@@ -91,6 +91,11 @@
       "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use "
     },
     {
+      "name": "agent-config-audit",
+      "source": "./skills/agent-config-audit",
+      "description": "Audit and sync AI agent configuration files (CLAUDE.md, CODEX.md, AGENTS.md, .cursorrules, hooks, se"
+    },
+    {
       "name": "agent-folder-init",
       "source": "./skills/agent-folder-init",
       "description": "Initialize a comprehensive .agents/ folder structure for AI-first development. Use this skill when s"
