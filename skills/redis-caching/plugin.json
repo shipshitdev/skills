@@ -1,0 +1,12 @@
+{
+  "name": "redis-caching",
+  "version": "1.0.0",
+  "description": "This skill should be used when users need to implement Redis caching, session storage, rate limiting, pub/sub messaging, or queue management in Node.js, Next.js, and NestJS applications",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}
