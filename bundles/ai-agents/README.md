@@ -5,7 +5,7 @@ AI agent development and prompt engineering
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-ai-agents@shipshitdev
 ```
 

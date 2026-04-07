@@ -5,7 +5,7 @@ Strategy, planning, and analysis skills
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-planning@shipshitdev
 ```
 

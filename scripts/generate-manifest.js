@@ -61,7 +61,7 @@ function generateManifest(options) {
     skillName,
     commandName,
     homepage,
-    repository = 'https://github.com/shipshitdev/library',
+    repository = 'https://github.com/shipshitdev/skills',
     license = 'MIT',
     tags = [],
     author = {

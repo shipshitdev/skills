@@ -5,7 +5,7 @@ GitHub workflow and automation skills
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-github@shipshitdev
 ```
 

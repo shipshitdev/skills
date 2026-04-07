@@ -5,7 +5,7 @@ Sales, leads, and outreach skills
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-sales@shipshitdev
 ```
 

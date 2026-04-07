@@ -5,7 +5,7 @@ Project setup and workspace initialization
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-workspace@shipshitdev
 ```
 

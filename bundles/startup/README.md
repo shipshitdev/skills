@@ -5,7 +5,7 @@ Skills for validating ideas, planning MVPs, and launching startups
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-startup@shipshitdev
 ```
 

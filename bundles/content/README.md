@@ -5,7 +5,7 @@ Content creation and documentation skills
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-content@shipshitdev
 ```
 

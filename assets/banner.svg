@@ -82,7 +82,7 @@
       <tspan fill="#7ee787">~</tspan>
       <tspan fill="#c9d1d9">/library</tspan>
       <tspan fill="#6e7681" dx="12">$</tspan>
-      <tspan fill="#c9d1d9" dx="8">npx add-skill shipshitdev/library -g</tspan>
+      <tspan fill="#c9d1d9" dx="8">npx add-skill shipshitdev/skills -g</tspan>
     </text>
 
     <!-- Output line -->

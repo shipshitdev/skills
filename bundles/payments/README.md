@@ -5,7 +5,7 @@ Payment processing and financial integrations
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-payments@shipshitdev
 ```
 

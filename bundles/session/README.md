@@ -5,7 +5,7 @@ Session management and documentation
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-session@shipshitdev
 ```
 

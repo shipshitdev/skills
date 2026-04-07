@@ -5,7 +5,7 @@ Brand strategy and naming skills
 ## Installation
 
 ```bash
-/plugin marketplace add shipshitdev/library
+/plugin marketplace add shipshitdev/skills
 /plugin install shipshitdev-branding@shipshitdev
 ```
 
