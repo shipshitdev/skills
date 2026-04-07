@@ -60,26 +60,26 @@ This skill should be used when:
 
 ```bash
 # Basic setup (80% coverage threshold, blocks commits below threshold)
-python3 ~/.claude/skills/husky-test-coverage/scripts/setup-husky-coverage.py \
+python3 scripts/setup-husky-coverage.py \
   --root /path/to/project
 
 # Custom threshold (85%)
-python3 ~/.claude/skills/husky-test-coverage/scripts/setup-husky-coverage.py \
+python3 scripts/setup-husky-coverage.py \
   --root /path/to/project \
   --threshold 85
 
 # Warn only (don't block commits)
-python3 ~/.claude/skills/husky-test-coverage/scripts/setup-husky-coverage.py \
+python3 scripts/setup-husky-coverage.py \
   --root /path/to/project \
   --no-fail-on-below
 
 # Skip if no tests found
-python3 ~/.claude/skills/husky-test-coverage/scripts/setup-husky-coverage.py \
+python3 scripts/setup-husky-coverage.py \
   --root /path/to/project \
   --skip-if-no-tests
 
 # Dry run to preview changes
-python3 ~/.claude/skills/husky-test-coverage/scripts/setup-husky-coverage.py \
+python3 scripts/setup-husky-coverage.py \
   --root /path/to/project \
   --dry-run
 ```
@@ -325,7 +325,7 @@ You don't need to run this skill separately if you used `fullstack-workspace-ini
 If adding to an existing project:
 
 ```bash
-python3 ~/.claude/skills/husky-test-coverage/scripts/setup-husky-coverage.py \
+python3 scripts/setup-husky-coverage.py \
   --root /path/to/project \
   --threshold 80
 ```
@@ -380,7 +380,7 @@ The skill uses the first detected runner in priority order: Vitest > Jest > Moch
 
 ---
 
-**When this skill is active**, Claude will:
+**When this skill is active**, it will:
 
 1. Discover project test setup and configuration
 2. Detect test runner and coverage tool

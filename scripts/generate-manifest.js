@@ -91,6 +91,9 @@ function generateManifest(options) {
   manifest.compatibility = {
     claude: '>=1.0.33',
     cursor: '>=0.40.0',
+    codex: '>=0.1.0',
+    openclaw: '>=0.1.0',
+    gemini: '>=0.1.0',
   };
 
   return manifest;
@@ -166,7 +169,7 @@ if (require.main === module) {
     console.error('Usage: generate-manifest.js <type> <path> [platform]');
     console.error('  type: skill|command');
     console.error('  path: path to skill directory or command file');
-    console.error('  platform: cursor|claude|codex (optional, defaults to cursor)');
+    console.error('  platform: cursor|claude|codex|openclaw|gemini (optional, defaults to cursor)');
     process.exit(1);
   }
 

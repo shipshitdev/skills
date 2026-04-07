@@ -25,8 +25,8 @@ Validates Clerk authentication configuration and prevents deprecated patterns. A
 ## Quick Start
 
 ```bash
-python3 ~/.claude/skills/clerk-validator/scripts/validate.py --root .
-python3 ~/.claude/skills/clerk-validator/scripts/validate.py --root . --strict
+python3 scripts/validate.py --root .
+python3 scripts/validate.py --root . --strict
 ```
 
 ## What Gets Checked
@@ -283,7 +283,7 @@ export async function POST(req: Request) {
 # .github/workflows/validate.yml
 - name: Validate Clerk Config
   run: |
-    python3 ~/.claude/skills/clerk-validator/scripts/validate.py \
+    python3 scripts/validate.py \
       --root . \
       --strict \
       --ci

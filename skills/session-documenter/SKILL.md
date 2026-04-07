@@ -1,14 +1,12 @@
 ---
 name: session-documenter
-description: Document session work with explicit commands. Use /start to begin tracking, /end to finalize session, /clear to reset. Tracks decisions, file changes, and context for continuity.
-triggers:
-  - /start
-  - /end
-  - session start
-  - session end
-  - document session
-  - what did we do
-  - track this decision
+description: Document session work to .agents/SESSIONS/YYYY-MM-DD.md. Use when user says 'document session', 'save session', 'what did we do', or when invoked by session-start/session-end skills.
+version: 1.0.0
+tags:
+  - session
+  - documentation
+  - workflow
+  - productivity
 ---
 
 # Session Documenter Skill

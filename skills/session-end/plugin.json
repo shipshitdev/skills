@@ -1,0 +1,12 @@
+{
+  "name": "session-end",
+  "version": "1.0.0",
+  "description": "Document session context before clearing conversation",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

@@ -25,8 +25,8 @@ Validates Biome 2.3+ configuration and prevents outdated patterns. Ensures type-
 ## Quick Start
 
 ```bash
-python3 ~/.claude/skills/biome-validator/scripts/validate.py --root .
-python3 ~/.claude/skills/biome-validator/scripts/validate.py --root . --strict
+python3 scripts/validate.py --root .
+python3 scripts/validate.py --root . --strict
 ```
 
 ## What Gets Checked
@@ -344,7 +344,7 @@ rm .eslintrc* .prettierrc* .eslintignore .prettierignore
 # .github/workflows/lint.yml
 - name: Validate Biome Config
   run: |
-    python3 ~/.claude/skills/biome-validator/scripts/validate.py \
+    python3 scripts/validate.py \
       --root . \
       --strict \
       --ci

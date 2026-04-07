@@ -173,13 +173,13 @@ Ready to run:
 
 ```bash
 # Create workspace with PRD-style prompt
-python3 ~/.claude/skills/fullstack-workspace-init/scripts/init-workspace.py \
+python3 scripts/init-workspace.py \
   --root ~/www/myproject \
   --name "My Project" \
   --brief "A task management app where users can create tasks with titles and due dates, organize them into projects, and mark them complete."
 
 # Or interactive mode (prompts for brief)
-python3 ~/.claude/skills/fullstack-workspace-init/scripts/init-workspace.py \
+python3 scripts/init-workspace.py \
   --root ~/www/myproject \
   --name "My Project" \
   --interactive
@@ -334,13 +334,13 @@ export function TaskList() {
 
 ```bash
 # Add a new entity to existing project
-python3 ~/.claude/skills/fullstack-workspace-init/scripts/add-entity.py \
+python3 scripts/add-entity.py \
   --root ~/www/myproject \
   --name "comment" \
   --fields "content:string,taskId:string"
 
 # Add a new frontend app
-python3 ~/.claude/skills/fullstack-workspace-init/scripts/add-frontend-app.py \
+python3 scripts/add-frontend-app.py \
   --root ~/www/myproject/frontend \
   --name admin
 ```

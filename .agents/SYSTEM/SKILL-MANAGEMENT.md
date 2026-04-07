@@ -1,226 +1,112 @@
-# Skill Replication Management Guidelines
-
-This document provides guidelines for managing skills that are replicated across Claude and Codex platforms.
+# Skill Management Guidelines
 
 ## Core Principle
 
-**Most skills should be functionally identical across platforms, with only platform-specific adaptations where necessary.**
+**One source, all platforms.** Each skill has a single SKILL.md that works on every supported agent platform (Claude Code, Codex, Cursor, OpenClaw, Gemini).
 
-## When Skills Should Be Identical
+No per-platform copies. No sync workflows. No platform-specific forks.
 
-Skills should be **identical** (or nearly identical) when they contain:
+## Skill Structure
 
-- **Domain expertise** (accessibility, security, testing, API design, etc.)
-- **Workflows and procedures** (step-by-step instructions)
-- **Scripts and assets** (executable code, templates, resources)
-- **Reference documentation** (detailed guides, schemas, examples)
-- **Core functionality** (what the skill does, not how it's presented)
-
-**Rule**: If the skill content doesn't reference platform-specific behavior, capabilities, or principles, it should be identical across platforms.
-
-### Examples of Identical Content
-
-- Accessibility guidelines and WCAG compliance rules
-- Security best practices and OWASP recommendations
-- Testing strategies and patterns
-- API design principles
-- Database migration procedures
-- Component library standards
-
-## When Skills Should Differ
-
-Skills should have **platform-specific adaptations** when they involve:
-
-### 1. Platform-Specific Principles
-
-**Codex-specific principles** that don't apply to Claude:
-
-- **"Concise is Key"** - Codex emphasizes extreme brevity and token efficiency
-- **"Degrees of Freedom"** - Codex uses high/medium/low freedom patterns
-- **Progressive disclosure** - Codex has stricter requirements for context management
-
-**Action**: Add Codex-specific sections only when these principles meaningfully change the skill's approach.
-
-### 2. Metadata Differences
-
-**Codex supports additional frontmatter fields:**
-
-```yaml
-metadata:
-  short-description: Brief description
+```
+skills/{skill-name}/
+├── SKILL.md           # Single source of truth
+├── references/        # Detailed docs, loaded on demand
+├── scripts/           # Executable code (Python, bash, Node)
+├── assets/            # Templates, boilerplate, resources
+└── plugin.json        # Generated manifest (do not edit manually)
 ```
 
-**Claude uses:**
+## Writing Rules
 
-```yaml
-license: Complete terms in LICENSE.txt
-```
+See [PLATFORM-ADAPTATIONS.md](PLATFORM-ADAPTATIONS.md) for the full writing guide. Key rules:
 
-**Action**: Use platform-appropriate frontmatter fields. Keep `name` and `description` identical.
+1. **No tool names** — write "Read the file", not "Use the Read tool"
+2. **No platform names** — write "This skill activates when...", not "Claude will use this when..."
+3. **No hardcoded paths** — use relative paths for bundled resources
+4. **Imperative style** — "Use when...", "Run the command...", "Check for..."
 
-### 3. Platform References
+## When Platform-Specific Content Is Needed
 
-Skills should reference the correct platform:
-
-- Codex skills: "extends Codex's capabilities", "Codex reads", "Codex determines"
-- Claude skills: "extends Claude's capabilities", "Claude will use", "Claude determines"
-
-**Action**: Always use the correct platform name. Never reference the wrong platform.
-
-### 4. Writing Style Guidance
-
-**Codex**: Use imperative/infinitive form (verb-first instructions)
-
-- "To accomplish X, do Y"
-- "Extract text with pdfplumber"
-- "Use docx-js for new documents"
-
-**Claude**: Use third-person instructional language
-
-- "This skill should be used when..."
-- "Claude will use the skill when..."
-- "The skill activates automatically when..."
-
-**Action**: Adapt writing style to match platform conventions, but keep core instructions identical.
-
-### 5. Context Window Management
-
-**Codex** has stricter progressive disclosure requirements:
-
-- Emphasizes keeping SKILL.md under 500 lines
-- More aggressive about moving content to references/
-- Stronger emphasis on token efficiency
-
-**Claude** is more flexible:
-
-- Can include more detail in SKILL.md
-- Less strict about progressive disclosure
-
-**Action**: Codex versions should be more concise, but core content should remain the same.
-
-## Update Workflow
-
-### Standard Workflow
-
-1. **Create/Update Skill**: Start with one platform (usually Claude)
-2. **Identify Platform-Specific Needs**: Review content for platform-specific adaptations
-3. **Sync Core Content**: Use sync tool or copy core content to other platform
-4. **Apply Platform Adaptations**: Make platform-specific changes
-5. **Validate**: Run validation script to check consistency
-6. **Test**: Verify skill works on both platforms
-
-### Using Platform Markers
-
-For skills with platform-specific sections, use markers:
+Some skills legitimately need per-platform behavior (e.g., `agent-folder-init` scaffolds different config directories per agent). Use HTML comment markers:
 
 ```markdown
-<!-- PLATFORM-SPECIFIC-START: codex -->
-## Core Principles
-
-### Concise is Key
-The context window is a public good...
-<!-- PLATFORM-SPECIFIC-END: codex -->
-
-<!-- Shared content here - identical for both platforms -->
-
 <!-- PLATFORM-SPECIFIC-START: claude -->
-**Metadata Quality:** The `name` and `description` in YAML frontmatter determine when Claude will use the skill.
+Platform-specific content here
 <!-- PLATFORM-SPECIFIC-END: claude -->
 ```
 
-### Sync Tool Usage
+This should be rare. If you find yourself adding many platform blocks, reconsider whether the skill should be split.
 
-Use `scripts/sync-skill.sh` to:
+## Creating a New Skill
 
-- Sync core content from source to target platform
-- Preserve platform-specific sections (marked with comments)
-- Update platform references automatically
-- Validate changes before applying
+1. Create `skills/{skill-name}/SKILL.md` with universal frontmatter
+2. Write platform-agnostic content following the writing rules
+3. Add `references/` for detailed documentation
+4. Add `scripts/` for executable code
+5. Run the validator: `./scripts/validate-skill-sync.sh`
+6. Add to README.md with install command
+
+## Updating an Existing Skill
+
+1. Edit the single SKILL.md
+2. Run the validator to check for platform-specific language
+3. Regenerate manifests if frontmatter changed: `bun run generate:plugin`
+4. Regenerate bundles if skill is in a bundle: `bun run generate:bundle`
+
+## Validation
+
+Run the platform-agnostic validator:
 
 ```bash
-# Sync from Claude to Codex
-./scripts/sync-skill.sh accessibility claude codex
-
-# Dry run to preview changes
-./scripts/sync-skill.sh accessibility claude codex --dry-run
+./scripts/validate-skill-sync.sh
 ```
 
-## Validation Checklist
+This checks for:
 
-Before considering a skill "synced", verify:
+- Tool-name references (Skill tool, Read tool, etc.)
+- Platform-name references outside marker blocks
+- Hardcoded platform paths
+- SKILL.md line count (warn if >500)
 
-- [ ] Platform references are correct (Codex vs Claude)
-- [ ] Frontmatter uses platform-appropriate fields
-- [ ] Writing style matches platform conventions
-- [ ] Core functionality is identical
-- [ ] Platform-specific principles are properly applied
-- [ ] Scripts and assets are identical (unless platform-specific)
-- [ ] References are identical (unless platform-specific)
+## Distribution
 
-## Common Mistakes to Avoid
+Skills are distributed via `npx skills add`:
 
-1. **Copy-paste errors**: Forgetting to change "Claude" to "Codex" in Codex skills
-2. **Over-adaptation**: Making unnecessary changes that should be identical
-3. **Under-adaptation**: Not applying platform-specific principles when needed
-4. **Drift**: Skills gradually diverging over time without documentation
-5. **Inconsistent frontmatter**: Using wrong metadata fields for platform
+```bash
+# Install for all platforms
+npx skills add shipshitdev/library -g --agent claude-code cursor codex openclaw --skill '*' -y
 
-## Maintenance
+# Install specific skill
+npx skills add shipshitdev/library --skill stripe-implementer -y
+```
 
-- **Regular validation**: Run `scripts/validate-skill-sync.sh` periodically
-- **Document differences**: When skills legitimately differ, document why
-- **Review updates**: When updating a skill, check if sync is needed
-- **Test both platforms**: Verify skills work correctly on both platforms
+The `generate-manifest.js` script sets compatibility for all platforms. If a skill genuinely cannot work on a platform, add `platforms` to frontmatter:
+
+```yaml
+platforms: [claude-code, cursor]  # only if restricted
+```
+
+Default (no field) = works everywhere.
+
+## Bundle Management
+
+Bundles group skills by category for marketplace distribution:
+
+```bash
+bun run generate:bundle    # Regenerate bundle directories
+bun run generate:plugin    # Regenerate plugin.json files
+bun run marketplace:generate  # Full marketplace sync
+```
+
+Bundle structure is already platform-neutral — no changes needed per platform.
 
 ## Decision Tree
 
 ```
-Is this a new skill or major update?
-├─ Yes → Create/update on primary platform (Claude)
-│         └─ Sync to other platform with adaptations
-│
-└─ No → Is this a platform-specific change?
-        ├─ Yes → Update only that platform
-        └─ No → Update both platforms (or use sync tool)
+Is this skill content platform-specific?
+├─ No (95% of cases) → Write once, works everywhere
+└─ Yes → Does it need different behavior per platform?
+         ├─ Just different paths/configs → Use HTML markers
+         └─ Fundamentally different → Consider separate skills
 ```
-
-## Examples
-
-### Example 1: Accessibility Skill
-
-**Should be identical**: Core WCAG guidelines, ARIA patterns, testing procedures
-
-**Should differ**:
-
-- Platform references ("Claude" vs "Codex")
-- Codex version might be more concise
-- Writing style (third-person vs imperative)
-
-### Example 2: Skill Creator
-
-**Should be identical**: Skill structure, creation process, bundled resources
-
-**Should differ**:
-
-- Codex-specific principles ("Concise is Key", "Degrees of Freedom")
-- Writing style guidance
-- Progressive disclosure emphasis
-- Frontmatter metadata fields
-
-### Example 3: Project Scaffold
-
-**Should be identical**: Scaffolding logic, templates, scripts
-
-**Should differ**:
-
-- Platform references in instructions
-- Path references (if different: `~/.claude/skills/` vs `~/.codex/skills/`)
-
-## Questions?
-
-When in doubt:
-
-1. Check this guide
-2. Review similar skills for patterns
-3. Run validation script
-4. Test on both platforms

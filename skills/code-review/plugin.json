@@ -1,0 +1,12 @@
+{
+  "name": "code-review",
+  "version": "1.0.0",
+  "description": "Comprehensive code review focusing on quality, security, performance, and testing",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

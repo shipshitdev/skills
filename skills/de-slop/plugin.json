@@ -1,0 +1,12 @@
+{
+  "name": "de-slop",
+  "version": "1.0.0",
+  "description": "Remove AI-generated code artifacts while maintaining project structure and quality",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

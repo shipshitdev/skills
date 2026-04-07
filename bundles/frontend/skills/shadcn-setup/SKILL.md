@@ -35,19 +35,19 @@ Sets up shadcn/ui with proper Tailwind CSS v4 configuration. This skill ensures 
 
 ```bash
 # Full setup (recommended)
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root .
+python3 scripts/setup.py --root .
 
 # With specific theme
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root . --theme zinc
+python3 scripts/setup.py --root . --theme zinc
 
 # Install specific components
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root . --components button,card,input,dialog
+python3 scripts/setup.py --root . --components button,card,input,dialog
 
 # Next.js App Router (default)
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root . --app-router
+python3 scripts/setup.py --root . --app-router
 
 # Next.js Pages Router
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root . --pages-router
+python3 scripts/setup.py --root . --pages-router
 ```
 
 ## What Gets Installed
@@ -226,15 +226,15 @@ Install commonly used components:
 
 ```bash
 # Essential set
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root . \
+python3 scripts/setup.py --root . \
   --components button,card,input,label,dialog,dropdown-menu,toast
 
 # Form-focused
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root . \
+python3 scripts/setup.py --root . \
   --components form,input,label,select,checkbox,radio-group,switch,textarea
 
 # Dashboard
-python3 ~/.claude/skills/shadcn-setup/scripts/setup.py --root . \
+python3 scripts/setup.py --root . \
   --components card,table,tabs,badge,avatar,dropdown-menu,sheet,sidebar
 ```
 
@@ -387,7 +387,7 @@ export function cn(...inputs: ClassValue[]) {
 After setup, run the Tailwind v4 validator:
 
 ```bash
-python3 ~/.claude/skills/tailwind4-validator/scripts/validate.py --root . --verbose
+python3 scripts/validate.py --root . --verbose
 ```
 
 This ensures no v3 patterns were accidentally introduced.

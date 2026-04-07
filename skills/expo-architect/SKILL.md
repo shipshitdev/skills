@@ -44,13 +44,13 @@ Generates **working mobile apps**, not empty scaffolds:
 
 ```bash
 # Create app with PRD-style prompt
-python3 ~/.claude/skills/expo-architect/scripts/init-expo.py \
+python3 scripts/init-expo.py \
   --root ~/www/myapp \
   --name "My App" \
   --brief "A fitness tracker where users can log workouts"
 
 # With specific options
-python3 ~/.claude/skills/expo-architect/scripts/init-expo.py \
+python3 scripts/init-expo.py \
   --root ~/www/myapp \
   --name "My App" \
   --tabs "Home,Workouts,Profile" \

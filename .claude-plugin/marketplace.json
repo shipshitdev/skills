@@ -116,6 +116,11 @@
       "description": "This skill should be used when users need help analyzing content analytics data, creating reports, i"
     },
     {
+      "name": "analyze-codebase",
+      "source": "./skills/analyze-codebase",
+      "description": "Generate comprehensive codebase analysis covering architecture, security, performance, and code qual"
+    },
+    {
       "name": "api-design-expert",
       "source": "./skills/api-design-expert",
       "description": "Expert in RESTful API design, OpenAPI/Swagger documentation, versioning, error handling, and API bes"
@@ -176,6 +181,11 @@
       "description": "Validate Clerk authentication configuration and detect deprecated patterns. Ensures proper proxy.ts "
     },
     {
+      "name": "code-review",
+      "source": "./skills/code-review",
+      "description": "Comprehensive code review focusing on quality, security, performance, and testing. Use when user say"
+    },
+    {
       "name": "cofounder-evaluator",
       "source": "./skills/cofounder-evaluator",
       "description": "Use this skill when users need to evaluate potential co-founders, assess founder compatibility, desi"
@@ -184,6 +194,11 @@
       "name": "comment-mode",
       "source": "./skills/comment-mode",
       "description": "Granular feedback on drafts without rewriting. Generates highlighted HTML with click-to-reveal inlin"
+    },
+    {
+      "name": "commit-summary",
+      "source": "./skills/commit-summary",
+      "description": "Generate meaningful commit messages from staged changes using conventional commits. Use when user sa"
     },
     {
       "name": "competitive-intelligence-analyst",
@@ -239,6 +254,16 @@
       "name": "cto-advisor",
       "source": "./skills/cto-advisor",
       "description": "Technical leadership guidance for engineering teams, architecture decisions, and technology strategy"
+    },
+    {
+      "name": "de-slop",
+      "source": "./skills/de-slop",
+      "description": "Remove AI-generated code artifacts (console.log, any types, unused imports, dead code) while maintai"
+    },
+    {
+      "name": "deploy",
+      "source": "./skills/deploy",
+      "description": "Run deployment workflows for web applications (staging, production). Use when user says 'deploy', 'p"
     },
     {
       "name": "design-consistency-auditor",
@@ -561,9 +586,19 @@
       "description": "Master React Native 0.79.5 components, styling, performance optimization, and mobile UI best practic"
     },
     {
+      "name": "refactor-code",
+      "source": "./skills/refactor-code",
+      "description": "Systematic approach to safely refactoring code with tests. Use when user says 'refactor', 'clean up "
+    },
+    {
       "name": "retention-engine",
       "source": "./skills/retention-engine",
       "description": "Use this skill when users need to reduce churn, increase customer lifetime value (LTV), build recurr"
+    },
+    {
+      "name": "review-pr",
+      "source": "./skills/review-pr",
+      "description": "Systematic PR review checklist for quality, security, and consistency. Use when user says 'review PR"
     },
     {
       "name": "roadmap-analyzer",
@@ -574,6 +609,11 @@
       "name": "rules-capture",
       "source": "./skills/rules-capture",
       "description": "Automatically detects and documents user preferences, coding rules, and style guidelines when expres"
+    },
+    {
+      "name": "scaffold",
+      "source": "./skills/scaffold",
+      "description": "Generate new code modules following existing codebase patterns. Use when user says 'scaffold', 'gene"
     },
     {
       "name": "scale-validator",
@@ -598,7 +638,17 @@
     {
       "name": "session-documenter",
       "source": "./skills/session-documenter",
-      "description": "Document session work with explicit commands. Use /start to begin tracking, /end to finalize session"
+      "description": "Document session work to .agents/SESSIONS/YYYY-MM-DD.md. Use when user says 'document session', 'sav"
+    },
+    {
+      "name": "session-end",
+      "source": "./skills/session-end",
+      "description": "Document session context before clearing. Use when user says 'end session', 'end', 'wrap up', or bef"
+    },
+    {
+      "name": "session-start",
+      "source": "./skills/session-start",
+      "description": "Load critical preferences, session history, and inbox tasks at session start. Use when user says 'st"
     },
     {
       "name": "shadcn-setup",

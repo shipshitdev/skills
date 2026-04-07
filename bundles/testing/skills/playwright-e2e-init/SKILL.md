@@ -301,7 +301,7 @@ await expect(async () => {
 
 ---
 
-**When this skill is active**, Claude will:
+**When this skill is active**, it will:
 
 1. Install Playwright and browsers
 2. Create configuration file

@@ -31,7 +31,7 @@ Use this skill when:
 ### Interactive Mode (Recommended)
 
 ```bash
-python3 ~/.claude/skills/project-scaffold/scripts/scaffold.py
+python3 scripts/scaffold.py
 ```
 
 The script will ask you:
@@ -52,7 +52,7 @@ The script will ask you:
 When user requests scaffolding, activate this skill and run:
 
 ```bash
-python3 ~/.claude/skills/project-scaffold/scripts/scaffold.py
+python3 scripts/scaffold.py
 ```
 
 The script handles all interactive prompts.
@@ -188,9 +188,9 @@ This skill integrates with:
 
 ## Troubleshooting
 
-**Script not found**: Ensure the skill is installed in `~/.claude/skills/project-scaffold/`
+**Script not found**: Ensure the skill is installed in ``
 
-**Permission denied**: Make script executable: `chmod +x ~/.claude/skills/project-scaffold/scripts/scaffold.py`
+**Permission denied**: Make script executable: `chmod +x scripts/scaffold.py`
 
 **Python not found**: Ensure Python 3 is installed and in PATH
 

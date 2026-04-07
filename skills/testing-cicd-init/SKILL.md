@@ -208,7 +208,7 @@ Ensure `bunx tsc --noEmit` passes locally before pushing.
 
 ---
 
-**When this skill is active**, Claude will:
+**When this skill is active**, it will:
 
 1. Detect the project type automatically
 2. Install appropriate testing dependencies

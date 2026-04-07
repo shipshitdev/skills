@@ -1,0 +1,12 @@
+{
+  "name": "session-start",
+  "version": "1.0.0",
+  "description": "Load critical preferences, session history, and inbox tasks at session start",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

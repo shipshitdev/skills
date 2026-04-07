@@ -1,0 +1,12 @@
+{
+  "name": "commit-summary",
+  "version": "1.0.0",
+  "description": "Generate meaningful commit messages from staged changes using conventional commits",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

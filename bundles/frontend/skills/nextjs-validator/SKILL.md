@@ -25,8 +25,8 @@ Validates Next.js 16 configuration and prevents deprecated patterns. AI assistan
 ## Quick Start
 
 ```bash
-python3 ~/.claude/skills/nextjs-validator/scripts/validate.py --root .
-python3 ~/.claude/skills/nextjs-validator/scripts/validate.py --root . --strict
+python3 scripts/validate.py --root .
+python3 scripts/validate.py --root . --strict
 ```
 
 ## What Gets Checked
@@ -319,7 +319,7 @@ export default async function Dashboard() {
 # .github/workflows/validate.yml
 - name: Validate Next.js 16
   run: |
-    python3 ~/.claude/skills/nextjs-validator/scripts/validate.py \
+    python3 scripts/validate.py \
       --root . \
       --strict \
       --ci

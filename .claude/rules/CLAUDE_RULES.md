@@ -4,7 +4,7 @@
 
 ### Forbidden Actions
 - **Background processes**: Use `run_in_background` for long-running tasks (training, generation, server ops). No trailing `&` in commands.
-- **Local builds/tests**: No `pnpm build`, `npm test` - CI/CD only
+- **Sequential only**: Run tests/builds one package at a time — `bun run test --filter=@genfeedai/[name]` or `bun build:app @genfeedai/[name]`. Never run the full root suite (`bun test` with no filter) locally — that's CI/CD only. No `pnpm build` at root.
 - **Auto-commit/push**: Wait for explicit user request
 - **Work outside workspace**: No `/tmp`, no `~/Desktop`, stay in project
 - **Force push main/master**: Never
@@ -39,7 +39,7 @@
 4. Relative (same directory only)
 
 ### Git
-- Conventional commits: `fix:`, `feat:`, `refactor:`
+- Conventional commits: `fix:`, `feat:`, `refactor:`, `chore:`
 - Never commit secrets (.env, API keys)
 - Descriptive messages, not "fix" or "wip"
 

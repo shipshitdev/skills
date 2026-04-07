@@ -26,23 +26,23 @@ You need a published landing UI components package. The skill expects:
 
 ```bash
 # Show help
-python3 ~/.claude/skills/micro-landing-builder/scripts/scaffold.py --help
+python3 scripts/scaffold.py --help
 
 # Create a new landing
-python3 ~/.claude/skills/micro-landing-builder/scripts/scaffold.py \
+python3 scripts/scaffold.py \
   --slug mystartup \
   --name "My Startup" \
   --domain "mystartup.com" \
   --concept "AI-powered analytics"
 
 # With custom UI package
-python3 ~/.claude/skills/micro-landing-builder/scripts/scaffold.py \
+python3 scripts/scaffold.py \
   --slug mystartup \
   --name "My Startup" \
   --ui-package "@myorg/landing-kit"
 
 # Allow outside current directory
-python3 ~/.claude/skills/micro-landing-builder/scripts/scaffold.py \
+python3 scripts/scaffold.py \
   --root ~/www/landings \
   --slug mystartup \
   --allow-outside
@@ -112,19 +112,19 @@ Create multiple landing pages from a template or CSV/JSON file:
 
 ```bash
 # From CSV file
-python3 ~/.claude/skills/micro-landing-builder/scripts/batch_create.py \
+python3 scripts/batch_create.py \
   --root ~/www/landings \
   --csv projects.csv \
   --allow-outside
 
 # From JSON file
-python3 ~/.claude/skills/micro-landing-builder/scripts/batch_create.py \
+python3 scripts/batch_create.py \
   --root ~/www/landings \
   --json projects.json \
   --allow-outside
 
 # Clone from existing template
-python3 ~/.claude/skills/micro-landing-builder/scripts/batch_create.py \
+python3 scripts/batch_create.py \
   --root ~/www/landings \
   --template ~/www/landings/template-landing \
   --json projects.json \
@@ -173,7 +173,7 @@ Deploy multiple projects to Vercel with custom domains:
 
 ```bash
 # Deploy with domain mapping
-python3 ~/.claude/skills/micro-landing-builder/scripts/deploy_vercel.py \
+python3 scripts/deploy_vercel.py \
   ~/www/landings/project1 \
   ~/www/landings/project2 \
   --domains-json domains.json \
@@ -181,7 +181,7 @@ python3 ~/.claude/skills/micro-landing-builder/scripts/deploy_vercel.py \
   --yes
 
 # Single domain
-python3 ~/.claude/skills/micro-landing-builder/scripts/deploy_vercel.py \
+python3 scripts/deploy_vercel.py \
   ~/www/landings/project1 \
   --domain project1.com \
   --prod \

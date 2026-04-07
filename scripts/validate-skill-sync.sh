@@ -1,8 +1,9 @@
 #!/bin/bash
 #
-# Validate Skills
+# Validate Skills (Platform-Agnostic Check)
 #
-# Validates skills have required files and frontmatter.
+# Validates skills have required files, frontmatter, and are free of
+# platform-specific language that prevents cross-platform compatibility.
 #
 # Usage:
 #   ./scripts/validate-skill-sync.sh [skill-name]
@@ -31,8 +32,12 @@ SKILL_NAME="${1:-}"
 
 # Statistics
 TOTAL_ISSUES=0
+TOTAL_WARNINGS=0
 TOTAL_SKILLS=0
 SKILLS_WITH_ISSUES=0
+
+# Skills that legitimately need platform references
+PLATFORM_EXEMPT_SKILLS="skill-creator agent-folder-init"
 
 # Function to check frontmatter
 check_frontmatter() {
@@ -43,7 +48,8 @@ check_frontmatter() {
         return 0
     fi
 
-    local content=$(cat "$file")
+    local content
+    content=$(cat "$file")
 
     # Check for frontmatter
     if ! echo "$content" | grep -q "^---$"; then
@@ -65,30 +71,216 @@ check_frontmatter() {
     return $issues
 }
 
+# Function to check for platform-specific tool references
+check_tool_references() {
+    local file="$1"
+    local warnings=0
+
+    if [[ ! -f "$file" ]]; then
+        return 0
+    fi
+
+    # Strip content inside PLATFORM-SPECIFIC markers before checking
+    local content
+    content=$(sed '/<!-- PLATFORM-SPECIFIC-START/,/<!-- PLATFORM-SPECIFIC-END/d' "$file")
+
+    # Check for Claude-specific tool references (match as standalone tool names)
+    local tool_patterns=(
+        "the Skill tool"
+        "the Read tool"
+        "the Edit tool"
+        "the Bash tool"
+        "the Glob tool"
+        "the Grep tool"
+        "the Agent tool"
+        "using Skill tool"
+        "Use Read tool"
+        "Use Bash tool"
+        "Use Edit tool"
+        "Use Glob tool"
+        "Use Grep tool"
+    )
+
+    for pattern in "${tool_patterns[@]}"; do
+        if echo "$content" | grep -qi "$pattern"; then
+            local line_num
+            line_num=$(grep -n -i "$pattern" "$file" | head -1 | cut -d: -f1)
+            echo -e "  ${YELLOW}⚠${NC} Tool reference: '$pattern' (line $line_num)"
+            ((warnings++))
+        fi
+    done
+
+    return $warnings
+}
+
+# Function to check for platform-name coupling
+check_platform_names() {
+    local file="$1"
+    local skill_name="$2"
+    local warnings=0
+
+    if [[ ! -f "$file" ]]; then
+        return 0
+    fi
+
+    # Skip exempt skills
+    for exempt in $PLATFORM_EXEMPT_SKILLS; do
+        if [[ "$skill_name" == "$exempt" ]]; then
+            return 0
+        fi
+    done
+
+    # Strip content inside PLATFORM-SPECIFIC markers before checking
+    local content
+    content=$(sed '/<!-- PLATFORM-SPECIFIC-START/,/<!-- PLATFORM-SPECIFIC-END/d' "$file")
+
+    # Check for platform-name coupling (agent references, not general mentions)
+    local platform_patterns=(
+        "Claude will"
+        "Claude reads"
+        "Claude determines"
+        "extends Claude"
+        "Codex will"
+        "Codex reads"
+        "Codex determines"
+        "extends Codex"
+    )
+
+    for pattern in "${platform_patterns[@]}"; do
+        if echo "$content" | grep -q "$pattern"; then
+            local line_num
+            line_num=$(grep -n "$pattern" "$file" | head -1 | cut -d: -f1)
+            echo -e "  ${YELLOW}⚠${NC} Platform coupling: '$pattern' (line $line_num)"
+            ((warnings++))
+        fi
+    done
+
+    return $warnings
+}
+
+# Function to check for hardcoded platform paths
+check_platform_paths() {
+    local file="$1"
+    local skill_name="${2:-}"
+    local warnings=0
+
+    if [[ ! -f "$file" ]]; then
+        return 0
+    fi
+
+    # Skip exempt skills
+    for exempt in $PLATFORM_EXEMPT_SKILLS; do
+        if [[ "$skill_name" == "$exempt" ]]; then
+            return 0
+        fi
+    done
+
+    # Strip content inside PLATFORM-SPECIFIC markers before checking
+    local content
+    content=$(sed '/<!-- PLATFORM-SPECIFIC-START/,/<!-- PLATFORM-SPECIFIC-END/d' "$file")
+
+    # These are literal strings to search for in file content, not shell paths
+    # shellcheck disable=SC2088
+    local path_patterns=(
+        "~/.claude/"
+        "~/.codex/"
+        "~/.cursor/"
+    )
+
+    for pattern in "${path_patterns[@]}"; do
+        if echo "$content" | grep -q "$pattern"; then
+            local line_num
+            line_num=$(grep -n "$pattern" "$file" | head -1 | cut -d: -f1)
+            echo -e "  ${YELLOW}⚠${NC} Hardcoded path: '$pattern' (line $line_num)"
+            ((warnings++))
+        fi
+    done
+
+    return $warnings
+}
+
+# Function to check SKILL.md line count
+check_line_count() {
+    local file="$1"
+
+    if [[ ! -f "$file" ]]; then
+        return 0
+    fi
+
+    local lines
+    lines=$(wc -l < "$file")
+    if [[ $lines -gt 500 ]]; then
+        echo -e "  ${YELLOW}⚠${NC} SKILL.md is $lines lines (recommended: <500)"
+        return 1
+    fi
+
+    return 0
+}
+
 # Function to validate a single skill
 validate_skill() {
     local skill_name="$1"
     local skill_issues=0
+    local skill_warnings=0
 
     echo -e "${BLUE}Validating: $skill_name${NC}"
 
     local skill_file="$SKILLS_DIR/$skill_name/SKILL.md"
     if [[ -f "$skill_file" ]]; then
         check_frontmatter "$skill_file" || skill_issues=$?
+
+        # Platform-agnostic checks
+        check_tool_references "$skill_file" || skill_warnings=$?
+
+        local name_warnings=0
+        check_platform_names "$skill_file" "$skill_name" || name_warnings=$?
+        ((skill_warnings += name_warnings))
+
+        local path_warnings=0
+        check_platform_paths "$skill_file" "$skill_name" || path_warnings=$?
+        ((skill_warnings += path_warnings))
+
+        local line_warnings=0
+        check_line_count "$skill_file" || line_warnings=$?
+        ((skill_warnings += line_warnings))
+
+        # Also check references/ directory
+        if [[ -d "$SKILLS_DIR/$skill_name/references" ]]; then
+            for ref_file in "$SKILLS_DIR/$skill_name/references/"*.md; do
+                if [[ -f "$ref_file" ]]; then
+                    local ref_warnings=0
+                    check_tool_references "$ref_file" || ref_warnings=$?
+                    ((skill_warnings += ref_warnings))
+
+                    local ref_name_warnings=0
+                    check_platform_names "$ref_file" "$skill_name" || ref_name_warnings=$?
+                    ((skill_warnings += ref_name_warnings))
+
+                    local ref_path_warnings=0
+                    check_platform_paths "$ref_file" "$skill_name" || ref_path_warnings=$?
+                    ((skill_warnings += ref_path_warnings))
+                fi
+            done
+        fi
     else
         echo -e "  ${RED}✗${NC} SKILL.md missing"
         ((skill_issues++))
     fi
 
-    if [[ $skill_issues -eq 0 ]]; then
-        echo -e "  ${GREEN}✓${NC} Valid"
+    if [[ $skill_issues -eq 0 ]] && [[ $skill_warnings -eq 0 ]]; then
+        echo -e "  ${GREEN}✓${NC} Valid (platform-agnostic)"
+    elif [[ $skill_issues -eq 0 ]]; then
+        echo -e "  ${YELLOW}⚠${NC} Valid but has $skill_warnings platform-specific warning(s)"
+        ((SKILLS_WITH_ISSUES++))
+        ((TOTAL_WARNINGS += skill_warnings))
     else
         ((SKILLS_WITH_ISSUES++))
         ((TOTAL_ISSUES += skill_issues))
+        ((TOTAL_WARNINGS += skill_warnings))
     fi
 
     echo
-    return $skill_issues
+    return 0
 }
 
 # Main validation logic
@@ -102,7 +294,7 @@ if [[ -n "$SKILL_NAME" ]]; then
     validate_skill "$SKILL_NAME"
 else
     # Validate all skills
-    echo -e "${BLUE}Validating all skills...${NC}"
+    echo -e "${BLUE}Validating all skills (platform-agnostic check)...${NC}"
     echo
 
     for skill_dir in "$SKILLS_DIR"/*/; do
@@ -118,13 +310,18 @@ fi
 echo -e "${BLUE}=== Validation Summary ===${NC}"
 echo "Total skills checked: $TOTAL_SKILLS"
 echo "Skills with issues: $SKILLS_WITH_ISSUES"
-echo "Total issues found: $TOTAL_ISSUES"
+echo "Errors (missing files/frontmatter): $TOTAL_ISSUES"
+echo "Warnings (platform-specific language): $TOTAL_WARNINGS"
 echo
 
-if [[ $TOTAL_ISSUES -eq 0 ]]; then
-    echo -e "${GREEN}✓ All skills validated successfully!${NC}"
+if [[ $TOTAL_ISSUES -eq 0 ]] && [[ $TOTAL_WARNINGS -eq 0 ]]; then
+    echo -e "${GREEN}✓ All skills validated — fully platform-agnostic!${NC}"
+    exit 0
+elif [[ $TOTAL_ISSUES -eq 0 ]]; then
+    echo -e "${YELLOW}⚠ No errors, but $TOTAL_WARNINGS platform-specific warning(s) found.${NC}"
+    echo -e "${YELLOW}  Review warnings above and update skills for cross-platform compatibility.${NC}"
     exit 0
 else
-    echo -e "${YELLOW}⚠ Some issues were found. Review the output above.${NC}"
+    echo -e "${RED}✗ $TOTAL_ISSUES error(s) found. Fix these before publishing.${NC}"
     exit 1
 fi

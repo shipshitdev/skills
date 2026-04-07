@@ -25,8 +25,8 @@ Validates Bun workspace configuration and prevents common monorepo issues. Ensur
 ## Quick Start
 
 ```bash
-python3 ~/.claude/skills/bun-validator/scripts/validate.py --root .
-python3 ~/.claude/skills/bun-validator/scripts/validate.py --root . --strict
+python3 scripts/validate.py --root .
+python3 scripts/validate.py --root . --strict
 ```
 
 ## What Gets Checked
@@ -308,7 +308,7 @@ Each workspace should list all its dependencies - don't rely on hoisting.
 # .github/workflows/validate.yml
 - name: Validate Bun Workspace
   run: |
-    python3 ~/.claude/skills/bun-validator/scripts/validate.py \
+    python3 scripts/validate.py \
       --root . \
       --strict \
       --ci

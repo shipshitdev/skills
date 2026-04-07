@@ -103,14 +103,14 @@ Verify before handoff:
 
 ```bash
 # Create landing page with PRD
-python3 ~/.claude/skills/landing-page-vercel/scripts/scaffold.py \
+python3 scripts/scaffold.py \
   --out ./my-landing-page \
   --name "ProductName" \
   --tagline "Your compelling value proposition" \
   --features "Feature1,Feature2,Feature3"
 
 # Interactive mode
-python3 ~/.claude/skills/landing-page-vercel/scripts/scaffold.py \
+python3 scripts/scaffold.py \
   --out ./my-landing-page \
   --interactive
 ```

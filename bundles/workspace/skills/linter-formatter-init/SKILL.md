@@ -33,32 +33,32 @@ Use this skill when:
 
 ```bash
 # Default setup (Biome) - RECOMMENDED
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/project
 
 # Use ESLint + Prettier instead (legacy)
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/project \
   --eslint
 
 # ESLint + Prettier with TypeScript
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/project \
   --eslint \
   --typescript
 
 # Skip pre-commit hooks
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/project \
   --no-hooks
 
 # Add Vitest testing with 80% coverage threshold
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/project \
   --vitest
 
 # Full setup: Biome + Vitest + Husky
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/project \
   --vitest \
   --coverage 80
@@ -240,7 +240,7 @@ export default defineConfig({
 Default threshold is 80%. Customize with:
 
 ```bash
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/project \
   --vitest \
   --coverage 90  # Set to 90%
@@ -335,7 +335,7 @@ The skill creates `.vscode/settings.json`:
 For monorepos, run from the root:
 
 ```bash
-python3 ~/.claude/skills/linter-formatter-init/scripts/setup.py \
+python3 scripts/setup.py \
   --root /path/to/monorepo \
   --monorepo
 ```
@@ -393,4 +393,4 @@ bunx eslint --init
 bunx husky
 ```
 
-Then copy configs from `~/.claude/skills/linter-formatter-init/assets/configs/`
+Then copy configs from `assets/configs/`

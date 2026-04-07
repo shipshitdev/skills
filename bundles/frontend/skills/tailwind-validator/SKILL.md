@@ -35,13 +35,13 @@ Validates that a project uses Tailwind CSS v4 with proper CSS-first configuratio
 
 ```bash
 # Validate current project
-python3 ~/.claude/skills/tailwind-validator/scripts/validate.py --root .
+python3 scripts/validate.py --root .
 
 # Validate with auto-fix suggestions
-python3 ~/.claude/skills/tailwind-validator/scripts/validate.py --root . --suggest-fixes
+python3 scripts/validate.py --root . --suggest-fixes
 
 # Strict mode (fail on any v3 pattern)
-python3 ~/.claude/skills/tailwind-validator/scripts/validate.py --root . --strict
+python3 scripts/validate.py --root . --strict
 ```
 
 ## What Gets Checked
@@ -328,7 +328,7 @@ Add to your CI pipeline:
 # .github/workflows/lint.yml
 - name: Validate Tailwind v4
   run: |
-    python3 ~/.claude/skills/tailwind-validator/scripts/validate.py \
+    python3 scripts/validate.py \
       --root . \
       --strict \
       --ci

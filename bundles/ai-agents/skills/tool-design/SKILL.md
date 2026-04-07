@@ -1,6 +1,6 @@
 ---
 name: tool-design
-description: Design tools that agents can use effectively, including when to reduce tool complexity. Use when creating, optimizing, or reducing agent tool sets.
+description: Design tools that agents can use effectively, including when to reduce tool complexity. Use when creating, optimizing, or reducing the set of tools available to an agent.
 ---
 
 # Tool Design for Agents

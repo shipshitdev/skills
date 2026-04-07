@@ -1,0 +1,12 @@
+{
+  "name": "review-pr",
+  "version": "1.0.0",
+  "description": "Systematic PR review checklist for quality, security, and consistency",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

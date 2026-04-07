@@ -1,0 +1,12 @@
+{
+  "name": "refactor-code",
+  "version": "1.0.0",
+  "description": "Systematic approach to safely refactoring code with tests",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

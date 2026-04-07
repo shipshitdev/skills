@@ -7,7 +7,7 @@ description: This skill should be used when users need to validate domain name f
 
 ## Overview
 
-This skill enables Claude to validate domain name formats, check domain availability status, and search for available domain names based on keywords. Claude will use this skill to implement domain validation logic, integrate with domain availability APIs, and provide domain search functionality.
+This skill enables validation of domain name formats, checking domain availability status, and searching for available domain names based on keywords. It will implement domain validation logic, integrate with domain availability APIs, and provide domain search functionality.
 
 ## When to Use This Skill
 
