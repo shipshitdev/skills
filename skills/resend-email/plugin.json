@@ -1,0 +1,12 @@
+{
+  "name": "resend-email",
+  "version": "1.0.0",
+  "description": "This skill should be used when users need to implement email functionality using Resend, including transactional emails, React Email templates, domain setup, and deliverability best practices.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}
