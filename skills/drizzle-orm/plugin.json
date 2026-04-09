@@ -1,0 +1,12 @@
+{
+  "name": "drizzle-orm",
+  "version": "1.0.0",
+  "description": "This skill should be used when users need to set up Drizzle ORM, define schemas, run migrations, write type-safe queries, or integrate Drizzle with Next.js/NestJS applications.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}
