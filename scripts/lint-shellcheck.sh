@@ -6,6 +6,10 @@
 
 set -euo pipefail
 
+if [[ $# -eq 0 ]]; then
+  exit 0
+fi
+
 if command -v shellcheck >/dev/null 2>&1; then
   shellcheck "$@"
 else
