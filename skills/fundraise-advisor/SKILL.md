@@ -1,16 +1,9 @@
 ---
 name: fundraise-advisor
 description: Use this skill when users need to raise funding, create a pitch deck, prepare for investor meetings, understand fundraising process, or navigate seed/pre-seed rounds. Activates for "how do I raise money," "pitch deck," "investors," or fundraising questions.
-version: 1.0.0
-tags:
-  - business
-  - hexa
-  - fundraise
-  - investors
-  - pitch
-  - seed
-  - venture
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, hexa, fundraise, investors, pitch, seed, venture"
 ---
 
 # Fundraise Advisor - Seed Round Strategy

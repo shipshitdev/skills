@@ -1,15 +1,9 @@
 ---
 name: competitive-intelligence-analyst
 description: Use this skill when users need to analyze competitors, monitor market movements, benchmark features/pricing, identify market gaps, or understand competitive positioning. Activates for "what are competitors doing," market analysis, or differentiation strategy.
-version: 1.0.0
-tags:
-  - business
-  - competitive-analysis
-  - market-research
-  - positioning
-  - differentiation
-  - benchmarking
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, competitive-analysis, market-research, positioning, differentiation, benchmarking"
 ---
 
 # Competitive Intelligence Analyst - Market & Competitor Tracking

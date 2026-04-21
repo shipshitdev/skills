@@ -1,12 +1,9 @@
 ---
 name: analyze-codebase
 description: Generate comprehensive codebase analysis covering architecture, security, performance, and code quality. Use when user says 'analyze codebase', 'code audit', 'architecture review', or 'project health check'.
-version: 1.0.0
-tags:
-  - analysis
-  - architecture
-  - documentation
-  - onboarding
+metadata:
+  version: "1.0.0"
+  tags: "analysis, architecture, documentation, onboarding"
 ---
 
 # Analyze Codebase

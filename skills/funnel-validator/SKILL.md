@@ -1,16 +1,9 @@
 ---
 name: funnel-validator
 description: Use this skill when users need to validate an existing sales funnel, landing page sequence, or customer journey. Activates for "validate my funnel," "is my funnel good," "why isn't my funnel converting," or when checking funnel quality before driving traffic.
-version: 1.0.0
-tags:
-  - business
-  - brunson
-  - validation
-  - funnels
-  - dotcom-secrets
-  - landing-pages
-  - conversion
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, brunson, validation, funnels, dotcom-secrets, landing-pages, conversion"
 ---
 
 # Funnel Validator - DotCom Secrets Scorecard

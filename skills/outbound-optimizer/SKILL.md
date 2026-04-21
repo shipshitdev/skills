@@ -1,16 +1,9 @@
 ---
 name: outbound-optimizer
 description: Use this skill when users need to improve cold outreach, optimize cold emails or DMs, increase response rates, or turn outbound from spam into revenue. Activates for cold outreach optimization, prospecting strategy, or "my outbound isn't working" problems.
-version: 1.0.0
-tags:
-  - business
-  - hormozi
-  - outbound
-  - cold-email
-  - prospecting
-  - sales
-  - outreach
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, hormozi, outbound, cold-email, prospecting, sales, outreach"
 ---
 
 # Outbound Optimizer - Cold Outreach Revenue Machine

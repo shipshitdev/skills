@@ -1,12 +1,9 @@
 ---
 name: session-start
 description: Load critical preferences, session history, and inbox tasks at session start. Use when user says 'start', 'start session', 'load context', or after running /clear.
-version: 1.0.0
-tags:
-  - session
-  - workflow
-  - context
-  - productivity
+metadata:
+  version: "1.0.0"
+  tags: "session, workflow, context, productivity"
 ---
 
 # Session Start

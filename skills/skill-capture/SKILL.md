@@ -1,12 +1,9 @@
 ---
 name: skill-capture
 description: Extracts valuable learnings, patterns, and workflows from conversations and persists them as reusable skill files. This skill should be used when a complex problem was solved, a valuable workflow was discovered, or the user explicitly requests to capture knowledge as a skill.
-version: 1.0.0
-tags:
-  - skills
-  - capture
-  - automation
-  - knowledge-management
+metadata:
+  version: "1.0.0"
+  tags: "skills, capture, automation, knowledge-management"
 ---
 
 # Skill Capture

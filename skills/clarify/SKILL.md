@@ -1,9 +1,10 @@
 ---
 name: clarify
 description: Improve unclear UX copy, error messages, microcopy, labels, and instructions to make interfaces easier to understand. Use when the user mentions confusing text, unclear labels, bad error messages, hard-to-follow instructions, or wanting better UX writing.
-version: 2.1.1
 user-invocable: true
 argument-hint: "[target]"
+metadata:
+  version: "2.1.1"
 ---
 
 Identify and improve unclear, confusing, or poorly written interface text to make the product easier to understand and use.

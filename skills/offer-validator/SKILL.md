@@ -1,15 +1,9 @@
 ---
 name: offer-validator
 description: Validate existing offers using Hormozi's Value Equation. Scores offers, exposes weaknesses, and provides actionable fixes. Activates for "validate my offer," "rate my offer," or "is my offer good."
-version: 1.0.0
-tags:
-  - business
-  - hormozi
-  - validation
-  - offers
-  - value-equation
-  - pricing
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, hormozi, validation, offers, value-equation, pricing"
 ---
 
 # Offer Validator - Hormozi Value Equation Scorecard

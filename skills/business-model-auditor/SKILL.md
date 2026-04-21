@@ -1,16 +1,9 @@
 ---
 name: business-model-auditor
 description: Use this skill when users need to stress test their business model, identify scale limitations, find bottlenecks, determine if they're trading time for money, or evaluate unit economics. Activates for "can this scale," "what breaks at 10x," or business model viability questions.
-version: 1.0.0
-tags:
-  - business
-  - hormozi
-  - scale
-  - leverage
-  - unit-economics
-  - bottlenecks
-  - business-model
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, hormozi, scale, leverage, unit-economics, bottlenecks, business-model"
 ---
 
 # Business Model Auditor - Scale Stress Test

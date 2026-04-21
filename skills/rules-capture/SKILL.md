@@ -1,12 +1,9 @@
 ---
 name: rules-capture
 description: Automatically detects and documents user preferences, coding rules, and style guidelines when expressed during conversations
-version: 1.0.0
-tags:
-  - preferences
-  - rules
-  - documentation
-  - automation
+metadata:
+  version: "1.0.0"
+  tags: "preferences, rules, documentation, automation"
 ---
 
 # Rules Capture Skill

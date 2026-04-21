@@ -1,12 +1,9 @@
 ---
 name: email-finder
 description: This skill should be used when users need to find email addresses associated with a domain. It activates when users ask to scan a domain for emails, find contact emails, discover email addresses, or replace email hunter functionality.
-version: 1.0.0
-tags:
-  - email
-  - domain
-  - contact-discovery
-  - lead-generation
+metadata:
+  version: "1.0.0"
+  tags: "email, domain, contact-discovery, lead-generation"
 ---
 
 # Email Finder

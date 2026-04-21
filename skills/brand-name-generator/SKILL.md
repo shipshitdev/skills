@@ -1,12 +1,9 @@
 ---
 name: brand-name-generator
 description: Generate creative brand names, company names, product names, or startup names. Includes naming strategies, brandability scoring, and domain availability checking.
-version: 1.0.0
-tags:
-  - branding
-  - naming
-  - startup
-  - domain
+metadata:
+  version: "1.0.0"
+  tags: "branding, naming, startup, domain"
 ---
 
 # Brand Name Generator

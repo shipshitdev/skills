@@ -1,15 +1,9 @@
 ---
 name: idea-validator
 description: Validate startup ideas using Hexa's Opportunity Memo framework and Perceived Created Value (PCV) methodology. Assess problem-solution fit, market opportunity, and determine if an idea is worth pursuing.
-version: 1.0.0
-tags:
-  - business
-  - hexa
-  - validation
-  - startup
-  - idea
-  - problem-solution-fit
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, hexa, validation, startup, idea, problem-solution-fit"
 ---
 
 # Idea Validator - Startup Idea Assessment Framework

@@ -1,12 +1,9 @@
 ---
 name: session-end
 description: Document session context before clearing. Use when user says 'end session', 'end', 'wrap up', or before running /clear.
-version: 1.0.0
-tags:
-  - session
-  - workflow
-  - documentation
-  - productivity
+metadata:
+  version: "1.0.0"
+  tags: "session, workflow, documentation, productivity"
 ---
 
 # Session End

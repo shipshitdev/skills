@@ -1,7 +1,6 @@
 ---
 name: ai-dev-loop
 description: Orchestrate autonomous AI development with task-based workflow and QA gates
-auto_trigger: false
 ---
 
 # AI Development Loop

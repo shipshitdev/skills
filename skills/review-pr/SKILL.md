@@ -1,12 +1,9 @@
 ---
 name: review-pr
 description: Systematic PR review checklist for quality, security, and consistency. Use when user says 'review PR', 'check PR', 'PR review', or before merging a pull request.
-version: 1.0.0
-tags:
-  - pull-request
-  - code-review
-  - quality
-  - security
+metadata:
+  version: "1.0.0"
+  tags: "pull-request, code-review, quality, security"
 ---
 
 # Review PR

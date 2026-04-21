@@ -1,16 +1,9 @@
 ---
 name: x-algorithm-optimizer
 description: Optimize X/Twitter content for algorithm engagement signals. Based on xai-org/x-algorithm's Grok transformer model that predicts 15 user-specific engagement signals. Activates for tweet optimization, thread strategy, X growth, or algorithm-aligned content.
-version: 1.0.0
-tags:
-  - twitter
-  - x
-  - algorithm
-  - engagement
-  - growth
-  - social-media
-  - content-optimization
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "twitter, x, algorithm, engagement, growth, social-media, content-optimization"
 ---
 
 # X Algorithm Optimizer

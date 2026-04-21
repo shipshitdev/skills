@@ -1,13 +1,9 @@
 ---
 name: nextjs-validator
 description: Validate Next.js 16 configuration and detect/prevent deprecated patterns. Ensures proxy.ts usage, Turbopack, Cache Components, and App Router best practices. Use before any Next.js work or when auditing existing projects.
-version: 1.0.0
-tags:
-  - nextjs
-  - validation
-  - frontend
-  - react
-  - turbopack
+metadata:
+  version: "1.0.0"
+  tags: "nextjs, validation, frontend, react, turbopack"
 ---
 
 # Next.js Validator

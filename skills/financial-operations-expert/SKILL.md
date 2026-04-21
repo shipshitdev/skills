@@ -1,16 +1,9 @@
 ---
 name: financial-operations-expert
 description: Use this skill when users need help with business finances, tax planning, bookkeeping, profit/loss analysis, cash flow management, or multi-business financial tracking. Activates for "am I profitable," tax questions, accounting setup, or financial health checks.
-version: 1.0.0
-tags:
-  - business
-  - finance
-  - taxes
-  - accounting
-  - cash-flow
-  - profit-loss
-  - bookkeeping
-auto_activate: true
+metadata:
+  version: "1.0.0"
+  tags: "business, finance, taxes, accounting, cash-flow, profit-loss, bookkeeping"
 ---
 
 # Financial Operations Expert - Indie Business Finance Manager

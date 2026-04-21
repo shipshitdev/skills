@@ -1,12 +1,9 @@
 ---
 name: scaffold
 description: Generate new code modules following existing codebase patterns. Use when user says 'scaffold', 'generate', 'create new endpoint', 'new component', or 'new module'.
-version: 1.0.0
-tags:
-  - scaffolding
-  - code-generation
-  - boilerplate
-  - productivity
+metadata:
+  version: "1.0.0"
+  tags: "scaffolding, code-generation, boilerplate, productivity"
 ---
 
 # Scaffold
