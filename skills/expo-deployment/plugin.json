@@ -1,0 +1,12 @@
+{
+  "name": "expo-deployment",
+  "version": "1.0.0",
+  "description": "Deploy Expo apps to app stores and web using EAS Build and EAS Submit.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

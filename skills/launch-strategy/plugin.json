@@ -1,0 +1,12 @@
+{
+  "name": "launch-strategy",
+  "version": "1.1.0",
+  "description": "Plan product launches, feature announcements, and go-to-market strategies.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

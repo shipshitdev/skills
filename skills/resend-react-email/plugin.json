@@ -1,0 +1,12 @@
+{
+  "name": "resend-react-email",
+  "version": "2.0.0",
+  "description": "Build HTML email templates with React Email components and send via Resend — covers all email types and the embeddable visual editor.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

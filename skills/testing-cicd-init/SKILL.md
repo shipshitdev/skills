@@ -37,7 +37,7 @@ The skill detects project type by scanning:
 
 ## Quick Start
 
-Ask Claude to:
+Example prompt:
 
 ```
 Add testing and CI/CD to this project
@@ -151,7 +151,7 @@ For monorepos (detected by workspaces in package.json):
 ```
 User: Add testing to this project
 
-Claude:
+Agent:
 1. Detects Next.js from package.json
 2. Installs vitest, @vitest/coverage-v8, @testing-library/react
 3. Creates vitest.config.ts with jsdom environment
@@ -165,7 +165,7 @@ Claude:
 ```
 User: Set up tests for this NestJS API
 
-Claude:
+Agent:
 1. Detects NestJS from @nestjs/core dependency
 2. Installs vitest, @vitest/coverage-v8, supertest
 3. Creates vitest.config.ts with node environment

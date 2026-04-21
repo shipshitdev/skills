@@ -4,7 +4,7 @@ description: Improve layout, spacing, and visual rhythm. Fixes monotonous grids,
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.1"
+  version: 2.1.1
 ---
 
 Assess and improve layout and spacing that feels monotonous, crowded, or structurally weak — turning generic arrangements into intentional, rhythmic compositions.

@@ -1,6 +1,6 @@
 ---
 name: incremental-fetch
-description: "Build resilient data ingestion pipelines from APIs. Use when creating scripts that fetch paginated data from external APIs (Twitter, exchanges, any REST API) and need to track progress, avoid duplicates, handle rate limits, and support both incremental updates and historical backfills. Triggers: 'ingest data from API', 'pull tweets', 'fetch historical data', 'sync from X', 'build a data pipeline', 'fetch without re-downloading', 'resume the download', 'backfill older data'. NOT for: simple one-shot API calls, websocket/streaming connections, file downloads, or APIs without pagination."
+description: 'Build resilient data ingestion pipelines from APIs. Use when creating scripts that fetch paginated data from external APIs (Twitter, exchanges, any REST API) and need to track progress, avoid duplicates, handle rate limits, and support both incremental updates and historical backfills. Triggers: ''ingest data from API'', ''pull tweets'', ''fetch historical data'', ''sync from X'', ''build a data pipeline'', ''fetch without re-downloading'', ''resume the download'', ''backfill older data''. NOT for: simple one-shot API calls, websocket/streaming connections, file downloads, or APIs without pagination.'
 ---
 
 # Incremental Fetch

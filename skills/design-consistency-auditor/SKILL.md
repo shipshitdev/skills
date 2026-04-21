@@ -2,8 +2,8 @@
 name: design-consistency-auditor
 description: Audit and maintain design system consistency, UX/UI patterns, color palettes, and design best practices across frontend applications
 metadata:
-  version: "1.0.0"
-  tags: "design, ux, ui, consistency, audit, tailwind, agenticindiedev-ui, accessibility"
+  version: 1.0.0
+  tags: design, ux, ui, consistency, audit, tailwind, agenticindiedev-ui, accessibility
 ---
 
 # Design Consistency Auditor

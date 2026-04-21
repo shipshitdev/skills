@@ -1,0 +1,12 @@
+{
+  "name": "resend-email-best-practices",
+  "version": "1.0.2",
+  "description": "Best practices for email deliverability, compliance (CAN-SPAM/GDPR), authentication (SPF/DKIM/DMARC), and reliable transactional email sending.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

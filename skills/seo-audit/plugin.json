@@ -1,0 +1,12 @@
+{
+  "name": "seo-audit",
+  "version": "1.1.0",
+  "description": "Audit and diagnose SEO issues including technical, on-page, and content problems.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

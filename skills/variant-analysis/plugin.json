@@ -1,0 +1,12 @@
+{
+  "name": "variant-analysis",
+  "version": "1.0.0",
+  "description": "Find similar vulnerabilities across codebases using pattern-based analysis and CodeQL/Semgrep queries.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

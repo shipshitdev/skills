@@ -2,8 +2,8 @@
 name: component-library
 description: Expert React/Next.js component architect specializing in creating consistent, reusable, and maintainable components for monorepo projects
 metadata:
-  version: "1.0.0"
-  tags: "react, nextjs, components, design-system, typescript, performance, patterns"
+  version: 1.0.0
+  tags: react, nextjs, components, design-system, typescript, performance, patterns
 ---
 
 # Component Library Standards Skill

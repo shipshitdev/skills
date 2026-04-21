@@ -1,0 +1,12 @@
+{
+  "name": "static-analysis-codeql",
+  "version": "1.0.0",
+  "description": "Scan codebases for security vulnerabilities using CodeQL interprocedural data flow and taint tracking analysis.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

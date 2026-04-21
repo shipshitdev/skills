@@ -1,0 +1,12 @@
+{
+  "name": "sharp-edges",
+  "version": "1.0.0",
+  "description": "Identifies footgun APIs, dangerous configurations, and designs that enable security mistakes. Use for API design and security review.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

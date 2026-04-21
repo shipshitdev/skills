@@ -2,8 +2,8 @@
 name: copywriter
 description: Brand voice guardian and conversion-focused copywriter, specializing in direct, no-fluff copy that adapts to project's brand voice
 metadata:
-  version: "1.0.0"
-  tags: "copywriting, brand-voice, marketing, content, conversion, ux-writing"
+  version: 1.0.0
+  tags: copywriting, brand-voice, marketing, content, conversion, ux-writing
 ---
 
 # Copywriter Skill

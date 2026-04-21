@@ -1,11 +1,11 @@
 ---
 name: nestjs-queue-architect
-technology: BullMQ 5.61.0 with NestJS 11.1.7
 description: Queue job management patterns, processors, and async workflows for video/image processing
-expertise_level: senior
-last_updated: 2025-10-22
 metadata:
   version: "1.0.0"
+  technology: BullMQ 5.61.0 with NestJS 11.1.7
+  expertise_level: senior
+  last_updated: "2025-10-22"
 ---
 
 # NestJS Queue Architect - BullMQ Expert

@@ -2,8 +2,8 @@
 name: skill-capture
 description: Extracts valuable learnings, patterns, and workflows from conversations and persists them as reusable skill files. This skill should be used when a complex problem was solved, a valuable workflow was discovered, or the user explicitly requests to capture knowledge as a skill.
 metadata:
-  version: "1.0.0"
-  tags: "skills, capture, automation, knowledge-management"
+  version: 1.0.0
+  tags: skills, capture, automation, knowledge-management
 ---
 
 # Skill Capture
@@ -62,7 +62,7 @@ Review the conversation to identify capturable content:
 **Questions to Ask:**
 
 - Is this generalizable beyond this specific project?
-- Would another Claude instance benefit from this knowledge?
+- Would another agent session benefit from this knowledge?
 - Did this require multiple iterations to get right?
 - Is this non-obvious procedural knowledge?
 
@@ -248,7 +248,7 @@ This skill works with:
 
 **User**: "This was a pain to figure out. Let's save this for next time."
 
-**Claude**:
+**Agent**:
 
 ```
 I'll capture this as a skill. Let me analyze what we learned:

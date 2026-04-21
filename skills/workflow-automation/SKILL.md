@@ -1,14 +1,13 @@
 ---
 name: workflow-automation
 description: This skill should be used when users need help designing content workflows, creating process documentation, implementing automation rules, designing approval processes, or optimizing content pipelines. It activates when users ask about workflow design, process documentation, automation, approval workflows, or content pipeline optimization.
-location: .claude/skills/content/workflow-automation/
 ---
 
 # Content Workflow Automation
 
 ## Overview
 
-This skill enables Claude to help users design and implement content workflows, create process documentation, suggest automation rules, document approval processes, and optimize content pipelines for efficiency and quality.
+This skill helps design and implement content workflows, create process documentation, suggest automation rules, document approval processes, and optimize content pipelines for efficiency and quality.
 
 ## When to Use This Skill
 

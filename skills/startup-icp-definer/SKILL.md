@@ -2,8 +2,8 @@
 name: startup-icp-definer
 description: Use this skill when users need to define their ideal customer profile, identify target personas, map buying centers, or understand who they're selling to. Activates for "who is my customer," "define ICP," "target audience," or persona questions.
 metadata:
-  version: "1.0.0"
-  tags: "business, hexa, icp, customer, persona, targeting, b2b"
+  version: 1.0.0
+  tags: business, hexa, icp, customer, persona, targeting, b2b
 ---
 
 # Startup ICP Definer - Ideal Customer Profile Builder

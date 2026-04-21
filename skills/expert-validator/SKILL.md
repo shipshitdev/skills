@@ -2,8 +2,8 @@
 name: expert-validator
 description: Validate positioning, authority, and messaging strategy using Expert Secrets principles. Assess Attractive Character, Big Domino, and New Opportunity framing. Activates for "validate my positioning" or authority assessment.
 metadata:
-  version: "1.0.0"
-  tags: "business, brunson, validation, expert-secrets, positioning, authority, messaging"
+  version: 1.0.0
+  tags: business, brunson, validation, expert-secrets, positioning, authority, messaging
 ---
 
 # Expert Validator - Expert Secrets Scorecard

@@ -1,0 +1,12 @@
+{
+  "name": "expo-cicd-workflows",
+  "version": "1.0.0",
+  "description": "Set up CI/CD workflows for Expo apps using EAS Build and EAS Submit.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

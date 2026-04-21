@@ -4,7 +4,7 @@ description: Evaluate design from a UX perspective, assessing visual hierarchy, 
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
-  version: "2.1.1"
+  version: 2.1.1
 ---
 
 ## STEPS
@@ -17,7 +17,7 @@ Invoke /impeccable, which contains design principles, anti-patterns, and the **C
 
 Launch two independent assessments. **Neither must see the other's output** to avoid bias.
 
-You SHOULD delegate each assessment to a separate sub-agent for independence. Use your environment's agent spawning mechanism (e.g., Claude Code's `Agent` tool, or Codex's subagent spawning). Sub-agents should return their findings as structured text. Do NOT output findings to the user yet.
+You SHOULD delegate each assessment to a separate sub-agent for independence. Use the current environment's sub-agent or delegation mechanism when available. Sub-agents should return their findings as structured text. Do NOT output findings to the user yet.
 
 If sub-agents are not available in the current environment, complete each assessment sequentially, writing findings to internal notes before proceeding.
 

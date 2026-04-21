@@ -32,15 +32,15 @@ Use this skill when:
 Run the scaffold script:
 
 ```bash
-python3 ~/.claude/skills/agent-folder-init/scripts/scaffold.py --help
+python3 scripts/scaffold.py --help
 
 # Basic usage
-python3 ~/.claude/skills/agent-folder-init/scripts/scaffold.py \
+python3 scripts/scaffold.py \
   --root /path/to/project \
   --name "My Project"
 
 # With custom options
-python3 ~/.claude/skills/agent-folder-init/scripts/scaffold.py \
+python3 scripts/scaffold.py \
   --root /path/to/project \
   --name "My Project" \
   --tech "nextjs,nestjs" \
@@ -117,7 +117,7 @@ python3 ~/.claude/skills/agent-folder-init/scripts/scaffold.py \
 └── commands/
 ```
 
-**Note:** Agent configs (agents/, commands/) are copied from the library root (e.g., `~/.claude/agents/`) to ensure projects get the latest version. Rules are NOT copied because they're inherited from `~/.claude/rules/` at the library/personal level - this prevents duplication and ensures all projects use consistent rules.
+**Note:** Agent configs (`agents/`, `commands/`) are copied from the installed library bundle so projects get the latest version. Rules are not copied because they are expected to be managed at the user or repo level to avoid duplication and drift.
 
 ### Root Files
 

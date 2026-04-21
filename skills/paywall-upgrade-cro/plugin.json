@@ -1,0 +1,12 @@
+{
+  "name": "paywall-upgrade-cro",
+  "version": "1.1.0",
+  "description": "Optimize in-app paywalls and upgrade screens to convert free users to paid.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

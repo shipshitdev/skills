@@ -1,0 +1,12 @@
+{
+  "name": "onboarding-cro",
+  "version": "1.1.0",
+  "description": "Optimize user onboarding flows to increase activation and reduce time-to-value.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

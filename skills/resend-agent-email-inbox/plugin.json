@@ -1,0 +1,12 @@
+{
+  "name": "resend-agent-email-inbox",
+  "version": "3.0.2",
+  "description": "Build AI agent email inboxes and email-triggered workflows with Resend inbound webhooks — includes critical security patterns for untrusted email.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

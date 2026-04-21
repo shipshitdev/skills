@@ -2,8 +2,8 @@
 name: market-sizer
 description: Use this skill when users need to calculate market size (TAM/SAM/SOM), assess market opportunity, validate market potential, or determine if a market is big enough to pursue. Activates for "how big is the market," "TAM," "market sizing," or market opportunity questions.
 metadata:
-  version: "1.0.0"
-  tags: "business, hexa, market, tam, sam, som, sizing, opportunity"
+  version: 1.0.0
+  tags: business, hexa, market, tam, sam, som, sizing, opportunity
 ---
 
 # Market Sizer - TAM/SAM/SOM Calculator

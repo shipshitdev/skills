@@ -2,8 +2,8 @@
 name: tailwind-validator
 description: Validate Tailwind CSS v4 configuration and detect/prevent Tailwind v3 patterns. Use this skill when setting up Tailwind, auditing CSS configuration, or when you suspect outdated Tailwind patterns are being used. Ensures CSS-first configuration with @theme blocks.
 metadata:
-  version: "1.0.0"
-  tags: "tailwind, css, validation, frontend, configuration"
+  version: 1.0.0
+  tags: tailwind, css, validation, frontend, configuration
 ---
 
 # Tailwind 4 Validator

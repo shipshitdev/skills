@@ -1,0 +1,12 @@
+{
+  "name": "resend-cli",
+  "version": "2.0.1",
+  "description": "Operate the Resend platform from the terminal — send emails, manage domains, contacts, broadcasts, templates, and webhooks via the resend CLI.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

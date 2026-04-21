@@ -1,7 +1,6 @@
 ---
 name: task-prd-creator
-description: Create a well-written PRD, task, or GitHub issue/sub-issue for a feature, bug, or enhancement. Use when planning work, writing GitHub issues, breaking down epics into sub-issues, or creating local task files.
-when_to_use: "create a task, write a PRD, open a GitHub issue, create a sub-issue, plan this feature, write up this bug, break this down into issues, I want to add X, implement Y"
+description: 'Create a well-written PRD, task, or GitHub issue/sub-issue for a feature, bug, or enhancement. Use when planning work, writing GitHub issues, breaking down epics into sub-issues, or creating local task files. Common prompts: create a task, write a PRD, open a GitHub issue, create a sub-issue, plan this feature, write up this bug, break this down into issues, I want to add X, implement Y.'
 disable-model-invocation: true
 allowed-tools: Bash(gh *)
 ---

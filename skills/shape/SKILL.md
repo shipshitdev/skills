@@ -4,7 +4,7 @@ description: Plan the UX and UI for a feature before writing code. Runs a struct
 user-invocable: true
 argument-hint: "[feature to shape]"
 metadata:
-  version: "2.1.1"
+  version: 2.1.1
 ---
 
 ## MANDATORY PREPARATION

@@ -1,0 +1,12 @@
+{
+  "name": "expo-dev-client",
+  "version": "1.0.0",
+  "description": "Configure and use Expo Dev Client for native development builds.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

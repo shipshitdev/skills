@@ -1,0 +1,12 @@
+{
+  "name": "differential-review",
+  "version": "1.0.0",
+  "description": "Security-focused code review of PRs and diffs — detects regressions, calculates blast radius, and generates comprehensive security reports.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

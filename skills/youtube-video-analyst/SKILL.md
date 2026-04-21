@@ -2,8 +2,8 @@
 name: youtube-video-analyst
 description: Forensic-level deconstruction of YouTube videos to extract viral formulas, hooks, retention mechanics, and emotional engineering. Use when analyzing video transcripts to clone success patterns for new content.
 metadata:
-  version: "1.0.0"
-  tags: "content-analysis, youtube, viral-content, hooks, content-strategy"
+  version: 1.0.0
+  tags: content-analysis, youtube, viral-content, hooks, content-strategy
 ---
 
 # YouTube Video Analyst

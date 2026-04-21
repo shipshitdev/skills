@@ -4,7 +4,7 @@ description: Improve unclear UX copy, error messages, microcopy, labels, and ins
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.1"
+  version: 2.1.1
 ---
 
 Identify and improve unclear, confusing, or poorly written interface text to make the product easier to understand and use.

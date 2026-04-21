@@ -7,7 +7,7 @@ description: This skill should be used when users need help with content strateg
 
 ## Overview
 
-This skill enables Claude to assist users with comprehensive content strategy tasks including building customer personas from analytics data, conducting competitive content analysis, planning content calendars, managing research-to-content workflows, and ensuring brand voice consistency across all content.
+This skill helps with comprehensive content strategy tasks including building customer personas from analytics data, conducting competitive content analysis, planning content calendars, managing research-to-content workflows, and ensuring brand voice consistency across all content.
 
 ## When to Use This Skill
 

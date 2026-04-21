@@ -27,7 +27,7 @@ This skill should be used when:
 
 ## Quick Start
 
-Ask Claude to:
+Example prompt:
 
 ```
 Add Playwright E2E tests to this project

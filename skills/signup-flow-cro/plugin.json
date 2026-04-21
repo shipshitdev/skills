@@ -1,0 +1,12 @@
+{
+  "name": "signup-flow-cro",
+  "version": "1.1.0",
+  "description": "Optimize signup and registration flows to increase conversions and reduce friction.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

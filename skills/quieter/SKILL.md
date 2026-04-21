@@ -4,7 +4,7 @@ description: Tones down visually aggressive or overstimulating designs, reducing
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.1"
+  version: 2.1.1
 ---
 
 Reduce visual intensity in designs that are too bold, aggressive, or overstimulating, creating a more refined and approachable aesthetic without losing effectiveness.

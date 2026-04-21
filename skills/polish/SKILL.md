@@ -4,7 +4,7 @@ description: Performs a final quality pass fixing alignment, spacing, consistenc
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.1"
+  version: 2.1.1
 ---
 
 ## MANDATORY PREPARATION

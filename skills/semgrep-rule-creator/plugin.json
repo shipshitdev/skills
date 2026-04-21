@@ -1,0 +1,12 @@
+{
+  "name": "semgrep-rule-creator",
+  "version": "1.0.0",
+  "description": "Create custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code anti-patterns.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

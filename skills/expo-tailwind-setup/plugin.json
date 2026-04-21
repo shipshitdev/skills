@@ -1,0 +1,12 @@
+{
+  "name": "expo-tailwind-setup",
+  "version": "1.0.0",
+  "description": "Set up Tailwind CSS v4 in Expo with NativeWind v5 for universal styling.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

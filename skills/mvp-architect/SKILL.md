@@ -2,8 +2,8 @@
 name: mvp-architect
 description: Use this skill when users need to scope an MVP, define minimum viable features, plan early product development, or determine what to build first. Activates for "what should my MVP include," "scope my MVP," "what to build first," or product scoping questions.
 metadata:
-  version: "1.0.0"
-  tags: "business, hexa, mvp, product, scope, build, features"
+  version: 1.0.0
+  tags: business, hexa, mvp, product, scope, build, features
 ---
 
 # MVP Architect - Minimum Viable Product Scoping

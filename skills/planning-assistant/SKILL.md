@@ -7,7 +7,7 @@ description: This skill should be used when users need help with content plannin
 
 ## Overview
 
-This skill enables Claude to assist users with comprehensive content planning including weekly/monthly planning, research organization and synthesis, content calendar creation, inspiration-to-plan conversion, and multi-platform content planning.
+This skill helps with comprehensive content planning including weekly/monthly planning, research organization and synthesis, content calendar creation, inspiration-to-plan conversion, and multi-platform content planning.
 
 ## When to Use This Skill
 

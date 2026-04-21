@@ -2,8 +2,8 @@
 name: lead-channel-optimizer
 description: Use this skill when users need to optimize lead generation channels, identify highest-ROI marketing activities, stop wasting time on low-performing channels, or systematize customer acquisition. Activates for lead gen strategy, marketing channel analysis, or "where should I focus" questions.
 metadata:
-  version: "1.0.0"
-  tags: "business, hormozi, leads, marketing, channels, acquisition, focus"
+  version: 1.0.0
+  tags: business, hormozi, leads, marketing, channels, acquisition, focus
 ---
 
 # Lead Channel Optimizer - Lead Generation Leverage Finder

@@ -2,8 +2,8 @@
 name: execution-validator
 description: Use this skill when users need to validate a launch plan, assess MVP scope, or determine if they're ready to execute. Activates for "validate my plan," "am I ready to launch," "is my scope too big," or when assessing action readiness.
 metadata:
-  version: "1.0.0"
-  tags: "business, hormozi, validation, execution, speed, mvp, launch, action"
+  version: 1.0.0
+  tags: business, hormozi, validation, execution, speed, mvp, launch, action
 ---
 
 # Execution Validator - Hormozi Speed Scorecard

@@ -2,8 +2,8 @@
 name: traffic-validator
 description: Validate traffic strategy against Traffic Secrets principles. Assess Dream 100, Work In vs. Buy In, traffic temperature, and audience ownership. Activates for "validate my traffic plan" or traffic assessment questions.
 metadata:
-  version: "1.0.0"
-  tags: "business, brunson, validation, traffic-secrets, dream-100, audience, acquisition"
+  version: 1.0.0
+  tags: business, brunson, validation, traffic-secrets, dream-100, audience, acquisition
 ---
 
 # Traffic Validator - Traffic Secrets Scorecard

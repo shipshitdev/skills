@@ -1,0 +1,12 @@
+{
+  "name": "expo-building-native-ui",
+  "version": "1.0.1",
+  "description": "Guide for building beautiful native UIs with Expo Router — styling, components, navigation, animations, and native tabs.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

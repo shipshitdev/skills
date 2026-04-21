@@ -2,8 +2,8 @@
 name: positioning-angles
 description: Use this skill when users need to find their unique marketing angle, differentiate from competitors, or transform their positioning. Activates for "find my angle," "how do I stand out," "why isn't this selling," "we sound like everyone else," or positioning strategy questions.
 metadata:
-  version: "1.0.0"
-  tags: "marketing, positioning, differentiation, angles, copywriting"
+  version: 1.0.0
+  tags: marketing, positioning, differentiation, angles, copywriting
 ---
 
 # Positioning Angles - Find Your Unique Angle

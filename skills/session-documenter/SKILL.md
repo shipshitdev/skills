@@ -2,8 +2,8 @@
 name: session-documenter
 description: Document session work to .agents/SESSIONS/YYYY-MM-DD.md. Use when user says 'document session', 'save session', 'what did we do', or when invoked by session-start/session-end skills.
 metadata:
-  version: "1.0.0"
-  tags: "session, documentation, workflow, productivity"
+  version: 1.0.0
+  tags: session, documentation, workflow, productivity
 ---
 
 # Session Documenter Skill

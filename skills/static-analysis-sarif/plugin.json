@@ -1,0 +1,12 @@
+{
+  "name": "static-analysis-sarif",
+  "version": "1.0.0",
+  "description": "Parse and process SARIF output files from CodeQL, Semgrep, and other static analysis tools.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

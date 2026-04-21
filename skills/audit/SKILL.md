@@ -4,7 +4,7 @@ description: Run technical quality checks across accessibility, performance, the
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
-  version: "2.1.1"
+  version: 2.1.1
 ---
 
 ## MANDATORY PREPARATION

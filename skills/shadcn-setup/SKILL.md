@@ -2,8 +2,8 @@
 name: shadcn-setup
 description: Set up shadcn/ui component library with Tailwind CSS v4 configuration. Handles installation, initialization, theme configuration, and common component setup. Use when starting a new Next.js/React project that needs a component library.
 metadata:
-  version: "1.0.0"
-  tags: "shadcn, ui, components, tailwind, react, nextjs"
+  version: 1.0.0
+  tags: shadcn, ui, components, tailwind, react, nextjs
 ---
 
 # shadcn/ui Setup

@@ -2,8 +2,8 @@
 name: advanced-evaluation
 description: Master LLM-as-a-Judge evaluation techniques including direct scoring, pairwise comparison, rubric generation, and bias mitigation. Use when building evaluation systems, comparing model outputs, or establishing quality standards for AI-generated content.
 metadata:
-  version: "1.0.0"
-  tags: "evaluation, llm-as-judge, quality, bias-mitigation"
+  version: 1.0.0
+  tags: evaluation, llm-as-judge, quality, bias-mitigation
 ---
 
 # Advanced Evaluation

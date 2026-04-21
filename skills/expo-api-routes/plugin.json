@@ -1,0 +1,12 @@
+{
+  "name": "expo-api-routes",
+  "version": "1.0.0",
+  "description": "Guidelines for creating API routes in Expo Router with EAS Hosting.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

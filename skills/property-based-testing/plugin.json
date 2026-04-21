@@ -1,0 +1,12 @@
+{
+  "name": "property-based-testing",
+  "version": "1.0.0",
+  "description": "Guidance for property-based testing across languages — use when serialization, validation, or parsing patterns need stronger coverage.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

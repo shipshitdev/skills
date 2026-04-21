@@ -1,0 +1,12 @@
+{
+  "name": "vercel-react-best-practices",
+  "version": "1.0.0",
+  "description": "React and Next.js performance optimization guidelines from Vercel Engineering — 70 rules across 8 categories.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

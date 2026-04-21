@@ -1,0 +1,12 @@
+{
+  "name": "resend",
+  "version": "3.3.3",
+  "description": "Resend email API skill — send transactional emails, manage templates, domains, webhooks, contacts, and API keys with correct gotchas for production use.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

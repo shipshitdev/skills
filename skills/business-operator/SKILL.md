@@ -2,8 +2,8 @@
 name: business-operator
 description: Use this skill when users manage multiple businesses, need help prioritizing across ventures, want a business health check, or ask "which business should I focus on." Activates for multi-business orchestration, portfolio management, and cross-venture resource allocation.
 metadata:
-  version: "1.0.0"
-  tags: "business, hormozi, orchestration, portfolio, multi-business, prioritization"
+  version: 1.0.0
+  tags: business, hormozi, orchestration, portfolio, multi-business, prioritization
 ---
 
 # Business Operator - Multi-Business Orchestrator

@@ -1,0 +1,12 @@
+{
+  "name": "ab-test-setup",
+  "version": "1.2.0",
+  "description": "Design statistically valid A/B tests and build systematic experimentation programs.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

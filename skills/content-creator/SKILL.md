@@ -3,8 +3,8 @@ name: content-creator
 description: Expert content creator specializing in newsletters and tweets that capture your authentic voice. Creates engaging, on-brand content for newsletters and social media (X/Twitter) that reflects your unique style and tone. Activates when users want to create newsletters, tweets, social media content, or content lineups.
 license: Complete terms in LICENSE.txt
 metadata:
-  version: "1.0.0"
-  tags: "content-creation, newsletter, social-media, twitter, brand-voice, content-strategy"
+  version: 1.0.0
+  tags: content-creation, newsletter, social-media, twitter, brand-voice, content-strategy
 ---
 
 # Content Creator Skill

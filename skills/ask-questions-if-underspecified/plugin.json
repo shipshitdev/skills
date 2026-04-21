@@ -1,0 +1,12 @@
+{
+  "name": "ask-questions-if-underspecified",
+  "version": "1.0.0",
+  "description": "Clarify ambiguous requirements before implementing. Use when a request has multiple interpretations or critical details are unclear.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

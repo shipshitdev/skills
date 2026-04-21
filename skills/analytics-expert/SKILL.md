@@ -7,7 +7,7 @@ description: This skill should be used when users need help analyzing content an
 
 ## Overview
 
-This skill enables Claude to analyze content analytics data, generate comprehensive reports, identify performance trends, calculate ROI and revenue attribution, and provide actionable insights for content optimization.
+This skill helps analyze content analytics data, generate comprehensive reports, identify performance trends, calculate ROI and revenue attribution, and provide actionable insights for content optimization.
 
 ## When to Use This Skill
 

@@ -1,0 +1,12 @@
+{
+  "name": "popup-cro",
+  "version": "1.1.0",
+  "description": "Optimize popups, modals, and overlays to maximize conversions without hurting UX.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

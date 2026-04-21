@@ -2,8 +2,8 @@
 name: expert-architect
 description: Use this skill when users need to build their positioning, develop their attractive character, or craft their origin story. Activates for "build my positioning," "create my origin story," "develop my brand," or when establishing expert authority.
 metadata:
-  version: "1.0.0"
-  tags: "business, brunson, expert-secrets, positioning, attractive-character, origin-story, authority"
+  version: 1.0.0
+  tags: business, brunson, expert-secrets, positioning, attractive-character, origin-story, authority
 ---
 
 # Expert Architect - Expert Secrets Builder

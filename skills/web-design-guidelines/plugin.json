@@ -1,0 +1,12 @@
+{
+  "name": "web-design-guidelines",
+  "version": "1.0.0",
+  "description": "Review UI code for Web Interface Guidelines compliance covering accessibility, UX, and design best practices.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}
