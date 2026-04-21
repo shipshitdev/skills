@@ -1,9 +1,9 @@
 ---
-name: ai-dev-loop
-description: Orchestrate autonomous AI development with task-based workflow and QA gates
+name: executing-plans
+description: Orchestrate autonomous AI development with task-based workflow and QA gates. Use when implementing a development plan, picking tasks from a queue, or running multi-platform parallel execution with QA gates.
 ---
 
-# AI Development Loop
+# Executing Plans
 
 Autonomous task execution with QA gates across multiple AI platforms.
 

@@ -213,6 +213,44 @@ def handle_customer_request(request):
         return handle_general(request)
 ```
 
+## Dispatching Parallel Agents
+
+Use parallel dispatch when facing 2+ independent tasks that can proceed without shared state or sequential dependencies.
+
+### When to Dispatch
+
+- 3+ failing components with different root causes (each needs separate investigation)
+- Multiple subsystems breaking independently (frontend, backend, infra — no shared cause)
+- Research tasks spanning unrelated domains
+- Any set of tasks where no agent's output is another agent's input
+
+### When NOT to Dispatch
+
+- Failures share a root cause (one fix resolves all)
+- Task N requires Task N-1's output
+- Agents would write to the same files or shared state
+- Full system context is required — splitting loses the picture
+
+### Dispatch Pattern
+
+1. **Group by domain** — identify independent subtasks with clear boundaries
+2. **Craft focused prompts** — each agent gets: specific scope, clear goal, explicit constraints, expected output format
+3. **Dispatch concurrently** — launch all agents in parallel
+4. **Review summaries** — read each agent's output report
+5. **Verify no conflicts** — check for overlapping changes before integrating
+6. **Integrate** — merge results, resolve any boundary collisions
+
+### Effective Agent Prompts
+
+Every dispatched agent prompt must be:
+
+- **Self-contained** — no references to "the conversation above" or shared state
+- **Domain-focused** — one clear problem area, not "look at everything"
+- **Explicit about deliverables** — "return a list of X" not "investigate and report"
+- **Scoped with constraints** — what files/directories to touch, what to leave alone
+
+Avoid: overly broad scopes ("fix the backend"), vague constraints ("be careful"), missing context (agent cannot understand the problem from the prompt alone).
+
 ## Guidelines
 
 1. Design for context isolation as the primary benefit of multi-agent systems
@@ -256,6 +294,6 @@ External resources:
 ## Skill Metadata
 
 **Created**: 2025-12-20
-**Last Updated**: 2025-12-20
+**Last Updated**: 2026-04-21
 **Author**: Agent Skills for Context Engineering Contributors
-**Version**: 1.0.0
+**Version**: 1.1.0
