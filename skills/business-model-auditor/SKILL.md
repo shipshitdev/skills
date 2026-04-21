@@ -317,6 +317,27 @@ For each bottleneck:
 | Leverage Score | X/4 | X/4 |
 ```
 
+## Quick Scale Score (100-Point Assessment)
+
+For fast validation without the full audit:
+
+| Dimension | Weight | What It Measures |
+|-----------|--------|------------------|
+| Time Independence | 2x | Can it run without you? |
+| Unit Economics | 2x | Do the numbers work at scale? |
+| Bottleneck Clarity | 1.5x | Do you know what's constraining? |
+| Leverage Active | 1x | How many leverage types? |
+| Delivery Scalability | 1.5x | Can you deliver 10x without 10x cost? |
+| Margin Integrity | 1x | Do margins hold at scale? |
+
+| Score | Rating | Verdict |
+|-------|--------|---------|
+| 85-100 | Scale-Ready | Pour fuel on fire |
+| 70-84 | Strong Foundation | Fix weak points first |
+| 55-69 | Fixable | Address constraints first |
+| 40-54 | Risky | Major issues to fix |
+| 0-39 | Broken Model | Rebuild fundamentals |
+
 ## The "Would I Hire Me?" Test
 
 Ask yourself:

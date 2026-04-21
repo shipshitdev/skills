@@ -4,7 +4,7 @@ last_verified: 2026-04-21
 
 ## What This Repo Is
 
-Public skills library at `shipshitdev/skills`. 158 skills, 26 commands, 14 bundles. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, Gemini.
+Public skills library at `shipshitdev/skills`. 155 skills, 26 commands, 14 bundles. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, Gemini.
 
 Published as `@agenticdev/*` packages via generated `plugins/` directory. Marketplace catalog at `.claude-plugin/marketplace.json`.
 
@@ -21,7 +21,7 @@ Published as `@agenticdev/*` packages via generated `plugins/` directory. Market
 
 | Asset | Count | Location |
 |-------|-------|----------|
-| Skills | 158 | `skills/<name>/SKILL.md` |
+| Skills | 155 | `skills/<name>/SKILL.md` |
 | Commands | 26 | `commands/<name>.md` |
 | Bundles | 14 | `bundles/<bundle>/plugin.json` |
 | Scripts | 15 | `scripts/` |

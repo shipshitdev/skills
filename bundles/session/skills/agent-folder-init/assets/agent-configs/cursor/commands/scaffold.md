@@ -52,7 +52,7 @@ Find the scaffold script:
 
 ```bash
 # Check for Cursor skill:
-~/.cursor/skills/project-scaffold/scripts/scaffold.py
+~/.cursor/skills/project-init-orchestrator/scripts/scaffold.py
 ```
 
 If not found, inform user they need to install the skill first.
@@ -87,8 +87,8 @@ If components were scaffolded, verify:
 
 **AI Actions:**
 
-1. Check if script exists: `ls -la ~/.cursor/skills/project-scaffold/scripts/scaffold.py`
-2. If found, run: `python3 ~/.cursor/skills/project-scaffold/scripts/scaffold.py`
+1. Check if script exists: `ls -la ~/.cursor/skills/project-init-orchestrator/scripts/scaffold.py`
+2. If found, run: `python3 ~/.cursor/skills/project-init-orchestrator/scripts/scaffold.py`
 3. The script will ask interactive questions
 4. Display results and next steps
 
@@ -132,7 +132,7 @@ myproject-frontend/   # Frontend only
 
 ## Integration
 
-This command uses the `project-scaffold` skill which:
+This command uses the `project-init-orchestrator` skill which:
 
 - Integrates with `agent-folder-init` for .agent folder scaffolding
 - Reuses templates from `fullstack-workspace-init`
@@ -142,8 +142,8 @@ This command uses the `project-scaffold` skill which:
 
 **Script not found:**
 
-- Install the skill: `ln -s /path/to/skills/.cursor/skills/project-scaffold ~/.cursor/skills/project-scaffold`
-- Make script executable: `chmod +x ~/.cursor/skills/project-scaffold/scripts/scaffold.py`
+- Install the skill: `ln -s /path/to/skills/.cursor/skills/project-init-orchestrator ~/.cursor/skills/project-init-orchestrator`
+- Make script executable: `chmod +x ~/.cursor/skills/project-init-orchestrator/scripts/scaffold.py`
 
 **Python not found:**
 
@@ -152,7 +152,7 @@ This command uses the `project-scaffold` skill which:
 
 **Permission denied:**
 
-- Make script executable: `chmod +x ~/.cursor/skills/project-scaffold/scripts/scaffold.py`
+- Make script executable: `chmod +x ~/.cursor/skills/project-init-orchestrator/scripts/scaffold.py`
 
 **Agent folder not created:**
 

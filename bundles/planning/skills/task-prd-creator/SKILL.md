@@ -104,4 +104,4 @@ Show the draft PRD. Wait for "looks good" or edits. Then create.
 
 - `spec-first` — spec-driven development before writing code
 - `gh-fix-ci` — fix CI on existing PRs
-- `planning-assistant` — broader roadmap planning
+- `strategy-expert` — broader roadmap and content planning

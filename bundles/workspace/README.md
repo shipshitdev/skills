@@ -12,7 +12,7 @@ Project setup and workspace initialization
 ## Included Skills
 
 - `fullstack-workspace-init`
-- `project-scaffold`
+- `project-init-orchestrator`
 - `project-init-orchestrator`
 - `linter-formatter-init`
 - `clerk-validator`

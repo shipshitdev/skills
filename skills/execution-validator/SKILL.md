@@ -78,7 +78,7 @@ Assess whether someone is ready to take action, if their scope is appropriate, a
 |-------|-------------|
 | `mvp-architect` | Scope the minimum viable product |
 | `offer-validator` | Validate the offer before launch |
-| `scale-validator` | After launch, assess scalability |
+| `business-model-auditor` | After launch, assess scalability |
 
 ---
 

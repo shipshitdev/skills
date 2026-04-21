@@ -1,94 +1,59 @@
-# Inbox Task Management
+# Inbox - Quick Task Capture
 
-Quick task capture and expansion. Backlog only - no status tracking here.
+Fast task capture into project-scoped inbox. Backlog only — no status tracking.
 
 ## Usage
 
 ```bash
-/inbox                    # View backlog
+/inbox                    # View inbox
 /inbox [task description] # Quick add
-/inbox expand             # Expand task to PRD/TASK
+/inbox expand             # Expand task to GitHub issue
 ```
 
----
+## File Location
 
-## Instructions for Claude
+Each project has its own inbox at `.agents/inbox.md` in the project root.
 
-### Mode 1: View Inbox (no arguments)
+If the file doesn't exist, create it with:
 
-**When:** `/inbox` or `/inbox list`
+```markdown
+# Inbox
 
-**Steps:**
+## Backlog
 
-1. Read `.agents/TASKS/INBOX.md`
-2. Display tasks from "Backlog" section:
+<!-- Quick-captured tasks. Expand to GitHub issues when ready. -->
+```
 
-   ```
-   📥 Inbox (5 tasks)
+## Mode 1: View Inbox
 
-   1. Add dark mode toggle (2025-11-21) - HIGH
-      Users keep requesting this feature
+Read `.agents/inbox.md` and display backlog items.
 
-   2. Fix analytics cron job (2025-11-20)
-      Sometimes misses hourly runs
-
-   Use `/inbox expand` to create PRD/TASK
-   ```
-
-### Mode 2: Quick Capture (arguments provided)
-
-**When:** `/inbox Add dark mode toggle`
-
-**Steps:**
+## Mode 2: Quick Capture
 
 1. Extract task title from arguments
-2. Ask: "Brief context? (1-2 sentences)"
-3. Add to "Backlog" section:
+2. Ask: "Brief context? (1-2 sentences)" (skip if user already provided)
+3. Append to Backlog section:
 
-   ```markdown
-   - [ ] **[TASK_TITLE]** ([TODAY_DATE])
-     - [USER_CONTEXT]
-   ```
+```markdown
+- [ ] **[TASK_TITLE]** ([TODAY_DATE])
+  [USER_CONTEXT]
+```
 
-4. Confirm: "✅ Added: [TASK_TITLE]"
+1. Confirm added.
 
-### Mode 3: Expand to PRD/TASK
+## Mode 3: Expand
 
-**When:** `/inbox expand`
-
-**Steps:**
-
-1. Show numbered list of backlog tasks
-2. Ask: "Which task? (number)"
-3. Ask clarifying questions:
-   - Problem statement
-   - Target users
-   - Success criteria
-   - Technical approach
-   - Priority
-4. Create PRD (`.agents/PRDS/`) or TASK (`.agents/TASKS/`)
-5. **Remove task from INBOX.md** (it now lives in PRD/TASK)
-6. Confirm: "✅ Created: [FILE_PATH]"
-
----
-
-## File Paths
-
-**Inbox:** `.agents/TASKS/INBOX.md`
-
-**PRDs:** `.agents/PRDS/{category}/{name}.md`
-**Tasks:** `.agents/TASKS/{category}/{name}.md`
-
-Categories: `studio/`, `manager/`, `publisher/`, `analytics/`, `api/`, `infrastructure/`
-
----
+1. Show numbered list of backlog items
+2. Ask which to expand
+3. Gather enough detail for a GitHub issue (problem, approach, acceptance criteria)
+4. Create GitHub issue via `gh issue create`
+5. Remove from inbox, note issue number
 
 ## Task Format
 
 ```markdown
 - [ ] **Task Title** (YYYY-MM-DD)
-  - Brief context (1-2 sentences)
-  - Priority: HIGH/MEDIUM/LOW (optional)
+  Brief context. Priority: HIGH/MEDIUM/LOW (optional)
 ```
 
-Keep it simple. Once expanded, remove from inbox.
+Keep simple. Once expanded to issue, remove from inbox.

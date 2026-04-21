@@ -25,4 +25,3 @@ Skills for validating ideas, planning MVPs, and launching startups
 - `constraint-eliminator`
 - `execution-accelerator`
 - `execution-validator`
-- `scale-validator`

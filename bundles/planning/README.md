@@ -11,7 +11,6 @@ Strategy, planning, and analysis skills
 
 ## Included Skills
 
-- `planning-assistant`
 - `roadmap-analyzer`
 - `strategy-expert`
 - `analytics-expert`

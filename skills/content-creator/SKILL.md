@@ -73,8 +73,7 @@ Expert content creator specializing in newsletters and tweets that authentically
 | Skill | When to Use |
 |-------|-------------|
 | `copywriter` | Brand voice consistency |
-| `strategy-expert` | Content strategy planning |
-| `planning-assistant` | Content calendar management |
+| `strategy-expert` | Content strategy and calendar planning |
 
 ---
 

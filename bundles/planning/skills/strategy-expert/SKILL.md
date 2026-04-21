@@ -1,6 +1,9 @@
 ---
 name: strategy-expert
-description: This skill should be used when users need help with content strategy, persona building, competitive analysis, content planning, or brand voice consistency. It activates when users ask about content strategy, building personas or target audiences, competitive analysis requests, content planning and ideation, or brand voice questions.
+description: Content strategy expert covering persona building, competitive analysis, content planning/calendars, research-to-content workflows, multi-platform scheduling, and brand voice consistency. Activates for content strategy, calendar management, ideation, or brand voice questions.
+metadata:
+  version: "1.0.0"
+  tags: content-strategy, planning, personas, competitive-analysis, brand-voice
 ---
 
 # Content Strategy Expert
@@ -212,6 +215,38 @@ To ensure brand voice consistency across content:
 
 ```
 Trend Detection → Content Generation → Distribution → Analytics → Optimization
+```
+
+### 6. Multi-Platform Content Planning
+
+Plan content across platforms with platform-specific adaptations:
+
+- **X/Twitter**: Short-form, real-time, trending topics
+- **LinkedIn**: Professional, long-form, thought leadership
+- **Instagram**: Visual, Stories, Reels, aesthetic focus
+- **TikTok**: Short-form video, trending sounds, viral hooks
+- **YouTube**: Long-form video, SEO, educational content
+
+**Workflow:**
+
+1. Understand platform-specific requirements (formats, lengths, best practices)
+2. Create platform-specific plans adapted from core content
+3. Coordinate posting schedules across platforms
+4. Ensure consistent messaging while adapting tone per platform
+
+### 7. Research Organization and Synthesis
+
+Convert bookmarked research into actionable content:
+
+1. **Organize** — Categorize research by topic, theme, or content type
+2. **Synthesize** — Extract key insights, identify common themes and patterns
+3. **Convert** — Turn research findings into content outlines and calendar entries
+
+**Workflow:**
+
+```
+Research/Inspiration → Content Ideas → Content Calendar →
+Content Generation → Publishing → Analytics → Optimization
 ```
 
 ## Best Practices

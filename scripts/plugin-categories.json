@@ -16,8 +16,7 @@
         "offer-validator",
         "constraint-eliminator",
         "execution-accelerator",
-        "execution-validator",
-        "scale-validator"
+        "execution-validator"
       ]
     },
     "testing": {
@@ -116,7 +115,6 @@
       "description": "Brand strategy and naming skills",
       "skills": [
         "brand-architect",
-        "brand-name-generator",
         "search-domain-validator",
         "expert-architect",
         "expert-validator",
@@ -163,7 +161,6 @@
     "planning": {
       "description": "Strategy, planning, and analysis skills",
       "skills": [
-        "planning-assistant",
         "roadmap-analyzer",
         "strategy-expert",
         "analytics-expert",

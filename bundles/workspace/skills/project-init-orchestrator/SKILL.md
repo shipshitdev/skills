@@ -1,6 +1,9 @@
 ---
 name: project-init-orchestrator
-description: Orchestrates complete project initialization by coordinating agent-folder-init, linter-formatter-init, husky-test-coverage, and other setup skills. Use this skill when starting a new project that needs full AI-first development infrastructure with code quality enforcement.
+description: Orchestrates complete project initialization — scaffolding, agent folders, linting, test coverage, and component setup (NestJS, Next.js, Expo, Plasmo). Use when starting a new project or adding infrastructure to an existing one.
+metadata:
+  version: "1.0.0"
+  tags: project-init, scaffolding, orchestration, setup, monorepo
 ---
 
 # Project Init Orchestrator
@@ -26,7 +29,7 @@ This skill activates automatically when users:
 | 1 | `agent-folder-init` | AI documentation & standards | Yes |
 | 2 | `linter-formatter-init` | ESLint + Prettier + pre-commit | Yes |
 | 3 | `husky-test-coverage` | Test coverage enforcement | Optional |
-| 4 | `project-scaffold` | Backend/Frontend/Mobile scaffolding | Optional |
+| 4 | Component scaffolding | Backend/Frontend/Mobile/Extension | Optional |
 
 ## Orchestration Flow
 
@@ -85,16 +88,16 @@ This skill activates automatically when users:
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  PHASE 5: PROJECT SCAFFOLD (optional)                       │
+│  PHASE 5: COMPONENT SCAFFOLD (optional)                     │
 │  • Scaffold additional components if requested:            │
-│    - Backend (NestJS)                                       │
-│    - Frontend (Next.js)                                     │
-│    - Mobile (Expo)                                          │
-│    - Extension (Plasmo)                                     │
+│    - Backend (NestJS + MongoDB + Swagger + Dockerfile)     │
+│    - Frontend (Next.js + Tailwind + App Router)            │
+│    - Mobile (Expo + Expo Router + React Native)            │
+│    - Extension (Plasmo + React + Tailwind)                 │
+│  • Supports monorepo (workspaces) or separate repos       │
 │  ──────────────────────────────────────────────────────────│
 │  Invocation:                                                │
 │  python3 scripts/scaffold.py                               │
-│          (from project-scaffold skill)                     │
 └─────────────────────────────────────────────────────────────┘
                            │
                            ▼
@@ -150,11 +153,24 @@ Follow the `husky-test-coverage` skill to:
 - Configure coverage thresholds
 - Add pre-commit hook
 
-**Phase 5: Project Scaffold (optional)**
+**Phase 5: Component Scaffold (optional)**
 
 ```bash
-python3 scripts/scaffold.py  # from project-scaffold skill
+python3 scripts/scaffold.py
 ```
+
+Supports scaffolding:
+
+- **Backend (NestJS)**: MongoDB, Swagger, soft deletes (`isDeleted`), multi-tenancy (filter by `organization`), Dockerfile
+- **Frontend (Next.js)**: Tailwind CSS, TypeScript strict, App Router, path aliases (`@components/`, `@services/`, `@hooks/`)
+- **Mobile (Expo)**: Expo Router, TypeScript, platform-specific configs
+- **Extension (Plasmo)**: React + TypeScript, Tailwind, manifest config, popup component
+
+Structure options:
+
+- **Monorepo**: All components in one repo with workspace config
+- **Separate repos**: Each component in its own directory
+- **Existing projects**: Add components incrementally
 
 ## Configuration Presets
 
@@ -241,7 +257,7 @@ project-root/
 
 - Always run agent-folder-init FIRST (establishes standards)
 - Run linter-formatter-init BEFORE husky-test-coverage (both use Husky)
-- Run project-scaffold LAST (depends on base setup)
+- Run component scaffolding LAST (depends on base setup)
 
 ### Customization
 

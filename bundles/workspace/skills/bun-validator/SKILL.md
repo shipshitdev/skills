@@ -313,5 +313,5 @@ Each workspace should list all its dependencies - don't rely on hoisting.
 ## Integration
 
 - `linter-formatter-init` - Sets up Biome with Bun
-- `project-scaffold` - Creates workspace structure
+- `project-init-orchestrator` - Creates workspace structure
 - `nextjs-validator` - Validates Next.js in workspace

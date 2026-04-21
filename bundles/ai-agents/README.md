@@ -11,7 +11,7 @@ AI agent development and prompt engineering
 
 ## Included Skills
 
-- `prompt-engineer`
+- `prompt-engineering`
 - `mcp-builder`
 - `skill-creator`
 - `context-fundamentals`

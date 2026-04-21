@@ -151,11 +151,6 @@
       "description": "Use this skill when users need to develop brand strategy, choose a company name, define brand positi"
     },
     {
-      "name": "brand-name-generator",
-      "source": "./skills/brand-name-generator",
-      "description": "Generate creative brand names, company names, product names, or startup names. Includes naming strat"
-    },
-    {
       "name": "bun-validator",
       "source": "./skills/bun-validator",
       "description": "Validate Bun workspace configuration and detect common monorepo issues. Ensures proper workspace set"
@@ -576,11 +571,6 @@
       "description": "Expert in performance optimization for React, Next.js, NestJS applications covering frontend renderi"
     },
     {
-      "name": "planning-assistant",
-      "source": "./skills/planning-assistant",
-      "description": "This skill should be used when users need help with content planning, calendar management, research "
-    },
-    {
       "name": "plasmo-extension-architect",
       "source": "./skills/plasmo-extension-architect",
       "description": "Architect Chrome MV3 extensions using Plasmo, including messaging, storage, and UI surfaces."
@@ -608,17 +598,7 @@
     {
       "name": "project-init-orchestrator",
       "source": "./skills/project-init-orchestrator",
-      "description": "Orchestrates complete project initialization by coordinating agent-folder-init, linter-formatter-ini"
-    },
-    {
-      "name": "project-scaffold",
-      "source": "./skills/project-scaffold",
-      "description": "Unified project scaffolder that works across all platforms. Scaffold .agent folders, backend (NestJS"
-    },
-    {
-      "name": "prompt-engineer",
-      "source": "./skills/prompt-engineer",
-      "description": "Expert prompt engineer specializing in content generation and social media optimization"
+      "description": "Orchestrates complete project initialization — scaffolding, agent folders, linting, test coverage, a"
     },
     {
       "name": "prompt-engineering",
@@ -701,11 +681,6 @@
       "description": "Generate new code modules following existing codebase patterns. Use when user says 'scaffold', 'gene"
     },
     {
-      "name": "scale-validator",
-      "source": "./skills/scale-validator",
-      "description": "Use this skill when users need to validate if their business can scale, stress-test their model, or "
-    },
-    {
       "name": "search-domain-validator",
       "source": "./skills/search-domain-validator",
       "description": "This skill should be used when users need to validate domain name format, check domain availability,"
@@ -778,7 +753,7 @@
     {
       "name": "strategy-expert",
       "source": "./skills/strategy-expert",
-      "description": "This skill should be used when users need help with content strategy, persona building, competitive "
+      "description": "Content strategy expert covering persona building, competitive analysis, content planning/calendars,"
     },
     {
       "name": "stripe-implementer",

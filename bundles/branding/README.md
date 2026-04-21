@@ -12,7 +12,6 @@ Brand strategy and naming skills
 ## Included Skills
 
 - `brand-architect`
-- `brand-name-generator`
 - `search-domain-validator`
 - `expert-architect`
 - `expert-validator`

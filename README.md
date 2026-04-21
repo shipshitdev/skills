@@ -131,9 +131,9 @@ touch skills/my-skill/SKILL.md
 
 ## Skills (158)
 
-### Startup (15)
+### Startup (14)
 
-`business-model-auditor`, `cofounder-evaluator`, `constraint-eliminator`, `early-hiring-advisor`, `execution-accelerator`, `execution-validator`, `fundraise-advisor`, `idea-validator`, `market-sizer`, `mvp-architect`, `offer-architect`, `offer-validator`, `pricing-strategist`, `scale-validator`, `startup-icp-definer`
+`business-model-auditor`, `cofounder-evaluator`, `constraint-eliminator`, `early-hiring-advisor`, `execution-accelerator`, `execution-validator`, `fundraise-advisor`, `idea-validator`, `market-sizer`, `mvp-architect`, `offer-architect`, `offer-validator`, `pricing-strategist`, `startup-icp-definer`
 
 ### Sales (13)
 
@@ -143,17 +143,17 @@ touch skills/my-skill/SKILL.md
 
 `x-algorithm-optimizer`
 
-### Branding (6)
+### Branding (5)
 
-`brand-architect`, `brand-name-generator`, `expert-architect`, `expert-validator`, `positioning-angles`, `search-domain-validator`
+`brand-architect`, `expert-architect`, `expert-validator`, `positioning-angles`, `search-domain-validator`
 
 ### Content (9)
 
 `changelog-generator`, `content-creator`, `copy-validator`, `copywriter`, `docs`, `humanizer`, `internal-comms`, `nextra-writer`, `youtube-video-analyst`
 
-### Planning (8)
+### Planning (7)
 
-`analytics-expert`, `business-operator`, `cto-advisor`, `planning-assistant`, `roadmap-analyzer`, `rules-capture`, `strategy-expert`, `task-prd-creator`
+`analytics-expert`, `business-operator`, `cto-advisor`, `roadmap-analyzer`, `rules-capture`, `strategy-expert`, `task-prd-creator`
 
 ### Frontend & React (28)
 

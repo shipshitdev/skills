@@ -44,17 +44,33 @@ Help indie founders build brands that scale using Hexa's "Branding from Day One"
 
 Build from bottom up: Name → Positioning → Voice → Identity.
 
-## Naming Approaches
+## Naming Strategies
 
-| Approach | Example | Best For |
-|----------|---------|----------|
-| Descriptive | Salesforce | Clear category |
-| Evocative | Nike, Apple | Emotional resonance |
-| Invented | Spotify | Unique, ownable |
-| Founder | Bloomberg | Personal brand |
-| Mashup | Instagram | Clever, memorable |
+| Strategy | Description | Examples | Best For |
+|----------|-------------|----------|----------|
+| **Descriptive** | Clear category | Salesforce | B2B, SaaS |
+| **Evocative** | Emotional resonance | Nike, Apple | Aspirational |
+| **Invented** | New words | Spotify, Xerox | Tech, premium |
+| **Compound** | Join words | Facebook, YouTube | Clear value prop |
+| **Portmanteau** | Blend two words | Pinterest, Instagram | Apps, social |
+| **Misspelling** | Creative respelling | Lyft, Flickr | Startups, apps |
+| **Suffix Pattern** | Brand suffixes | Shopify, Grammarly | SaaS, tools |
+| **Founder** | Personal name | Bloomberg | Personal brand |
 
-## Name Evaluation (Score 1-5)
+**Popular Suffixes**: `-ify`, `-ly`, `-io`, `-hub`, `-ment`, `-able`
+**Popular Prefixes**: `get-`, `try-`, `go-`, `my-`, `super-`
+
+## Name Evaluation
+
+### Brandability Score (1-10 each)
+
+- **Memorability**: Shorter = better
+- **Pronounceability**: Vowel ratio, consonant clusters
+- **Spellability**: Common patterns, no confusion
+- **Uniqueness**: Distinctiveness in market
+- **Domain Available**: .com bonus
+
+### Viability Score (1-5 each)
 
 - Easy to spell/pronounce
 - Memorable
@@ -63,7 +79,24 @@ Build from bottom up: Name → Positioning → Voice → Identity.
 - Works at scale
 - International friendly
 
-**Minimum score:** 35/50
+**Minimum viability score:** 35/50
+
+### Validation Checklist
+
+- [ ] Easy to spell when heard
+- [ ] Easy to pronounce when read
+- [ ] No trademark conflicts
+- [ ] No negative connotations in target markets
+- [ ] Domain available (preferred TLD)
+- [ ] Social handles available
+
+## Name Generation Workflow
+
+1. Gather context (industry, keywords, constraints)
+2. Generate 20-30 candidates using multiple strategies
+3. Score brandability + viability
+4. Check domain availability
+5. Recommend top 3-5 with rationale
 
 ## Positioning Statement Template
 
@@ -86,7 +119,6 @@ we [key differentiator].
 
 ## Integration
 
-- `brand-name-generator` - Generate candidates
 - `copywriter` - Brand-consistent copy
 - `startup-icp-definer` - Define audience
 - `micro-landing-builder` - Brand-aligned pages
