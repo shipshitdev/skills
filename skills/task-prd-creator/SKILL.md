@@ -1,99 +1,108 @@
 ---
 name: task-prd-creator
-description: Use this skill when users request new features, enhancements, bug fixes, or any work that needs planning. Creates structured task files and PRDs (Product Requirements Documents) before implementation. Activates for "I want to add X", "implement Y", "create a task for Z", "plan this feature", or any feature request.
-version: 1.0.0
-tags:
-  - planning
-  - task-management
-  - prd
-  - workflow
-  - documentation
-  - project-management
-auto_activate: true
+description: Create a well-written PRD, task, or GitHub issue/sub-issue for a feature, bug, or enhancement. Use when planning work, writing GitHub issues, breaking down epics into sub-issues, or creating local task files.
+when_to_use: "create a task, write a PRD, open a GitHub issue, create a sub-issue, plan this feature, write up this bug, break this down into issues, I want to add X, implement Y"
+disable-model-invocation: true
+allowed-tools: Bash(gh *)
 ---
 
 # Task & PRD Creator
 
-## Overview
+Write a clear, actionable PRD or task. Output depends on where the user tracks work.
 
-Create structured task files and PRDs before implementing features. This ensures proper planning, documentation, and clear scope definition.
+## Step 1: Detect workflow preference
 
-**CRITICAL RULE:** Never implement a feature without first creating the task + PRD files and getting user approval.
+Check in order:
 
-## When This Activates
+1. User explicitly says "GitHub issue", "local file", or both
+2. Check if `gh auth status` succeeds and a GitHub remote exists → GitHub available
+3. Check if `.agents/TASKS/` or `.agents/PRDS/` exist → local available
+4. If ambiguous, ask: "GitHub issue, local file, or both?"
 
-- "I want to add [feature]"
-- "Implement [feature]"
-- "Create a task for [feature]"
-- "Plan this feature"
-- User describes a user story
-- Bug that needs tracking
+## Step 2: Understand the request
 
-## The Workflow
+Ask only what's missing — don't interrogate if context is clear:
 
-### Step 1: Understand Request
+- What problem does this solve?
+- Who's affected? (user-facing, internal, infra)
+- Any hard constraints or dependencies?
+- Is this part of a larger epic? (→ sub-issue)
+- Priority: critical / high / medium / low
 
-- **Simple task:** <1 hour, few files
-- **Complex feature:** >1 hour, multiple files/systems
+## Step 3: Research before writing
 
-### Step 2: Gather Requirements
+- Read relevant architecture docs if available (`.agents/SYSTEM/ARCHITECTURE.md`)
+- Search codebase for related patterns
+- Check for existing issues on same topic: `gh issue list --search "[keyword]"`
 
-- Which app/project?
-- Priority? (CRITICAL/High/Medium/Low)
-- Dependencies?
+## Step 4: Write the PRD
 
-### Step 3: Check Existing System
+See `references/full-guide.md` for the full PRD structure.
 
-- Read architecture docs
-- Search for similar implementations
+A good PRD has:
 
-### Step 4: Create Files
+- **Problem** — why this exists, what breaks without it
+- **Goal** — one sentence, measurable outcome
+- **Scope** — what's in, what's explicitly out
+- **Acceptance criteria** — testable, not vague
+- **Technical notes** — approach, risks, dependencies
 
-**Task file:** `[project]/.agents/TASKS/[task-name].md`
-**PRD file:** `[project]/.agents/PRDS/[task-name].md`
+Keep it tight. No filler. Acceptance criteria must be checkable by a human.
 
-### Step 5: Get Approval
+## Step 5: Output to correct destination
 
-Present files, explain approach, **WAIT for user approval**.
+### GitHub (primary if available)
 
-## Task File Format
+**New issue:**
 
-```markdown
-## Task: [Feature Name]
-
-**ID:** feature-name-slug
-**Label:** [App]: [Feature Name]
-**Description:** Brief description
-**Type:** Feature | Bug | Enhancement
-**Status:** Backlog | To Do | Testing | Done
-**Priority:** High | Medium | Low
-**Created:** YYYY-MM-DD
-**Updated:** YYYY-MM-DD
-**PRD:** [Link](../PRDS/feature-name.md)
+```bash
+gh issue create \
+  --title "[type]: clear title" \
+  --body "$(cat <<'BODY'
+[PRD content here]
+BODY
+)" \
+  --label "feature" \
+  --assignee "@me"
 ```
 
-## Critical Rules
+**Sub-issue** (linked to parent):
 
-1. Create task file
-2. Create PRD file
-3. Link them together
-4. Present to user
-5. Get approval
-6. Then implement
+```bash
+# Create sub-issue
+gh issue create --title "..." --body "..." 
 
-## Red Flags (Stop and Ask)
+# Link as sub-issue to parent #N
+gh issue develop N --checkout  # only if needed
+# Use: gh api repos/{owner}/{repo}/issues/{parent}/sub_issues --method POST -f sub_issue_id={child_id}
+```
 
-- Breaking changes
-- Affects multiple projects
-- Security implications
-- Unclear requirements
+**Draft PR from issue:**
 
-## Integration
+```bash
+gh issue develop [issue-number] --branch "feature/[name]"
+```
 
-- `mvp-architect` - MVP scoping
-- `planning-assistant` - Content planning
-- `agent-folder-init` - Initialize .agents/ structure
+### Local files (optional, or when no GitHub)
 
----
+- Task: `.agents/TASKS/[kebab-name].md`
+- PRD: `.agents/PRDS/[kebab-name].md`
 
-**For complete PRD template, naming conventions, status update workflow, Context7 integration, and example interactions, see:** `references/full-guide.md`
+See `references/full-guide.md` for local file templates.
+
+## Step 6: Get approval before creating
+
+Show the draft PRD. Wait for "looks good" or edits. Then create.
+
+## Rules
+
+- `disable-model-invocation: true` → only runs when user explicitly invokes
+- Never create files or GitHub issues without user seeing the draft first
+- Sub-issues should be small enough to ship in one PR
+- If requirements are unclear, write the problem statement first — not the solution
+
+## Related
+
+- `spec-first` — spec-driven development before writing code
+- `gh-fix-ci` — fix CI on existing PRs
+- `planning-assistant` — broader roadmap planning

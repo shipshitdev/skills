@@ -1,7 +1,7 @@
 {
   "name": "task-prd-creator",
   "version": "1.0.0",
-  "description": "Use this skill when users request new features, enhancements, bug fixes, or any work that needs plan",
+  "description": "Write well-structured PRDs and tasks. Creates GitHub issues, sub-issues, or local files based on user workflow.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

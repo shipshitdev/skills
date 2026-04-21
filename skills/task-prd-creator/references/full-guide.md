@@ -1,391 +1,214 @@
-# Task & PRD Creator - Full Guide
+# Task & PRD Creator — Full Guide
 
-## The Workflow: Create Task + PRD
+## Workflow detection
 
-### Step 1: Understand Request (Detect Complexity)
+| Situation | Output |
+|-----------|--------|
+| `gh auth status` OK + git remote is GitHub | GitHub issue (default) |
+| `.agents/TASKS/` exists | Local file (default) |
+| Both available | Ask user which, or both |
+| Neither | Create local files, suggest `gh auth login` |
 
-1. Analyze the request to determine complexity:
-   - **Simple task:** One-shot, straightforward implementation (< 1 hour, few files)
-   - **Complex feature:** Multi-step, requires planning (> 1 hour, multiple files/systems)
+---
 
-2. Ask clarifying questions:
-   - What problem does this solve?
-   - Who are the users?
-   - What's the expected behavior?
-   - Any constraints or requirements?
+## PRD structure
 
-### Step 2: Gather Requirements
+Every PRD — whether GitHub issue body or local file — uses this structure.
+Skip sections that don't apply. Never leave placeholder text in.
 
-Ask these questions if not clear from request:
+```markdown
+## Problem
 
-- Which app/project is this for?
-- What's the priority? (CRITICAL, High, Medium, Low, Future)
-- What's the main goal/outcome?
-- Are there dependencies on other tasks?
-- Any specific technical requirements?
+[What breaks, what's missing, why this matters. 2-4 sentences max.]
 
-### Step 3: Check Existing System
+## Goal
 
-1. Read relevant architecture docs:
+[One sentence. Measurable. "Users can X without Y friction."]
 
-   ```bash
-   # For API features
-   cat [api-project]/.agents/SYSTEM/ARCHITECTURE.md
-   cat [api-project]/.agents/SYSTEM/RULES.md
+## Scope
 
-   # For Frontend features
-   cat [frontend-project]/.agents/SYSTEM/ARCHITECTURE.md
-   ```
+**In:**
+- [specific thing 1]
+- [specific thing 2]
 
-2. Search for similar implementations:
+**Out:**
+- [explicitly excluded thing — prevents scope creep]
 
-   ```bash
-   grep -r "similar_pattern" [project]/
-   ```
+## Acceptance criteria
 
-3. Check examples:
+- [ ] [Specific, testable condition — can a human verify this?]
+- [ ] [Another condition]
+- [ ] [Edge case handled]
 
-   ```bash
-   cat .agents/EXAMPLES/[category]/[example-name].md
-   ```
+## Technical notes
 
-### Step 4: Fetch Latest Library Docs (MANDATORY)
+**Approach:** [Pattern to follow, key architectural decision]
+**Risks:** [What could go wrong, unknowns]
+**Dependencies:** [Other issues, external services, env vars needed]
+**Files likely affected:** [rough list if known]
 
-Use Context7 MCP for all relevant libraries:
+## Links
 
-```typescript
-// Example for Next.js feature
-await mcp_context7_resolve_library_id("nextjs");
-await mcp_context7_get_library_docs(
-  "/vercel/next.js",
-  "app router server actions"
-);
-
-// Example for NestJS feature
-await mcp_context7_resolve_library_id("nestjs");
-await mcp_context7_get_library_docs(
-  "/nestjs/docs.nestjs.com",
-  "guards decorators"
-);
+- Parent issue: #N (if sub-issue)
+- Related: #N, #N
+- Design: [Figma/Linear link if any]
 ```
 
-### Step 5: Create Files (Task + PRD)
+---
 
-#### 5.1 Determine File Locations
+## Issue types and titles
 
-**Task file locations:**
+Format: `[type]: [clear imperative title]`
 
-- **Frontend tasks:**
-  - Task: `[frontend-project]/.agents/TASKS/[task-name].md`
-  - PRD: `[frontend-project]/.agents/PRDS/[subfolder]/[task-name].md`
+| Type | When to use | Example |
+|------|-------------|---------|
+| `feat` | New capability | `feat: add CSV export to reports` |
+| `fix` | Bug, broken behavior | `fix: auth token not refreshing on 401` |
+| `chore` | Infra, deps, config | `chore: upgrade NestJS to v11` |
+| `refactor` | Same behavior, different code | `refactor: extract payment service` |
+| `perf` | Performance improvement | `perf: lazy load dashboard charts` |
+| `docs` | Documentation | `docs: add API authentication guide` |
 
-- **Backend tasks:**
-  - Task: `[backend-project]/.agents/TASKS/[task-name].md`
-  - PRD: `[backend-project]/.agents/PRDS/[task-name].md`
+---
 
-- **Cross-project tasks:**
-  - Task: `.agents/TASKS/[task-name].md` (workspace root)
-  - PRD: `.agents/PRDS/[task-name].md`
+## GitHub issue creation
 
-#### 5.2 Choose Template Type
+### Standard issue
 
-- **User Story** - Feature from user perspective
-- **Technical Task** - Implementation-focused
-- **Bug Fix** - Fix existing issue
-- **Enhancement** - Improve existing feature
-- **Migration** - Move/refactor existing code
-- **Research** - Investigation/audit task
+```bash
+gh issue create \
+  --title "feat: add CSV export to reports" \
+  --body "$(cat <<'BODY'
+## Problem
+Users need to export report data for external analysis. Currently only PDF is supported, which isn't usable in spreadsheets.
 
-### Step 6: Present to User & Get Approval
+## Goal
+Users can download any report as CSV in one click.
 
-1. Present to user:
-   - Show both file locations (task + PRD)
-   - Summary of the task breakdown
-   - Explain approach and scope
-   - List what will be created/modified
-   - Mention any risks or concerns
+## Scope
+**In:**
+- CSV export button on report detail page
+- All visible columns included
+- Filename: `report-[id]-[date].csv`
 
-2. Ask if they want to proceed with implementation or adjust the task
+**Out:**
+- Scheduled/automated exports
+- Custom column selection
 
-3. **WAIT for user approval before coding**
+## Acceptance criteria
+- [ ] Export button visible on report detail page
+- [ ] Downloaded file is valid CSV with headers
+- [ ] Large reports (10k+ rows) don't timeout
+- [ ] Empty reports download as headers-only CSV
 
-## Templates
+## Technical notes
+**Approach:** Stream response, don't buffer full dataset in memory
+**Dependencies:** None
+BODY
+)" \
+  --label "feature" \
+  --assignee "@me"
+```
 
-### Task Template: Structured Format
+### Sub-issue (part of epic)
 
-**CRITICAL:** All tasks MUST follow this exact structured format for Kanban Markdown extension compatibility.
+```bash
+# 1. Create the sub-issue
+CHILD_ID=$(gh issue create \
+  --title "feat: CSV export — streaming backend endpoint" \
+  --body "..." \
+  --json number --jq '.number')
+
+# 2. Link it to parent epic #42
+gh api repos/{owner}/{repo}/issues/42/sub_issues \
+  --method POST \
+  -f sub_issue_id=$CHILD_ID
+```
+
+Get `{owner}/{repo}` from:
+
+```bash
+gh repo view --json nameWithOwner --jq '.nameWithOwner'
+```
+
+### Update existing issue
+
+```bash
+# Add comment with update
+gh issue comment 42 --body "Scope change: removing X, adding Y. See updated description."
+
+# Edit body
+gh issue edit 42 --body "$(cat updated-prd.md)"
+
+# Close with reason
+gh issue close 42 --comment "Shipped in #87"
+```
+
+---
+
+## Local file format (optional)
+
+Use when: no GitHub access, or user explicitly wants local tracking.
+
+**Task file:** `.agents/TASKS/[kebab-name].md`
 
 ```markdown
 ## Task: [Feature Name]
 
-**ID:** feature-name-slug
-**Label:** [App]: [Feature Name]
-**Description:** [Brief description of what this task accomplishes]
-**Type:** Feature
-**Status:** Backlog
-**Priority:** High
+**ID:** kebab-name
+**Type:** Feature | Bug | Enhancement | Refactor | Chore
+**Status:** Backlog | In Progress | Testing | Done
+**Priority:** Critical | High | Medium | Low
 **Created:** YYYY-MM-DD
 **Updated:** YYYY-MM-DD
-**PRD:** [Link](../PRDS/[path]/feature-name.md)
-
----
+**GitHub:** #N (link if issue exists)
+**PRD:** [full-prd.md](../PRDS/kebab-name.md)
 ```
 
-**Metadata Fields:**
+**PRD file:** `.agents/PRDS/[kebab-name].md`
 
-- `ID`: kebab-case-slug (filename without .md)
-- `Label`: Human-readable title with app prefix
-- `Description`: Brief description of what this task accomplishes
-- `Type`: Feature | Bug | Enhancement | Task | Migration | Audit | Planning
-- `Status`: Backlog | To Do | Testing | Done
-- `Priority`: High | Medium | Low
-- `Created`: YYYY-MM-DD (when task was first created)
-- `Updated`: YYYY-MM-DD (when task was last modified)
-- `PRD`: Link to PRD file (relative path)
+Use the PRD structure from above. Add `# [Feature Name]` as h1.
 
-**Status Rules:**
+**File naming rules:**
 
-- Not started: `Status: Backlog`
-- In progress: `Status: To Do`
-- Testing: `Status: Testing`
-- Complete: `Status: Done`
-
-### PRD Template
-
-**File naming:** Same as task file: `[task-name].md`
-**Location:** `<project>/.agents/PRDS/[subdirs]/[task-name].md`
-
-**CRITICAL:** PRDs MUST NOT contain checkboxes (`- [ ]` or `- [x]`). Use plain bullets `-` instead.
-
-```markdown
-# [App]: [Feature Name]
-
-**Priority:** High | Medium | Low
-**Status:** Not Started | In Progress | Done
-**Type:** Feature | Bug | Enhancement | Task | Migration | Audit
-**Created:** YYYY-MM-DD
-**Last Updated:** YYYY-MM-DD
-
-## Overview
-
-[High-level description of what needs to be built and why]
-
-## User Story (if applicable)
-
-**As a** [type of user]
-**I want** [goal/desire]
-**So that** [benefit/value]
-
-## Description
-
-[Detailed description of the feature/task]
-
-## Context
-
-[Why is this needed? What problem does it solve? Background information]
-
-## Implementation Overview
-
-[Technical approach, patterns to follow, architectural decisions]
-
-## Features / Requirements
-
-1. **Feature 1**
-   - Detail about feature 1
-   - Specific behaviors and requirements
-
-2. **Feature 2**
-   - Detail about feature 2
-   - Specific behaviors and requirements
-
-## Files to Create
-
-- `path/to/new/file.ts` - [description and purpose]
-- `path/to/component.tsx` - [description and purpose]
-- `path/to/service.ts` - [description and purpose]
-
-## Files to Modify
-
-- `path/to/existing/file.ts` - [what changes are needed]
-- `path/to/another.tsx` - [what changes are needed]
-
-## API Endpoints (if applicable)
-
-**New endpoints to create:**
-
-- `POST /api/[resource]` - [description]
-- `GET /api/[resource]/:id` - [description]
-- `PATCH /api/[resource]/:id` - [description]
-- `DELETE /api/[resource]/:id` - [description]
-
-**Existing endpoints to modify:**
-
-- `PATCH /api/[resource]/:id` - [changes needed]
-
-## Database Changes (if applicable)
-
-```javascript
-// Schema changes
-{
-  fieldName: Type,
-  newField: Type,
-}
-
-// Indexes to add
-db.collection.createIndex({ field: 1 });
-```
-
-## Libraries/Dependencies
-
-**CRITICAL:** Use Context7 MCP to fetch latest docs before implementing.
-
-**Libraries to use:**
-
-- **[Library Name]** (Context7 ID: `/org/project`) - [specific feature/API needed]
-- **[Framework]** (Context7 ID: `/org/project`) - [specific feature needed]
-
-## Technical Implementation
-
-### Architecture Approach
-
-[Describe the technical approach, patterns to follow, architectural decisions]
-
-### Technical Considerations
-
-- [Performance concern]
-- [Security consideration]
-- [Scalability issue]
-- [Browser compatibility]
-- [Tenant/organization filtering - if multi-tenant]
-- [Soft delete handling - if using soft delete]
-
-### Design/UX Considerations
-
-- [User flow]
-- [Wireframe/mockup reference]
-- [Accessibility requirements]
-- [Responsive design notes]
-
-## Testing Requirements
-
-### Unit Tests
-
-- Test for [component/service] - [specific scenario]
-- Test for [function] - [edge case]
-
-### Integration Tests
-
-- Test for [workflow] - [happy path]
-- Test for [workflow] - [error cases]
-
-### E2E Tests
-
-- Test user flow: [describe flow]
-- Test edge case: [describe scenario]
-
-### Manual Testing Checklist
-
-- Happy path works
-- Error handling works
-- Edge cases handled
-- [Tenant/organization] isolation verified (if multi-tenant)
-- Soft delete respected (if using soft delete)
-- Performance acceptable
+- kebab-case only: `video-generation-with-captions.md`
+- Full words, no abbreviations: not `vid-gen.md`
+- No dates in filename (use metadata)
 
 ---
 
-**Implementation Notes:**
+## Sub-issue sizing rules
 
-[Any additional notes, gotchas, or things to watch out for during implementation]
+A sub-issue should:
 
-```
+- Ship in one PR
+- Be completable in 1 session (not 5 hours of work)
+- Have its own acceptance criteria, independent of siblings
+- NOT depend on an unmerged sibling
 
-## Naming Conventions
+If you're writing a sub-issue that says "do X after Y is merged" — that's a dependency, list it. Don't assume order.
 
-**File naming:** `kebab-case-task-name.md`
+---
 
-**Good names:**
-- `video-generation-with-captions.md`
-- `quick-actions-audit.md`
-- `multi-platform-integration.md`
-- `organization-review.md`
+## When to push back on requirements
 
-**Bad names:**
-- `feature.md` (too generic)
-- `VideoGeneration.md` (wrong case)
-- `video_generation.md` (use kebab, not snake)
-- `video-gen.md` (don't abbreviate)
+Stop and flag to user if:
 
-## Update Task Status
+- Acceptance criteria can't be tested (too vague)
+- Scope includes 3+ unrelated things (split the issue)
+- "Out of scope" section is empty on anything >medium complexity
+- Breaking change with no migration path defined
+- Security-sensitive and no threat model mentioned
 
-When user says:
-- "Mark [task] as complete"
-- "Update status of [task] to in progress"
-- "Change priority of [task] to high"
+---
 
-**Your Actions:**
+## Quick reference
 
-1. Find the task file
-2. Read current status/priority
-3. Update the relevant fields:
-   - `**Status:**` → new status
-   - `**Updated:**` → current date (YYYY-MM-DD)
-   - `**Priority:**` (if changing)
-4. If marking complete, also update linked PRD status
-5. Confirm with user
-
-**Status Values:**
-- Backlog → To Do → Testing → Done
-- Also: Blocked, Cancelled
-
-## Example Interaction
-
-**User:** "I want to add video generation with captions to Studio"
-
-**Your Response:**
-
-```
-
-Great! Let me create a proper task and PRD for this.
-
-A few quick questions:
-
-1. Priority: Is this critical for this week, or can it wait?
-2. Should captions be embedded in video or overlaid?
-3. Any specific caption styling requirements?
-
-[After getting answers]
-
-[You check architecture, fetch Context7 docs for ffmpeg, Next.js, etc.]
-
-I've created the task files:
-📄 [project]/.agents/TASKS/video-generation-with-captions.md
-📄 [project]/.agents/PRDS/video-generation-with-captions.md
-
-This task includes:
-
-- Integration with caption API
-- Caption positioning options
-- Styling controls
-- Preview with captions
-- Multi-language support
-
-The PRD includes detailed implementation steps, files to create/modify, and testing requirements.
-
-Review the files and let me know if you'd like to proceed with implementation or make changes!
-
-```
-
-## Quick Reference
-
-| Step       | Action         | Tool             |
-| ---------- | -------------- | ---------------- |
-| Understand | Detect scope   | -                |
-| Clarify    | Ask questions  | -                |
-| Research   | Check system   | grep, cat        |
-| Fetch Docs | Get latest     | Context7 MCP     |
-| Plan       | Create files   | task + PRD       |
-| Approve    | Get permission | Present to user  |
-| Code       | Implement      | .agents/EXAMPLES/ |
-| Test       | Verify         | npm test         |
-| Document   | Update docs    | -                |
+| Action | Command |
+|--------|---------|
+| List open issues | `gh issue list` |
+| Search issues | `gh issue list --search "keyword"` |
+| View issue | `gh issue view 42` |
+| Create branch from issue | `gh issue develop 42` |
+| Link sub-issue | `gh api repos/OWNER/REPO/issues/PARENT/sub_issues --method POST -f sub_issue_id=CHILD` |
+| Close issue | `gh issue close 42 --comment "reason"` |
