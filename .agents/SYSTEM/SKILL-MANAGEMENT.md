@@ -1,5 +1,7 @@
 # Skill Management Guidelines
 
+> **Standards reference:** For the complete frontmatter spec, valid fields, common mistakes, and versioning rules, see [SKILL-STANDARDS.md](SKILL-STANDARDS.md).
+
 ## Core Principle
 
 **One source, all platforms.** Each skill has a single SKILL.md that works on every supported agent platform (Claude Code, Codex, Cursor, OpenClaw, Gemini).
