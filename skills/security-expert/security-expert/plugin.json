@@ -1,0 +1,12 @@
+{
+  "name": "security-expert",
+  "version": "1.0.0",
+  "description": "Expert in application security, OWASP Top 10, authentication, authorization, data protection, and se",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "growth-engine",
+  "version": "1.0.0",
+  "description": "Growth engine: SEO, ASO, viral loops, referral programs, and acquisition strategy.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

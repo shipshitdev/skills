@@ -1,0 +1,12 @@
+{
+  "name": "backend-security-coder",
+  "version": "1.0.0",
+  "description": "Secure backend coding: CSRF, injection prevention, database security, and audit logging.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

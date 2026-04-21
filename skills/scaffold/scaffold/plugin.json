@@ -1,0 +1,12 @@
+{
+  "name": "scaffold",
+  "version": "1.0.0",
+  "description": "Generate new code modules following existing codebase patterns",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

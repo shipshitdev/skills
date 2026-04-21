@@ -1,10 +1,10 @@
-# Universal Skill Writing Guide
+# Claude + Codex Skill Writing Guide
 
-Skills in this library are **platform-agnostic by default**. One SKILL.md works on Claude Code, Codex, Cursor, OpenClaw, Gemini, and any future agent that supports the skills.sh format.
+Skills in this library target **Claude Code and Codex together**. The shared baseline is the Agent Skills spec, and Claude-specific frontmatter extensions are allowed when they add real value.
 
 ## The Rule
 
-**Write for any agent, not a specific one.**
+**Write one SKILL.md that works cleanly in Codex and still exposes Claude-specific capabilities where useful.**
 
 | Do | Don't |
 |----|-------|
@@ -14,51 +14,53 @@ Skills in this library are **platform-agnostic by default**. One SKILL.md works 
 | "Search for" | "Use the Grep tool" |
 | "Find files matching" | "Use the Glob tool" |
 | "Run the `other-skill` skill" | "Invoke `other-skill` using the Skill tool" |
-| "This skill activates when..." | "Claude will use this skill when..." |
-| "extends your capabilities" | "extends Claude's capabilities" |
+| "This skill activates when..." | "Claude will use this skill when..." in universal instructions |
+| "extends your capabilities" | "extends Claude's capabilities" in universal instructions |
 
 ## Frontmatter
 
-Use the universal format. All platforms read `name` and `description`:
+Use Agent Skills frontmatter as the base. Codex relies on the base spec; Claude can also read its extension fields:
 
 ```yaml
 ---
 name: skill-name
 description: What the skill does and when to use it. Activates when...
-version: 1.0.0
-tags:
-  - relevant
-  - tags
+license: MIT
+metadata:
+  version: "1.0.0"
+  tags: "relevant, tags"
+# Claude Code extensions are allowed below when needed
+when_to_use: "extra trigger phrases for Claude"
+disable-model-invocation: true
 ---
 ```
 
-No platform-specific fields (`license`, `metadata.short-description`) — these are handled by the distribution tooling, not the skill content.
+Keep `version`, `tags`, and custom metadata inside `metadata`. Claude Code extension fields may stay top-level when they are intentionally used: `when_to_use`, `disable-model-invocation`, `user-invocable`, `argument-hint`, `model`, `effort`, `context`, `agent`, `hooks`, `paths`, and `shell`.
 
 ## Writing Style
 
-Use **imperative, action-oriented language**. This is the most universal style across all platforms:
+Use **imperative, action-oriented language**. This is the safest shared style across both CLIs:
 
 - "Use when you need to..."
 - "Run the command..."
 - "Read the configuration file..."
 - "Check for existing patterns before..."
 
-Avoid third-person ("Claude will...", "The agent should...") and passive voice.
+Avoid third-person behavior claims in universal instructions ("Claude will...", "Codex will...") unless you are documenting a CLI-specific behavior in a clearly labeled section.
 
-## Platform Capabilities Matrix
+## Compatibility Model
 
-| Capability | Claude Code | Codex | Cursor | OpenClaw | Gemini |
-|-----------|-------------|-------|--------|----------|--------|
-| Skills (SKILL.md) | Yes | Yes | Yes | Yes | Yes |
-| Slash commands | Yes | Yes | Yes (IDE) | Yes | Yes |
-| Subagents | Yes | Limited | No | Varies | Varies |
-| File read/write | Yes | Yes | Yes (IDE) | Yes | Yes |
-| Bash execution | Yes | Sandboxed | Yes | Yes | Yes |
-| Skill-to-skill invocation | Yes (Skill tool) | Yes | Limited | Varies | Yes |
-| Hooks | Yes | No | No | Varies | No |
-| MCP servers | Yes | No | Yes | Varies | Yes |
+| Layer | Claude Code | Codex |
+|-------|-------------|-------|
+| Agent Skills base spec | Yes | Yes |
+| `allowed-tools` | Yes | Varies |
+| Claude frontmatter extensions | Yes | No guarantee |
+| Skill body instructions | Yes | Yes |
+| Hooks via skill frontmatter | Yes | No guarantee |
 
-## When Platform-Specific Content IS Needed
+Codex-safe rule: never make the skill depend on Claude-only frontmatter to be understandable or runnable. If Claude-only fields are ignored, the body should still work.
+
+## When Platform-Specific Content Is Needed
 
 Rare cases where a skill legitimately needs different behavior per platform (e.g., `agent-folder-init` scaffolding different config directories):
 
@@ -72,7 +74,7 @@ Config directory: `~/.cursor/`
 <!-- PLATFORM-SPECIFIC-END: cursor -->
 ```
 
-Use this sparingly. If more than 10% of a skill is platform-specific, consider whether it should be split into separate skills.
+Use this sparingly. If more than 10% of a skill is platform-specific, consider splitting the skill or moving the CLI-specific material into `references/`.
 
 ## Skill-to-Skill References
 
@@ -93,7 +95,7 @@ For critical workflows, add a fallback:
 
 ## Path References
 
-Avoid hardcoded platform paths (`~/.claude/skills/`, `~/.codex/skills/`). If a skill needs to reference its own files, use relative paths:
+Avoid hardcoded platform paths in universal instructions. If a skill needs to reference its own files, use relative paths:
 
 ```markdown
 See `references/full-guide.md` for detailed documentation.
@@ -113,9 +115,10 @@ Move detailed content to `references/` early. Prefer examples over explanations.
 ## Checklist for New Skills
 
 - [ ] No tool-name references (Read tool, Bash tool, etc.)
-- [ ] No platform-name references (Claude, Codex) in instructions
+- [ ] No platform-name coupling in universal instructions
 - [ ] No hardcoded platform paths
 - [ ] Imperative writing style throughout
+- [ ] Claude-only frontmatter is intentional and documented by the skill body
 - [ ] Standard bash commands (portable across Unix/macOS)
 - [ ] Relative paths for bundled resources
 - [ ] Under 500 lines for SKILL.md body

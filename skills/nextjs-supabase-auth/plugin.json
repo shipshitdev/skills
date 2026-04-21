@@ -1,0 +1,12 @@
+{
+  "name": "nextjs-supabase-auth",
+  "version": "1.0.0",
+  "description": "Expert integration of Supabase Auth with Next.js App Router, including middleware and Server Actions.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "churn-prevention",
+  "version": "1.0.0",
+  "description": "Reduce SaaS churn with cancel flows, dynamic save offers, dunning, and win-back sequences.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

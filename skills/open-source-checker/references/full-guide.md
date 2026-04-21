@@ -1270,7 +1270,7 @@ pipeline {
 
 ## Commands to Execute
 
-\`\`\`bash
+```bash
 # Step 1: Create backup
 git clone --mirror . ../repo-backup-$(date +%Y%m%d)
 
@@ -1283,7 +1283,8 @@ echo "*.pem" >> .gitignore
 
 # Step 4: Force push
 git push origin --force --all
-\`\`\`
+```
+
 ```
 
 ---

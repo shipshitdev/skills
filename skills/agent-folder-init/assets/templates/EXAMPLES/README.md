@@ -43,9 +43,9 @@ EXAMPLES/
 
 ## Code
 
-\`\`\`typescript
+```typescript
 // Your code here
-\`\`\`
+```
 
 ## Usage
 
@@ -55,6 +55,7 @@ How to use this pattern.
 
 - Important consideration 1
 - Important consideration 2
+
 ```
 
 ---

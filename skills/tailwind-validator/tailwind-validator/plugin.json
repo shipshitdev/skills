@@ -1,0 +1,12 @@
+{
+  "name": "tailwind-validator",
+  "version": "1.0.0",
+  "description": "Validate Tailwind CSS v4 configuration and detect/prevent Tailwind v3 patterns",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

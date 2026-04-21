@@ -68,7 +68,7 @@ Structured framework for reviewing AI agent work before finalizing changes. Catc
 ls -la <file-path>
 
 # Check balanced code blocks
-grep -c '\`\`\`' file.md
+grep -c '```' file.md
 
 # Find violations
 grep -r "console\.log" <files>

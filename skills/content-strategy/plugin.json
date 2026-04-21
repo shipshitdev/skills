@@ -1,0 +1,12 @@
+{
+  "name": "content-strategy",
+  "version": "1.0.0",
+  "description": "Plan topic clusters, editorial roadmaps, and content mix for traffic and lead generation.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

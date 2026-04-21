@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Validate Skills (Platform-Agnostic Check)
+# Validate Skills (Claude + Codex Check)
 #
-# Validates skills have required files, frontmatter, and are free of
-# platform-specific language that prevents cross-platform compatibility.
+# Validates skills have required files, frontmatter, and avoid coupling
+# that would break shared Claude Code + Codex usage.
 #
 # Usage:
 #   ./scripts/validate-skill-sync.sh [skill-name]
@@ -36,8 +36,8 @@ TOTAL_WARNINGS=0
 TOTAL_SKILLS=0
 SKILLS_WITH_ISSUES=0
 
-# Skills that legitimately need platform references
-PLATFORM_EXEMPT_SKILLS="skill-creator agent-folder-init"
+# Skills that legitimately need limited platform references in subject matter
+PLATFORM_EXEMPT_SKILLS=""
 
 # Function to check frontmatter
 check_frontmatter() {
@@ -69,6 +69,77 @@ check_frontmatter() {
     fi
 
     return $issues
+}
+
+# Function to extract frontmatter body
+get_frontmatter_block() {
+    local file="$1"
+    awk '
+        NR == 1 && $0 == "---" { in_frontmatter = 1; next }
+        in_frontmatter && $0 == "---" { exit }
+        in_frontmatter { print }
+    ' "$file"
+}
+
+# Function to check for unsupported top-level frontmatter fields
+check_frontmatter_fields() {
+    local file="$1"
+    local warnings=0
+
+    if [[ ! -f "$file" ]]; then
+        return 0
+    fi
+
+    local frontmatter
+    frontmatter=$(get_frontmatter_block "$file")
+
+    if [[ -z "$frontmatter" ]]; then
+        return 0
+    fi
+
+    local allowed_fields=(
+        "name"
+        "description"
+        "license"
+        "compatibility"
+        "metadata"
+        "allowed-tools"
+        "when_to_use"
+        "disable-model-invocation"
+        "user-invocable"
+        "argument-hint"
+        "model"
+        "effort"
+        "context"
+        "agent"
+        "hooks"
+        "paths"
+        "shell"
+    )
+
+    while IFS= read -r line; do
+        [[ "$line" =~ ^[A-Za-z0-9_-]+: ]] || continue
+
+        local field
+        field="${line%%:*}"
+        local is_allowed=0
+
+        for allowed in "${allowed_fields[@]}"; do
+            if [[ "$field" == "$allowed" ]]; then
+                is_allowed=1
+                break
+            fi
+        done
+
+        if [[ $is_allowed -eq 0 ]]; then
+            local line_num
+            line_num=$(grep -n "^$field:" "$file" | head -1 | cut -d: -f1)
+            echo -e "  ${YELLOW}⚠${NC} Unsupported top-level frontmatter field: '$field' (line $line_num)"
+            ((warnings++))
+        fi
+    done <<< "$frontmatter"
+
+    return $warnings
 }
 
 # Function to check for platform-specific tool references
@@ -134,16 +205,20 @@ check_platform_names() {
     local content
     content=$(sed '/<!-- PLATFORM-SPECIFIC-START/,/<!-- PLATFORM-SPECIFIC-END/d' "$file")
 
-    # Check for platform-name coupling (agent references, not general mentions)
+    # Check for platform-name coupling in universal instructions.
+    # Small CLI-specific notes are fine when isolated behind marker blocks.
     local platform_patterns=(
         "Claude will"
         "Claude reads"
         "Claude determines"
-        "extends Claude"
+        "This skill enables Claude"
+        "Claude should use"
+        "Ask Claude to:"
+        "^Claude:$"
+        "another Claude instance"
         "Codex will"
         "Codex reads"
         "Codex determines"
-        "extends Codex"
     )
 
     for pattern in "${platform_patterns[@]}"; do
@@ -229,6 +304,10 @@ validate_skill() {
     if [[ -f "$skill_file" ]]; then
         check_frontmatter "$skill_file" || skill_issues=$?
 
+        local frontmatter_warnings=0
+        check_frontmatter_fields "$skill_file" || frontmatter_warnings=$?
+        ((skill_warnings += frontmatter_warnings))
+
         # Platform-agnostic checks
         check_tool_references "$skill_file" || skill_warnings=$?
 
@@ -268,9 +347,9 @@ validate_skill() {
     fi
 
     if [[ $skill_issues -eq 0 ]] && [[ $skill_warnings -eq 0 ]]; then
-        echo -e "  ${GREEN}✓${NC} Valid (platform-agnostic)"
+        echo -e "  ${GREEN}✓${NC} Valid (Claude + Codex)"
     elif [[ $skill_issues -eq 0 ]]; then
-        echo -e "  ${YELLOW}⚠${NC} Valid but has $skill_warnings platform-specific warning(s)"
+        echo -e "  ${YELLOW}⚠${NC} Valid but has $skill_warnings compatibility warning(s)"
         ((SKILLS_WITH_ISSUES++))
         ((TOTAL_WARNINGS += skill_warnings))
     else
@@ -294,11 +373,14 @@ if [[ -n "$SKILL_NAME" ]]; then
     validate_skill "$SKILL_NAME"
 else
     # Validate all skills
-    echo -e "${BLUE}Validating all skills (platform-agnostic check)...${NC}"
+    echo -e "${BLUE}Validating all skills (Claude + Codex check)...${NC}"
     echo
 
     for skill_dir in "$SKILLS_DIR"/*/; do
         if [[ -d "$skill_dir" ]]; then
+            if [[ -z "$(find "$skill_dir" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
+                continue
+            fi
             skill_name=$(basename "$skill_dir")
             ((TOTAL_SKILLS++))
             validate_skill "$skill_name"
@@ -311,15 +393,15 @@ echo -e "${BLUE}=== Validation Summary ===${NC}"
 echo "Total skills checked: $TOTAL_SKILLS"
 echo "Skills with issues: $SKILLS_WITH_ISSUES"
 echo "Errors (missing files/frontmatter): $TOTAL_ISSUES"
-echo "Warnings (platform-specific language): $TOTAL_WARNINGS"
+echo "Warnings (compatibility issues): $TOTAL_WARNINGS"
 echo
 
 if [[ $TOTAL_ISSUES -eq 0 ]] && [[ $TOTAL_WARNINGS -eq 0 ]]; then
-    echo -e "${GREEN}✓ All skills validated — fully platform-agnostic!${NC}"
+    echo -e "${GREEN}✓ All skills validated for shared Claude Code + Codex use.${NC}"
     exit 0
 elif [[ $TOTAL_ISSUES -eq 0 ]]; then
-    echo -e "${YELLOW}⚠ No errors, but $TOTAL_WARNINGS platform-specific warning(s) found.${NC}"
-    echo -e "${YELLOW}  Review warnings above and update skills for cross-platform compatibility.${NC}"
+    echo -e "${YELLOW}⚠ No errors, but $TOTAL_WARNINGS compatibility warning(s) found.${NC}"
+    echo -e "${YELLOW}  Review warnings above and update skills for shared Claude Code + Codex usage.${NC}"
     exit 0
 else
     echo -e "${RED}✗ $TOTAL_ISSUES error(s) found. Fix these before publishing.${NC}"

@@ -1,0 +1,12 @@
+{
+  "name": "postgres-best-practices",
+  "version": "1.0.0",
+  "description": "Postgres performance optimization: indexing, connection pooling, RLS, schema design, and monitoring.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

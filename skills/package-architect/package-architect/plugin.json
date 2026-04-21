@@ -1,0 +1,12 @@
+{
+  "name": "package-architect",
+  "version": "1.0.0",
+  "description": "Design and maintain TypeScript packages in a monorepo, including exports and build configuration.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

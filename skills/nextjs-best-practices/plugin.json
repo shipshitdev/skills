@@ -1,0 +1,12 @@
+{
+  "name": "nextjs-best-practices",
+  "version": "1.0.0",
+  "description": "Next.js App Router principles: Server Components, data fetching, routing patterns, and caching.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

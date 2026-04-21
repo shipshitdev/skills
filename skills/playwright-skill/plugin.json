@@ -1,0 +1,12 @@
+{
+  "name": "playwright-skill",
+  "version": "1.0.0",
+  "description": "Browser automation with Playwright: testing UI flows, forms, screenshots, and broken links.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

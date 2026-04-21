@@ -109,17 +109,18 @@ tags: prefix, technique, related-concepts
 
 **Incorrect (what's wrong):**
 
-\`\`\`language
+```language
 // Bad example with comments explaining the cost
-\`\`\`
+```
 
 **Correct (what's right):**
 
-\`\`\`language
+```language
 // Good example with comments explaining the benefit
-\`\`\`
+```
 
 Reference: [Link](https://example.com)
+
 ```
 
 ## File Naming Convention

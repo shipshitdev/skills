@@ -1,0 +1,12 @@
+{
+  "name": "bun-development",
+  "version": "1.0.0",
+  "description": "Fast, modern JS/TS development with Bun: runtime, bundler, test runner, and built-in APIs.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

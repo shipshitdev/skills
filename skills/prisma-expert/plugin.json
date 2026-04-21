@@ -1,0 +1,12 @@
+{
+  "name": "prisma-expert",
+  "version": "1.0.0",
+  "description": "Prisma ORM: schema design, migrations, N+1 prevention, connection management, and transactions.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

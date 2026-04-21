@@ -1,7 +1,7 @@
 {
   "name": "nestjs-expert",
   "version": "1.0.0",
-  "description": "NestJS architecture, DI, guards, MongoDB/Mongoose, auth, and production patterns.",
+  "description": "Enterprise NestJS architecture: DI, guards, interceptors, TypeORM/Prisma, JWT auth, and testing.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

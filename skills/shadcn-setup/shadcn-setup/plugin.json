@@ -1,0 +1,12 @@
+{
+  "name": "shadcn-setup",
+  "version": "1.0.0",
+  "description": "Set up shadcn/ui component library with Tailwind CSS v4 configuration",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

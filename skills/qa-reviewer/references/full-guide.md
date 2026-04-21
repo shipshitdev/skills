@@ -122,7 +122,7 @@ Check for:
 # Check balanced code blocks
 python3 -c "
 content = open('file.md').read()
-blocks = content.count('\`\`\`')
+blocks = content.count('```')
 print(f'Blocks: {blocks}, Balanced: {blocks % 2 == 0}')
 "
 

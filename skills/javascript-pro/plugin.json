@@ -1,0 +1,12 @@
+{
+  "name": "javascript-pro",
+  "version": "1.0.0",
+  "description": "Master modern JavaScript with ES6+, async patterns, event loops, and Node.js/browser APIs.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

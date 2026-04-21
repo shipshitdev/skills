@@ -1,0 +1,12 @@
+{
+  "name": "llm-structured-output",
+  "version": "1.0.0",
+  "description": "Extract typed JSON from LLMs using response_format, tool_use, and Zod/Pydantic schemas.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "component-library",
+  "version": "1.0.0",
+  "description": "Expert React/Next.js component architect specializing in creating consistent, reusable, and maintain",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "frontend-security-coder",
+  "version": "1.0.0",
+  "description": "Secure frontend coding: XSS prevention, CSP, safe DOM manipulation, and auth token storage.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

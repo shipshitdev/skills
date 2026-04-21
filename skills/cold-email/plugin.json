@@ -1,0 +1,12 @@
+{
+  "name": "cold-email",
+  "version": "1.0.0",
+  "description": "Write B2B cold emails and follow-up sequences that earn replies.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

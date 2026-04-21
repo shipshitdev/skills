@@ -4,7 +4,7 @@
 
 ## Core Principle
 
-**One source, all platforms.** Each skill has a single SKILL.md that works on every supported agent platform (Claude Code, Codex, Cursor, OpenClaw, Gemini).
+**One source, two primary CLIs.** Each skill has a single SKILL.md that must work in both Claude Code and Codex. The Agent Skills spec is the shared baseline; Claude-specific extensions are allowed on top.
 
 No per-platform copies. No sync workflows. No platform-specific forks.
 
@@ -24,9 +24,10 @@ skills/{skill-name}/
 See [PLATFORM-ADAPTATIONS.md](PLATFORM-ADAPTATIONS.md) for the full writing guide. Key rules:
 
 1. **No tool names** — write "Read the file", not "Use the Read tool"
-2. **No platform names** — write "This skill activates when...", not "Claude will use this when..."
-3. **No hardcoded paths** — use relative paths for bundled resources
-4. **Imperative style** — "Use when...", "Run the command...", "Check for..."
+2. **No platform-name coupling in universal instructions** — keep shared instructions neutral, and isolate Claude-only notes when needed
+3. **Shared frontmatter baseline** — keep `version`, `tags`, and custom metadata inside `metadata`; keep official Claude extension fields top-level when intentionally used
+4. **No hardcoded paths** — use relative paths for bundled resources
+5. **Imperative style** — "Use when...", "Run the command...", "Check for..."
 
 ## When Platform-Specific Content Is Needed
 
@@ -42,8 +43,8 @@ This should be rare. If you find yourself adding many platform blocks, reconside
 
 ## Creating a New Skill
 
-1. Create `skills/{skill-name}/SKILL.md` with universal frontmatter
-2. Write platform-agnostic content following the writing rules
+1. Create `skills/{skill-name}/SKILL.md` with Agent Skills frontmatter plus Claude extensions only if needed
+2. Write shared Claude/Codex content following the writing rules
 3. Add `references/` for detailed documentation
 4. Add `scripts/` for executable code
 5. Run the validator: `./scripts/validate-skill-sync.sh`
@@ -67,8 +68,9 @@ Run the platform-agnostic validator:
 This checks for:
 
 - Tool-name references (Skill tool, Read tool, etc.)
-- Platform-name references outside marker blocks
+- Platform-name coupling outside marker blocks
 - Hardcoded platform paths
+- Unsupported top-level frontmatter fields
 - SKILL.md line count (warn if >500)
 
 ## Distribution
@@ -89,7 +91,7 @@ The `generate-manifest.js` script sets compatibility for all platforms. If a ski
 platforms: [claude-code, cursor]  # only if restricted
 ```
 
-Default (no field) = works everywhere.
+Default (no field) = should work in both Claude Code and Codex.
 
 ## Bundle Management
 

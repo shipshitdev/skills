@@ -1,0 +1,12 @@
+{
+  "name": "copywriting",
+  "version": "1.0.0",
+  "description": "Conversion-focused marketing copy for landing pages, CTAs, and emails. No fabrication.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://github.com/shipshitdev"
+  },
+  "license": "MIT",
+  "skills": "."
+}
