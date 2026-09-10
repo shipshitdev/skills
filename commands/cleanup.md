@@ -22,14 +22,19 @@ extend the sweep to completed GitHub issues and old session files.
 
 ## Git Cleanup (default / `branches` / `worktrees` / `verify` / `prune`)
 
-Use the `git-cleanup` skill. It is squash-merge aware: GitHub PR merge state is
-the merge oracle, never `git branch --merged` ancestry alone.
+Use the `git-cleanup` skill. Fetch origin trunk first and classify by **file
+content on trunk**, not unique commit SHAs. Squash-merge rewrites every commit;
+`git patch-id` against master is not a landing signal. GitHub merged-PR metadata
+is one oracle; path blobs that already exist on trunk at the same path are the
+squash oracle.
 
-1. Verify every candidate branch's work is provably in the trunk (default
-   branch); report in-flight and genuinely stranded branches loudly.
-2. Print the prune plan — local branches, remote branches, worktrees — plus a
+1. Fetch origin trunk and fast-forward local trunk when it is behind. Never
+   classify worktrees against a stale local master.
+2. Verify every candidate's files are on trunk; report in-flight and genuinely
+   stranded branches (unique blobs at a path) loudly.
+3. Print the prune plan — local branches, remote branches, worktrees — plus a
    skipped list with reasons. Dry-run is the default; nothing is deleted.
-3. In `prune` mode, delete only after you confirm the printed plan.
+4. In `prune` mode, delete only after you confirm the printed plan.
 
 ## Tasks (`tasks`)
 

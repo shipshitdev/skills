@@ -1,7 +1,7 @@
 {
   "name": "git-cleanup",
-  "version": "4.0.0",
-  "description": "Verify branches are provably merged into the trunk, then prune merged branches and stale worktrees.",
+  "version": "4.1.0",
+  "description": "Fetch trunk, prove candidate file content reached trunk, then prune merged branches and stale worktrees.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

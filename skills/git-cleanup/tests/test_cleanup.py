@@ -98,12 +98,16 @@ class GitFixtureTests(unittest.TestCase):
 
     def test_fork_pr_metadata_cannot_prove_squash(self):
         self.squash(head_repo="fork/repo")
-        self.assertEqual(self.repo.plan("local-branches")["actions"], [])
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
 
     def test_missing_head_repository_cannot_prove_squash(self):
         self.squash()
         self.prs[0]["head"]["repo"] = None
-        self.assertEqual(self.repo.plan("local-branches")["actions"], [])
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
 
     def test_same_subject_different_patch_is_not_proof(self):
         self.git("switch", "-c", "feature")
@@ -131,7 +135,7 @@ class GitFixtureTests(unittest.TestCase):
         self.git("cherry-pick", first, second)
         self.git("push", "origin", "main")
         plan = self.repo.plan("local-branches")
-        self.assertEqual(plan["actions"][0]["proof"]["kind"], "every-commit-patch")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
         self.assertEqual(len(plan["actions"][0]["proof"]["ahead"]), 2)
 
     def test_whitespace_difference_is_not_patch_equivalence(self):
@@ -152,7 +156,7 @@ class GitFixtureTests(unittest.TestCase):
         self.git("push", "origin", "main")
         self.assertEqual(self.repo.plan("local-branches")["actions"], [])
 
-    def test_historical_patch_membership_does_not_prove_combined_final_state(self):
+    def test_historical_path_blobs_prove_content_even_after_trunk_reverts(self):
         self.git("switch", "-c", "feature")
         first = self.commit("first feature", "first\n", "first.txt")
         second = self.commit("second feature", "second\n", "second.txt")
@@ -163,13 +167,18 @@ class GitFixtureTests(unittest.TestCase):
         self.git("cherry-pick", second)
         self.git("revert", "--no-edit", "HEAD")
         self.git("push", "origin", "main")
-        self.assertEqual(self.repo.plan("local-branches")["actions"], [])
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
 
-    def test_empty_commit_and_merge_commit_are_not_silently_ignored(self):
+    def test_empty_commit_is_not_content_proof(self):
         self.git("switch", "-c", "feature")
         self.git("commit", "--allow-empty", "-m", "empty")
         self.git("switch", "main")
         self.assertEqual(self.repo.plan("local-branches")["actions"], [])
+
+    def test_merge_of_already_landed_files_is_content_on_trunk(self):
+        self.git("switch", "-c", "feature")
+        self.git("commit", "--allow-empty", "-m", "empty")
         self.git("switch", "-c", "side")
         self.commit("side", "side\n", "side.txt")
         self.git("switch", "feature")
@@ -177,7 +186,12 @@ class GitFixtureTests(unittest.TestCase):
         self.git("switch", "main")
         self.git("cherry-pick", "side")
         self.git("push", "origin", "main")
-        self.assertNotIn("refs/heads/feature", self.action_names(self.repo.plan("local-branches")))
+        plan = self.repo.plan("local-branches")
+        self.assertIn("refs/heads/feature", self.action_names(plan))
+        self.assertEqual(
+            next(action["proof"]["kind"] for action in plan["actions"]
+                 if action["ref"] == "refs/heads/feature"),
+            "content-on-trunk")
 
     def test_protected_branch_names_are_literal_strings(self):
         self.git("branch", "release.v1")
@@ -278,9 +292,10 @@ class GitFixtureTests(unittest.TestCase):
         result = self.repo.apply(plan, "local-branches")
         self.assertEqual(len(result["actions"]), 3)
         self.assertTrue(all(item["result"] == "removed" for item in result["actions"]))
+        self.assertTrue(all(item["proof"]["kind"] == "content-on-trunk" for item in result["actions"]))
         scans = [call.args for call in self.repo.run.call_args_list
                  if call.args[:3] == ("git", "rev-list", "--max-count=500")]
-        self.assertEqual(len(scans), 1)
+        self.assertEqual(len(scans), 0)
 
     def test_exact_pr_proof_does_not_scan_trunk_history(self):
         self.squash()
@@ -409,7 +424,10 @@ class GitFixtureTests(unittest.TestCase):
         self.assertFalse(worktree.exists())
         self.assertEqual(self.git("show-ref"), before)
         commands = [call.args for call in self.repo.run.call_args_list]
-        self.assertFalse(any("fetch" in cmd or "prune" in cmd for cmd in commands))
+        self.assertFalse(any(len(cmd) >= 3 and cmd[1:3] in (("worktree", "prune"), ("remote", "prune"))
+                             for cmd in commands))
+        self.assertFalse(any(len(cmd) >= 2 and cmd[1] == "fetch" and "--prune" in cmd
+                             and "--no-prune" not in cmd for cmd in commands))
 
     def test_dirty_untracked_or_changed_worktree_is_preserved(self):
         worktree = self.make_worktree()
@@ -512,6 +530,36 @@ class GitFixtureTests(unittest.TestCase):
         with patch.object(self.repo, "git", side_effect=git):
             self.assertEqual(self.repo.apply(plan, "remote-branches")["actions"][0]["result"], "skipped")
         self.assertEqual(self.repo.remote_heads()["refs/heads/feature"], new)
+
+    def test_squash_without_pr_is_proven_by_content_on_trunk(self):
+        self.squash()
+        self.prs = []
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
+
+    def test_squash_then_trunk_edits_same_path_still_proven(self):
+        self.squash()
+        self.prs = []
+        self.git("switch", "main")
+        self.commit("later trunk edit", "third\n")
+        self.git("push", "origin", "main")
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
+
+    def test_stale_local_trunk_is_fetched_and_fast_forwarded(self):
+        base = self.git("rev-parse", "HEAD")
+        self.git("branch", "feature")
+        self.git("switch", "main")
+        newer = self.commit("newer trunk", "newer\n")
+        self.git("push", "origin", "main")
+        self.git("reset", "--hard", base)
+        self.assertEqual(self.git("rev-parse", "HEAD"), base)
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.git("rev-parse", "main"), newer)
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "ancestor")
 
     def test_local_cas_rejects_ref_moved_after_revalidation(self):
         self.git("branch", "feature")

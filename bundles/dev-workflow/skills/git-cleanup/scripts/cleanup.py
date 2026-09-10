@@ -102,14 +102,84 @@ class Repository:
         branch = self.run("git", "-C", str(path), "symbolic-ref", "-q", "HEAD",
                           accepted=(0, 1)).stdout.strip()
         status = self.run("git", "-C", str(path), "status", "--porcelain=v1", "-z",
-                          "--untracked-files=all", "--ignored", "--ignore-submodules=none").stdout
+                          "--untracked-files=all", "--ignore-submodules=none").stdout
         if status or "locked" in record or "prunable" in record:
-            raise Refused("dirty, ignored files, locked, or stale worktree")
+            raise Refused("dirty, untracked files, locked, or stale worktree")
         return {"path": str(path.resolve()), "oid": head, "ref": branch}
 
     def remote_heads(self) -> dict[str, str]:
         return {ref: oid for oid, ref in (line.split("\t") for line in
                 self.git("ls-remote", "--heads", "origin").splitlines())}
+
+    def refresh_trunk(self, trunk: str) -> str:
+        """Fetch origin trunk and fast-forward the local trunk ref when it is behind."""
+        self.git("fetch", "--no-prune", "origin",
+                 f"refs/heads/{trunk}:refs/remotes/origin/{trunk}")
+        remote_oid = self.oid(f"refs/remotes/origin/{trunk}")
+        local_ref = f"refs/heads/{trunk}"
+        if self.run("git", "show-ref", "--verify", "--quiet", local_ref,
+                    accepted=(0, 1)).returncode != 0:
+            return remote_oid
+        local_oid = self.oid(local_ref)
+        if local_oid == remote_oid or not self.ancestor(local_oid, remote_oid):
+            return remote_oid
+        current = self.run("git", "symbolic-ref", "-q", "HEAD", accepted=(0, 1)).stdout.strip()
+        if current == local_ref:
+            self.git("merge", "--ff-only", remote_oid)
+            return remote_oid
+        for record in self.worktrees():
+            if record.get("branch") == local_ref:
+                self.git("-C", record["worktree"], "merge", "--ff-only", remote_oid)
+                return remote_oid
+        self.git("update-ref", local_ref, remote_oid, local_oid)
+        return remote_oid
+
+    def blob_at(self, commit: str, path: str) -> str | None:
+        output = self.run("git", "ls-tree", "-z", "--full-tree", commit, "--", path).stdout
+        if not output:
+            return None
+        metadata, _, _rest = output.partition("\t")
+        parts = metadata.split()
+        return parts[2] if len(parts) >= 3 else None
+
+    def path_has_blob(self, trunk: str, path: str, blob: str) -> bool:
+        if self.blob_at(trunk, path) == blob:
+            return True
+        found = self.git("log", "-1", "--pretty=%H", f"--find-object={blob}",
+                         trunk, "--", path)
+        return bool(found)
+
+    def content_on_trunk(self, oid: str, trunk: str) -> bool:
+        """True when every path the candidate changed already reached trunk.
+
+        Squash-merge rewrites commit SHAs, so unique commits are not evidence.
+        Compare blobs at each changed path against current trunk and that path's
+        trunk history. An empty file delta is not proof (empty commits stay).
+        """
+        base = self.git("merge-base", oid, trunk)
+        raw = self.run("git", "diff", "--raw", "--full-index", "-z", "--no-renames",
+                       "--no-ext-diff", base, oid, "--").stdout
+        if not raw:
+            return False
+        parts = raw.split("\0")
+        index = 0
+        saw_path = False
+        while index < len(parts) and parts[index]:
+            metadata = parts[index]
+            path = parts[index + 1]
+            index += 2
+            fields = metadata.split()
+            if len(fields) < 5:
+                return False
+            new_blob, status = fields[3], fields[4]
+            saw_path = True
+            if status == "D" or new_blob == "0" * 40:
+                if self.blob_at(trunk, path) is not None:
+                    return False
+                continue
+            if not self.path_has_blob(trunk, path, new_blob):
+                return False
+        return saw_path
 
     def context(self, trunk: str | None = None) -> dict:
         metadata = json.loads(self.run("gh", "repo", "view", "--json",
@@ -125,22 +195,56 @@ class Repository:
                                               "nameWithOwner").stdout)
         if origin_metadata["nameWithOwner"].lower() != metadata["nameWithOwner"].lower():
             raise Refused("origin repository differs from selected GitHub repository")
+        self.refresh_trunk(trunk)
         remote_oid = self.remote_heads().get(f"refs/heads/{trunk}")
         if not remote_oid or self.oid(remote_oid) != remote_oid:
-            raise Refused("remote trunk object unavailable; refresh separately without pruning")
+            raise Refused("remote trunk object unavailable after fetching origin trunk")
         current = self.run("git", "symbolic-ref", "-q", "HEAD", accepted=(0, 1)).stdout.strip()
         return {"root": str(self.root), "common": self.git("rev-parse", "--path-format=absolute", "--git-common-dir"),
                 "repository": metadata["nameWithOwner"], "remote": remote,
                 "trunk": trunk, "trunk_oid": remote_oid, "current": current,
                 "head": self.oid("HEAD")}
 
-    def assert_no_operations(self, worktrees: list[dict]) -> None:
-        markers = ("rebase-merge", "rebase-apply", "MERGE_HEAD", "CHERRY_PICK_HEAD",
-                   "REVERT_HEAD", "sequencer", "BISECT_LOG")
+    OPERATION_MARKERS = ("rebase-merge", "rebase-apply", "MERGE_HEAD", "CHERRY_PICK_HEAD",
+                         "REVERT_HEAD", "sequencer", "BISECT_LOG")
+    OPERATION_REASON = "active operation in this worktree or on this branch; preserve until it finishes"
+
+    def active_operations(self, worktrees: list[dict]) -> tuple[set[str], set[str]]:
+        """Worktree paths and branch refs pinned by an in-progress or unreadable operation."""
+        paths: set[str] = set()
+        refs: set[str] = set()
         for record in worktrees:
-            git_dir = Path(self.git("-C", record["worktree"], "rev-parse", "--absolute-git-dir"))
-            if any((git_dir / marker).exists() for marker in markers):
-                raise Refused("active worktree operation; preserve cleanup candidates until it finishes")
+            branch = record.get("branch")
+            try:
+                git_dir = Path(self.git("-C", record["worktree"], "rev-parse", "--absolute-git-dir"))
+            except FAILURES:
+                paths.add(record["worktree"])
+                refs.update({branch} if branch else set())
+                continue
+            if not any((git_dir / marker).exists() for marker in self.OPERATION_MARKERS):
+                continue
+            paths.add(record["worktree"])
+            if branch:
+                refs.add(branch)
+            # Rebase and bisect detach HEAD; their metadata names the original branch.
+            for name in ("rebase-merge/head-name", "rebase-apply/head-name", "BISECT_START"):
+                marker = git_dir / name
+                if not marker.is_file():
+                    continue
+                value = marker.read_text().strip()
+                if value.startswith("refs/heads/"):
+                    refs.add(value)
+                elif value and self.run("git", "check-ref-format", f"refs/heads/{value}",
+                                        accepted=(0, 1)).returncode == 0:
+                    refs.add(f"refs/heads/{value}")
+        return paths, refs
+
+    def assert_not_pinned(self, candidate: dict, operations: tuple[set[str], set[str]]) -> None:
+        paths, refs = operations
+        if candidate["kind"] == "worktree" and candidate["path"] in paths:
+            raise Refused(self.OPERATION_REASON)
+        if candidate["kind"] in ("local", "remote") and candidate["ref"] in refs:
+            raise Refused(self.OPERATION_REASON)
 
     def pull_requests(self, repository: str, branch: str) -> list[dict]:
         owner = repository.split("/")[0]
@@ -198,6 +302,11 @@ class Repository:
             if candidate_patch and candidate_patch == self.patch(parents[0], merge):
                 return {"kind": "exact-pr-head-squash", "pr": pr["number"],
                         "head": oid, "merge": merge, "ahead": ahead}
+        # Squash-merge rewrites commit SHAs. Unique commits and per-commit
+        # patch IDs are not merge evidence. Path blobs that already exist on
+        # trunk (current tree or that path's history) prove the codebase landed.
+        if self.content_on_trunk(oid, trunk):
+            return {"kind": "content-on-trunk", "ahead": ahead}
         # Every non-upstream commit is accounted for. Merge commits and empty
         # patches are deliberately not silently omitted as they are by git cherry.
         upstream_patches = self.trunk_patches(trunk)
@@ -277,16 +386,11 @@ class Repository:
         if "remote" in SCOPES[scope]:
             for ref, oid in remote_heads.items():
                 candidates.append({"kind": "remote", "ref": ref, "oid": oid})
-        operation_error = None
-        try:
-            self.assert_no_operations(worktrees)
-        except FAILURES as error:
-            operation_error = str(error)
+        operations = self.active_operations(worktrees)
         actions, skipped, pr_cache = [], [], {}
         for candidate in candidates:
             try:
-                if operation_error:
-                    raise Refused(operation_error)
+                self.assert_not_pinned(candidate, operations)
                 actions.append(self.evaluate(candidate, context, scope, worktrees=worktrees,
                                              heads=remote_heads, pr_cache=pr_cache))
             except FAILURES as error:
@@ -297,7 +401,7 @@ class Repository:
         if self.context(context["trunk"]) != context:
             raise Refused("repository changed immediately before deletion")
         worktrees = self.worktrees()
-        self.assert_no_operations(worktrees)
+        self.assert_not_pinned(action, self.active_operations(worktrees))
         if action["kind"] == "remote":
             if self.remote_heads().get(action["ref"]) != action["oid"]:
                 raise Refused("remote ref changed immediately before deletion")

@@ -111,6 +111,76 @@ class Repository:
         return {ref: oid for oid, ref in (line.split("\t") for line in
                 self.git("ls-remote", "--heads", "origin").splitlines())}
 
+    def refresh_trunk(self, trunk: str) -> str:
+        """Fetch origin trunk and fast-forward the local trunk ref when it is behind."""
+        self.git("fetch", "--no-prune", "origin",
+                 f"refs/heads/{trunk}:refs/remotes/origin/{trunk}")
+        remote_oid = self.oid(f"refs/remotes/origin/{trunk}")
+        local_ref = f"refs/heads/{trunk}"
+        if self.run("git", "show-ref", "--verify", "--quiet", local_ref,
+                    accepted=(0, 1)).returncode != 0:
+            return remote_oid
+        local_oid = self.oid(local_ref)
+        if local_oid == remote_oid or not self.ancestor(local_oid, remote_oid):
+            return remote_oid
+        current = self.run("git", "symbolic-ref", "-q", "HEAD", accepted=(0, 1)).stdout.strip()
+        if current == local_ref:
+            self.git("merge", "--ff-only", remote_oid)
+            return remote_oid
+        for record in self.worktrees():
+            if record.get("branch") == local_ref:
+                self.git("-C", record["worktree"], "merge", "--ff-only", remote_oid)
+                return remote_oid
+        self.git("update-ref", local_ref, remote_oid, local_oid)
+        return remote_oid
+
+    def blob_at(self, commit: str, path: str) -> str | None:
+        output = self.run("git", "ls-tree", "-z", "--full-tree", commit, "--", path).stdout
+        if not output:
+            return None
+        metadata, _, _rest = output.partition("\t")
+        parts = metadata.split()
+        return parts[2] if len(parts) >= 3 else None
+
+    def path_has_blob(self, trunk: str, path: str, blob: str) -> bool:
+        if self.blob_at(trunk, path) == blob:
+            return True
+        found = self.git("log", "-1", "--pretty=%H", f"--find-object={blob}",
+                         trunk, "--", path)
+        return bool(found)
+
+    def content_on_trunk(self, oid: str, trunk: str) -> bool:
+        """True when every path the candidate changed already reached trunk.
+
+        Squash-merge rewrites commit SHAs, so unique commits are not evidence.
+        Compare blobs at each changed path against current trunk and that path's
+        trunk history. An empty file delta is not proof (empty commits stay).
+        """
+        base = self.git("merge-base", oid, trunk)
+        raw = self.run("git", "diff", "--raw", "--full-index", "-z", "--no-renames",
+                       "--no-ext-diff", base, oid, "--").stdout
+        if not raw:
+            return False
+        parts = raw.split("\0")
+        index = 0
+        saw_path = False
+        while index < len(parts) and parts[index]:
+            metadata = parts[index]
+            path = parts[index + 1]
+            index += 2
+            fields = metadata.split()
+            if len(fields) < 5:
+                return False
+            new_blob, status = fields[3], fields[4]
+            saw_path = True
+            if status == "D" or new_blob == "0" * 40:
+                if self.blob_at(trunk, path) is not None:
+                    return False
+                continue
+            if not self.path_has_blob(trunk, path, new_blob):
+                return False
+        return saw_path
+
     def context(self, trunk: str | None = None) -> dict:
         metadata = json.loads(self.run("gh", "repo", "view", "--json",
                                        "nameWithOwner,defaultBranchRef").stdout)
@@ -125,9 +195,10 @@ class Repository:
                                               "nameWithOwner").stdout)
         if origin_metadata["nameWithOwner"].lower() != metadata["nameWithOwner"].lower():
             raise Refused("origin repository differs from selected GitHub repository")
+        self.refresh_trunk(trunk)
         remote_oid = self.remote_heads().get(f"refs/heads/{trunk}")
         if not remote_oid or self.oid(remote_oid) != remote_oid:
-            raise Refused("remote trunk object unavailable; refresh separately without pruning")
+            raise Refused("remote trunk object unavailable after fetching origin trunk")
         current = self.run("git", "symbolic-ref", "-q", "HEAD", accepted=(0, 1)).stdout.strip()
         return {"root": str(self.root), "common": self.git("rev-parse", "--path-format=absolute", "--git-common-dir"),
                 "repository": metadata["nameWithOwner"], "remote": remote,
@@ -231,6 +302,11 @@ class Repository:
             if candidate_patch and candidate_patch == self.patch(parents[0], merge):
                 return {"kind": "exact-pr-head-squash", "pr": pr["number"],
                         "head": oid, "merge": merge, "ahead": ahead}
+        # Squash-merge rewrites commit SHAs. Unique commits and per-commit
+        # patch IDs are not merge evidence. Path blobs that already exist on
+        # trunk (current tree or that path's history) prove the codebase landed.
+        if self.content_on_trunk(oid, trunk):
+            return {"kind": "content-on-trunk", "ahead": ahead}
         # Every non-upstream commit is accounted for. Merge commits and empty
         # patches are deliberately not silently omitted as they are by git cherry.
         upstream_patches = self.trunk_patches(trunk)
