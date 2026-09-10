@@ -1516,12 +1516,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "872dea1ca83c07a868f544d8e0806125ca4ae9aef3093a1fedd793e2e62b35b3"
+          "sha256": "95977aaae82bcd3ad70964ac825d6fafb0a546260a05b82b6107047cc8ef34a2"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Reviewed git-cleanup destination: fetch origin trunk before classify, prove squash landings by path blobs on trunk, keep unique WIP.",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4173,12 +4173,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "872dea1ca83c07a868f544d8e0806125ca4ae9aef3093a1fedd793e2e62b35b3"
+          "sha256": "95977aaae82bcd3ad70964ac825d6fafb0a546260a05b82b6107047cc8ef34a2"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Reviewed git-cleanup destination: fetch origin trunk before classify, prove squash landings by path blobs on trunk, keep unique WIP.",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
