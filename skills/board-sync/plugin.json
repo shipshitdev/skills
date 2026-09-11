@@ -1,6 +1,6 @@
 {
   "name": "board-sync",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Reconcile board state with delivery evidence and prepare approved field corrections.",
   "author": {
     "name": "Ship Shit Dev",

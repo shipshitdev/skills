@@ -200,7 +200,7 @@
     {
       "name": "board-sync",
       "source": "./skills/board-sync",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "description": "Reconciles a project board with current work and delivery evidence, reports incomplete coverage and metadata gaps, and applies only approved provider-supported field changes. Use when auditing board drift, reviewing blocked work, or assessing upcoming delivery."
     },
     {

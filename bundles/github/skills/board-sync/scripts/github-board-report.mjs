@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 import { execFileSync } from 'node:child_process';
-import { pathToFileURL } from 'node:url';
+import { realpathSync } from 'node:fs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const PAGE = 'pageInfo { hasNextPage endCursor } totalCount';
 const FIELDS = `... on ProjectV2ItemFieldSingleSelectValue {
@@ -409,7 +410,18 @@ export function parseArgs(argv) {
   return options;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+function realPath(path) {
+  try { return realpathSync(path); } catch { return path; }
+}
+
+// Node resolves the main module through symlinks, so a skill installed via a
+// symlinked directory yields an import.meta.url that never equals argv[1].
+export function isEntrypoint(argvPath, moduleUrl) {
+  if (!argvPath) return false;
+  return realPath(argvPath) === realPath(fileURLToPath(moduleUrl));
+}
+
+if (isEntrypoint(process.argv[1], import.meta.url)) {
   try {
     const options = parseArgs(process.argv.slice(2));
     if (!options) process.stdout.write('Read-only: --owner <login> --project <number> [--repo owner/name] [--window 14] [--stale 7] [--horizon 7] [--status-map JSON] [--json]\n');
