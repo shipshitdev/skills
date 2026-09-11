@@ -3,7 +3,7 @@ name: board-sync
 description: "Reconciles a project board with current work and delivery evidence, reports incomplete coverage and metadata gaps, and applies only approved provider-supported field changes. Use when auditing board drift, reviewing blocked work, or assessing upcoming delivery."
 compatibility: Requires access to the selected board provider. GitHub has a bundled Node.js or Bun report; Jira uses an existing authenticated provider connection or browser.
 metadata:
-  version: "2.0.0"
+  version: "2.0.1"
   tags: "boards, workflow, reconciliation, github, jira, audit"
 ---
 

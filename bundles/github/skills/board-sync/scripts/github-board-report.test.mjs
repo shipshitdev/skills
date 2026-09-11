@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { audit, buildFindings, createReader, fetchRepoActivity, issueIsShipped, parseArgs, parseStatusMap, renderReport, resolvePriorities } from './github-board-report.mjs';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, rmSync, symlinkSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { audit, buildFindings, createReader, fetchRepoActivity, isEntrypoint, issueIsShipped, parseArgs, parseStatusMap, renderReport, resolvePriorities } from './github-board-report.mjs';
 
 const NOW = Date.now();
 const RECENT = new Date(NOW - 86400000).toISOString();
@@ -274,5 +279,22 @@ test('GraphQL transport preserves explicit numeric and boolean values', () => {
     const index = captured.indexOf(value);
     assert.ok(index > 0);
     assert.equal(captured[index - 1], '-F');
+  }
+});
+
+test('entrypoint detection survives a symlinked skill directory', () => {
+  const script = fileURLToPath(new URL('./github-board-report.mjs', import.meta.url));
+  const dir = mkdtempSync(join(tmpdir(), 'board-sync-'));
+  const link = join(dir, 'linked-report.mjs');
+  symlinkSync(script, link);
+  try {
+    assert.equal(isEntrypoint(link, pathToFileURL(script).href), true);
+    assert.equal(isEntrypoint(script, pathToFileURL(script).href), true);
+    assert.equal(isEntrypoint(join(dir, 'other.mjs'), pathToFileURL(script).href), false);
+    assert.equal(isEntrypoint(undefined, pathToFileURL(script).href), false);
+    const output = execFileSync(process.execPath, [link, '--help'], { encoding: 'utf8' });
+    assert.match(output, /^Read-only: --owner/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
   }
 });
