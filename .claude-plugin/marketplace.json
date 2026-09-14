@@ -8,79 +8,79 @@
     {
       "name": "shipshitdev-testing",
       "source": "./bundles/testing",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Testing, QA, and CI/CD automation skills"
     },
     {
       "name": "shipshitdev-payments",
       "source": "./bundles/payments",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Payment processing and financial integrations"
     },
     {
       "name": "shipshitdev-infrastructure",
       "source": "./bundles/infrastructure",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "DevOps, cloud, and infrastructure skills"
     },
     {
       "name": "shipshitdev-frontend",
       "source": "./bundles/frontend",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Frontend development and design skills"
     },
     {
       "name": "shipshitdev-backend",
       "source": "./bundles/backend",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Backend development and API skills"
     },
     {
       "name": "shipshitdev-ai-agents",
       "source": "./bundles/ai-agents",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "AI agent development and prompt engineering"
     },
     {
       "name": "shipshitdev-workspace",
       "source": "./bundles/workspace",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Project setup and workspace initialization"
     },
     {
       "name": "shipshitdev-planning",
       "source": "./bundles/planning",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Strategy, planning, and analysis skills"
     },
     {
       "name": "shipshitdev-github",
       "source": "./bundles/github",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "GitHub workflow and automation skills"
     },
     {
       "name": "shipshitdev-security",
       "source": "./bundles/security",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Security review, dependency safety, and release-risk skills"
     },
     {
       "name": "shipshitdev-dev-workflow",
       "source": "./bundles/dev-workflow",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Code review, debugging, refactoring, release, and AI-assisted development workflows"
     },
     {
       "name": "shipshitdev-session",
       "source": "./bundles/session",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Session management and documentation"
     },
     {
       "name": "shipshitdev-dev-loop",
       "source": "./bundles/dev-loop",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "description": "Autonomous GitHub issue-to-PR loop with PRDs, plans, board dispatch, QA, and review"
     },
     {
