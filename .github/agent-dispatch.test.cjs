@@ -7,6 +7,10 @@ const {
   validateRuntime,
   validatePlan,
   resolveSkillRoot,
+  validateActors,
+  selectTrustedPlan,
+  finalizationDecision,
+  blockedSummary,
 } = require('./agent-dispatch.cjs');
 
 const issue = {
@@ -22,6 +26,7 @@ const eligible = {
   item: { status: 'Backlog', content: { url: issue.html_url } },
 };
 const runtime = {
+  DISPATCH_LANE: 'codex',
   MODEL_ID: 'approved-model',
   MODEL_EFFORT: 'medium',
   MODEL_PROVIDER: 'openai',
@@ -74,7 +79,7 @@ test('board eligibility is tied to issue URL and Backlog, never just issue numbe
 
 test('missing role configuration and automatic model routing block without fallback', () => {
   assert.doesNotThrow(() => validateRuntime(runtime));
-  for (const field of Object.keys(runtime))
+  for (const field of Object.keys(runtime).filter((name) => name !== 'DISPATCH_LANE'))
     assert.throws(() => validateRuntime({ ...runtime, [field]: '' }), /Missing explicit/);
   for (const MODEL_ID of ['openrouter/auto', 'openrouter/free', 'model --extra-flag'])
     assert.throws(() => validateRuntime({ ...runtime, MODEL_ID }), /explicit model/);
@@ -107,7 +112,7 @@ test('board configuration is data and never executable shell', () => {
   assert.throws(() => parseBoard(`${board}\nEVIL=$(printenv)`), /Invalid board/);
   assert.throws(
     () => parseBoard(board.replace('PROJECT_OWNER=acme', 'PROJECT_OWNER=')),
-    /Invalid board/
+    /Missing board configuration: PROJECT_OWNER/
   );
 });
 
@@ -156,4 +161,155 @@ test('consumer workflow resolves complete packaged resources and fails closed if
     /resources are missing/
   );
   assert.throws(() => resolveSkillRoot('plan', () => false), /resources are missing/);
+});
+
+test('effort validation follows transport capabilities without rejecting supported high efforts', () => {
+  for (const MODEL_EFFORT of ['none', 'minimal', 'max'])
+    assert.doesNotThrow(() => validateRuntime({ ...runtime, MODEL_EFFORT }));
+  for (const MODEL_EFFORT of ['xhigh', 'max', 'ultracode'])
+    assert.doesNotThrow(() =>
+      validateRuntime({
+        ...runtime,
+        DISPATCH_LANE: 'claude',
+        MODEL_EFFORT,
+        MODEL_PROVIDER: 'anthropic',
+      })
+    );
+  for (const [DISPATCH_LANE, MODEL_EFFORT] of [
+    ['codex', 'ultracode'],
+    ['claude', 'none'],
+    ['plan', 'banana'],
+    ['unknown', 'medium'],
+  ]) {
+    assert.throws(
+      () => validateRuntime({ ...runtime, DISPATCH_LANE, MODEL_EFFORT }),
+      /Unsupported configured effort/
+    );
+  }
+});
+
+test('original gate actor and a distinct rerun actor both require write permission', () => {
+  const permissions = (login) => ({ writer: 'write', admin: 'admin', stranger: 'read' })[login];
+  assert.doesNotThrow(() => validateActors('writer', 'admin', permissions));
+  assert.doesNotThrow(() => validateActors('writer', 'writer', permissions));
+  assert.throws(() => validateActors('stranger', 'admin', permissions), /write permission/);
+  assert.throws(() => validateActors('writer', 'stranger', permissions), /rerun actor/);
+});
+
+test('authoritative plan pointer must resolve on this issue and to a trusted writer or Actions app', () => {
+  const url = `${issue.html_url}#issuecomment-1`;
+  const prepared = { ...issue, body: `${issue.body}\nCurrent plan: ${url}` };
+  const comment = { ...plan, html_url: url, user: { login: 'writer' } };
+  const permissions = (login) => (login === 'writer' ? 'write' : 'read');
+  assert.equal(selectTrustedPlan(prepared, [comment], permissions), comment);
+  assert.throws(() => selectTrustedPlan(prepared, [], permissions), /this issue/);
+  assert.throws(
+    () => selectTrustedPlan(prepared, [{ ...comment, user: { login: 'stranger' } }], permissions),
+    /trusted repository writer/
+  );
+  const bot = {
+    ...comment,
+    user: { login: 'github-actions[bot]' },
+    performed_via_github_app: { slug: 'github-actions' },
+  };
+  assert.equal(selectTrustedPlan(prepared, [bot], permissions), bot);
+  assert.throws(
+    () =>
+      selectTrustedPlan(
+        prepared,
+        [{ ...bot, performed_via_github_app: { slug: 'other-app' } }],
+        permissions
+      ),
+    /trusted repository writer/
+  );
+  const foreign = { ...comment, html_url: 'https://github.com/other/repo/issues/7#issuecomment-1' };
+  assert.throws(
+    () =>
+      selectTrustedPlan(
+        { ...prepared, body: `Current plan: ${foreign.html_url}` },
+        [foreign],
+        permissions
+      ),
+    /this issue/
+  );
+  assert.throws(
+    () =>
+      selectTrustedPlan(
+        { ...prepared, body: `${prepared.body}\nCurrent plan: ${url}` },
+        [comment],
+        permissions
+      ),
+    /Exactly one/
+  );
+});
+
+const claimedIssue = {
+  ...issue,
+  labels: [
+    'claim:active',
+    'dispatch:codex',
+    'loop:testing',
+    'priority:high',
+    'dispatch:claude',
+    'loop:custom',
+  ],
+};
+const claimState = {
+  runId: '42',
+  runAttempt: '1',
+  claimCommentId: 11,
+  lane: 'codex',
+  actor: 'writer',
+  board: { STATUS_HUMAN_REVIEW_OPTION_ID: 'review-id' },
+};
+const ownedClaim = { id: 11, body: 'Claimed-By: writer\nClaim-Run: 42:1' };
+
+test('finalizer returns explicit handoff transitions for success, failure and skipped work', () => {
+  for (const outcome of ['success', 'failure', 'skipped']) {
+    const decision = finalizationDecision(claimState, claimedIssue, [ownedClaim], outcome);
+    assert.equal(decision.mutate, true);
+    assert.equal(decision.statusOptionId, 'review-id');
+    assert.equal(decision.assignee, 'writer');
+    assert.deepEqual(decision.removeLabels, ['claim:active', 'dispatch:codex', 'loop:testing']);
+    assert.match(
+      decision.status,
+      outcome === 'success' ? /review and required CI remain pending/ : /blocked/
+    );
+  }
+  assert.match(
+    finalizationDecision({ ...claimState, lane: 'plan' }, claimedIssue, [ownedClaim], 'success')
+      .status,
+    /plan readiness/
+  );
+});
+
+test('finalizer preserves all issue state when the claim was replaced, edited, or released', () => {
+  for (const comments of [
+    [],
+    [{ ...ownedClaim, body: 'Claimed-By: writer\nClaim-Run: 42:2' }],
+    [ownedClaim, { id: 12, body: 'Claimed-By: another-run' }],
+  ]) {
+    const decision = finalizationDecision(claimState, claimedIssue, comments, 'success');
+    assert.equal(decision.mutate, false);
+    assert.deepEqual(decision.removeLabels, []);
+    assert.equal(decision.assignee, undefined);
+    assert.equal(decision.statusOptionId, undefined);
+  }
+  assert.equal(finalizationDecision(claimState, issue, [ownedClaim], 'failure').mutate, false);
+  assert.equal(
+    finalizationDecision(
+      { ...claimState, claimCommentId: null },
+      claimedIssue,
+      [ownedClaim],
+      'failure'
+    ).mutate,
+    false
+  );
+});
+
+test('pre-claim failure summary explains the reason and safe re-dispatch without issue writes', () => {
+  const summary = blockedSummary('Plan repository SHA is stale');
+  assert.match(summary, /Plan repository SHA is stale/);
+  assert.match(summary, /remove and re-apply the dispatch label/);
+  assert.match(summary, /Pre-claim failures do not change the issue/);
 });

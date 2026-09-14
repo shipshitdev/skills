@@ -22,7 +22,7 @@ function parseBoard(text) {
   for (const raw of text.split('\n')) {
     const line = raw.trim();
     if (!line || line.startsWith('#')) continue;
-    const match = line.match(/^([A-Z_]+)=([A-Za-z0-9_-]+)$/);
+    const match = line.match(/^([A-Z_]+)=([A-Za-z0-9_-]*)$/);
     if (!match)
       fail('Invalid board configuration; expected unquoted identifiers, never shell commands.');
     config[match[1]] = match[2];
@@ -61,12 +61,87 @@ function validateRuntime(env) {
   }
   if (!/^[A-Za-z0-9_.:/-]+$/.test(env.MODEL_ID) || /(^|\/)(auto|free)$/.test(env.MODEL_ID))
     fail('Choose an explicit model, not automatic routing.');
-  if (!['low', 'medium', 'high', 'xhigh', 'max'].includes(env.MODEL_EFFORT))
-    fail('Unsupported configured effort.');
+  // Transport syntax only: individual model capability still requires a real run.
+  const effortByLane = {
+    plan: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'],
+    codex: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'],
+    openrouter: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'],
+    claude: ['low', 'medium', 'high', 'xhigh', 'max', 'ultracode'],
+  };
+  if (!effortByLane[env.DISPATCH_LANE]?.includes(env.MODEL_EFFORT))
+    fail(`Unsupported configured effort for ${env.DISPATCH_LANE || 'unknown lane'}.`);
   if (!/^[a-z0-9-]+$/.test(env.MODEL_PROVIDER) || env.MODEL_PROVIDER === 'openrouter')
     fail('Declare the actual implementation model provider, not its transport.');
   if (env.DISPATCH_LANE === 'openrouter' && env.MODEL_ID.split('/')[0] !== env.MODEL_PROVIDER)
     fail('OpenRouter model namespace must match the declared provider.');
+}
+function validateActors(actor, triggeringActor, permissionFor) {
+  if (!['admin', 'maintain', 'write'].includes(permissionFor(actor))) {
+    fail('Dispatch requires a current repository maintainer with write permission.');
+  }
+  if (
+    triggeringActor &&
+    triggeringActor !== actor &&
+    !['admin', 'maintain', 'write'].includes(permissionFor(triggeringActor))
+  ) {
+    fail('Untrusted workflow rerun actor.');
+  }
+}
+function selectTrustedPlan(issue, issueComments, permissionFor) {
+  const pointers = [...(issue.body || '').matchAll(/^Current plan: (https:\/\/\S+)\s*$/gm)];
+  if (pointers.length !== 1) fail('Exactly one Current plan URL is required in the issue body.');
+  const plan = issueComments.find((comment) => comment.html_url === pointers[0][1]);
+  if (!plan || !plan.html_url.startsWith(`${issue.html_url}#issuecomment-`)) {
+    fail('Current plan must point to a comment on this issue.');
+  }
+  const actionsApp =
+    plan.user.login === 'github-actions[bot]' &&
+    plan.performed_via_github_app?.slug === 'github-actions';
+  if (!actionsApp && !['admin', 'maintain', 'write'].includes(permissionFor(plan.user.login))) {
+    fail('Current plan author is not a trusted repository writer.');
+  }
+  return plan;
+}
+function finalizationDecision(state, issue, issueComments, outcome) {
+  const claims = issueComments.filter((comment) => /^Claimed-By: /m.test(comment.body));
+  const latest = claims.reduce(
+    (current, comment) => (!current || Number(comment.id) > Number(current.id) ? comment : current),
+    null
+  );
+  const labels = issue.labels.map((label) => (typeof label === 'string' ? label : label.name));
+  if (
+    !state.claimCommentId ||
+    latest?.id !== state.claimCommentId ||
+    !latest.body.split('\n').includes(`Claim-Run: ${state.runId}:${state.runAttempt}`) ||
+    !labels.includes('claim:active')
+  ) {
+    return {
+      mutate: false,
+      status: 'blocked: claim ownership changed or was released; no issue state modified',
+      removeLabels: [],
+    };
+  }
+  const status =
+    outcome !== 'success'
+      ? 'blocked: dispatch failed or was skipped; inspect run evidence'
+      : state.lane === 'plan'
+        ? 'planning handoff: inspect plan readiness verdict'
+        : 'implementation handoff: independent review and required CI remain pending';
+  return {
+    mutate: true,
+    status,
+    statusOptionId: state.board.STATUS_HUMAN_REVIEW_OPTION_ID,
+    assignee: state.actor,
+    removeLabels: labels.filter(
+      (name) =>
+        name === 'claim:active' ||
+        name === `dispatch:${state.lane}` ||
+        ['loop:planning', 'loop:executing', 'loop:testing', 'loop:shipping'].includes(name)
+    ),
+  };
+}
+function blockedSummary(reason) {
+  return `## Dispatch blocked\n\n${reason}\n\nNo successful delivery is recorded. For a pre-claim failure, fix the reported prerequisite, then remove and re-apply the dispatch label. Pre-claim failures do not change the issue.\n`;
 }
 function validatePlan(comment, issue, sha) {
   const body = comment.body;
@@ -143,11 +218,7 @@ function prepare(env) {
   const skillRoot = resolveSkillRoot(lane);
   const board = parseBoard(readFileSync('.github/agent-loop.env', 'utf8'));
   const issue = api(`repos/${repo}/issues/${number}`);
-  const actorPermission = permission(repo, env.GITHUB_ACTOR);
-  if (env.GITHUB_TRIGGERING_ACTOR && env.GITHUB_TRIGGERING_ACTOR !== env.GITHUB_ACTOR) {
-    if (!['admin', 'maintain', 'write'].includes(permission(repo, env.GITHUB_TRIGGERING_ACTOR)))
-      fail('Untrusted workflow rerun actor.');
-  }
+  validateActors(env.GITHUB_ACTOR, env.GITHUB_TRIGGERING_ACTOR, (login) => permission(repo, login));
   const items = JSON.parse(
     gh([
       'project',
@@ -164,17 +235,11 @@ function prepare(env) {
   const matches = items.filter((item) => item.content?.url === issue.html_url);
   if (matches.length !== 1)
     fail('Expected one matching board item; missing or beyond query limit.');
-  validateEligibility({ permission: actorPermission, issue, lane, item: matches[0], repo });
+  validateEligibility({ permission: 'write', issue, lane, item: matches[0] });
   if (lane !== 'plan') {
-    const pointers = [...(issue.body || '').matchAll(/^Current plan: (https:\/\/\S+)\s*$/gm)];
-    if (pointers.length !== 1) fail('Exactly one Current plan URL is required in the issue body.');
-    const plan = comments(repo, number).find((comment) => comment.html_url === pointers[0][1]);
-    if (!plan) fail('Current plan must point to a comment on this issue.');
-    const actionsApp =
-      plan.user.login === 'github-actions[bot]' &&
-      plan.performed_via_github_app?.slug === 'github-actions';
-    if (!actionsApp && !['admin', 'maintain', 'write'].includes(permission(repo, plan.user.login)))
-      fail('Current plan author is not a trusted repository writer.');
+    const plan = selectTrustedPlan(issue, comments(repo, number), (login) =>
+      permission(repo, login)
+    );
     validatePlan(
       plan,
       issue,
@@ -188,42 +253,48 @@ function prepare(env) {
     board,
     itemId: matches[0].id,
     actor: env.GITHUB_ACTOR,
-    claimed: true,
+    runId: env.GITHUB_RUN_ID,
+    runAttempt: env.GITHUB_RUN_ATTEMPT || '1',
+    claimCommentId: null,
   };
-  // Persist recovery data before the first mutation so partial failures are released.
+  if (lane !== 'plan') gh(['auth', 'setup-git']);
+  // Publish the unique ownership marker before changing labels or board state.
+  writeFileSync(join(env.RUNNER_TEMP, 'agent-dispatch-state.json'), JSON.stringify(state));
+  const claim = api(`repos/${repo}/issues/${number}/comments`, {
+    body: `Claimed-By: ${env.GITHUB_ACTOR}\nClaimed-At: ${new Date().toISOString()}\nClaim-Run: ${state.runId}:${state.runAttempt}\nRun: ${env.GITHUB_SERVER_URL}/${repo}/actions/runs/${state.runId}\nRole: ${lane === 'plan' ? 'planner' : 'executor'}\nProvider: ${env.MODEL_PROVIDER}\nModel: ${env.MODEL_ID}\nEffort: ${env.MODEL_EFFORT}`,
+  });
+  state.claimCommentId = claim.id;
   writeFileSync(join(env.RUNNER_TEMP, 'agent-dispatch-state.json'), JSON.stringify(state));
   api(`repos/${repo}/issues/${number}/labels`, {
     labels: ['claim:active', lane === 'plan' ? 'loop:planning' : 'loop:executing'],
   });
   setStatus(board, state.itemId, board.STATUS_IN_PROGRESS_OPTION_ID);
-  api(`repos/${repo}/issues/${number}/comments`, {
-    body: `Claimed-By: ${env.GITHUB_ACTOR}\nClaimed-At: ${new Date().toISOString()}\nRun: ${env.GITHUB_SERVER_URL}/${repo}/actions/runs/${env.GITHUB_RUN_ID}\nRole: ${lane === 'plan' ? 'planner' : 'executor'}\nProvider: ${env.MODEL_PROVIDER}\nModel: ${env.MODEL_ID}\nEffort: ${env.MODEL_EFFORT}`,
-  });
   const prompt = `Run the ${lane === 'plan' ? 'planning' : 'execution'} role for issue #${number} in ${repo}.\nRead and follow .github/agent-dispatch.md in full.\nResolve workflow skills from ${skillRoot}.\nThe workflow owns claim release and status handoff.\nRuntime provider: ${env.MODEL_PROVIDER}; model: ${env.MODEL_ID}; effort: ${env.MODEL_EFFORT}.\n`;
   writeFileSync(join(env.RUNNER_TEMP, 'agent-dispatch-prompt.md'), prompt);
-  appendFileSync(env.GITHUB_OUTPUT, `ready=true\n`);
+  appendFileSync(env.GITHUB_OUTPUT, `ready=true\nskill-root=${skillRoot}\n`);
 }
 function finalize(env) {
   const path = join(env.RUNNER_TEMP, 'agent-dispatch-state.json');
   if (!existsSync(path)) return;
   const state = JSON.parse(readFileSync(path, 'utf8'));
-  const succeeded = env.AGENT_OUTCOME === 'success';
-  const status = !succeeded
-    ? 'blocked: dispatch failed; inspect run evidence'
-    : state.lane === 'plan'
-      ? 'planning handoff: inspect plan readiness verdict'
-      : 'implementation handoff: independent review and required CI remain pending';
+  const issue = api(`repos/${state.repo}/issues/${state.number}`);
+  const decision = finalizationDecision(
+    state,
+    issue,
+    comments(state.repo, state.number),
+    env.AGENT_OUTCOME
+  );
+  const status = decision.status;
+  appendFileSync(
+    env.GITHUB_STEP_SUMMARY,
+    `## Dispatch handoff\n\n${status}. No merge or Done transition was performed.\n`
+  );
+  if (!decision.mutate) return;
   api(`repos/${state.repo}/issues/${state.number}/comments`, {
     body: `Delivery state: ${status}.\nThis workflow does not certify merge-ready or Done.\n${state.lane === 'plan' ? 'Return a READY issue to Backlog and apply one execution gate when authorized.' : 'Independent reviewer automation is not provisioned by this workflow. Block delivery until a different frontier provider reviews the exact PR head, findings are resolved, and required CI is green. Merge and required deployment evidence are still required for Done.'}`,
   });
-  setStatus(state.board, state.itemId, state.board.STATUS_HUMAN_REVIEW_OPTION_ID);
-  const issue = api(`repos/${state.repo}/issues/${state.number}`);
-  for (const label of issue.labels
-    .map((label) => label.name)
-    .filter(
-      (name) =>
-        name === 'claim:active' || name === `dispatch:${state.lane}` || name.startsWith('loop:')
-    )) {
+  setStatus(state.board, state.itemId, decision.statusOptionId);
+  for (const label of decision.removeLabels) {
     gh([
       'api',
       '--method',
@@ -231,11 +302,7 @@ function finalize(env) {
       `repos/${state.repo}/issues/${state.number}/labels/${encodeURIComponent(label)}`,
     ]);
   }
-  api(`repos/${state.repo}/issues/${state.number}/assignees`, { assignees: [state.actor] });
-  appendFileSync(
-    env.GITHUB_STEP_SUMMARY,
-    `## Dispatch handoff\n\n${status}. No merge or Done transition was performed.\n`
-  );
+  api(`repos/${state.repo}/issues/${state.number}/assignees`, { assignees: [decision.assignee] });
 }
 module.exports = {
   parseBoard,
@@ -243,6 +310,10 @@ module.exports = {
   validateRuntime,
   validatePlan,
   resolveSkillRoot,
+  validateActors,
+  selectTrustedPlan,
+  finalizationDecision,
+  blockedSummary,
 };
 if (require.main === module) {
   try {
@@ -251,6 +322,8 @@ if (require.main === module) {
     else fail('Expected prepare or finalize.');
   } catch (error) {
     process.stderr.write(`Dispatch blocked: ${error.message}\n`);
+    if (process.env.GITHUB_STEP_SUMMARY)
+      appendFileSync(process.env.GITHUB_STEP_SUMMARY, blockedSummary(error.message));
     process.exitCode = 1;
   }
 }
