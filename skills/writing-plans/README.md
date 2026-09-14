@@ -1,6 +1,6 @@
 # writing-plans
 
-Turn a spec into a bite-sized, TDD-structured implementation plan that agentic workers can execute reliably.
+Resolve a spec into an evidence-backed implementation contract that an executor can implement without choosing missing behavior or architecture.
 
 ## Upstream
 
@@ -14,6 +14,14 @@ Derived from **[obra/superpowers](https://github.com/obra/superpowers)** (MIT).
 | Last synced | 2026-06-12 |
 | License | MIT |
 
-**Local modifications:** Vendored as a standalone, platform-neutral marketplace plugin (Claude Code + Codex). The prior `author: Ship Shit Dev` frontmatter was incorrect and has been removed — this skill derives from obra/superpowers. **Storage diverges from upstream** (`metadata.version` `1.1.0`): the plan is posted as a `## Implementation Plan` comment on the work/PRD GitHub issue (issue-as-source-of-truth), not saved to a local `docs/plans/*.md` file. This aligns the skill with the dev loop — the executor and all execution lanes (`agent-dispatch.yml`, `codex-dispatch.yml`, `openrouter-dispatch.yml`) read the issue's comments, so the plan crosses to CI for either engine. **Preserve this divergence on future syncs** — do not let an upstream pull re-introduce the `docs/plans/` default.
+**Local modifications:** Adapted and maintained here as a platform-neutral planning
+engine. Version 2.0.0 replaces complete implementation/test code and fixed 2–5 minute
+TDD/commit steps with resolved decisions, repository evidence, exact contracts,
+ordered implementation steps and acceptance-to-verification mapping. Reuse the
+canonical `prd-quality-gate` readiness contract. Keep requirements and the current
+versioned implementation plan on the same issue, with source revision, requirements
+fingerprint and blocking freshness checks. Executors escalate missing decisions;
+model selection belongs to the harness. Preserve these deliberate differences when
+reviewing upstream changes.
 
 **Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/writing-plans/SKILL.md`](https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md) on `main` since commit `f2cbfbefebbf`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.

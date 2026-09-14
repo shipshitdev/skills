@@ -1,7 +1,7 @@
 {
   "name": "prd-writer",
-  "version": "1.3.0",
-  "description": "Author the PRD document itself with scope, EARS acceptance criteria, and a verification plan.",
+  "version": "2.0.0",
+  "description": "Authors repository-grounded requirements with complete feature scope and observable acceptance cr...",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

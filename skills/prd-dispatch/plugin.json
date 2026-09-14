@@ -1,7 +1,7 @@
 {
   "name": "prd-dispatch",
-  "version": "2.0.0",
-  "description": "Front door for specs/PRDs — routes new/spec/gate/write/intake/interview to the engine.",
+  "version": "3.0.0",
+  "description": "Routes PRD preparation, requirements, planning, readiness checks, and issue intake.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",
