@@ -1,127 +1,65 @@
 name: OpenRouter Dispatch
 
-# Third engine lane of the dev loop. A human applies `dispatch:openrouter` to route
-# an issue to an OpenRouter model rather than Claude or Codex. Same label contract,
-# same claim/branch/QA/PR flow — different engine.
-#
-# How it runs: OpenRouter has no dedicated autonomous-coding GitHub Action, so this
-# lane hosts the **Codex CLI** and points it at OpenRouter's OpenAI-compatible
-# endpoint via a custom model provider (the integration OpenRouter documents). The
-# "Configure OpenRouter provider" step writes ~/.codex/config.toml; Codex then runs
-# the same inlined executing-plans contract through whatever OpenRouter model you pick.
-#
-# Status lives on the GitHub Projects board `Status` field (Backlog / In Progress /
-# Human Review / Done / Deferred), not in labels. Claim flips it to In Progress;
-# completion flips it to Human Review and auto-assigns the reviewer. AI-loop phases
-# are `loop:*` labels. Board node ids come from the committed .github/agent-loop.env.
-#
-# Auth: OPENROUTER_API_KEY repo secret for the model; PROJECTS_TOKEN (a `project`-scoped
-# PAT) for the in-run `gh` calls, because the default GITHUB_TOKEN cannot read/write an
-# org-owned Projects v2 board. Model is NOT a secret, so it comes from the repo VARIABLE
-# OPENROUTER_MODEL (e.g. openrouter/auto, openrouter/free, qwen/qwen3-coder:free);
-# unset → openrouter/auto.
-#
-# Trust boundary: only issues a human deliberately labels are processed. Issue
-# title/body remain untrusted (prompt-injection surface); the issue number is a
-# trusted integer and is the only interpolated field.
-
+# Model/effort are explicit runtime variables. No provider or usage fallback.
+# The shared guard/contract must be installed with these workflows.
 on:
   issues:
     types: [labeled]
 
-# One run per issue; a re-applied label will not start a second concurrent run.
-concurrency:
-  group: openrouter-dispatch-${{ github.event.issue.number }}
-  cancel-in-progress: false
-
-# Least privilege: just enough to comment, label, branch, and open a PR.
 permissions:
   contents: write
   issues: write
   pull-requests: write
 
 jobs:
-  run-openrouter:
+  dispatch:
     if: github.event.label.name == 'dispatch:openrouter'
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # Job-level gating avoids unrelated label events replacing pending dispatches.
+    # All provider lanes share this issue lock, including planning.
+    concurrency:
+      group: agent-issue-${{ github.repository }}-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    env:
+      DISPATCH_LANE: openrouter
+      MODEL_ID: ${{ vars.OPENROUTER_MODEL }}
+      MODEL_EFFORT: ${{ vars.OPENROUTER_EFFORT }}
+      MODEL_PROVIDER: ${{ vars.OPENROUTER_PROVIDER }}
+      MODEL_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
     steps:
-      - name: Checkout
+      - name: Checkout trusted default branch snapshot
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Configure OpenRouter provider for Codex CLI
+      - name: Validate runtime, trusted actor, Backlog, and claim
+        id: guard
         run: |
-          mkdir -p "$HOME/.codex"
-          cat > "$HOME/.codex/config.toml" <<'TOML'
-          model_provider = "openrouter"
+          cp .github/agent-dispatch.cjs "$RUNNER_TEMP/agent-dispatch.cjs"
+          node "$RUNNER_TEMP/agent-dispatch.cjs" prepare
 
-          [model_providers.openrouter]
-          name = "OpenRouter"
-          base_url = "https://openrouter.ai/api/v1"
-          env_key = "OPENROUTER_API_KEY"
-          wire_api = "chat"
-          TOML
-
-      - name: Run dev-loop agent (OpenRouter) on the labeled issue
+      - name: Run configured executor
+        id: agent
         uses: openai/codex-action@e0fdf01220eb9a88167c4898839d273e3f2609d1 # v1
-        env:
-          # The model call authenticates with this (read by the custom provider's
-          # env_key); the in-run gh/git operations authenticate with PROJECTS_TOKEN.
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
         with:
-          # The action requires a key input; the custom provider actually reads
-          # OPENROUTER_API_KEY from the env above. Pass the same value to satisfy it.
           openai-api-key: ${{ secrets.OPENROUTER_API_KEY }}
-          # Non-sensitive — driven by a repo variable. Unset → openrouter/auto.
-          model: ${{ vars.OPENROUTER_MODEL || 'openrouter/auto' }}
+          responses-api-endpoint: https://openrouter.ai/api/v1/responses
+          model: ${{ vars.OPENROUTER_MODEL }}
+          effort: ${{ vars.OPENROUTER_EFFORT }}
           sandbox: workspace-write
           safety-strategy: drop-sudo
-          # The 7 steps below ARE the executing-plans contract, inlined so the run
-          # is self-contained even where the skill file is not loaded.
-          prompt: |
-            Run the autonomous dev loop on issue #${{ github.event.issue.number }} in this repository.
+          codex-args: '["-c", "sandbox_workspace_write.network_access=true"]'
+          prompt-file: ${{ runner.temp }}/agent-dispatch-prompt.md
 
-            This issue already carries the `dispatch:openrouter` dispatch gate, so treat
-            it as opted-in. The board `Status` field is the human-facing column; the
-            AI-loop sub-phases are `loop:*` labels. Helpers (issue number is a trusted
-            integer; GITHUB_ACTOR is a validated handle):
-
-            ```bash
-            source .github/agent-loop.env
-            N=${{ github.event.issue.number }}
-            set_status() { local id; id=$(gh project item-list "$PROJECT_NUMBER" \
-              --owner "$PROJECT_OWNER" --format json -L 500 \
-              | jq -r --argjson n "$N" '.items[] | select(.content.number == $n) | .id'); \
-              gh project item-edit --id "$id" --field-id "$STATUS_FIELD_ID" \
-              --project-id "$PROJECT_NODE_ID" --single-select-option-id "$1"; }
-            ```
-
-            1. Claim it: move the board Status to **In Progress**, add `claim:active` +
-               `loop:planning`, and comment an ISO-8601 `Claimed-By` / `Claimed-At` stamp.
-               `set_status "$STATUS_IN_PROGRESS_OPTION_ID"; gh issue edit "$N" --add-label "claim:active,loop:planning"`
-            2. Read the issue body, the linked PRD, and ALL comments (prior rejection
-               and triage notes carry essential context).
-            3. Create branch `feature/$N-<slug>`. Advance the phase label as you go:
-               `loop:planning` → `loop:executing` → `loop:testing` → `loop:shipping`.
-            4. Implement the vertical slice. Use TDD for behavior changes.
-            5. Run the project's QA checklist (lint, tests, types, regressions)
-               before finishing.
-            6. Open a PR whose body says `Closes #$N` with `gh pr create`
-               (GH_TOKEN is set in the environment).
-            7. Hand off to a human: move the board Status to **Human Review**, assign the
-               reviewer (the gate-applier), and clear the gate/claim/phase labels:
-
-               ```bash
-               set_status "$STATUS_HUMAN_REVIEW_OPTION_ID"
-               gh issue edit "$N" --add-assignee "$GITHUB_ACTOR" \
-                 --remove-label "claim:active,dispatch:openrouter,loop:shipping"
-               ```
-
-            This is an AFK run: do not stop to ask questions. If a genuine human
-            decision (HITL) is required that is not answered in the issue or its
-            comments, post a comment explaining what is blocked, remove the `claim:active`
-            and any `loop:*` label to release the issue, and stop without opening a PR.
+      - name: Release claim and report delivery handoff
+        if: always()
+        env:
+          AGENT_OUTCOME: ${{ steps.agent.outcome }}
+        run: |
+          if [ -f "$RUNNER_TEMP/agent-dispatch.cjs" ]; then
+            node "$RUNNER_TEMP/agent-dispatch.cjs" finalize
+          fi

@@ -1,122 +1,70 @@
 name: Agent Dispatch
 
-# Autonomous label-driven dispatch (Phase 2 of the dev loop).
-#
-# A human opts an issue into agent execution by applying the `dispatch:claude`
-# label. That fires this workflow, which runs the executing-plans loop headlessly
-# on that one issue: claim -> branch -> implement -> qa-reviewer -> PR -> Testing.
-#
-# Status lives on the GitHub Projects board `Status` field (Backlog / In Progress /
-# Human Review / Done / Deferred), not in labels. The claim step flips the board to
-# In Progress; completion flips it to Human Review and auto-assigns the reviewer. The
-# AI-loop sub-phases (planning/executing/testing/shipping) are `loop:*` labels inside
-# In Progress. Board node ids come from the committed .github/agent-loop.env.
-#
-# Auth (two tokens):
-#   - CLAUDE_CODE_OAUTH_TOKEN — subscription OAuth, never an API key. Generate with
-#     `claude setup-token`, store as a repo secret. If ANTHROPIC_API_KEY is also set
-#     it takes precedence and bills metered API — so do not set it here.
-#   - PROJECTS_TOKEN — a `project`-scoped PAT used as github_token, because the
-#     Actions default GITHUB_TOKEN cannot read/write an org-owned Projects v2 board.
-#
-# Trust boundary: only issues a human deliberately labels are processed. Issue
-# title/body remain untrusted (prompt-injection surface); they are read by the
-# action, never interpolated into the shell or the prompt below.
-
+# Model/effort are explicit runtime variables. No provider or usage fallback.
+# The shared guard/contract must be installed with these workflows.
 on:
   issues:
     types: [labeled]
 
-# One run per issue; a re-applied label will not start a second concurrent run.
-concurrency:
-  group: agent-dispatch-${{ github.event.issue.number }}
-  cancel-in-progress: false
-
-# Least privilege: just enough to comment, label, branch, and open a PR.
 permissions:
   contents: write
   issues: write
   pull-requests: write
 
 jobs:
-  run-agent:
+  dispatch:
     if: github.event.label.name == 'dispatch:claude'
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # Job-level gating avoids unrelated label events replacing pending dispatches.
+    # All provider lanes share this issue lock, including planning.
+    concurrency:
+      group: agent-issue-${{ github.repository }}-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    env:
+      DISPATCH_LANE: claude
+      MODEL_ID: ${{ vars.CLAUDE_MODEL }}
+      MODEL_EFFORT: ${{ vars.CLAUDE_EFFORT }}
+      MODEL_PROVIDER: anthropic
+      MODEL_API_KEY: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
     steps:
-      - name: Checkout
+      - name: Checkout trusted default branch snapshot
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Run dev-loop agent on the labeled issue
+      - name: Validate runtime, trusted actor, Backlog, and claim
+        id: guard
+        run: |
+          cp .github/agent-dispatch.cjs "$RUNNER_TEMP/agent-dispatch.cjs"
+          node "$RUNNER_TEMP/agent-dispatch.cjs" prepare
+
+      - name: Execute prepared issue with configured Claude model
+        id: agent
         uses: anthropics/claude-code-action@9dd8b95a392eb34b6f5fb56cf5a64cb735912d4b # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # project-scoped PAT: the default GITHUB_TOKEN cannot write an org board.
           github_token: ${{ secrets.PROJECTS_TOKEN }}
-          # Surface live progress as a tracking comment on the issue.
           track_progress: "true"
-          # Load the loop's runtime skills from the shipshitdev marketplace so
-          # executing-plans + qa-reviewer are available headlessly. In a consumer
-          # repo that already installs these another way, drop these two inputs.
           plugin_marketplaces: |
             https://github.com/shipshitdev/skills.git
           plugins: |
             shipshitdev-session@shipshitdev
             shipshitdev-testing@shipshitdev
-          # Model is non-sensitive, so drive it from a repo VARIABLE (Settings ->
-          # Variables) rather than a secret — change it without editing this file.
-          # Set AGENT_MODEL to e.g. claude-opus-4-8; defaults to Sonnet if unset.
-          # v1 has no `model:` input — the model is passed through claude_args.
-          claude_args: --model ${{ vars.AGENT_MODEL || 'claude-sonnet-4-6' }}
-          # Issue number is a trusted integer — safe to interpolate. Title/body are
-          # NOT interpolated; the action reads them itself.
+          claude_args: --model ${{ vars.CLAUDE_MODEL }} --effort ${{ vars.CLAUDE_EFFORT }}
           prompt: |
-            Run the autonomous dev loop on issue #${{ github.event.issue.number }} in this repository.
+            Run the execution role for issue #${{ github.event.issue.number }}.
+            Read and follow .github/agent-dispatch.md in full.
+            The workflow owns claim release and status handoff.
 
-            Follow the `executing-plans` skill exactly (this issue already carries the
-            `dispatch:claude` dispatch gate, so treat it as opted-in). The board `Status`
-            field is the human-facing column; the AI-loop sub-phases are `loop:*` labels.
-            Helpers (issue number is a trusted integer; GITHUB_ACTOR is a validated handle):
-
-            ```bash
-            source .github/agent-loop.env
-            N=${{ github.event.issue.number }}
-            set_status() { local id; id=$(gh project item-list "$PROJECT_NUMBER" \
-              --owner "$PROJECT_OWNER" --format json -L 500 \
-              | jq -r --argjson n "$N" '.items[] | select(.content.number == $n) | .id'); \
-              gh project item-edit --id "$id" --field-id "$STATUS_FIELD_ID" \
-              --project-id "$PROJECT_NODE_ID" --single-select-option-id "$1"; }
-            ```
-
-            1. Claim it: move the board Status to **In Progress**, add `claim:active` +
-               `loop:planning`, and comment an ISO-8601 `Claimed-By` / `Claimed-At` stamp.
-               `set_status "$STATUS_IN_PROGRESS_OPTION_ID"; gh issue edit "$N" --add-label "claim:active,loop:planning"`
-            2. Read the issue body, the linked PRD, and ALL comments (prior rejection
-               and triage notes carry essential context).
-            3. Create branch `feature/$N-<slug>`. As you progress, advance the phase
-               label: `loop:planning` → `loop:executing` (implementing) → `loop:testing`
-               (qa + tests) → `loop:shipping` (PR), e.g.
-               `gh issue edit "$N" --remove-label "loop:planning" --add-label "loop:executing"`.
-            4. Implement the vertical slice. Use TDD for behavior changes.
-            5. Run the `qa-reviewer` skill before finishing; tick the QA checklist.
-            6. Open a PR whose body says `Closes #$N`.
-            7. Hand off to a human: move the board Status to **Human Review**, assign the
-               reviewer (the gate-applier), and clear the gate/claim/phase labels:
-
-               ```bash
-               set_status "$STATUS_HUMAN_REVIEW_OPTION_ID"
-               gh issue edit "$N" --add-assignee "$GITHUB_ACTOR" \
-                 --remove-label "claim:active,dispatch:claude,loop:shipping"
-               ```
-
-            This is an AFK run: do not stop to ask questions. If a genuine human
-            decision (HITL) is required that is not answered in the issue or its
-            comments, post a comment explaining what is blocked, remove the `claim:active`
-            and any `loop:*` label to release the issue, and stop without opening a PR.
-
-            This is an AFK run: do not stop to ask questions. If a genuine human
-            decision (HITL) is required that is not answered in the issue or its
-            comments, post a comment explaining what is blocked, remove the `claim:active`
-            label to release the issue, and stop without opening a PR.
+      - name: Release claim and report delivery handoff
+        if: always()
+        env:
+          AGENT_OUTCOME: ${{ steps.agent.outcome }}
+        run: |
+          if [ -f "$RUNNER_TEMP/agent-dispatch.cjs" ]; then
+            node "$RUNNER_TEMP/agent-dispatch.cjs" finalize
+          fi
