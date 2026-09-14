@@ -202,6 +202,16 @@ test('authoritative plan pointer must resolve on this issue and to a trusted wri
   const comment = { ...plan, html_url: url, user: { login: 'writer' } };
   const permissions = (login) => (login === 'writer' ? 'write' : 'read');
   assert.equal(selectTrustedPlan(prepared, [comment], permissions), comment);
+  for (const suffix of ['instructions', url, '']) {
+    assert.throws(
+      () => selectTrustedPlan({ ...prepared, body: `${prepared.body}\nCurrent plan: ${suffix}` }, [comment], permissions),
+      /Exactly one/
+    );
+  }
+  assert.throws(
+    () => selectTrustedPlan({ ...prepared, body: `${prepared.body} extra instructions` }, [comment], permissions),
+    /only its comment URL/
+  );
   assert.throws(() => selectTrustedPlan(prepared, [], permissions), /this issue/);
   assert.throws(
     () => selectTrustedPlan(prepared, [{ ...comment, user: { login: 'stranger' } }], permissions),

@@ -88,9 +88,12 @@ function validateActors(actor, triggeringActor, permissionFor) {
   }
 }
 function selectTrustedPlan(issue, issueComments, permissionFor) {
-  const pointers = [...(issue.body || '').matchAll(/^Current plan: (https:\/\/\S+)\s*$/gm)];
+  const lines = (issue.body || '').replace(/\r\n/g, '\n').split('\n');
+  const pointers = lines.filter((line) => line.startsWith('Current plan: '));
   if (pointers.length !== 1) fail('Exactly one Current plan URL is required in the issue body.');
-  const plan = issueComments.find((comment) => comment.html_url === pointers[0][1]);
+  const pointer = pointers[0].match(/^Current plan: (https:\/\/\S+)$/);
+  if (!pointer) fail('Current plan must contain only its comment URL.');
+  const plan = issueComments.find((comment) => comment.html_url === pointer[1]);
   if (!plan || !plan.html_url.startsWith(`${issue.html_url}#issuecomment-`)) {
     fail('Current plan must point to a comment on this issue.');
   }

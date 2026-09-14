@@ -102,3 +102,24 @@ without a fallback. Configure extended effort only when explicitly authorized.
 References verified 2026-09-14: [Claude CLI reference](https://code.claude.com/docs/en/cli-reference),
 [Codex Action inputs](https://github.com/openai/codex-action/blob/e0fdf01220eb9a88167c4898839d273e3f2609d1/action.yml),
 and [OpenRouter reasoning options](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens).
+
+## Credential boundary
+
+The planner receives the short-lived repository `GITHUB_TOKEN` with contents read,
+issues write, and pull requests read. It can publish the issue plan but cannot push
+implementation code. The broader Projects token and raw model-key validation are
+limited to the deterministic guard/finalizer steps, not job-wide environment.
+Model credentials go through the model action's supported credential input.
+
+Execution explicitly needs repository write access and network access to publish
+its PR. Its execution step receives the configured repository/Projects token;
+configure that token with only the target repository and project scopes and a
+short expiry. This is a write-capable trusted-maintainer lane, not a secret-free
+sandbox. Never use an organization-wide administrator token. The planner does
+not inherit that execution credential. Issue content never authorizes credential
+access or changes to these permissions.
+
+Preflight counts every reserved `Current plan:` line and accepts exactly one,
+containing only the current comment URL. Additional or malformed reserved lines
+block execution before fingerprint validation; they cannot hide changed input
+from the requirements hash.

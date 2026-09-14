@@ -26,8 +26,6 @@ jobs:
       MODEL_ID: ${{ vars.CLAUDE_MODEL }}
       MODEL_EFFORT: ${{ vars.CLAUDE_EFFORT }}
       MODEL_PROVIDER: anthropic
-      MODEL_API_KEY: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
     steps:
       - name: Checkout trusted default branch snapshot
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -38,12 +36,17 @@ jobs:
 
       - name: Validate runtime, trusted actor, Backlog, and claim
         id: guard
+        env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+          MODEL_API_KEY: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           cp .github/agent-dispatch.cjs "$RUNNER_TEMP/agent-dispatch.cjs"
           node "$RUNNER_TEMP/agent-dispatch.cjs" prepare
 
       - name: Execute prepared issue with configured Claude model
         id: agent
+        env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
         uses: anthropics/claude-code-action@9dd8b95a392eb34b6f5fb56cf5a64cb735912d4b # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -60,6 +63,7 @@ jobs:
       - name: Release claim and report delivery handoff
         if: always()
         env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
           AGENT_OUTCOME: ${{ steps.agent.outcome }}
         run: |
           if [ -f "$RUNNER_TEMP/agent-dispatch.cjs" ]; then

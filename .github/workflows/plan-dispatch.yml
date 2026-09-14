@@ -26,8 +26,6 @@ jobs:
       MODEL_ID: ${{ vars.PLANNER_MODEL }}
       MODEL_EFFORT: ${{ vars.PLANNER_EFFORT }}
       MODEL_PROVIDER: openai
-      MODEL_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
     steps:
       - name: Checkout trusted default branch snapshot
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -38,12 +36,17 @@ jobs:
 
       - name: Validate runtime, trusted actor, Backlog, and claim
         id: guard
+        env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+          MODEL_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cp .github/agent-dispatch.cjs "$RUNNER_TEMP/agent-dispatch.cjs"
           node "$RUNNER_TEMP/agent-dispatch.cjs" prepare
 
       - name: Run configured planner
         id: agent
+        env:
+          GH_TOKEN: ${{ github.token }}
         uses: openai/codex-action@e0fdf01220eb9a88167c4898839d273e3f2609d1 # v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -57,6 +60,7 @@ jobs:
       - name: Release claim and report delivery handoff
         if: always()
         env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
           AGENT_OUTCOME: ${{ steps.agent.outcome }}
         run: |
           if [ -f "$RUNNER_TEMP/agent-dispatch.cjs" ]; then
