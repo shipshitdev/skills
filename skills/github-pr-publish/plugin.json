@@ -1,6 +1,6 @@
 {
   "name": "github-pr-publish",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Create or update GitHub pull requests with branch hygiene, PR body, checks, and safe push gates.",
   "author": {
     "name": "Ship Shit Dev",

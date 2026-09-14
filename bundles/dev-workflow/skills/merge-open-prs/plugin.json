@@ -1,6 +1,6 @@
 {
   "name": "merge-open-prs",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Review and merge trunk PRs through a gated sweep or explicit force queue drain.",
   "author": {
     "name": "Ship Shit Dev",

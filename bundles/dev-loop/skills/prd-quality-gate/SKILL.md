@@ -1,54 +1,69 @@
 ---
 name: prd-quality-gate
-description: PRD completeness validation. Use to check that a PRD (or issue body that serves as one) contains the required sections before it is handed to a planning/execution agent, so the plan is built from a complete spec instead of hallucinated scope. Run it as a blocking gate or a warning-only lint.
+description: "Validates draft requirements and blocks execution until the same issue contains a complete, current implementation contract. Owns the shared preparation templates and readiness rules."
 metadata:
-  version: "1.1.0"
+  version: "2.0.0"
   tags: "prd, planning, validation, quality-gate, spec, requirements, ears"
 ---
 
-<prd_quality_gate>
-A well-formed PRD (or the issue body that serves as one) must contain ALL of the
-following sections as markdown headings (## or ###).
+# PRD Quality Gate
 
-Required sections:
+## Contract
 
-- Executive Summary
-- Problem Statement
-- Goals
-- Functional Requirements
-- Acceptance Criteria
-- Verification Plan
+Inputs:
 
-Acceptance Criteria must be written in EARS (Easy Approach to Requirements
-Syntax) so each bullet is machine-checkable and pass/fail without judgement.
-Every bullet under Acceptance Criteria must match one of:
+- Requirements, implementation plan, target repository, and requested mode.
+- Live issue body/comments and repository revision when execution is requested.
 
-- WHEN <trigger> THE SYSTEM SHALL <response>        (event-driven)
-- WHILE <state> THE SYSTEM SHALL <response>         (state-driven)
-- WHERE <feature> THE SYSTEM SHALL <response>       (optional feature)
-- IF <condition> THEN THE SYSTEM SHALL <response>   (unwanted behavior)
-- THE SYSTEM SHALL <invariant>                      (ubiquitous)
+Outputs:
 
-A bullet that does not match this grammar (case-insensitive regex
-`^\s*(\d+\.\s*)?(WHEN|WHILE|WHERE|IF|THE SYSTEM)\b.*\bSHALL\b`) is free-form
-prose, not a verifiable criterion.
+- `draft-lint`: warnings for incomplete requirements; never execution permission.
+- `execution-readiness`: `READY` or `BLOCKED`, evidence for each check, and exact gaps.
 
-When the quality gate is ENABLED (blocking):
+Creates/Modifies:
 
-- Missing any required section → fail immediately with an actionable message
-  listing the missing sections.
-- Any Acceptance Criteria bullet that is not EARS-shaped → fail, quoting each
-  offending bullet and the EARS pattern it should take.
-- The author must update the PRD and re-run the gate before planning proceeds.
+- No implementation or tracker mutations; return findings to the calling engine.
 
-When the quality gate is DISABLED (default, warning-only):
+External Side Effects:
 
-- Missing sections → log a warning.
-- Non-EARS Acceptance Criteria bullets → log a warning listing each offending
-  bullet.
-- Planning proceeds. The planner should still note the gaps in its output.
+- Read-only repository and tracker inspection.
 
-Section matching is case-insensitive against ## and ### headings. Exact heading
-text must appear (e.g. "## Executive Summary" or "### Goals"). Headings nested
-inside code fences are ignored by convention (they are examples, not structure).
-</prd_quality_gate>
+Confirmation Required:
+
+- None for read-only validation. Preserve the caller's access restrictions.
+
+## One Shared Contract
+
+Read [Execution readiness](references/execution-readiness.md) before validating or
+supplying preparation templates. This reference owns the requirements template,
+plan template, decomposition rule, decision boundary, and readiness checklist.
+Resolve this skill through the active catalog; consumers load the reference
+relative to this skill's installed directory. Do not maintain alternate copies.
+
+Use `draft-lint` for an explicit requirements-only review. Check required headings,
+nonempty scope and EARS acceptance criteria; report missing information as warnings.
+Draft lint may help the planner continue research. It cannot mark an issue ready
+for an executor, even if every heading is present.
+
+Use blocking `execution-readiness` for `/prd prepare`, feature intake, execution
+handoff, AFK classification, or any request to declare work ready for an agent.
+An unspecified mode in one of those contexts means `execution-readiness`.
+Otherwise default to `draft-lint` and label that limitation in the output.
+
+## Validate Meaning and Evidence
+
+Check actual behavior, complete decisions, repository evidence, verification
+feasibility, and freshness. Headings and EARS grammar alone cannot establish
+readiness. Read source files and command definitions; distinguish observed facts
+from proposed changes. Fail unknowns that require an executor decision.
+
+Accept numbered or checkbox acceptance bullets, removing their marker and optional
+`AC-N:` prefix before checking EARS. Accept `WHEN`, `WHILE`, `WHERE`, `IF ... THEN`,
+or `THE SYSTEM SHALL` forms with an observable response. Give each criterion a
+stable ID for the plan-to-verification mapping. Reject subjective pass conditions
+and criteria that merely repeat a heading.
+
+Return the validation mode, verdict, issue/plan identity, inspected revision,
+passed checks, and blockers with remediation owners. Missing or unavailable
+checks are `BLOCKED`, never an inferred pass. A blocked draft may be saved within
+authorized scope, but stays off the runnable path until the planner repairs it.

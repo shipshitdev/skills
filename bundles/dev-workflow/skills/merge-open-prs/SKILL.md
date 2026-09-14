@@ -3,7 +3,7 @@ name: merge-open-prs
 description: Review and land open pull requests through one /merge command. The default mode runs a confirmation-gated trunk sweep and reports cleanup candidates; exact /merge force drains the queue non-serially by merging green PRs and narrowly fixing red PRs. Use when asked to review and merge open PRs, batch-merge to trunk, drain PR WIP, or run /merge.
 compatibility: Requires git, GitHub CLI gh, and jq access to the target repository.
 metadata:
-  version: "2.0.1"
+  version: "2.1.0"
   tags: "git, github, pull-request, merge, review, trunk, cleanup, batch"
 allowed-tools: Bash(git *) Bash(gh *) Bash(jq *)
 disable-model-invocation: true
@@ -22,6 +22,25 @@ not cut a release (use the `release` skill to tag from trunk) and does not deplo
 (use `deploy`). It lands the open feature/fix PRs onto the trunk. Cleanup is a separately selected workflow.
 
 `/merge force` is the sole non-serial queue-drain surface.
+
+## Delivery Readiness
+
+For every implementation PR, resolve the installed `executing-plans` skill and
+read its `references/delivery-gate.md` before declaring merge-ready, merging, or
+reporting Done. This is the canonical delivery contract; local menus and playbook
+shortcuts do not weaken it.
+
+Require acceptance evidence for the complete promised outcome, independent review
+from a different lab than every implementation contributor, a PASS tied to the
+current head, resolved findings, and green required CI from live repository policy.
+A different model from the same lab is not an independent cross-provider review.
+Missing reviewer capacity, credentials, check discovery, or evidence leaves a
+visible blocker. A new implementation commit invalidates previous review and CI.
+
+PR publication and a ready-for-review flag do not imply merge readiness. Merge only
+within existing authorization and bind it to the verified head. Done additionally
+requires a verified merge and the issue's required deployment, migration, enablement,
+and end-to-end smoke evidence. Partial work references its epic without closing it.
 
 ## Contract
 
@@ -50,8 +69,8 @@ Creates/Modifies:
 - In `force` mode, commits and pushes narrow fixes to PR branches when the root
   cause is clear, and may rerun or cancel setup-stuck CI
 - All merge modes request no branch or worktree deletion
-- Never merges a draft, a conflicted PR, or a PR with failing required checks
-  without explicit per-PR confirmation
+- Never merges a draft, a conflicted PR, or a PR missing the required independent
+  review or passing required checks
 
 External Side Effects:
 

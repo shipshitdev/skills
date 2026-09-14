@@ -6,7 +6,7 @@ license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "1.3.0"
   tags: "orchestrator, playbooks, verification, architecture, review"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/poteto-mode/SKILL.md
@@ -80,6 +80,27 @@ capabilities. Optional adapters remain dormant until explicitly configured.
 
 For prose, load `references/prose-slop.md` from the selected `deslop` skill.
 
+## Prepared Issue Execution
+
+When implementing a prepared issue, apply the installed `executing-plans` contract
+and its `references/delivery-gate.md` across all playbooks. The planner resolves
+architecture, scope, contracts, and verification before execution. The executor
+implements those decisions and escalates any missing decision; it does not invoke
+an architectural investigation to choose a new design on its own authority.
+Planning-only requests route through `feature-intake` or `writing-plans` and stop
+before implementation. Existing explicit authorization carries across composition.
+
+A complete issue owns the end-to-end outcome. Layer tasks and parallel lanes are
+internal work, not evidence that a feature is delivered. Every implementation needs
+current independent review from a different implementation lab and green required
+CI before merge-ready. A same-provider swarm supplements that review; it cannot
+replace it. Keep missing review capacity blocked and record actual evidence.
+
+The prepared issue contract takes precedence over generic playbook defaults that
+would re-plan in the executor, require full implementation code in a plan, or add
+unrequested fixed-count review panels. Apply verification proportional to the
+approved acceptance criteria and risk, retaining every required gate.
+
 ## Start
 
 Open a todo list whose first item is reading
@@ -125,8 +146,8 @@ models. Never name a concrete model.
 
 Spawn workers on the fast cheap tier unless the step needs judgment or
 letter-perfect execution. Review every delegate's diff yourself. Do not pass
-through a self-report. A second opinion is the same prompt on a different
-tier or family.
+through a self-report. For delivery, the independent review must use a different provider/lab from
+every implementation contributor. A different tier alone does not qualify.
 
 Give each writer its own worktree or branch. File pointers, not inlined dumps.
 

@@ -9,7 +9,7 @@ description: >-
   command. Use when asked to review changes, a PR, all PRs, recent commits, or
   merged history, or to get a second opinion from another CLI.
 metadata:
-  version: "1.4.2"
+  version: "1.5.0"
   tags: "code-review, dispatcher, pull-requests, commits, retro, orchestration, second-opinion"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)
@@ -23,6 +23,25 @@ target workflow, pick the review depth when applicable, and delegate. It does
 **not** contain review rubrics or merge logic of its own — correctness/security
 live in `code-review`, the multi-dimension pass lives in `full-code-review`, and
 non-serial queue draining belongs exclusively to `/merge force`.
+
+## Delivery Readiness
+
+For every implementation PR, resolve the installed `executing-plans` skill and
+read its `references/delivery-gate.md` before declaring merge-ready, merging, or
+reporting Done. This is the canonical delivery contract; local menus and playbook
+shortcuts do not weaken it.
+
+Require acceptance evidence for the complete promised outcome, independent review
+from a different lab than every implementation contributor, a PASS tied to the
+current head, resolved findings, and green required CI from live repository policy.
+A different model from the same lab is not an independent cross-provider review.
+Missing reviewer capacity, credentials, check discovery, or evidence leaves a
+visible blocker. A new implementation commit invalidates previous review and CI.
+
+PR publication and a ready-for-review flag do not imply merge readiness. Merge only
+within existing authorization and bind it to the verified head. Done additionally
+requires a verified merge and the issue's required deployment, migration, enablement,
+and end-to-end smoke evidence. Partial work references its epic without closing it.
 
 ## Composition Boundary
 

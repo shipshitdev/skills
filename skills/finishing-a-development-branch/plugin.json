@@ -1,6 +1,6 @@
 {
   "name": "finishing-a-development-branch",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Verify tests, present merge or PR options, and clean up a completed branch.",
   "author": {
     "name": "Ship Shit Dev",

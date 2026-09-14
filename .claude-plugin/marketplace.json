@@ -422,8 +422,8 @@
     {
       "name": "executing-plans",
       "source": "./skills/executing-plans",
-      "version": "2.3.0",
-      "description": "Orchestrate autonomous AI development with task-based workflow and QA gates. Use when implementing a development plan, picking tasks from a queue, or running multi-platform parallel execution with QA gates."
+      "version": "3.0.0",
+      "description": "Executes a prepared GitHub issue without inventing product or engineering decisions, escalates plan gaps, and tracks delivery through independent cross-provider review, required CI, merge, and deployment evidence. Use when implementing an approved plan or processing an explicitly authorized issue queue."
     },
     {
       "name": "execution-debugging",
@@ -440,8 +440,8 @@
     {
       "name": "feature-intake",
       "source": "./skills/feature-intake",
-      "version": "1.3.1",
-      "description": "Capture a client or stakeholder feature request, turn it into a planner-ready PRD epic with scoped sub-issues, check for duplicate work, and place approved issues on a GitHub Projects kanban. Use when a user invokes feature intake, asks to turn a rough client requirement into GitHub issues, or wants an idea written as a PRD and pushed to a board."
+      "version": "2.0.0",
+      "description": "Coordinates a rough request into one complete, execution-ready issue by composing the shared requirements, planning, readiness, and issue-publishing engines. Use for /prd prepare or feature intake."
     },
     {
       "name": "figure-it-out",
@@ -452,8 +452,8 @@
     {
       "name": "finishing-a-development-branch",
       "source": "./skills/finishing-a-development-branch",
-      "version": "1.0.0",
-      "description": "Structured \"done coding, now what?\" workflow: verify tests pass, detect the repository environment (normal repo vs worktree, named branch vs detached HEAD), present exactly the right merge / PR / keep / discard options, and execute the chosen path including safe worktree cleanup. Use when implementation is complete and the branch needs to be integrated, published, or abandoned."
+      "version": "2.0.0",
+      "description": "Finishes an implementation branch through authorized PR publication and verified delivery gates, or preserves/discards it when explicitly requested. Use when coding is complete and the branch needs integration or a delivery status."
     },
     {
       "name": "fix-merge-conflicts",
@@ -518,7 +518,7 @@
     {
       "name": "github-pr-publish",
       "source": "./skills/github-pr-publish",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "description": "Create, update, and publish GitHub pull requests with a clean title, durable body, branch hygiene, validation notes, and safe push/PR gates. Use when opening a PR, updating a PR description, preparing a draft PR, or publishing local changes to GitHub."
     },
     {
@@ -632,7 +632,7 @@
     {
       "name": "merge-open-prs",
       "source": "./skills/merge-open-prs",
-      "version": "2.0.1",
+      "version": "2.1.0",
       "description": "Review and land open pull requests through one /merge command. The default mode runs a confirmation-gated trunk sweep and reports cleanup candidates; exact /merge force drains the queue non-serially by merging green PRs and narrowly fixing red PRs. Use when asked to review and merge open PRs, batch-merge to trunk, drain PR WIP, or run /merge."
     },
     {
@@ -746,26 +746,26 @@
     {
       "name": "prd-dispatch",
       "source": "./skills/prd-dispatch",
-      "version": "2.0.0",
-      "description": "Single front door for product specs, PRDs, and feature planning. Parses a subcommand — new, spec, gate, write, intake, or interview — and routes to the right planning engine: prd-task-creator (GitHub issue or local PRD), spec-first (spec → plan → execute loop), prd-quality-gate (completeness validation), prd-writer (full PRD draft), feature-intake (client requirement → kanban issues), or interview (discovery interview before PRD writing). Backs the /prd command. Use when asked to create a PRD, plan a feature, write a spec, validate a PRD, run a discovery interview, or intake a stakeholder requirement, and the action must be picked from an argument like \"new\", \"spec\", \"gate\", \"write\", \"intake\", or \"interview\"."
+      "version": "3.0.0",
+      "description": "Routes /prd prepare to complete issue preparation and retains focused requirements, planning, draft lint, intake, and discovery modes."
     },
     {
       "name": "prd-quality-gate",
       "source": "./skills/prd-quality-gate",
-      "version": "1.1.0",
-      "description": "PRD completeness validation. Use to check that a PRD (or issue body that serves as one) contains the required sections before it is handed to a planning/execution agent, so the plan is built from a complete spec instead of hallucinated scope. Run it as a blocking gate or a warning-only lint."
+      "version": "2.0.0",
+      "description": "Validates draft requirements and blocks execution until the same issue contains a complete, current implementation contract. Owns the shared preparation templates and readiness rules."
     },
     {
       "name": "prd-task-creator",
       "source": "./skills/prd-task-creator",
-      "version": "1.3.1",
-      "description": "Files work into a tracker — turns a feature, bug, or finished PRD into GitHub issues, linked sub-issues, or local task files, slicing epics into thin vertical slices sized for one PR each and tagged AFK or HITL. Starts once the requirements are settled; authoring the PRD document itself is `prd-writer`."
+      "version": "2.0.0",
+      "description": "Publishes prepared requirements and implementation plans as one complete feature issue, with independently complete child outcomes only when justified. Reuses shared readiness and decomposition rules."
     },
     {
       "name": "prd-writer",
       "source": "./skills/prd-writer",
-      "version": "1.3.0",
-      "description": "Authors the PRD document itself — problem, scope boundaries, EARS acceptance criteria, and verification plan — as one self-contained contract a planning agent consumes without re-elicitation. Ends at the written PRD; slicing it into tracked issues is `prd-task-creator`."
+      "version": "2.0.0",
+      "description": "Authors repository-grounded requirements with complete feature scope and observable acceptance criteria. Reuses the canonical preparation contract; implementation planning is writing-plans."
     },
     {
       "name": "production-audit",
@@ -800,7 +800,7 @@
     {
       "name": "pstack",
       "source": "./skills/pstack",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "description": "Playbook orchestrator for verified, unslopped engineering work. Matches a task to a named playbook, applies the principles index, and routes to how, why, architect, arena, swarm, interrogate, tdd, and related skills. Use for pstack, poteto-mode, /pstack, or requests to work in this style."
     },
     {
@@ -908,13 +908,13 @@
     {
       "name": "release-pr-gates",
       "source": "./skills/release-pr-gates",
-      "version": "1.2.1",
+      "version": "1.3.0",
       "description": "Holds a release at the gate — opens or reuses a release PR into the trunk, runs local format, lint, and type-check, watches required GitHub checks through to green, and summarizes the failing run's root cause when they are not. Tags only after the gate passes. Reach for it during the pre-merge wait; for version derivation and plain-English patch notes, use `release`."
     },
     {
       "name": "review-dispatch",
       "source": "./skills/review-dispatch",
-      "version": "1.4.2",
+      "version": "1.5.0",
       "description": "Single front door for code review. Resolves a target — working-tree changes, one PR, all open PRs, the last N commits, a time window, or a retrospective over merged history — into the right workflow, natively or through an external second-opinion engine (grok). Keeps every /review mode report-only except confirmation-gated retrospective issue filing. Backs the /review command. Use when asked to review changes, a PR, all PRs, recent commits, or merged history, or to get a second opinion from another CLI."
     },
     {
@@ -1022,8 +1022,8 @@
     {
       "name": "spec-first",
       "source": "./skills/spec-first",
-      "version": "1.1.0",
-      "description": "Enforces a spec → plan → execute → verify loop before writing code, preventing \"looks right\" failures. Activates on \"build X\", \"implement...\", \"add a feature that...\", or any multi-file/unclear-requirements request. Creates spec.md, todo.md, and decisions.md as durable artifacts."
+      "version": "2.0.0",
+      "description": "Coordinates preparation, prescribed implementation, independent review and verification using one shared issue contract. Use for nontrivial implementation that needs decisions settled before coding."
     },
     {
       "name": "stack-modernization",
@@ -1208,8 +1208,8 @@
     {
       "name": "writing-plans",
       "source": "./skills/writing-plans",
-      "version": "1.1.0",
-      "description": "Turn a spec or requirements doc into a comprehensive, bite-sized implementation plan: map every file, define 2-5 minute TDD tasks with complete code, and enforce DRY/YAGNI/frequent-commits discipline. Use when you have requirements ready and need a concrete execution plan before touching code, when a feature spans multiple files and needs decomposition, or when you want agentic workers to execute tasks reliably without guessing."
+      "version": "2.0.0",
+      "description": "Resolves implementation decisions from researched requirements into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions."
     }
   ]
 }

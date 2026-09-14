@@ -64,6 +64,9 @@ jobs:
           done
           find skills -type f -name '*.test.mjs' -not -path '*/node_modules/*' -exec node --test {} +
 
+      - name: Check dispatch guard regressions
+        run: node --test .github/agent-dispatch.test.cjs
+
       - name: Check validator regression fixtures
         run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 

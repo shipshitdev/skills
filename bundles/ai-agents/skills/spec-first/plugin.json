@@ -1,7 +1,7 @@
 {
   "name": "spec-first",
-  "version": "1.1.0",
-  "description": "Use when building anything non-trivial. Enforces a spec → plan → execute → verify loop that pr",
+  "version": "2.0.0",
+  "description": "Coordinates preparation, prescribed implementation, independent review and verification using one...",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

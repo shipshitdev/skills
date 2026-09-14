@@ -1,7 +1,7 @@
 {
   "name": "executing-plans",
-  "version": "2.3.0",
-  "description": "Orchestrate autonomous AI development with task-based workflow and QA gates",
+  "version": "3.0.0",
+  "description": "Execute prepared issues with independent review and verified end-to-end delivery",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",
