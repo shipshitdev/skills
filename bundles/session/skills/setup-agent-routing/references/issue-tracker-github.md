@@ -1,82 +1,54 @@
-# Issue tracker — GitHub Issues + Projects
+# Issue Tracker — GitHub Issues and Projects
 
-> Seed for `docs/agents/issue-tracker.md`. Replace `<owner>`, `<repo>`, and `<N>`
-> with this repo's values before writing.
+Seed `docs/agents/issue-tracker.md` using verified repository/project values.
+Track issues in `<owner/repository>` and project #`<number>`. Keep status, priority,
+assignee and other supported metadata in native tracker fields.
 
-Work is tracked as **GitHub Issues** on `<owner>/<repo>`, visualized on a
-**GitHub Projects** kanban board (project #`<N>`) with columns
-**Backlog → In Progress → Human Review → Done** (plus **Deferred** for parked work).
+## Canonical Content and Contracts
 
-## Column → state + board Status map
+The issue body contains complete feature requirements and its `Current plan:` line
+selects the authoritative implementation-plan comment on the same issue. Resolve
+`prd-quality-gate` through the active catalog and read its installed readiness
+reference for the content/fingerprint contract. Resolve `executing-plans` and its
+installed delivery reference for lifecycle rules. Provisioned workflows also read
+`.github/agent-dispatch.md`. Avoid duplicating those contracts in tracker docs.
 
-Status is the board `Status` field (a Projects v2 single-select), the sole source
-of truth — not a label.
+## Board State
 
-| Column       | Issue state | Board `Status` |
-| ------------ | ----------- | -------------- |
-| Backlog      | open        | Backlog        |
-| In Progress  | open        | In Progress    |
-| Human Review | open        | Human Review   |
-| Done         | closed      | Done           |
-| Deferred     | open        | Deferred       |
+Inspect live field IDs and option names; do not invent them. The common Status
+columns are Backlog, In Progress, Human Review, Done and Deferred. Columns show
+human-facing location, while `loop:*` labels show activity. Neither a closed issue
+nor its board column proves complete delivery.
 
-These are the human-facing columns; the AI loop's sub-phases ride as `loop:*` labels
-inside In Progress.
+Use read-only tracker/project inspection to resolve repository identity, issue
+comments, membership and fields. Paginate when selecting a complete queue, and
+match repository identity as well as issue number. Treat `.github/agent-loop.env`
+as validated configuration data, never arbitrary shell source. Apply state writes
+only under existing authorization using the shared dispatch/execution owner rules.
 
-Issue state (open/closed) plus the board `Status` field drive column placement.
-The `gh` CLI is the agent's interface for every task operation; the board node ids
-live in `.github/agent-loop.env`.
+## Publication and Relationships
 
-## Command vocabulary
+Use structured text fields or UTF-8 body files for multiline issue/PR content;
+avoid shell interpolation of tracker text. Re-read before replacement to preserve
+concurrent edits and verify saved content after publication.
 
-```bash
-# Create (use --body-file under the current repo's .tmp/ for multi-line PRDs)
-REPO_TMP="$(git rev-parse --show-toplevel)/.tmp"
-mkdir -p "$REPO_TMP"
-gh issue create --title "<title>" --body-file "$REPO_TMP/body.md" --label "type:feature"
+One issue/PR normally delivers one whole feature, including required API, UI,
+wiring, migration, tests and docs. Link children only for independently complete
+outcomes under the canonical decomposition rule. Preserve parent acceptance and
+integration coverage when children are necessary.
 
-# Read one issue with full comment history (rejection + triage notes live here)
-gh issue view <number> --comments
+Use the repository's scoped branch convention. Reference the issue in commits and
+publish the PR with `Refs #<issue>` plus the current plan link/revision. Handoff is
+`review_pending`; do not automatically close the issue at implementation publication.
 
-# List the dispatch queue: the gate label intersected with the board's Backlog column
-# (see triage-labels.md for the dispatch:claude / dispatch:codex gates)
-source .github/agent-loop.env
-gh issue list --label "dispatch:claude" --json number,labels,assignees --jq '.'
-gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json -L 500 \
-  | jq -r '.items[] | select(.status == "Backlog") | .content.number'
+## Recovery and Completion
 
-# Comment (progress updates, claim stamps, completion summaries)
-gh issue comment <number> --body "..."
+Confirm the run ended before explicit claim recovery; timestamps alone do not
+release ownership. Follow the shared receipt/claim rules after interrupted runs.
 
-# Apply / remove labels
-gh issue edit <number> --add-label "..."
-gh issue edit <number> --remove-label "..."
-
-# Close (approve / wontfix)
-gh issue close <number> --comment "..."
-```
-
-## Placing issues on the board
-
-```bash
-# Add an issue to the project board
-gh project item-add <N> --owner <owner> --url <issue-url>
-
-# Discover field + item IDs live — never hard-code them
-gh project field-list <N> --owner <owner> --format json
-gh project item-list <N> --owner <owner> -L 500 --format json   # default limit is 30
-```
-
-Use live field IDs from `gh project field-list` and item IDs from
-`gh project item-list`. Do not hard-code project field IDs — they differ per board.
-
-## Sub-issues
-
-Link sub-issues using the repository's supported GitHub sub-issue API. If native
-sub-issues are unavailable, link children in the parent body and each child body.
-
-## Branch + PR convention
-
-- Branch per task: `feature/<issue-number>-<slug>`.
-- Commits reference the issue (`fixes #N`).
-- PR opened with `gh pr create --body "Closes #N"`; the link goes in an issue comment.
+Done requires independent actual implementation review from a different model
+provider/lab, green required CI at the final reviewed head, verified merge and
+required deployment/migration/smoke evidence. Keep the epic open until every
+required outcome and integrated acceptance criterion is satisfied. Reviewer
+assignment and self-QA do not replace that review. Closing rejected work is a
+separate authorized decision with an explicit reason, not delivery completion.
