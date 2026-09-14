@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.1](https://github.com/shipshitdev/skills/compare/v2.2.0...v2.2.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* **board-sync:** detect the CLI entrypoint through symlinked skill installs ([#147](https://github.com/shipshitdev/skills/issues/147)) ([63fec2c](https://github.com/shipshitdev/skills/commit/63fec2cdf52ed329cf7cc42622b7fb5b39caeccd))
+* **git-cleanup:** fetch trunk and prove squash landings by file content ([#145](https://github.com/shipshitdev/skills/issues/145)) ([73e6017](https://github.com/shipshitdev/skills/commit/73e6017ef3eab0258da24102e4e0ec6c2b4d582f))
+* prepare complete issues and enforce delivery gates ([#149](https://github.com/shipshitdev/skills/issues/149)) ([b75b7f3](https://github.com/shipshitdev/skills/commit/b75b7f351b73ae5b81f81210eb6c724fcd0f13f4))
+
 ## [2.2.0](https://github.com/shipshitdev/skills/compare/v2.1.0...v2.2.0) (2026-09-05)
 
 
