@@ -91,6 +91,23 @@ function validatePlan(comment, issue, sha) {
   if (field('Requirements SHA256') !== fingerprint)
     fail('Requirements changed since planning; return to planner.');
 }
+function resolveSkillRoot(lane, exists = existsSync) {
+  const required = [
+    'prd-quality-gate/SKILL.md',
+    'prd-quality-gate/references/execution-readiness.md',
+    ...(lane === 'plan'
+      ? ['prd-writer/SKILL.md', 'writing-plans/SKILL.md']
+      : ['executing-plans/SKILL.md', 'executing-plans/references/delivery-gate.md']),
+  ];
+  const root = ['.github/agent-skills', 'skills'].find((candidate) =>
+    required.every((resource) => exists(join(candidate, resource)))
+  );
+  if (!root)
+    fail(
+      'Prepared workflow skill resources are missing; reinstall with setup-dev-loop.sh from the current skills release.'
+    );
+  return root;
+}
 function setStatus(board, itemId, optionId) {
   gh([
     'project',
@@ -123,6 +140,7 @@ function prepare(env) {
   if (event.label.name !== `dispatch:${lane}`) fail('Event does not authorize this lane.');
   if (!existsSync('.github/agent-dispatch.md'))
     fail('Missing shared dispatch contract; reinstall workflows with setup-dev-loop.sh.');
+  const skillRoot = resolveSkillRoot(lane);
   const board = parseBoard(readFileSync('.github/agent-loop.env', 'utf8'));
   const issue = api(`repos/${repo}/issues/${number}`);
   const actorPermission = permission(repo, env.GITHUB_ACTOR);
@@ -181,7 +199,7 @@ function prepare(env) {
   api(`repos/${repo}/issues/${number}/comments`, {
     body: `Claimed-By: ${env.GITHUB_ACTOR}\nClaimed-At: ${new Date().toISOString()}\nRun: ${env.GITHUB_SERVER_URL}/${repo}/actions/runs/${env.GITHUB_RUN_ID}\nRole: ${lane === 'plan' ? 'planner' : 'executor'}\nProvider: ${env.MODEL_PROVIDER}\nModel: ${env.MODEL_ID}\nEffort: ${env.MODEL_EFFORT}`,
   });
-  const prompt = `Run the ${lane === 'plan' ? 'planning' : 'execution'} role for issue #${number} in ${repo}.\nRead and follow .github/agent-dispatch.md in full.\nThe workflow owns claim release and status handoff.\nRuntime provider: ${env.MODEL_PROVIDER}; model: ${env.MODEL_ID}; effort: ${env.MODEL_EFFORT}.\n`;
+  const prompt = `Run the ${lane === 'plan' ? 'planning' : 'execution'} role for issue #${number} in ${repo}.\nRead and follow .github/agent-dispatch.md in full.\nResolve workflow skills from ${skillRoot}.\nThe workflow owns claim release and status handoff.\nRuntime provider: ${env.MODEL_PROVIDER}; model: ${env.MODEL_ID}; effort: ${env.MODEL_EFFORT}.\n`;
   writeFileSync(join(env.RUNNER_TEMP, 'agent-dispatch-prompt.md'), prompt);
   appendFileSync(env.GITHUB_OUTPUT, `ready=true\n`);
 }
@@ -219,7 +237,13 @@ function finalize(env) {
     `## Dispatch handoff\n\n${status}. No merge or Done transition was performed.\n`
   );
 }
-module.exports = { parseBoard, validateEligibility, validateRuntime, validatePlan };
+module.exports = {
+  parseBoard,
+  validateEligibility,
+  validateRuntime,
+  validatePlan,
+  resolveSkillRoot,
+};
 if (require.main === module) {
   try {
     if (process.argv[2] === 'prepare') prepare(process.env);

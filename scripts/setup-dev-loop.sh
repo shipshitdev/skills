@@ -49,6 +49,14 @@ BOARD_SCRIPT="${SCRIPT_DIR}/../skills/project-board/scripts/setup-github-board.m
 
 # Phase-2 push workflows installed into the target repo: one planning gate
 # (plan-dispatch.yml, dispatch:plan) plus one execution lane per engine.
+# Fixed companion set shipped from the same checkout as the workflows.
+# Copy complete skill directories so relative scripts/references remain usable.
+DISPATCH_SKILLS=(
+  prd-writer prd-task-creator feature-intake writing-plans prd-quality-gate
+  executing-plans tdd qa-reviewer github-pr-publish verification-before-completion
+  commit-summary github-fix-ci testing-expert ai-regression-testing
+)
+
 WORKFLOWS=(
   "plan-dispatch.yml"
   "agent-dispatch.yml"
@@ -246,6 +254,18 @@ install_workflows() {
     cp "$src" "$dest"
     log "workflow installed: .github/workflows/${wf}"
   done
+  local skill
+  for skill in "${DISPATCH_SKILLS[@]}"; do
+    src="${SCRIPT_DIR}/../skills/${skill}"
+    dest="${repo_root}/.github/agent-skills/${skill}"
+    [[ -f "${src}/SKILL.md" ]] || { err "required dispatch skill missing: ${src}"; return 1; }
+    if $DRY_RUN; then
+      dry "copy complete skill ${src} to ${dest}"
+    else
+      mkdir -p "$dest"
+      cp -R "${src}/." "$dest/"
+    fi
+  done
   local resource
   for resource in agent-dispatch.cjs agent-dispatch.md; do
     src="${WORKFLOW_DIR}/../${resource}"
@@ -417,7 +437,7 @@ print_variables_step() {
   echo "      No usage telemetry or subscription-capacity routing is installed. Codex Actions use API credentials."
   echo "      Provision a separate frontier reviewer from a different provider for every implementation."
   echo "      These workflows stop at review-pending; they do not provision reviewer automation or branch protection."
-  echo "      Install writing-plans, prd-quality-gate, and executing-plans with their references on the target harness."
+  echo "      Setup copies the prepared workflow skill set and complete resources into .github/agent-skills/."
   echo "      Missing skills, runtime settings, or board configuration block dispatch."
 }
 
@@ -483,7 +503,8 @@ What it does:
   3. Installs the Phase-2 push workflows: plan-dispatch.yml (planning gate,
      dispatch:plan), agent-dispatch.yml (Claude lane, dispatch:claude),
      codex-dispatch.yml (Codex lane, dispatch:codex), and openrouter-dispatch.yml
-     (OpenRouter lane, dispatch:openrouter).
+     (OpenRouter lane, dispatch:openrouter), shared dispatch contract/guard, and
+     the companion skill directories under .github/agent-skills/.
   4. Arms the auth secrets: CLAUDE_CODE_OAUTH_TOKEN (subscription OAuth),
      OPENAI_API_KEY (Codex lane), OPENROUTER_API_KEY (OpenRouter lane), and
      PROJECTS_TOKEN (project-scoped PAT for the board write — the default

@@ -6,6 +6,7 @@ const {
   validateEligibility,
   validateRuntime,
   validatePlan,
+  resolveSkillRoot,
 } = require('./agent-dispatch.cjs');
 
 const issue = {
@@ -139,4 +140,20 @@ test('plan freshness binds exact revision metadata, repository commit, and norma
     () => validatePlan({ body: plan.body.replace('revision: 1', 'revision: 0') }, issue, sha),
     /positive integer/
   );
+});
+
+test('consumer workflow resolves complete packaged resources and fails closed if absent', () => {
+  assert.equal(
+    resolveSkillRoot('plan', (path) => path.startsWith('.github/agent-skills/')),
+    '.github/agent-skills'
+  );
+  assert.equal(
+    resolveSkillRoot('codex', (path) => path.startsWith('skills/')),
+    'skills'
+  );
+  assert.throws(
+    () => resolveSkillRoot('codex', (path) => !path.endsWith('delivery-gate.md')),
+    /resources are missing/
+  );
+  assert.throws(() => resolveSkillRoot('plan', () => false), /resources are missing/);
 });

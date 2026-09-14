@@ -8,8 +8,9 @@ one dispatch label, and the current repository's Backlog item. Do not claim it a
 ## Planning role
 
 Run `writing-plans` and the strict execution-readiness gate from `prd-quality-gate`.
-Resolve these skills through the active installation; this repository also exposes
-them under `skills/`. Missing skills or their reference files are a blocking setup
+Resolve these skills first from `.github/agent-skills/`, copied by setup from the
+same checkout as these workflows; this source repository exposes them under
+`skills/`. Read their `SKILL.md` directly when the harness has no skill loader. Missing skills or their reference files are a blocking setup
 error. Read the canonical `references/execution-readiness.md` beside the selected
 `prd-quality-gate` skill. Research current code and resolve product, architecture,
 interface, migration, security, failure, rollout, and verification decisions. Ask
@@ -34,7 +35,7 @@ claim and moves the item to Human Review.
 ## Execution role
 
 Run `executing-plans`. Resolve its canonical delivery gate and the readiness
-reference through the installed skills. Missing resources block execution. Read
+reference from the workflow skill root verified by preflight. Missing resources block execution. Read
 requirements plus the one current trusted `## Implementation Plan` comment.
 Independently apply the full semantic readiness gate; the workflow's metadata
 check is necessary but cannot establish that decisions are complete.
@@ -45,6 +46,10 @@ again before publication. Escalate every missing or contradictory decision to th
 planner with the affected step and evidence. Do not invent behavior, silently
 choose architecture, reinterpret acceptance criteria, or patch the plan yourself.
 A stale repository SHA requires planner revalidation and a new ready revision.
+Optional companions outside the packaged set are not prerequisites for this
+bounded execution. Follow the prepared issue and direct execution contract; if an
+absent companion is necessary to satisfy acceptance, escalate instead of guessing
+or attempting a recursive installation.
 
 Create or reuse the scoped branch in the repository's approved worktree location.
 Complete all layers, migrations, error paths, and integration work needed for the
