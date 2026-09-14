@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/shipshitdev/skills/compare/v2.2.1...v2.2.2) (2026-09-14)
+
+
+### Bug Fixes
+
+* align dev-loop setup credential guidance ([#151](https://github.com/shipshitdev/skills/issues/151)) ([625e0d6](https://github.com/shipshitdev/skills/commit/625e0d6c9f4fa2df5e12fbb6893221b706cba207))
+
 ## [2.2.1](https://github.com/shipshitdev/skills/compare/v2.2.0...v2.2.1) (2026-09-14)
 
 
