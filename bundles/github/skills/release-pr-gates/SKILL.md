@@ -3,7 +3,7 @@ name: release-pr-gates
 description: Holds a release at the gate — opens or reuses a release PR into the trunk, runs local format, lint, and type-check, watches required GitHub checks through to green, and summarizes the failing run's root cause when they are not. Tags only after the gate passes. Reach for it during the pre-merge wait; for version derivation and plain-English patch notes, use `release`.
 compatibility: Requires git and GitHub CLI gh access to the target repository.
 metadata:
-  version: "1.2.1"
+  version: "1.3.0"
   tags: "release, github, pull-request, ci-cd, quality-gates"
 when_to_use: "open a release PR, wait for the checks to go green, are the release checks passing, is the trunk ready to release, gate this release on CI, which required check is failing"
 allowed-tools: Bash(git *) Bash(gh *)
@@ -15,6 +15,25 @@ Verify required CI checks are green on the trunk, then cut a release (semver
 tag + GitHub release) or open a release PR targeting the default branch.
 Staging and production are deployment environments driven by CI/CD and tags —
 not long-lived branches.
+
+## Delivery Readiness
+
+For every implementation PR, resolve the installed `executing-plans` skill and
+read its `references/delivery-gate.md` before declaring merge-ready, merging, or
+reporting Done. This is the canonical delivery contract; local menus and playbook
+shortcuts do not weaken it.
+
+Require acceptance evidence for the complete promised outcome, independent review
+from a different lab than every implementation contributor, a PASS tied to the
+current head, resolved findings, and green required CI from live repository policy.
+A different model from the same lab is not an independent cross-provider review.
+Missing reviewer capacity, credentials, check discovery, or evidence leaves a
+visible blocker. A new implementation commit invalidates previous review and CI.
+
+PR publication and a ready-for-review flag do not imply merge readiness. Merge only
+within existing authorization and bind it to the verified head. Done additionally
+requires a verified merge and the issue's required deployment, migration, enablement,
+and end-to-end smoke evidence. Partial work references its epic without closing it.
 
 ## Authorized Scope
 
@@ -123,18 +142,11 @@ Require explicit user confirmation before merging into the trunk.
 
 ## Release PR Workflow
 
-1. Run local quality gates before opening or updating the release PR. Format,
-   lint, and type-check are mandatory because they mirror GitHub Actions and are
-   cheap to run locally:
-
-   ```bash
-   bun run format || npm run format || bunx biome check --write .
-   bun run lint || npm run lint || bunx turbo lint
-   bun run typecheck || bun run type-check || npm run typecheck || npm run type-check || bunx tsc --noEmit
-   ```
-
-   Fix failures before pushing. Do not open a release PR with known local
-   format, lint, or type errors.
+1. Resolve the repository's actual format, lint, typecheck, and test commands.
+   Run each on the permitted verification host or CI. Host restrictions take
+   precedence over a local example; do not guess package scripts or try a chain
+   of alternative package managers. Record exact commands, revisions, and results.
+   PR publication can expose pending verification; merge/tag readiness cannot.
 
 2. Inspect divergence between the source branch and the trunk:
 
@@ -183,7 +195,8 @@ gh pr checks <number>
 
 Quality gate outcomes:
 
-- `pass`: report the PR is green and ready for review or merge.
+- `pass`: report CI green; evaluate the independent review and delivery gates
+  before calling the PR merge-ready.
 - `fail`: fetch the failing workflow logs and summarize root cause.
 - `pending`: keep waiting unless the user asks for a status-only update.
 - `skipping` or no checks: report exactly what GitHub shows; do not call it green

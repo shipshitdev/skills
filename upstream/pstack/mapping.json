@@ -5,11 +5,12 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "d0d31e35689d05342bc16163fdc5c3c26e94b01ed7c2e032d456d1b3c0bcb7c0"
+          "sha256": "5df87ae797cbac90f5fc944432c65f8d5cc726af8748c384174d67eeb0795ee4"
         }
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2255,11 +2256,12 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "d0d31e35689d05342bc16163fdc5c3c26e94b01ed7c2e032d456d1b3c0bcb7c0"
+          "sha256": "5df87ae797cbac90f5fc944432c65f8d5cc726af8748c384174d67eeb0795ee4"
         }
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2269,11 +2271,12 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "d0d31e35689d05342bc16163fdc5c3c26e94b01ed7c2e032d456d1b3c0bcb7c0"
+          "sha256": "5df87ae797cbac90f5fc944432c65f8d5cc726af8748c384174d67eeb0795ee4"
         }
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2297,12 +2300,12 @@
         {
           "executable": false,
           "path": ".github/workflows/ci.yml",
-          "sha256": "8140607d9123a3cde382fb6d73214676670fa2808ea370f28177661a1a03ac04"
+          "sha256": "eb9643d7b12df92e14c621158d3965ce83a875d4dddaae3898896b241cde5c8c"
         }
       ],
       "disposition": "superseded",
       "reason": "Shipshit CI verifies source coverage, runtime tests/types, canonical contracts and generated packages.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2494,11 +2497,12 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "d0d31e35689d05342bc16163fdc5c3c26e94b01ed7c2e032d456d1b3c0bcb7c0"
+          "sha256": "5df87ae797cbac90f5fc944432c65f8d5cc726af8748c384174d67eeb0795ee4"
         }
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2508,11 +2512,12 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "d0d31e35689d05342bc16163fdc5c3c26e94b01ed7c2e032d456d1b3c0bcb7c0"
+          "sha256": "5df87ae797cbac90f5fc944432c65f8d5cc726af8748c384174d67eeb0795ee4"
         }
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2847,12 +2852,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Creates or updates a personal mode from working conventions; canonical skill-creator and harness-selected roots; does not schedule automation.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2867,12 +2872,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "One canonical monitoring playbook owns all modes; removes shadow standalone entrypoint, implicit scheduling and topology rewrite permissions.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2906,11 +2911,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Plain-language restatement of the preceding response, routed conditionally from canonical pstack; not a session-resume workflow.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3256,11 +3262,12 @@
         {
           "executable": false,
           "path": "skills/github-pr-publish/SKILL.md",
-          "sha256": "56a3abef74e411afa3b28c39d29faa3a6ac47b9e03f5acc4cddabac524ffa6e8"
+          "sha256": "324a42d65511e8546a626e723bb7a019759d6097a4b0652a32f012c73b2a2a96"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3294,12 +3301,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4194,11 +4201,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4213,11 +4221,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4232,11 +4241,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4251,11 +4261,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4270,11 +4281,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4289,11 +4301,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4308,11 +4321,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4327,11 +4341,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4346,11 +4361,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4365,11 +4381,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4384,11 +4401,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4403,11 +4421,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4422,11 +4441,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4441,11 +4461,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4460,11 +4481,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4479,11 +4501,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4498,11 +4521,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4517,11 +4541,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4536,11 +4561,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4555,11 +4581,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4574,11 +4601,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "dc25778a58fb1a12eba87980fcd7f1ccefd6e300e7fb71b2895ecb3e21968d04"
+          "sha256": "0dfe4fecf38d3b1287c057037a5362d92c602d19b22d216aa2dd253de244bc8f"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

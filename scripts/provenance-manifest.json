@@ -2,7 +2,7 @@
   "skills": [
     {
       "skill": "writing-plans",
-      "desc": "Turn a spec into a bite-sized, TDD-structured implementation plan that agentic workers can execute reliably.",
+      "desc": "Resolve all implementation decisions in a repository-grounded issue plan without prewriting code.",
       "source": "https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md",
       "source_path": "skills/writing-plans/SKILL.md",
       "upstream_repo": "obra/superpowers",
@@ -12,7 +12,7 @@
       "license": "MIT",
       "mode": "rolling",
       "drop_author": true,
-      "modifications": "Vendored as a standalone, platform-neutral marketplace plugin (Claude Code + Codex). The prior `author: Ship Shit Dev` frontmatter was incorrect and has been removed — this skill derives from obra/superpowers. No behavioral changes beyond provenance metadata."
+      "modifications": "Adapted from obra/superpowers. Preparation uses shared execution readiness, complete feature scope, issue-bound versioned plans, repository evidence, and no full implementation code dumps. Preserve these local contracts on upstream review."
     },
     {
       "skill": "systematic-debugging",
@@ -58,7 +58,7 @@
     },
     {
       "skill": "finishing-a-development-branch",
-      "desc": "Cleanly finish a development branch — verify, merge, prune — without leaving loose ends.",
+      "desc": "Publish authorized branches and verify independent review, CI, and complete delivery; preserve worktrees.",
       "source": "https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md",
       "source_path": "skills/finishing-a-development-branch/SKILL.md",
       "upstream_repo": "obra/superpowers",
@@ -68,7 +68,7 @@
       "license": "MIT",
       "mode": "rolling",
       "drop_author": true,
-      "modifications": "Vendored from obra/superpowers as a standalone, platform-neutral marketplace plugin. The prior `author: Ship Shit Dev` frontmatter was incorrect and has been removed. No behavioral changes beyond provenance metadata."
+      "modifications": "Adapted from obra/superpowers. Existing authorization replaces repeated menus; required verification respects the host, independent cross-lab review and CI gate merge readiness, and worktree cleanup requires explicit authorization."
     },
     {
       "skill": "frontend-design",

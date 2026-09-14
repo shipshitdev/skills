@@ -1,32 +1,19 @@
-# Feature - Client Requirement Intake
+# Feature - Prepare an End-to-End Feature
 
-Capture a rough client or stakeholder requirement, turn it into a PRD epic, split
-it into scoped sub-issues, and push approved issues to a GitHub Projects kanban.
-
-## Usage
-
-```bash
-/feature [client requirement or feature idea]
+```text
+/feature <rough requirement>
 ```
 
-## Workflow
+Apply `feature-intake` with the request, target, existing authorization, and caller
+restrictions. It composes requirements writing, implementation planning, readiness
+validation, and issue creation. It owns no competing PRD template.
 
-Use the `feature-intake` skill.
+Default to one issue and one PR containing the complete feature, including every
+required layer, integration, verification, migration, and delivery step. Split only
+independently complete outcomes; keep the epic open until all promised behavior is
+delivered. Ask only for consequential product information that existing context
+cannot answer. Existing authorization covers the same tracker writes without a
+repeated approval ceremony.
 
-1. Read the command arguments as the feature idea.
-2. Confirm the target repository and GitHub Project board.
-3. Search existing issues and board items for duplicates or nearby work.
-4. Read relevant product, roadmap, and memory context.
-5. Ask at most three focused stakeholder questions only if required details are
-   missing.
-6. Draft one parent PRD issue plus scoped sub-issues.
-7. Show the draft and wait for approval.
-8. Create the GitHub issues, link sub-issues, and add approved items to the
-   kanban.
-
-## Rules
-
-- Do not create GitHub issues before draft approval.
-- Do not create sidecar PRD files unless explicitly requested.
-- Prefer updating a true duplicate over creating a parallel epic.
-- Keep PRD requirements product-readable and agent-verifiable.
+Return the issue, current plan, readiness verdict, and blockers. Preparation does
+not silently start implementation or apply an execution dispatch gate.

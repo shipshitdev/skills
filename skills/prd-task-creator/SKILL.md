@@ -1,178 +1,85 @@
 ---
 name: prd-task-creator
-description: 'Files work into a tracker — turns a feature, bug, or finished PRD into GitHub issues, linked sub-issues, or local task files, slicing epics into thin vertical slices sized for one PR each and tagged AFK or HITL. Starts once the requirements are settled; authoring the PRD document itself is `prd-writer`.'
+description: "Publishes prepared requirements and implementation plans as one complete feature issue, with independently complete child outcomes only when justified. Reuses shared readiness and decomposition rules."
 allowed-tools: Bash(gh *)
 metadata:
-  version: "1.3.1"
+  version: "2.0.0"
   tags: "tasks, prd, github, ears"
 when_to_use: "create a task, open a GitHub issue, create a sub-issue, break this epic down into issues, file this PRD as work items, write up this bug as an issue"
 ---
 
 # PRD Task Creator
 
-Write a clear, actionable PRD or task — output depends on where the user tracks work.
-
-## Authorized Scope
-
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Publish the shared preparation packet. This engine owns tracker mechanics and
+relationships; requirements, implementation planning and readiness stay with their
+respective engines.
 
 ## Contract
 
 Inputs:
 
-- Feature, bug, enhancement, or planning request
-- Destination preference: GitHub issue, local PRD/task file, or both
-- Optional parent issue, labels, assignee, and priority
+- Prepared packet or rough request, target issue/repository, and authorized actions.
+- Optional parent epic, labels, assignee, priority, or canonical local destination.
 
 Outputs:
 
-- Draft PRD or task body
-- Destination-specific create command or file path
-- Created issue/file URL or path after approval
+- Verified issue/body and current plan links, readiness result, and relationships.
+- Draft content with blockers when publication or execution readiness is unavailable.
 
 Creates/Modifies:
 
-- Local `.agents/memory/<kebab-name>.md` PRD files only after draft approval
-- GitHub issues/sub-issues only after draft approval
+- Requested issues, plan comments, current-plan links, and authorized sub-issue links.
+- One local canonical document only for an explicitly local workflow.
 
 External Side Effects:
 
-- Reads GitHub issue state
-- May create GitHub issues, sub-issues, or issue branches
+- Tracker reads and authorized issue/comment writes. No implicit branch creation,
+  implementation, board dispatch, merge, or deployment.
 
 Confirmation Required:
 
-- Always show the draft before creating files or GitHub issues
-- Ask before linking sub-issues or creating issue branches
+- Existing authorization to create/update these work items covers publication.
+  Ask only for missing or expanded authority. Draft/report-only callers stay draft.
+  Prepare the full packet before any required publication approval.
 
 Delegates To:
 
-- `spec-first` when implementation constraints are still unclear
-- `tdd` when the work should be executed test-first
-- `github-fix-ci` for CI failures after implementation
-- `roadmap-analyzer` for roadmap-level planning
-- `cto-advisor` for technical strategy and architecture tradeoffs
+- `feature-intake` for a rough request without a prepared packet.
+- `prd-quality-gate` for canonical templates and readiness validation.
 
-## Step 1: Detect workflow preference
+## Publish the Packet
 
-Check in order:
+1. Resolve the target from the user/session and verified repository remote. Search
+   existing issues and open PRs. Reuse the matching issue within authorized scope;
+   never overwrite unrelated work. Missing GitHub access is a publication blocker,
+   not authority to create unrequested local memory files.
+2. If the input is a rough request, run the `feature-intake` skill and return its
+   result. Its call back into this engine carries a prepared packet, preventing
+   recursive preparation. For an explicit requirements-only/draft issue, publish
+   the draft within scope but keep it non-runnable.
+3. Load the shared readiness/decomposition reference through `prd-quality-gate`.
+   Default to one complete feature issue and one PR. Split only independently
+   complete outcomes, never backend/frontend/E2E ticket templates. Publish necessary
+   dependencies first, link real IDs, and preserve parent acceptance coverage.
+4. Run the `prd-quality-gate` skill in `execution-readiness` mode for an execution
+   packet. Keep blocked packets off the runnable path even if their drafts may be
+   published. Do not label unresolved planner decisions AFK.
+5. Preserve live tracker metadata and current user edits. Write requirements as the
+   issue body and the complete plan as a `## Implementation Plan` comment. Bind it
+   using the shared revision, SHA, fingerprint, and verdict protocol; set the
+   current-plan link and identify superseded plans.
+6. Fetch the saved body and current comment again. Verify their identity, content,
+   fingerprint and links; re-run readiness against the saved packet and current
+   source. If a write partially fails, report the partial state and repair within
+   authorized scope before changing readiness/dispatch state. A local READY draft
+   does not prove the published issue is ready.
+7. Set only requested/authorized native fields using inspected live IDs/options.
+   Record AFK only for a verified READY packet. Keep human-only blockers distinct
+   from planner-owned rework. Return URLs and the readiness verdict, including any
+   remaining publication or delivery blockers.
 
-1. User explicitly says "GitHub issue", "local file", or both
-2. Check if `gh auth status` succeeds and a GitHub remote exists → GitHub available
-3. If ambiguous, ask: "GitHub issue, local PRD file in `.agents/memory/`, or both?"
+## Tracker Mechanics
 
-## Step 2: Understand the request
-
-Ask only what's missing:
-
-- What problem does this solve?
-- Who's affected? (user-facing, internal, infra)
-- Any hard constraints or dependencies?
-- Is this part of a larger epic? (→ sub-issue)
-- Priority: critical / high / medium / low
-
-## Step 3: Research before writing
-
-- Read relevant architecture docs in `.agents/memory/` (look for architecture, summary, or context files)
-- Search codebase for related patterns
-- Check for existing issues: `gh issue list --search "[keyword]"`
-
-## Step 4: Write the PRD
-
-See `references/full-guide.md` for the full PRD structure.
-
-A good PRD has:
-
-- **Problem** — why this exists, what breaks without it
-- **Goal** — one sentence, measurable outcome
-- **Scope** — what's in, what's explicitly out
-- **Acceptance criteria** — EARS (`WHEN/WHILE/WHERE/IF … THE SYSTEM SHALL …`), testable, not vague
-- **Technical notes** — approach, risks, dependencies
-
-Acceptance criteria must be EARS-shaped and checkable by a human.
-
-### Agent-ready issue rules
-
-When the output is an issue for an autonomous or AFK agent, write it as an
-agent brief, not a stream-of-consciousness plan:
-
-- Describe behavior and contracts, not file-by-file instructions.
-- Avoid line numbers and brittle file paths unless the path is itself the contract.
-- Include current behavior, desired behavior, acceptance criteria, and out of scope.
-- Name public interfaces, CLI commands, API shapes, config keys, or data contracts when known.
-- Keep implementation notes as constraints, not a script the agent must follow.
-
-### Vertical-slice breakdown
-
-When breaking an epic, PRD, or plan into issues:
-
-- Prefer thin vertical slices that produce a verifiable outcome.
-- Mark each issue as `AFK` when an agent can complete it without more human input.
-- Mark each issue as `HITL` when it needs a human decision, design review, credential, or product judgment.
-- Publish blockers before blocked issues so dependencies can reference real issue IDs.
-- Keep each sub-issue small enough for one focused PR.
-
-## Step 5: Output to correct destination
-
-### GitHub (primary if available)
-
-**New issue:**
-
-```bash
-gh issue create \
-  --title "[type]: clear title" \
-  --body "$(cat <<'BODY'
-[PRD content here]
-BODY
-)" \
-  --label "type:feature" \
-  --assignee "@me"
-```
-
-**Sub-issue** (linked to parent):
-
-```bash
-# Create sub-issue
-gh issue create --title "..." --body "..." 
-
-# Link as sub-issue to parent #N
-gh issue develop N --checkout  # only if needed
-# Use: gh api repos/{owner}/{repo}/issues/{parent}/sub_issues --method POST -f sub_issue_id={child_id}
-```
-
-**Draft PR from issue:**
-
-```bash
-gh issue develop [issue-number] --branch "feature/[name]"
-```
-
-### Local files (optional, or when no GitHub)
-
-- PRD: `.agents/memory/[kebab-name].md`
-
-See `references/full-guide.md` for local file templates.
-
-## Step 6: Get approval before creating
-
-Show the draft PRD. Wait for "looks good" or edits. Then create.
-
-## Rules
-
-- Reusable engine → act only within the requested destination and approved draft
-- Never create files or GitHub issues without user seeing the draft first
-- Sub-issues should be small enough to ship in one PR
-- If requirements are unclear, write the problem statement first — not the solution
-- If rejecting an enhancement as out of scope, record durable reasoning in `.out-of-scope/<concept>.md` when the repo uses local out-of-scope memory.
-
-## Related
-
-- `prd-writer` — author the PRD document first when requirements are not settled yet; this skill files what that one wrote
-- `spec-first` — spec-driven development before writing code
-- `tdd` — red-green-refactor execution for tasks with clear behavior
-- `github-fix-ci` — fix CI on existing PRs
-- `roadmap-analyzer` — broader roadmap planning
-- `cto-advisor` — technical strategy and architecture tradeoffs
+Use the procedures in [Publishing guide](references/full-guide.md). They contain
+tracker details only. Resolve templates through `prd-quality-gate`, never maintain
+an alternate agent brief or weaker readiness checklist here.

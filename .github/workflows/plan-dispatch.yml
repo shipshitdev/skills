@@ -1,136 +1,68 @@
 name: Plan Dispatch
 
-# Planning gate of the dev loop. A human applies `dispatch:plan` to a Backlog
-# issue to have an agent DRAFT an implementation plan for human review — it does
-# NOT execute the plan. This keeps planning and execution separated by a human
-# validation step: nothing runs until a human reads the plan and applies one
-# execution gate (`dispatch:claude` / `dispatch:codex` / `dispatch:openrouter`).
-#
-# What it does: runs the `writing-plans` contract headlessly on the labeled issue,
-# posts (or updates) a trusted `## Implementation Plan` maintainer comment, then
-# hands the issue back to a human — board `Status` → Human Review, auto-assigned to
-# the gate-applier. It clears `dispatch:plan` and the `claim:active` / `loop:*`
-# labels it used, and deliberately applies NO execution gate.
-#
-# Status lives on the GitHub Projects board `Status` field (Backlog / In Progress /
-# Human Review / Done / Deferred), not in labels. Claim flips it to In Progress;
-# completion flips it to Human Review. Board node ids come from the committed
-# .github/agent-loop.env.
-#
-# Auth (two tokens), identical to the Claude execution lane:
-#   - CLAUDE_CODE_OAUTH_TOKEN — subscription OAuth, never an API key. Generate with
-#     `claude setup-token`, store as a repo secret. Do not also set ANTHROPIC_API_KEY.
-#   - PROJECTS_TOKEN — a `project`-scoped PAT used as github_token, because the
-#     Actions default GITHUB_TOKEN cannot read/write an org-owned Projects v2 board.
-#
-# Trust boundary: only issues a human deliberately labels are processed. Issue
-# title/body remain untrusted (prompt-injection surface); they are read by the
-# action, never interpolated into the shell or the prompt below. Only the integer
-# issue number and the validated $GITHUB_ACTOR handle are interpolated.
-
+# Model/effort are explicit runtime variables. No provider or usage fallback.
+# The shared guard/contract must be installed with these workflows.
 on:
   issues:
     types: [labeled]
 
-# One run per issue; a re-applied label will not start a second concurrent run.
-concurrency:
-  group: plan-dispatch-${{ github.event.issue.number }}
-  cancel-in-progress: false
-
-# Least privilege: planning only reads the repo and writes the issue (comment,
-# labels, assignee). It never branches or opens a PR, so no contents:write.
 permissions:
   contents: read
   issues: write
+  pull-requests: read
 
 jobs:
-  run-planner:
+  dispatch:
     if: github.event.label.name == 'dispatch:plan'
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # Job-level gating avoids unrelated label events replacing pending dispatches.
+    # All provider lanes share this issue lock, including planning.
+    concurrency:
+      group: agent-issue-${{ github.repository }}-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    env:
+      DISPATCH_LANE: plan
+      MODEL_ID: ${{ vars.PLANNER_MODEL }}
+      MODEL_EFFORT: ${{ vars.PLANNER_EFFORT }}
+      MODEL_PROVIDER: openai
     steps:
-      - name: Checkout
+      - name: Checkout trusted default branch snapshot
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Draft an implementation plan for the labeled issue
-        uses: anthropics/claude-code-action@9dd8b95a392eb34b6f5fb56cf5a64cb735912d4b # v1
+      - name: Validate runtime, trusted actor, Backlog, and claim
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+          MODEL_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cp .github/agent-dispatch.cjs "$RUNNER_TEMP/agent-dispatch.cjs"
+          node "$RUNNER_TEMP/agent-dispatch.cjs" prepare
+
+      - name: Run configured planner
+        id: agent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        uses: openai/codex-action@e0fdf01220eb9a88167c4898839d273e3f2609d1 # v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # project-scoped PAT: the default GITHUB_TOKEN cannot write an org board.
-          github_token: ${{ secrets.PROJECTS_TOKEN }}
-          # Surface live progress as a tracking comment on the issue.
-          track_progress: "true"
-          # Load the planning skill from the shipshitdev marketplace so writing-plans
-          # is available headlessly. In a consumer repo that installs it another way,
-          # drop these two inputs.
-          plugin_marketplaces: |
-            https://github.com/shipshitdev/skills.git
-          plugins: |
-            shipshitdev-session@shipshitdev
-          # Model is non-sensitive, so drive it from a repo VARIABLE (Settings ->
-          # Variables) rather than a secret. Defaults to Sonnet if unset.
-          claude_args: --model ${{ vars.AGENT_MODEL || 'claude-sonnet-4-6' }}
-          # Issue number is a trusted integer — safe to interpolate. Title/body are
-          # NOT interpolated; the action reads them itself.
-          prompt: |
-            Draft an implementation plan for issue #${{ github.event.issue.number }} in this repository.
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: ${{ vars.PLANNER_MODEL }}
+          effort: ${{ vars.PLANNER_EFFORT }}
+          sandbox: workspace-write
+          safety-strategy: drop-sudo
+          codex-args: '["-c", "sandbox_workspace_write.network_access=true"]'
+          prompt-file: ${{ runner.temp }}/agent-dispatch-prompt.md
 
-            This is the PLANNING gate (`dispatch:plan`), not execution. Follow the
-            `writing-plans` skill exactly and STOP at plan review — do NOT implement
-            anything, do NOT open a branch or PR, and do NOT apply any execution gate.
-            The board `Status` field is the human-facing column; the AI-loop sub-phases
-            are `loop:*` labels. Helpers (issue number is a trusted integer;
-            GITHUB_ACTOR is a validated handle):
-
-            ```bash
-            source .github/agent-loop.env
-            N=${{ github.event.issue.number }}
-            set_status() { local id; id=$(gh project item-list "$PROJECT_NUMBER" \
-              --owner "$PROJECT_OWNER" --format json -L 500 \
-              | jq -r --argjson n "$N" '.items[] | select(.content.number == $n) | .id'); \
-              gh project item-edit --id "$id" --field-id "$STATUS_FIELD_ID" \
-              --project-id "$PROJECT_NODE_ID" --single-select-option-id "$1"; }
-            ```
-
-            1. Claim it for planning: move the board Status to **In Progress**, add
-               `claim:active` + `loop:planning`, and comment an ISO-8601 `Claimed-By` /
-               `Claimed-At` stamp.
-               `set_status "$STATUS_IN_PROGRESS_OPTION_ID"; gh issue edit "$N" --add-label "claim:active,loop:planning"`
-            2. Read the issue body, the linked PRD/context, and ALL comments (prior
-               triage and rejection notes carry essential context).
-            3. Draft a comprehensive, bite-sized implementation plan per the
-               `writing-plans` contract: map every file, decompose into 2-5 minute
-               TDD tasks with complete code, exact commands, and verification. No
-               placeholders.
-            4. Post the plan as a trusted maintainer comment whose body **starts with
-               the heading `## Implementation Plan`** so the executor can find it. If
-               such a comment already exists, update it in place rather than adding a
-               second one:
-
-               ```bash
-               gh issue comment "$N" --body-file -    # plan markdown on stdin
-               # (or: gh issue comment --edit-last "$N" --body-file - to update)
-               ```
-
-            5. Hand off to a human for plan validation — do NOT apply any execution
-               gate. Move the board Status to **Human Review**, assign the gate-applier,
-               and clear ONLY the planning labels and the planning gate:
-
-               ```bash
-               set_status "$STATUS_HUMAN_REVIEW_OPTION_ID"
-               gh issue edit "$N" --add-assignee "$GITHUB_ACTOR" \
-                 --remove-label "claim:active,loop:planning,dispatch:plan"
-               ```
-
-            After this run, a human reviews the plan. If they accept it, THEY move the
-            issue back to Backlog and apply exactly one execution gate
-            (`dispatch:claude`, `dispatch:codex`, or `dispatch:openrouter`). Planning
-            never auto-advances into execution.
-
-            This is an AFK run: do not stop to ask questions. If the issue is too
-            under-specified to plan (a genuine HITL decision the issue and its comments
-            do not answer), post a comment explaining exactly what is missing, remove
-            `claim:active` and any `loop:*` label to release the issue, and stop without
-            posting a plan.
+      - name: Release claim and report delivery handoff
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+          AGENT_OUTCOME: ${{ steps.agent.outcome }}
+        run: |
+          if [ -f "$RUNNER_TEMP/agent-dispatch.cjs" ]; then
+            node "$RUNNER_TEMP/agent-dispatch.cjs" finalize
+          fi

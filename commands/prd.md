@@ -1,50 +1,31 @@
-# Prd - One Front Door for PRDs and Feature Planning
+# Prd - Prepare Work for Agents
 
-Drive the full product-spec lifecycle from one command — create a GitHub issue
-or local PRD, enforce a spec-first loop, validate completeness, draft a full PRD,
-intake a stakeholder requirement to a kanban board, or run a discovery interview.
+Use `/prd prepare <request>` to turn a rough request into an execution-ready issue
+with settled requirements, an implementation plan, and a blocking readiness check.
+Preparation finishes before implementation begins.
 
 ## Usage
 
-```bash
-/prd                  # status: domain overview + usage
-/prd new              # create a GitHub issue or local PRD/task file for a feature or bug
-/prd spec             # enforce spec → plan → execute → verify loop before writing code
-/prd gate             # validate a PRD for completeness before handing it to a planning agent
-/prd write            # draft and formalize a feature as a full PRD ready for a planning agent
-/prd intake           # turn a client or stakeholder requirement into kanban issues on GitHub Projects
-/prd interview        # hand off to the explicit /interview discovery workflow
+```text
+/prd prepare <request>  # prepare the complete issue and implementation contract
+/prd intake <request>   # the same preparation with stakeholder/board context
+/prd write <request>    # requirements only; not execution-ready
+/prd new <request>      # file settled work through the task-creation engine
+/prd plan <issue>       # resolve implementation decisions on the same issue
+/prd lint <issue>       # warning-only draft requirements lint
+/prd gate <issue>       # check readiness; draft lint never authorizes execution
+/prd spec <request>     # apply the shared specification and planning contract
+/prd interview <topic>  # discover missing product requirements
+/prd                   # read-only status and usage
 ```
-
-## Steps
-
-- **`new`** — the `prd-task-creator` skill: create a well-written PRD, task, or
-  GitHub issue/sub-issue for a feature, bug, or enhancement.
-- **`spec`** — the `spec-first` skill: enforce a spec → plan → execute → verify
-  loop before writing code, producing `spec.md`, `todo.md`, and `decisions.md`
-  as durable artifacts.
-- **`gate`** — the `prd-quality-gate` skill: validate that a PRD contains all
-  required sections (Executive Summary, Problem Statement, Goals, Functional
-  Requirements, Acceptance Criteria, Verification Plan) before it is handed to a
-  planning agent.
-- **`write`** — the `prd-writer` skill: draft, scope, and formalize a feature
-  as a PRD that a planning agent can consume in one shot without re-elicitation.
-- **`intake`** — the `feature-intake` skill: capture a client or stakeholder
-  feature request, turn it into a planner-ready PRD epic with scoped sub-issues,
-  check for duplicate work, and place approved issues on a GitHub Projects kanban.
-- **`interview`** — recommend `/interview` with the supplied discovery context;
-  this advisory workflow remains a separate explicit entry point.
 
 ## Workflow
 
-Use the `prd-dispatch` skill. It parses the subcommand and delegates to the
-right planning engine. Read-only until the delegated skill's own confirmation
-gate; it never creates issues, writes files, or places items on a board without
-the delegated skill's gate firing.
+Resolve `prd-dispatch` from the installed catalog and pass the selected mode,
+request, target, existing authorization, and caller restrictions. The router
+composes shared engines; this command defines no separate issue template.
 
-1. **Parse the argument** into a mode (`status` / `new` / `spec` / `gate` /
-   `write` / `intake` / `interview`). Unknown argument → print Usage, don't guess.
-2. **Route** to the delegated skill (or, for `status`, print the domain overview
-   and Usage block and stop).
-3. **Defer** preconditions and confirmation to the delegated skill — this command
-   does not relax them.
+Complete the feature end to end in one issue/PR by default. Internal API, UI, and
+verification tasks do not count as finished features. Preparation settles all
+product and engineering decisions. Executors escalate gaps to the planner instead
+of inventing answers. Model and effort selection belong to the harness.

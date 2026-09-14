@@ -25,8 +25,7 @@ set -euo pipefail
 #      an API key), OPENAI_API_KEY (Codex lane), and PROJECTS_TOKEN (a project-
 #      scoped PAT the workflows use to write the board; the default GITHUB_TOKEN
 #      cannot touch an org-owned Projects v2 board).
-#   5. Prints the `gh variable set` commands for model selection (AGENT_MODEL,
-#      CODEX_MODEL, CODEX_EFFORT) — non-sensitive, so repo VARIABLES not secrets.
+#   5. Prints explicit planner/executor model and effort variables; no fallback.
 #   6. Points you at /setup-agent-routing for the per-repo routing block.
 #
 # Operates on the current repo by default (resolved via `gh`); override with
@@ -50,6 +49,14 @@ BOARD_SCRIPT="${SCRIPT_DIR}/../skills/project-board/scripts/setup-github-board.m
 
 # Phase-2 push workflows installed into the target repo: one planning gate
 # (plan-dispatch.yml, dispatch:plan) plus one execution lane per engine.
+# Fixed companion set shipped from the same checkout as the workflows.
+# Copy complete skill directories so relative scripts/references remain usable.
+DISPATCH_SKILLS=(
+  prd-writer prd-task-creator feature-intake writing-plans prd-quality-gate
+  executing-plans tdd qa-reviewer github-pr-publish verification-before-completion
+  commit-summary github-fix-ci testing-expert ai-regression-testing
+)
+
 WORKFLOWS=(
   "plan-dispatch.yml"
   "agent-dispatch.yml"
@@ -98,7 +105,7 @@ vlog() {
 # ============================================================================
 
 LABELS=(
-  "claim:active|5319e7|An agent currently holds this issue (30-min claim lock)"
+  "claim:active|5319e7|An agent holds this issue; stale claims require explicit recovery"
   "priority:high|b60205|Queue ordering — picked first"
   "priority:medium|d93f0b|Queue ordering — picked after high"
   "priority:low|0e8a16|Queue ordering — picked last"
@@ -108,8 +115,8 @@ LABELS=(
   "dispatch:claude|006b75|Dispatch gate (human opt-in) — Claude lane runs only on issues carrying this"
   "dispatch:codex|10a37f|Dispatch gate (human opt-in) — Codex/GPT lane runs only on issues carrying this"
   "dispatch:openrouter|8250df|Dispatch gate (human opt-in) — OpenRouter lane (Codex CLI via OpenRouter) runs only on issues carrying this"
-  "dispatch:plan|fbca04|Planning gate (human opt-in) — drafts an Implementation Plan for human review; applies NO execution gate"
-  "loop:planning|c5def5|AI-loop phase — reading the issue/PRD and planning (inside In Progress)"
+  "dispatch:plan|fbca04|Planning gate (human opt-in) — prepares a decision-complete issue and plan; applies no execution gate"
+  "loop:planning|c5def5|AI-loop phase — preparing decisions and checking execution readiness"
   "loop:executing|c5def5|AI-loop phase — implementing the change on a branch (inside In Progress)"
   "loop:testing|c5def5|AI-loop phase — running qa-reviewer + automated tests/e2e (inside In Progress)"
   "loop:shipping|c5def5|AI-loop phase — opening the PR (inside In Progress)"
@@ -226,7 +233,7 @@ install_workflows() {
     for wf in "${WORKFLOWS[@]}"; do info "  ${WORKFLOW_DIR}/${wf}"; done
     return
   fi
-  mkdir -p "${repo_root}/.github/workflows"
+  if ! $DRY_RUN; then mkdir -p "${repo_root}/.github/workflows"; fi
   local wf src dest
   for wf in "${WORKFLOWS[@]}"; do
     src="${WORKFLOW_DIR}/${wf}"
@@ -246,6 +253,26 @@ install_workflows() {
     [[ -f "$dest" ]] && warn "${wf} exists — overwriting with the bundled version"
     cp "$src" "$dest"
     log "workflow installed: .github/workflows/${wf}"
+  done
+  local skill
+  for skill in "${DISPATCH_SKILLS[@]}"; do
+    src="${SCRIPT_DIR}/../skills/${skill}"
+    dest="${repo_root}/.github/agent-skills/${skill}"
+    [[ -f "${src}/SKILL.md" ]] || { err "required dispatch skill missing: ${src}"; return 1; }
+    if $DRY_RUN; then
+      dry "copy complete skill ${src} to ${dest}"
+    else
+      mkdir -p "$dest"
+      cp -R "${src}/." "$dest/"
+    fi
+  done
+  local resource
+  for resource in agent-dispatch.cjs agent-dispatch.md; do
+    src="${WORKFLOW_DIR}/../${resource}"
+    dest="${repo_root}/.github/${resource}"
+    [[ -f "$src" ]] || { err "required dispatch resource missing: ${src}"; return 1; }
+    if [[ "$dest" -ef "$src" ]]; then continue; fi
+    if $DRY_RUN; then dry "cp ${src} ${dest}"; else cp "$src" "$dest"; fi
   done
 }
 
@@ -383,7 +410,7 @@ setup_secrets() {
     "Claude lane — generate with:  claude setup-token   (uses your Claude subscription, never an API key)"
   # Codex/GPT lane (dispatch:codex). Skip if you only run the Claude lane.
   setup_one_secret "OPENAI_API_KEY" \
-    "Codex lane — an OpenAI API key from https://platform.openai.com/api-keys (skip if you only use the Claude lane)"
+    "Planner/Codex lanes — an OpenAI API key from https://platform.openai.com/api-keys (required for dispatch:plan and dispatch:codex)"
   # OpenRouter lane (dispatch:openrouter). Skip if you only run Claude/Codex.
   setup_one_secret "OPENROUTER_API_KEY" \
     "OpenRouter lane — an OpenRouter API key from https://openrouter.ai/keys (skip if you don't use the OpenRouter lane)"
@@ -398,18 +425,20 @@ setup_secrets() {
 # Step 4 — model selection (repo VARIABLES, not secrets)
 # ============================================================================
 
-# Model ids and reasoning effort are non-sensitive, so they belong in repo
-# variables — change the engine without touching a workflow file. All optional:
-# the workflows fall back to Sonnet (Claude) / the provider default (Codex).
+# Role configuration is explicit and separate; setup never guesses capacity.
 print_variables_step() {
-  info "Optional — pick which model each lane runs (repo VARIABLES, not secrets):"
-  echo "      # Claude lane (defaults to claude-sonnet-4-6 if unset):"
-  echo "      gh variable set AGENT_MODEL  --body claude-opus-4-8 ${REPO_FLAG[*]}"
-  echo "      # Codex lane (leave unset for Codex defaults):"
-  echo "      gh variable set CODEX_MODEL  --body gpt-5.5         ${REPO_FLAG[*]}"
-  echo "      gh variable set CODEX_EFFORT --body xhigh           ${REPO_FLAG[*]}"
-  echo "      # OpenRouter lane (defaults to openrouter/auto if unset):"
-  echo "      gh variable set OPENROUTER_MODEL --body openrouter/auto ${REPO_FLAG[*]}"
+  info "Required runtime variables for the lanes you use (no model fallback):"
+  echo "      Planner: PLANNER_MODEL + PLANNER_EFFORT (OpenAI planning role)"
+  echo "      Codex executor: CODEX_MODEL + CODEX_EFFORT"
+  echo "      Claude executor: CLAUDE_MODEL + CLAUDE_EFFORT (replaces AGENT_MODEL)"
+  echo "      OpenRouter executor: OPENROUTER_MODEL + OPENROUTER_EFFORT + OPENROUTER_PROVIDER"
+  echo "      Set each with: gh variable set VARIABLE --body '<approved-value>' ${REPO_FLAG[*]}"
+  echo "      OPENROUTER_PROVIDER names the actual model lab; automatic model routing is rejected."
+  echo "      No usage telemetry or subscription-capacity routing is installed. Codex Actions use API credentials."
+  echo "      Provision a separate frontier reviewer from a different provider for every implementation."
+  echo "      These workflows stop at review-pending; they do not provision reviewer automation or branch protection."
+  echo "      Setup copies the prepared workflow skill set and complete resources into .github/agent-skills/."
+  echo "      Missing skills, runtime settings, or board configuration block dispatch."
 }
 
 print_routing_step() {
@@ -425,17 +454,19 @@ print_summary() {
   $DO_BOARD    && echo "  • Board:     Status normalized to Backlog/In Progress/Human Review/Done/Deferred; ids in .github/agent-loop.env"
   $DO_WORKFLOW && echo "  • Workflows: plan-dispatch (dispatch:plan) + agent-dispatch (dispatch:claude) + codex-dispatch (dispatch:codex) + openrouter-dispatch (dispatch:openrouter)"
   $DO_SECRETS  && echo "  • Secrets:   CLAUDE_CODE_OAUTH_TOKEN + OPENAI_API_KEY + OPENROUTER_API_KEY + PROJECTS_TOKEN (board write)"
-  echo "  • Variables: AGENT_MODEL / CODEX_MODEL / CODEX_EFFORT (set with gh variable set)"
+  echo "  • Variables: explicit planner + per-provider executor model/effort (see above)"
   echo "  • Routing:   run /setup-agent-routing in Claude Code"
   echo ""
   echo "  How to drive it:"
   echo "    1. Put an issue in the board's Backlog column (Status field — not a label)."
-  echo "    2. (Optional) Apply dispatch:plan to have an agent draft an Implementation"
-  echo "       Plan comment for your review; it lands the issue in Human Review and"
+  echo "    2. Apply dispatch:plan to prepare requirements and a decision-complete Implementation"
+  echo "       Plan comment with revision, base SHA, requirements hash, and readiness; it lands in Human Review and"
   echo "       applies no execution gate. Approve it: move back to Backlog, then gate it."
-  echo "    3. Apply dispatch:claude (Claude lane) OR dispatch:codex (Codex lane)."
+  echo "    3. For a READY issue in Backlog, apply exactly one execution gate: codex, claude, or openrouter."
   echo "    4. Phase 1 (local):  run  /loop   to claim + work one issue (Claude)."
-  echo "    5. Phase 2 (push):   the gate label alone fires its dispatch workflow headlessly."
+  echo "    5. Phase 2 (push): trusted gate-applier + eligible Backlog + current READY plan dispatch execution."
+  echo "    6. PR publication -> different-provider frontier review + resolved findings + green required CI."
+  echo "    7. Merge-ready only after those gates; Done only after merge and required deployment evidence."
   echo ""
   echo "  Full loop reference: .agents/memory/system/ai-dev-loop.md"
 }
@@ -472,13 +503,14 @@ What it does:
   3. Installs the Phase-2 push workflows: plan-dispatch.yml (planning gate,
      dispatch:plan), agent-dispatch.yml (Claude lane, dispatch:claude),
      codex-dispatch.yml (Codex lane, dispatch:codex), and openrouter-dispatch.yml
-     (OpenRouter lane, dispatch:openrouter).
+     (OpenRouter lane, dispatch:openrouter), shared dispatch contract/guard, and
+     the companion skill directories under .github/agent-skills/.
   4. Arms the auth secrets: CLAUDE_CODE_OAUTH_TOKEN (subscription OAuth),
      OPENAI_API_KEY (Codex lane), OPENROUTER_API_KEY (OpenRouter lane), and
      PROJECTS_TOKEN (project-scoped PAT for the board write — the default
      GITHUB_TOKEN cannot touch an org board).
-  5. Prints the gh variable set commands for model selection (AGENT_MODEL,
-     CODEX_MODEL, CODEX_EFFORT) — non-sensitive, so repo variables not secrets.
+  5. Prints explicit planner and executor runtime variables; no automatic fallback.
+     Reviewer automation and protected-branch gates require separate provisioning.
   6. Points you at /setup-agent-routing for the per-repo routing block.
 
 Examples:

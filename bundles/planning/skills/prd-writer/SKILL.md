@@ -1,349 +1,82 @@
 ---
 name: prd-writer
-description: Authors the PRD document itself — problem, scope boundaries, EARS acceptance criteria, and verification plan — as one self-contained contract a planning agent consumes without re-elicitation. Ends at the written PRD; slicing it into tracked issues is `prd-task-creator`.
+description: "Authors repository-grounded requirements with complete feature scope and observable acceptance criteria. Reuses the canonical preparation contract; implementation planning is writing-plans."
 metadata:
-  version: "1.3.0"
+  version: "2.0.0"
   tags: "prd, planning, requirements, spec, scoping, ears"
 when_to_use: "write a PRD for X, draft a PRD, scope this out, what should X do, formalize this feature, flesh out this issue before planning"
 ---
 
 # PRD Writer
 
-A PRD is the input contract for the planning phase. It must contain enough
-context, acceptance criteria, scope boundaries, and verification detail for a
-planning agent to produce a plan without re-eliciting requirements.
-
-This skill is platform-agnostic. It assumes a plan → review → verify → ship flow
-where a PRD is written first, a planner decomposes it into steps, and a verifier
-checks the result against the PRD's acceptance criteria. Adapt the storage and
-field mechanics below to whatever tracker you use.
-
-## Authorized Scope
-
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Write the requirements portion of the shared execution contract. Keep user intent
+and observable behavior clear; implementation decisions belong in the plan on the
+same issue. A bounded task needs a compact issue, not an inflated PRD.
 
 ## Contract
 
 Inputs:
 
-- Feature requirements and the selected tracker issue or document destination
-- Known constraints and accepted scope
+- Request, target repository/issue, available product context, and constraints.
+- Draft versus publication mode and existing authorization.
 
 Outputs:
 
-- A PRD with EARS acceptance criteria and a verification plan
+- Requirements draft with current behavior, complete desired outcome, scope,
+  EARS acceptance criteria, delivery coverage, dependencies, and verification needs.
 
 Creates/Modifies:
 
-- The requested PRD document or approved tracker issue body
-- No implementation or automatic issue slicing
+- Requested canonical requirements document or authorized issue body.
+- No implementation and no automatic decomposition.
 
 External Side Effects:
 
-- Tracker reads and approved issue-body writes
+- Read-only research; authorized requirements publication only.
 
 Confirmation Required:
 
-- Confirm the destination and draft before creating or replacing tracker content
-  when that exact write is not already authorized
+- Ask only for a missing destination, consequential intent, or write authority
+  that cannot be resolved from the session. Existing same-scope authorization
+  carries through. An orchestrator's draft mode produces a draft without writes.
 
 Delegates To:
 
-- `prd-quality-gate` to check completeness
-- Recommend `prd-task-creator` when the user wants to split the finished PRD
-
-## Storage Location
-
-Use the tracker issue body as the default PRD location: one document per work
-item, one location. Avoid local sidecar files unless the repo explicitly uses
-them as source truth.
-
-- **Create** a PRD by creating an issue whose body is clean PRD markdown.
-- **Edit** a PRD by editing that issue's body.
-- **Version history** is the tracker's edit history — no manual `updated` field.
-- **The planner reads the issue body verbatim.** What you write in the body is
-  exactly what the planning agent sees, so it must stand alone.
-
-If there is no connected tracker, decide on the single canonical location for the
-PRD before writing — do not draft into a throwaway scratch file that nobody will
-find again.
-
-## Native Tracker Metadata
-
-Do not put YAML frontmatter at the top of issue bodies. Trackers render
-issue-body frontmatter as visible noise and already have native fields for this
-metadata.
-
-Use native tracker / project-board fields instead:
-
-- **Issue type:** `Feature`, `Bug`, or `Task`.
-- **Status:** `Backlog`, `In Progress`, `Human Review`, `Done`, or `Deferred`.
-- **Priority:** `P0`, `P1`, `P2`, or `P3`.
-- **Complexity:** `Low`, `Medium`, or `High`.
-- **Blast radius:** `Contained`, `Cross-package`, `Cross-app`, or `Infra`.
-
-Rules:
-
-- The PRD body starts with `# PRD: <name>` and contains only human-readable PRD content.
-- Put card/list summaries in the issue title, project fields, or a short Executive Summary, not in hidden metadata.
-- If you cannot estimate complexity, set the field to `Medium` and explain why in Risks & Open Questions.
-- `Draft` is workflow state, not body text. Keep draft PRDs off the runnable board path through status fields, not by editing the body.
-
-## Issue Title Style
-
-The issue title is what the board shows most of the time. Keep it at or under
-80 characters.
-
-- Default to **4-7 words**.
-- Use an **imperative verb + object** shape: `Add pipeline checkpoints`, `Track CI blockers on issues`, `Expose model selectors in settings`.
-- Put the detail in the Executive Summary and body, not in the title.
-- Avoid titles chained together with `and` / `while` / `during` unless the feature is truly one inseparable unit.
-- Avoid titles that restate the full implementation loop. The title names the work item; the PRD explains it.
-- Keep the `# PRD:` name aligned with the final issue title's slugified form. If you shorten the title, shorten the PRD heading too.
-
-Bad:
-
-- `Open draft PR during execution and ingest PR feedback into stabilization loop`
-- `Treat CI failures as blocker state on issue tasks`
-
-Better:
-
-- `Add draft PR feedback loop`
-- `Track CI blockers on issues`
-
-## Required Sections
-
-Every PRD must have these sections, in this order. Missing sections fail quality gate.
-
-```markdown
-# PRD: <name>
-
-## Executive Summary
-<2–4 sentences. What is this feature, why now, who wins.>
-
-## Problem Statement
-<The concrete pain. Reference real incidents, real users, real metrics where possible.
-Avoid "users might want..." — if you can't name the user, you don't have a problem yet.>
-
-## Goals
-- <measurable, verifiable goal>
-- <measurable, verifiable goal>
-
-## Non-Goals
-- <thing this explicitly does NOT do — the more you list, the less scope creep downstream>
-
-## User Stories
-- As a <role>, I want <capability> so that <outcome>.
-- Each story ends with "**Acceptance:**" followed by 1–3 EARS criteria
-  (`WHEN <trigger> THE SYSTEM SHALL <response>`) — same syntax as Acceptance Criteria below.
-
-## Functional Requirements
-<Numbered list. Each item must be verifiable by reading code or running it.
-NO implementation details — "the system must do X", not "use Zustand to do X".>
-
-## Non-Functional Requirements
-<Performance, accessibility, error-handling, offline, observability.
-Only list the ones that actually matter for this feature.>
-
-## Acceptance Criteria
-<The bar the verification phase will check against. Write every bullet in EARS
-syntax (Easy Approach to Requirements Syntax) so it parses unambiguously and is
-pass/fail without judgement. Each bullet becomes an assertion the verifier checks:
-- Event:    WHEN <trigger> THE SYSTEM SHALL <response>.
-- State:    WHILE <state> THE SYSTEM SHALL <response>.
-- Unwanted: IF <condition> THEN THE SYSTEM SHALL <response>.
-- Optional: WHERE <feature enabled> THE SYSTEM SHALL <response>.
-- Always:   THE SYSTEM SHALL <invariant>.>
-
-## Out of Scope
-<At least one explicit boundary the implementation must not cross.>
-
-## Dependencies
-<Other PRDs, packages, external APIs, feature flags. Reference by path or URL.>
-
-## Verification Plan
-<How the verifier will know this shipped correctly.
-`tests`: list the test files/suites that must exist and pass.
-`manual`: list the manual QA steps a human will run post-merge.
-`both`: both sections. The clearer this section, the fewer verification retries you burn.>
-
-## Risks & Open Questions
-<Unknowns, edge cases, things that could kill the plan mid-execution.
-Open questions get tracked here until answered, then deleted.>
-```
-
-## Mapping PRD Sections to the Plan
-
-A PRD is read by the planning agent. Every section has a downstream consumer:
-
-| PRD section | Feeds | Consumer |
-|---|---|---|
-| Executive Summary | Plan objective | Plan display, PR title, board card |
-| Goals + Functional Requirements | Plan steps | Planner decomposition |
-| Acceptance Criteria | Acceptance criteria (EARS) | Verification phase |
-| Out of Scope | Plan out-of-scope list | Review phase (rejects scope creep) |
-| Complexity field | Estimated complexity | Review rubric, retry budget |
-| Verification Plan | Verification prompt input | Verification phase |
-| Non-Goals + Out of Scope | Review gate | Reviewer rejects patches that violate these |
-
-**Do not write sections that describe files to change, function names, or implementation choices.** Those belong in the plan, not the PRD. If you can't resist writing pseudo-code, put it under "Risks & Open Questions" as "I suspect we'll need to touch X" — not as a requirement.
-
-## Quality Gates
-
-Before marking a PRD ready for a planner to consume, every one of these must be true:
-
-- [ ] No placeholder text (`TODO`, `TBD`, `<fill this in>`) remains in any section.
-- [ ] `Goals` has at least one measurable bullet.
-- [ ] `Acceptance Criteria` has at least one bullet, every bullet is written in **EARS** syntax (`WHEN`/`WHILE`/`WHERE`/`IF … THE SYSTEM SHALL …`, or a bare `THE SYSTEM SHALL …`), and each is **verifiable without judgement** — it either passes or fails. "Feels fast" is not verifiable. "WHEN the issues query runs THE SYSTEM SHALL return p95 latency < 300ms" is.
-- [ ] `Out of Scope` has at least one bullet. Empty `Out of Scope` is a tell that the author didn't scope the feature.
-- [ ] `User Stories` has at least one story with explicit Acceptance bullets.
-- [ ] Every external dependency in `Dependencies` is named (package, PRD path, or URL), not described vaguely.
-- [ ] `Verification Plan` names either test file paths, suite names, or concrete manual steps — not "write some tests".
-
-If any gate fails, keep it in draft/on-hold workflow state and do not mark it ready to plan.
+- `prd-quality-gate` for the canonical template and draft lint.
+- `writing-plans` when invoked to plan settled requirements.
+- Recommend `feature-intake` for complete preparation from a rough request.
 
 ## Workflow
 
-### When the user says "write a PRD for X"
+1. Resolve the canonical destination from session/repository context. Prefer the
+   existing tracker issue; use one local document only when that is the requested
+   workflow. Search issues and PRs for duplicates before creating new work.
+2. Read relevant product decisions, code, and existing behavior. Reuse established
+   facts before asking questions. Distinguish observed requirements from inferred
+   intent; resolve consequential uncertainties before claiming readiness.
+3. Load the template from `prd-quality-gate` and its execution-readiness reference.
+   Write a short imperative title. Fill each required section with concrete content;
+   use stable acceptance IDs and EARS outcomes. Expand into a full PRD only when
+   complexity warrants additional user stories or nonfunctional requirements.
+4. Cover the entire feature, including required API, UI, wiring, migration, tests,
+   docs and operational handoff. Record N/A reasons for absent surfaces. Do not
+   convert technical layers into separate feature-completion issues.
+5. State verification requirements based on repository practice. The planner will
+   bind them to exact commands, files and expected results. Keep unresolved facts
+   visible under Open Decisions; draft lint warnings do not grant readiness.
+6. Run the `prd-quality-gate` skill in `draft-lint` mode. Return the requirements to
+   the calling coordinator so planning continues without another user prompt.
+   For a standalone requirements-only request, return/publish the draft within
+   authorization and clearly say that execution readiness has not been checked.
 
-1. **Confirm where the PRD will live.** If using a tracker, confirm the target repo/project. If nothing is connected, agree on the single canonical location first — there must be exactly one.
+## Updates and Planning
 
-2. **Do not start writing immediately.** Run a short elicitation pass first — you need answers before section-filling is meaningful:
-   - What problem does this solve, and for whom specifically?
-   - What does success look like — how would we measure it?
-   - What is explicitly out of scope?
-   - What is the complexity estimate (low/medium/high) and what evidence supports it?
-   - Any hard constraints — deadlines, other projects in flight, package boundaries?
+When asked to plan existing requirements, read the live issue body and relevant
+comments, then run the `writing-plans` skill. A draft state does not prevent a
+planner from resolving gaps; it prevents executor dispatch until READY.
 
-3. **Check for an existing issue.** Search the project's tracker by keywords and state. If a matching issue already exists, ask whether to edit it or create a fresh one.
-
-4. **Kebab-case the PRD name.** If the proposed name has spaces, camelCase, or punctuation, kebab-case it: `"Notification Center"` → `notification-center`. This slug goes in the `# PRD:` heading.
-
-5. **Compress the issue title before writing the body.** Default to a short imperative title, then derive the `# PRD:` heading from that final title. Put nuance in the Executive Summary, not the title.
-
-6. **Draft the PRD body** using the template above, in a scratch buffer. Fill every required section. If you can't fill a section, ask the user — don't hallucinate requirements.
-
-7. **Run the quality gates** against the draft. If any fail, keep the issue in draft/on-hold workflow state and tell the user which gates failed. If they all pass, mark it ready through native project state.
-
-8. **Create the issue (with user approval).** Show the drafted body first. On approval, create it through the tracker's native issue creation flow, using the PRD markdown as the issue body.
-
-9. **Confirm the outcome** to the user with the issue URL and whether the PRD
-   passed every quality gate. Then suggest the next step: `Ready to hand this to the planner? Say: plan issue #N`.
-
-### When the user says "plan the X PRD"
-
-1. Fetch the current issue body from the tracker. Read it fully before producing anything.
-2. Verify the issue is ready through native project state — never plan a draft/on-hold issue.
-3. Translate directly: Executive Summary → objective, Acceptance Criteria → acceptance criteria, Out of Scope → out-of-scope, complexity field → estimated complexity.
-4. The plan phase owns file changes and step breakdown — do not copy those out of the PRD (there shouldn't be any).
-5. The resulting plan is posted back as a `## Implementation Plan` comment on the same issue (see `writing-plans`) — it lives on the issue, not in a local file, so it stays in sync with the PRD and reaches the loop.
-
-### When the user says "update the X PRD"
-
-1. Fetch the current issue body (prefer the tracker's live read to guarantee freshness).
-2. Make the requested edit in a scratch buffer.
-3. Write it back through the tracker's native edit flow. The tracker records the edit history automatically.
-4. If the change invalidates an in-flight plan (new acceptance criterion, new out-of-scope item), flag that explicitly — the user may want to kill the thread and re-plan.
-
-## Anti-Patterns
-
-Observed failure modes — do not repeat:
-
-- **PRD full of implementation details.** Writing `use TanStack Query v5 for caching` in Functional Requirements. The PRD describes the *what*; the plan owns the *how*. This leaks into review and causes the reviewer to flag the plan for violating the PRD, which the planner then "fixes" by copying the implementation detail verbatim. Dead loop.
-- **Acceptance Criteria written as vibes.** "Users should find the flow intuitive." Unverifiable → verification retries forever. Force it into EARS: `WHEN the import completes THE SYSTEM SHALL display a success toast within 200ms`.
-- **Empty Out of Scope.** Always a sign the author is planning to sneak scope in later. Force the listing.
-- **Authoring a PRD with nowhere to put it.** If there's no agreed canonical location, the PRD becomes an orphan document that drifts out of sync. Decide the location first.
-- **Editing a cached copy instead of the source.** If your tracker caches issue bodies locally, the cache is downstream of the tracker, not upstream. Always edit via the tracker's API/CLI, never the cache.
-- **Creating an issue without running the quality gates first.** Half-formed PRDs thrash the planner and burn verification retries. Running gates after the issue is already public is embarrassing and harder to fix than running them first.
-- **Writing a PRD for something you should just ticket.** A typo fix does not need a PRD. A dependency bump does not need a PRD. Reserve PRDs for features and architectural changes that will run through plan / review / verify / ship.
-
-## Minimal Example
-
-The text below is the exact issue body to publish. Tracker metadata belongs in native fields, not in this body.
-
-```markdown
-# PRD: copy-issue-url-action
-
-## Executive Summary
-Users working in the board frequently need to paste an issue URL into chat,
-commit messages, or an external ticketing tool. Today the only way to get the
-URL is to click into the issue, then copy from the header — three clicks and
-a context switch. Add a "Copy URL" action to the card's context menu so it
-takes one click.
-
-## Problem Statement
-Observed on 2026-04-09: the user mentioned needing to paste an issue URL
-into a chat thread five times in a single session, each requiring a detour
-through the issue detail view. This is pure friction — the URL is already known.
-
-## Goals
-- Right-clicking a board card shows a context menu with "Copy URL".
-- Clicking "Copy URL" writes the issue's URL to the clipboard and
-  shows a toast confirming the copy.
-
-## Non-Goals
-- Copying anything other than the URL (title, body, ID — all separate actions
-  if demand appears).
-- A multi-select "copy all URLs" bulk action.
-- Keyboard shortcut for copy — mouse-only for v1.
-
-## User Stories
-- As a developer pasting issue links into chat, I want to copy an issue's
-  URL without leaving the board, so that I don't break my flow.
-  **Acceptance:**
-  - WHEN a user right-clicks a board card THE SYSTEM SHALL display a context
-    menu including a "Copy URL" action.
-  - WHEN a user clicks "Copy URL" THE SYSTEM SHALL write the issue's URL to the
-    system clipboard.
-  - WHEN the copy succeeds THE SYSTEM SHALL display a confirmation toast within 200ms.
-
-## Functional Requirements
-1. The card component must support a right-click context menu.
-2. The context menu must include an action labeled "Copy URL".
-3. The URL written to the clipboard must be the canonical issue URL.
-4. The toast notification must use the existing UI toast primitive.
-
-## Non-Functional Requirements
-- Clipboard write must succeed or fail cleanly — no silent failures. On
-  permission denial, surface an error toast.
-
-## Acceptance Criteria
-- WHEN a user right-clicks any board card THE SYSTEM SHALL open a context menu
-  containing a "Copy URL" item.
-- WHEN a user clicks "Copy URL" THE SYSTEM SHALL place the exact canonical issue
-  URL on the clipboard.
-- WHEN the clipboard write succeeds THE SYSTEM SHALL display a success toast.
-- IF the clipboard API rejects the write THEN THE SYSTEM SHALL display an error toast.
-
-## Out of Scope
-- Copying other fields (title, body, branch name).
-- Bulk selection + copy.
-- Keyboard shortcut bindings.
-- A "Share" action that opens the URL in the browser.
-
-## Dependencies
-- The existing UI toast primitive in the project's component library.
-- The issue number and repo identifier for URL construction.
-
-## Verification Plan
-- **tests:** add a test that simulates a right-click and asserts the context
-  menu includes a "Copy URL" item wired to a mocked clipboard write.
-- **manual:** right-click three cards from different projects, paste the
-  clipboard into a browser tab, verify the URL loads the correct issue.
-
-## Risks & Open Questions
-- Which clipboard API does the renderer use today? Check the existing
-  implementation before writing new clipboard code.
-- Do we need focus-management so the context menu doesn't fight with
-  drag-and-drop handlers on the same card?
-```
-
-Note: no `created`, `updated`, `status`, `complexity`, or `blast radius` fields in the body — the tracker and project board track those natively. No file path — the PRD lives in the issue body itself.
-
-## Related
-
-- `prd-task-creator` — file the finished PRD into a tracker and slice it into sub-issues sized for one PR each.
+When requirements change, invalidate the old plan/readiness and identify affected
+acceptance criteria. Preserve settled decisions and unrelated user edits. Keep
+native issue type, priority and board status in tracker fields; use the body for
+content and the canonical current-plan link. Never silently mark a requirements
+edit execution-ready because an older plan passed.

@@ -6,11 +6,30 @@ allowed-tools: Bash(git *) Bash(gh *)
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "2.1.0"
+  version: "2.2.0"
   tags: "github, pull-requests, publishing"
 ---
 
 # GitHub PR Publish
+
+## Delivery Readiness
+
+For every implementation PR, resolve the installed `executing-plans` skill and
+read its `references/delivery-gate.md` before declaring merge-ready, merging, or
+reporting Done. This is the canonical delivery contract; local menus and playbook
+shortcuts do not weaken it.
+
+Require acceptance evidence for the complete promised outcome, independent review
+from a different lab than every implementation contributor, a PASS tied to the
+current head, resolved findings, and green required CI from live repository policy.
+A different model from the same lab is not an independent cross-provider review.
+Missing reviewer capacity, credentials, check discovery, or evidence leaves a
+visible blocker. A new implementation commit invalidates previous review and CI.
+
+PR publication and a ready-for-review flag do not imply merge readiness. Merge only
+within existing authorization and bind it to the verified head. Done additionally
+requires a verified merge and the issue's required deployment, migration, enablement,
+and end-to-end smoke evidence. Partial work references its epic without closing it.
 
 ## Authorized Scope
 

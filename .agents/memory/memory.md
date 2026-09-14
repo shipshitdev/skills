@@ -71,7 +71,7 @@ PRD/spec skills standardize acceptance criteria on **EARS** (Easy Approach to
 Requirements Syntax): `WHEN/WHILE/WHERE/IF … THE SYSTEM SHALL …`, or a bare
 `THE SYSTEM SHALL …`. `prd-quality-gate` validates each Acceptance Criteria
 bullet against this grammar (regex `^\s*(\d+\.\s*)?(WHEN|WHILE|WHERE|IF|THE
-SYSTEM)\b.*\bSHALL\b`); default stays warning-only. The canonical
+SYSTEM)\b.*\bSHALL\b`); draft lint may warn; execution readiness is blocking (see the prepared-delivery decision below). The canonical
 verifiable-outcomes section is `Acceptance Criteria` (the former
 `Success Criteria` in `prd-writer`/`feature-intake` was renamed/merged — they
 are now one EARS section; testing bars live in `Verification Plan`). Applies to
@@ -126,6 +126,19 @@ is the default. Existing scoped repair authorization carries to engines; board
 writes and deployment actions keep their own boundaries. Code coverage controls
 the next review checkpoint, with unresolved work retained separately. Shipshit
 `deslop` and upstream `pstack:deslop` remain separate implementations.
+
+### Prepared issue delivery (2026-09-14)
+
+One end-to-end feature per issue/PR by default. `feature-intake` composes the PRD,
+plan, readiness gate, and task-creation engines without a separate template.
+`prd-quality-gate/references/execution-readiness.md` owns preparation readiness;
+`executing-plans/references/delivery-gate.md` owns delivery readiness. Resolve these
+through installed skills. Executors implement settled decisions and escalate gaps;
+planning does not require complete implementation code. Every implementation needs
+independent review from a different contributor lab, current-head evidence, and
+green required CI before merge-ready. Done additionally verifies merge and required
+deployment. Harnesses own model/effort/capacity configuration. Static validation
+proves contract consistency, not guaranteed model behavior or cost savings.
 
 ## Known Issues
 
