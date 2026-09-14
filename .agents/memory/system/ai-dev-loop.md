@@ -1,333 +1,96 @@
-# The AI Dev Loop
-
-Board-driven autonomous task execution with a human opt-in gate and a human QA
-gate. A human puts an issue in **Backlog** and applies one dispatch-gate label; an
-agent claims it (board → **In Progress**), works it on a branch, and opens a PR that
-lands the issue in **Human Review** — auto-assigned to the reviewer.
-
-**Columns are for humans; labels carry the AI loop.** The board `Status` field is
-the sole source of truth for the human-facing column. The loop's own sub-phases ride
-as `loop:*` labels *inside* In Progress, so the board stays readable while the labels
-show exactly where the agent is. This mirrors **ShipCode** (the productized version
-of this workflow): macro columns for humans, `shipcode:pipeline:*` sub-state labels
-for the loop; this repo is the open, `gh`-driven version of the same pipeline.
-
-**Three engine lanes, one contract.** The gate label picks the engine:
-
-- `dispatch:claude` → **Claude lane** (`anthropics/claude-code-action`).
-- `dispatch:codex` → **Codex/GPT lane** (`openai/codex-action`).
-- `dispatch:openrouter` → **OpenRouter lane** (Codex CLI pointed at OpenRouter's
-  OpenAI-compatible API via a custom provider).
-
-(ShipCode equivalents: `shipcode:agent:{claude,codex,openrouter}`.) All obey
-the identical claim → branch → implement → QA → PR → **Human Review** flow. An issue
-carries at most one gate at a time.
-
-Upstream of those execution gates is an optional **planning gate**, `dispatch:plan`:
-a human applies it to a Backlog issue to have the Claude lane draft an
-`## Implementation Plan` comment via `writing-plans` and stop for human review. It
-never executes and never applies an execution gate — a human approves the plan, then
-opts the issue into one of the engine lanes. See "Planning gate" below.
-
-Two ways to run it, same contract:
-
-- **Phase 1 — local pull (`/loop`).** You trigger one task at a time from your
-  editor (Claude lane). Cheap, fully under your hand.
-- **Phase 2 — push dispatch (GitHub Actions).** Applying a gate label fires its
-  dispatch workflow (`agent-dispatch.yml` for Claude, `codex-dispatch.yml` for
-  Codex), which runs the loop headlessly. Truly AFK.
-
-The runtime behavior lives in the **`executing-plans`** skill — this doc is the
-operator's map; that skill is the implementation.
-
-## Where the planner / executor / QA roles live
-
-The loop has the classic planner → executor → QA split, but it lives at the
-**skill layer mapped to lifecycle stages**, not as three separate CI agents:
-
-| Role | Skill(s) | Who runs it |
-| ---- | -------- | ----------- |
-| **Planner** | `feature-intake` → `prd-writer` / `writing-plans` | Human, before the gate — or the `dispatch:plan` gate drafts the plan for human review. Creates the issue + PRD + acceptance criteria + plan. |
-| **Executor** | `executing-plans` | The dispatched agent (Claude or Codex). What the loop runs. |
-| **QA** | `qa-reviewer` | The executor runs it before opening the PR; the human reviews after. |
-
-Both planning artifacts live **on the issue**, never in a local file: `prd-writer`
-stores the PRD in the issue **body**, and `writing-plans` posts the implementation
-plan as a `## Implementation Plan` **comment**. The executor and every dispatch lane
-read the body plus all comments, so the plan crosses to CI for any engine.
-
-## Concept
-
-**One invocation = one task.** The loop is NOT a daemon. Each run:
-
-1. Builds the candidate queue: issues carrying a dispatch gate **and** sitting in the
-   board's **Backlog** column.
-2. Claims the top-priority candidate — flips the board to **In Progress**, adds the
-   `claim:active` label + a timestamped claim comment (a 30-minute lock), and starts
-   the phase labels at `loop:planning`.
-3. Implements the slice on a `feature/<n>-<slug>` branch (TDD for behavior),
-   advancing `loop:planning → loop:executing → loop:testing → loop:shipping`.
-4. Runs the `qa-reviewer` skill (lint, tests, types, regressions) — the `loop:testing`
-   phase. Automated tests + PR CI are the test gate; there is no Testing column.
-5. Opens a PR with `Closes #<n>`, flips the board `Status` to **Human Review**, and
-   auto-assigns the reviewer.
-6. Exits. The human reviews the PR.
-
-The gate is the safety property: nothing runs until a human deliberately opts an
-issue in. An issue can sit in **Backlog** untouched indefinitely.
-
-## Workflow diagram
-
-```
-┌───────────────────────────────────────────────────────────────────┐
-│                          THE AI DEV LOOP                            │
-│        (board columns = humans · loop:* labels = the AI loop)       │
-└───────────────────────────────────────────────────────────────────┘
-
-   BACKLOG          IN PROGRESS        HUMAN REVIEW         DONE
-  ┌─────────┐      ┌───────────┐      ┌───────────┐      ┌───────┐
-  │ open +  │ ───▶ │ agent     │ ───▶ │ PR open;  │ ───▶ │  ✓    │
-  │ gate    │ loop │ builds    │  PR  │ assigned  │ merge│       │
-  │(opt-in) │      │ (loop:*)  │      │ to you    │      │       │
-  └─────────┘      └───────────┘      └───────────┘      └───────┘
-       ▲                                    │
-       │   re-arm gate (reject)             │ QA reject
-       └──── Status→Backlog + gate, ────────┘
-             rejection:N bumped        (Deferred = parked / wontfix)
-
-  loop:planning → loop:executing → loop:testing → loop:shipping  (labels in In Progress)
-```
-
-The human controls the two gates: applying a dispatch label (start) and merging or
-rejecting the PR (finish).
-
-## Label vocabulary
-
-Status is **not** in this table — it is the board `Status` field. These are the
-labels that ride alongside it:
-
-| Label | Role |
-| ----- | ---- |
-| `claim:active` | An agent holds the issue. Paired with a timestamped claim comment (30-min lock). |
-| `loop:planning` / `loop:executing` / `loop:testing` / `loop:shipping` | AI-loop sub-phase **inside In Progress** (observability; mirrors `shipcode:pipeline:*`). |
-| `priority:high` / `priority:medium` / `priority:low` | Queue ordering. High first. |
-| `rejection:N` | QA rejection count, bumped on each kickback from Human Review → Backlog. |
-| `dispatch:plan` | **Planning gate (human opt-in).** Drafts an `## Implementation Plan` comment via `writing-plans` and stops at Human Review; applies no execution gate. |
-| `dispatch:claude` | **Dispatch gate → Claude lane (human opt-in).** Nothing runs autonomously until a human applies it. |
-| `dispatch:codex` | **Dispatch gate → Codex/GPT lane (human opt-in).** Apply at most one gate per issue. |
-| `dispatch:openrouter` | **Dispatch gate → OpenRouter lane (human opt-in).** Codex CLI via OpenRouter; at most one gate per issue. |
-| `type:feature` | Applied by `feature-intake` to PRD epics and their sub-issues. |
-| `wontfix` | Closed; will not be actioned (often paired with the Deferred column). |
-
-**AFK vs HITL are body markers, not labels.** Mark each issue body `AFK` (an agent
-can finish from written context) or `HITL` (a human decision is required mid-task).
-**HITL issues must never receive any dispatch gate** — neither the execution gates
-(`dispatch:claude` / `dispatch:codex` / `dispatch:openrouter`) nor the planning gate
-(`dispatch:plan`).
-
-## One-time setup (per repo)
-
-```bash
-# 1. Provision labels + the board + all four Phase-2 workflows + the auth secrets.
-#    Normalizes the board Status to Backlog/In Progress/Human Review/Done/Deferred
-#    and writes .github/agent-loop.env (idempotent).
-bash scripts/setup-dev-loop.sh            # or: --repo owner/name, --project N, --dry-run
-
-# 2. Pick which model each lane runs (repo VARIABLES, not secrets — optional):
-gh variable set AGENT_MODEL  --body claude-opus-4-8   # Claude lane; defaults to Sonnet
-gh variable set CODEX_MODEL  --body gpt-5.5           # Codex lane; unset = provider default
-gh variable set CODEX_EFFORT --body xhigh             # Codex reasoning effort
-
-# 3. Write this repo's routing block so the loop skills know its tracker + labels.
-#    Run in Claude Code:
-/setup-agent-routing
-```
-
-`setup-dev-loop.sh` creates the label vocabulary above, provisions the Projects
-board (Status options Backlog/In Progress/Human Review/Done/Deferred) and writes its
-node ids to `.github/agent-loop.env`, copies all four dispatch workflows
-(`plan-dispatch.yml` plus the three execution lanes) into `.github/workflows/`, and
-arms `CLAUDE_CODE_OAUTH_TOKEN` (Claude lane),
-`OPENAI_API_KEY` (Codex lane), and `PROJECTS_TOKEN` (the `project`-scoped PAT the
-workflows use to write the board).
-
-**Board auth: `PROJECTS_TOKEN`, not `GITHUB_TOKEN`.** The Actions default token
-cannot read/write an org-owned Projects v2 board, so the dispatch workflows use a
-`project`-scoped PAT stored as the `PROJECTS_TOKEN` secret. You create and paste it
-at the setup script's hidden prompt; it is never generated or echoed by the tooling.
-Local `/loop` runs under your own `gh` auth, which already has `project` scope.
-
-## Phase 1 — local pull (`/loop`)
-
-```bash
-/loop            # claim and work one dispatch:claude issue
-/loop --status   # show the task this agent currently holds (read-only)
-/loop --list     # list dispatch:claude candidates by priority (read-only)
-```
-
-The candidate query is the dispatch contract — the gate label intersected with the
-board's Backlog column:
-
-```bash
-source .github/agent-loop.env
-gh issue list --label "dispatch:claude" \
-  --json number,labels,assignees --jq '.'
-gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json -L 500 \
-  | jq -r '.items[] | select(.status == "Backlog") | .content.number'
-```
-
-On claim, flip the board to In Progress (`STATUS_IN_PROGRESS_OPTION_ID`) + add
-`claim:active,loop:planning`. On completion, flip to Human Review and assign the
-reviewer:
-
-```bash
-ITEM_ID=$(gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json -L 500 \
-  | jq -r --argjson n <n> '.items[] | select(.content.number == $n) | .id')
-gh project item-edit --id "$ITEM_ID" --field-id "$STATUS_FIELD_ID" \
-  --project-id "$PROJECT_NODE_ID" --single-select-option-id "$STATUS_HUMAN_REVIEW_OPTION_ID"
-gh issue edit <n> --add-assignee "<reviewer>" \
-  --remove-label "claim:active,dispatch:claude,loop:shipping"
-```
-
-The Codex lane has a local twin, **`/codex-loop`**, with identical claim semantics:
-it claims one `dispatch:codex` Backlog issue (same 30-minute lock, shared with
-`/loop` and the push workflows) and runs the same contract through `codex exec`. Use
-it for local Codex iteration without going through GitHub Actions.
-
-## Phase 2 — push dispatch (GitHub Actions)
-
-Each gate label is also a push workflow: three execution lanes (`agent-dispatch.yml`,
-`codex-dispatch.yml`, `openrouter-dispatch.yml`) plus the planning gate
-(`plan-dispatch.yml`). All run on `issues: labeled`, gate on their own label, key
-concurrency per issue, and authenticate `gh` with `PROJECTS_TOKEN` so the claim and
-completion steps can write the board. The three execution lanes run the
-`executing-plans` contract; the planning lane runs `writing-plans` and stops at plan
-review.
-
-### Planning lane — `plan-dispatch.yml`
-
-Gates on `if: github.event.label.name == 'dispatch:plan'`, runs via
-`anthropics/claude-code-action@v1` like the Claude lane, but on the `writing-plans`
-contract instead of `executing-plans`.
-
-- **What it does:** claims the issue (board → In Progress, `claim:active` +
-  `loop:planning`), drafts a plan, and posts/updates a trusted `## Implementation
-  Plan` maintainer comment.
-- **Handoff:** clears `dispatch:plan` and the `claim:active` / `loop:*` labels it
-  used, moves board `Status` to **Human Review**, and assigns the gate-applier. It
-  applies **no** execution gate — a human approves the plan, moves the issue back to
-  Backlog, and applies one of the three execution gates. Planning never auto-advances
-  into execution.
-- **Auth/model:** same as the Claude lane — `CLAUDE_CODE_OAUTH_TOKEN` for the model,
-  `PROJECTS_TOKEN` as `github_token`, `claude_args: --model ${{ vars.AGENT_MODEL || 'claude-sonnet-4-6' }}`.
-
-### Claude lane — `agent-dispatch.yml`
-
-Gates on `if: github.event.label.name == 'dispatch:claude'`, runs via
-`anthropics/claude-code-action@v1`.
-
-- **Auth:** `CLAUDE_CODE_OAUTH_TOKEN` for the model (never set `ANTHROPIC_API_KEY`)
-  plus `PROJECTS_TOKEN` as `github_token` for the board write.
-- **Model:** `claude_args: --model ${{ vars.AGENT_MODEL || 'claude-sonnet-4-6' }}`.
-
-### Codex lane — `codex-dispatch.yml`
-
-Gates on `if: github.event.label.name == 'dispatch:codex'`, runs via
-`openai/codex-action@v1` (`sandbox: workspace-write`, `safety-strategy: drop-sudo`).
-
-- **Auth:** `OPENAI_API_KEY` for the model; `GH_TOKEN`/`GITHUB_TOKEN` = `PROJECTS_TOKEN`.
-- **Model:** `model: ${{ vars.CODEX_MODEL }}` / `effort: ${{ vars.CODEX_EFFORT }}`.
-- The contract is inlined into the workflow `prompt:` so the run is self-contained.
-
-### OpenRouter lane — `openrouter-dispatch.yml`
-
-Gates on `if: github.event.label.name == 'dispatch:openrouter'`. OpenRouter has no
-dedicated coding action, so this lane **hosts the Codex CLI and points it at
-OpenRouter** via a custom model provider — a setup step writes `~/.codex/config.toml`
-(`base_url = https://openrouter.ai/api/v1`, `wire_api = "chat"`), then
-`openai/codex-action@v1` runs the same inlined contract.
-
-- **Auth:** `OPENROUTER_API_KEY` for the model (read by the provider's `env_key`);
-  `GH_TOKEN`/`GITHUB_TOKEN` = `PROJECTS_TOKEN` for the board write.
-- **Model:** `model: ${{ vars.OPENROUTER_MODEL || 'openrouter/auto' }}` (e.g.
-  `openrouter/auto`, `openrouter/free`, `qwen/qwen3-coder:free`).
-- **Status:** unverified end-to-end — this is the documented OpenRouter + Codex-CLI
-  integration, but smoke-test it on a throwaway repo before relying on it.
-
-### Shared properties
-
-- **Auto-assign:** the completion step assigns the gate-applier (`$GITHUB_ACTOR`) so
-  the PR lands in their Human Review queue.
-- **Concurrency** is keyed per issue, so re-applying a gate label will not start a
-  second run.
-- **Trust boundary:** only issues a human deliberately labels are processed. Issue
-  title/body stay untrusted; only the integer issue number and the validated
-  `$GITHUB_ACTOR` handle are interpolated.
-
-## Human review
-
-After the loop completes, review the PRs / issues sitting in **Human Review** (each
-auto-assigned to you):
-
-- **Approve:** merge the PR — the issue closes via `Closes #<n>`; set board
-  `Status` = Done.
-- **Reject:** request changes, then re-arm the gate so the loop retries — set board
-  `Status` = Backlog, re-apply the gate label, and bump `rejection:N`.
-
-```bash
-# Reject → re-queue (set Status=Backlog on the board, then re-arm the gate)
-source .github/agent-loop.env
-ITEM_ID=$(gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json -L 500 \
-  | jq -r --argjson n <n> '.items[] | select(.content.number == $n) | .id')
-gh project item-edit --id "$ITEM_ID" --field-id "$STATUS_FIELD_ID" \
-  --project-id "$PROJECT_NODE_ID" --single-select-option-id "$STATUS_BACKLOG_OPTION_ID"
-gh issue edit <n> --add-label "dispatch:claude,rejection:1"   # bump rejection:N on each kickback
-
-# Stop a rejected issue instead: move it to Deferred (leave the gate off) or close wontfix.
-```
-
-## Multi-platform + rate-limit handling
-
-The claim mechanic is platform-agnostic — the 30-minute claim lock is what lets any
-tool pick up where another left off.
-
-| Scenario | What happens |
-| -------- | ------------ |
-| Agent completes the task | PR opened, board `Status` moves to Human Review, assigned to you. |
-| Agent rate-limited / crashes | Claim comment ages out (30 min); the issue is reclaimable. |
-| Switch editors mid-flight | The other agent sees the stale claim and reclaims the issue. |
-| QA rejects | Gate re-armed (`Status` = Backlog + gate label, `rejection:N`). |
-
-## Why this works
-
-| Benefit | How |
-| ------- | --- |
-| Human opt-in | Nothing runs until a human applies a dispatch gate. |
-| HITL safety | HITL issues never carry the gate, so the loop only takes finishable work. |
-| Single source of truth | Status lives only on the board field — labels never duplicate it. |
-| Loop observability | `loop:*` labels show the AI-loop phase without cluttering the board. |
-| Human oversight | The Human Review column requires PR review before Done. |
-
-## Commands & skills
-
-| Entry point | Effect |
-| ----------- | ------ |
-| `/loop` | Claim and work one task locally, Claude lane (Phase 1). |
-| `/codex-loop` | Claim and work one task locally via `codex exec`, Codex lane (Phase 1). |
-| `plan-dispatch.yml` | Push dispatch on `dispatch:plan` — drafts a plan for review, no execution (Phase 2). |
-| `agent-dispatch.yml` | Push dispatch on `dispatch:claude` — Claude lane (Phase 2). |
-| `codex-dispatch.yml` | Push dispatch on `dispatch:codex` — Codex/GPT lane (Phase 2). |
-| `openrouter-dispatch.yml` | Push dispatch on `dispatch:openrouter` — OpenRouter lane (Phase 2). |
-| `executing-plans` skill | The loop's runtime behavior (claim → branch → QA → PR). |
-| `qa-reviewer` skill | The QA gate run before every PR. |
-| `feature-intake` / `prd-writer` skills | Create the PRD epics + sub-issues the loop consumes. |
-| `setup-dev-loop.sh` / `/setup-agent-routing` | One-time per-repo provisioning. |
-
-## Best practices
-
-1. **Keep tasks small** — one task = one PR's worth of work.
-2. **Write clear acceptance criteria** — the agent needs a definition of done.
-3. **Split HITL from AFK** at creation time — never gate a HITL issue.
-4. **Review promptly** — don't let the Human Review queue grow.
-5. **Document rejections** — rejection comments carry the context the retry needs.
-6. **Use PRDs** — link tasks to product requirements via `feature-intake`.
+# The Prepared AI Dev Loop
+
+last_verified: 2026-09-14
+
+Prepare one complete feature issue, implement its settled decisions, and track
+actual delivery. The issue body holds requirements; its `Current plan:` pointer
+selects one authoritative `## Implementation Plan` comment bound to requirements
+and source revision. A PR is an implementation handoff, not feature completion.
+
+## Canonical Contracts
+
+- `.github/agent-dispatch.md` owns the provisioned planning/execution workflow prompt.
+- `executing-plans` owns execution and its `references/delivery-gate.md` owns delivery.
+- `prd-quality-gate` owns `references/execution-readiness.md`, including templates,
+  fingerprint/revision rules and the blocking semantic readiness check.
+
+Resolve skills through the active catalog and references relative to their installed
+directories. In provisioned workflows, use the setup-pinned `.github/agent-skills/`
+copy verified by preflight; this source repository exposes them under `skills/`.
+Do not assume a consumer checkout has the source repository layout. Missing required
+resources block the run. This page is an operator map, not another execution script.
+
+## Roles and Entry Points
+
+| Stage | Entry point | Responsibility |
+| --- | --- | --- |
+| Prepare | `/prd prepare`, `feature-intake` | Research requirements, resolve every implementation decision, validate and publish the complete issue. |
+| Queued planning | `dispatch:plan`, `plan-dispatch.yml` | OpenAI planner; publish the current plan and readiness verdict, then stop at the existing execution-authorization boundary. |
+| Implement | `/loop`, `/codex-loop`, or an authorized execution gate | Run `executing-plans` against the current prepared issue; escalate missing decisions. |
+| Review | Separately configured independent reviewer | Review actual implementation and acceptance evidence from another model provider/lab. |
+| Deliver | Repository delivery gate | Verify acceptance, independent review, required CI, merge and deployment evidence. |
+
+The harness owns model, effort, account and capacity routing. `dispatch:plan` uses
+the OpenAI planning workflow; it has no implicit usage-based provider fallback.
+The execution gates are `dispatch:claude`, `dispatch:codex` and
+`dispatch:openrouter`; the last identifies transport, so record the actual model
+lab for review independence. At most one dispatch gate applies to an issue.
+Preparation and execution authorization are separate; do not auto-apply an execution
+gate merely because preparation passed.
+
+## Intake and Ownership
+
+For one authorized invocation, intersect the selected execution gate with the
+verified Backlog item in the target repository. Inspect current requirements,
+selected plan, dependencies and claims. Metadata preflight and semantic readiness
+must both pass; no missing plan or open decision is delegated to the executor.
+Read-only status/list requests perform no mutations.
+
+Serialize claims across all lanes and inspect actual run ownership. Confirm the run
+ended before explicit claim recovery. Elapsed time, an old timestamp, or a rate-limit
+error alone does not prove another owner has stopped. If ownership or board state
+cannot be verified, leave the issue unclaimed. Preserve interrupted work and record
+a resumable handoff. A push workflow owns its claim/finalization; the dispatched
+agent does not claim again or clear the workflow's labels.
+
+## Delivery State
+
+Board Status is the human-facing location: Backlog, In Progress, Human Review,
+Done or Deferred. `loop:*` labels show activity; neither labels nor column placement
+prove delivery. Record the exact implementation head and delivery receipt.
+
+| State | Required evidence or next action |
+| --- | --- |
+| `blocked` | Missing intent, stale plan, access, ownership or required review capacity; identify the owner and remedy. |
+| `review_pending` | Implementation PR published with `Refs #<issue>` and current plan revision; independent review still required. |
+| `ci_pending` | Review and acceptance evidence recorded; required checks still pending or failing. |
+| `merge_ready` | Complete acceptance, different-lab review PASS at the final head, findings resolved, green required CI and repository protection gates satisfied. |
+| `delivery_pending` | Merge verified; required deployment, migration, enablement or smoke evidence remains. |
+| `done` | Merge and all planned delivery obligations verified, including complete integrated feature/epic acceptance. |
+
+Independent review must come from a different model provider/lab from every
+implementation contributor and examine the actual diff. Self-QA, another model
+from the same lab, a plan review, reviewer assignment or a review request is not
+that evidence. New commits invalidate prior review/CI receipts; refresh them for
+the actual final head. Unavailable review stays blocked, never an invented PASS.
+
+Done requires green required CI plus independent implementation review, verified
+merge and required deployment/migration/smoke evidence (or an explicit prepared
+N/A decision). Keep an epic open until every required child outcome and integrated
+feature passes the same gate. Use references in implementation PRs to avoid closing
+work before post-merge delivery. Merge-ready is evidence, not authority to merge.
+
+## Setup and Recovery
+
+Run the repository's `setup-dev-loop.sh` under existing setup authorization to
+provision its board, labels, pinned workflow contracts and resources. Use
+`setup-agent-routing` to generate the consumer tracker/domain documentation.
+Inspect the resulting configuration and separately provision the independent
+review route and protected-branch checks. The dispatch workflows prepare and
+implement; they do not themselves supply independent review or branch protection.
+
+After a failed or interrupted run, inspect its actual state and preserve evidence.
+Resolve planning gaps through the planner; revalidate changed plans before a new
+execution. Re-arm a gate only within existing retry authorization, after the prior
+run has ended and claim recovery is explicit. Do not probe accounts or silently
+change providers to bypass missing capacity.

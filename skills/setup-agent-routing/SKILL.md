@@ -3,7 +3,7 @@ name: setup-agent-routing
 description: Sets up an `## Agent skills` routing block in CLAUDE.md/AGENTS.md plus docs/agents/ so the dev-loop skills (executing-plans, feature-intake, prd-writer, qa-reviewer) know this repo's GitHub issue tracker, kanban label vocabulary, and domain doc layout. Run once per repo before first use of the loop, or when those skills appear to lack tracker, label, or domain context.
 license: MIT
 metadata:
-  version: "1.3.0"
+  version: "2.0.0"
   tags: "setup, routing, github, labels, dev-loop"
   author: Ship Shit Dev
 allowed-tools: Bash(git remote*) Bash(gh label list*) Bash(gh project list*) Bash(gh repo view*)
@@ -11,164 +11,122 @@ allowed-tools: Bash(git remote*) Bash(gh label list*) Bash(gh project list*) Bas
 
 # Setup Agent Routing
 
-Write a machine-readable routing block so the dev-loop skills know where this repo tracks work, which labels drive the loop, and how its domain docs are laid out. Run once per consumer repo; bridges `executing-plans`, `feature-intake`, `prd-writer`, and `qa-reviewer` into a new repo.
-
-Prompt-driven, not deterministic. Explore first, present findings, confirm each decision, show drafts, then write. Never write speculatively.
+Configure one thin routing index and consumer tracker/domain documentation for
+the prepared issue workflow. Reuse the canonical readiness and delivery contracts;
+setup records where to find them, not another execution procedure.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Preserve the user's target and existing write authorization. Read-only/report-only
+requests stay read-only. Existing approval for this setup covers the requested local
+files; ask only for consequential missing choices or expanded authority. Model,
+effort, account, checkout and provider policy remain harness-owned.
 
 ## Contract
 
 Inputs:
 
-- Target repository: its git remote, existing `CLAUDE.md` / `AGENTS.md`, and `docs/agents/`
-- Existing label vocabulary and GitHub Projects board, read live via `gh`
-- User overrides for label strings, the project board number, and the domain layout
+- Target repository, existing agent instructions and `docs/agents/` layout.
+- Live tracker/project fields, labels, and user-approved overrides.
 
 Outputs:
 
-- A draft `## Agent skills` routing block
-- Draft `docs/agents/{issue-tracker,triage-labels,domain}.md` files seeded from `references/`
-- A short summary of present vs. missing routing state
+- One `## Agent skills` index and populated tracker, triage and domain documents.
+- Present/missing state, canonical resource locations and unresolved setup blockers.
 
 Creates/Modifies:
 
-- Writes the `## Agent skills` block into `CLAUDE.md` (preferred) or `AGENTS.md`, in place
-- Creates `docs/agents/*.md` from the reference seeds, updating in place when they already exist
-- Never creates a second routing file when one already exists, and never duplicates the block
+- The existing `CLAUDE.md` or `AGENTS.md` routing block, updated in place.
+- `docs/agents/{issue-tracker,triage-labels,domain}.md`, preserving unrelated content.
 
 External Side Effects:
 
-- Reads git remote, GitHub labels, and project boards via read-only `gh` calls
-- Writes local files only; performs no GitHub mutations
+- Read-only GitHub inspection and authorized local documentation writes.
+- No issue labels, board changes, workflows, model configuration or dispatch writes.
 
 Confirmation Required:
 
-- Before writing the routing block or any `docs/agents/` file
-- Before choosing `CLAUDE.md` vs. `AGENTS.md` when neither exists
+- Ask only for a missing target/authority or consequential choice not settled by
+  session context or repository convention. Prepare drafts before any required
+  approval; do not ask again between writes already covered by that approval.
 
 Delegates To:
 
-- `executing-plans`, `feature-intake`, `prd-writer`, and `qa-reviewer` consume the
-  routing block this skill writes — it produces their machine-readable context, then hands off
-- `domain-modeling` maintains `CONTEXT.md` and ADRs after this skill has recorded the layout
+- File pointer: `executing-plans` and its installed delivery reference define execution.
+- File pointer: `prd-quality-gate` and its installed readiness reference define preparation.
+- Recommend `domain-modeling` to maintain the discovered domain layout separately.
 
-## What it produces
+## 1. Inspect Existing Context
 
-1. An `## Agent skills` block in `CLAUDE.md` (preferred) or `AGENTS.md`.
-2. Three docs under `docs/agents/`:
-   - `issue-tracker.md` — how issues are created, labeled, and placed on the board.
-   - `triage-labels.md` — full label vocabulary, including `dispatch:claude`/`dispatch:codex`/`dispatch:openrouter` execution gates and the `dispatch:plan` planning gate (status lives on the board, not a label).
-   - `domain.md` — the domain glossary layout (single- or multi-context).
+Read remote identity, current agent instructions, `docs/agents/`, domain documents,
+labels, and the configured project. Inspect live board fields and paginate queries
+when complete inventory is needed. Preserve existing vocabulary and use native
+priority where configured; do not invent board IDs or duplicate fields.
 
-The `CLAUDE.md`/`AGENTS.md` block is a thin index; detail lives in `docs/agents/`.
+Resolve `executing-plans` and `prd-quality-gate` through the active skill catalog.
+Resolve references relative to each selected installed directory, never an assumed
+source checkout. When provisioned, `.github/agent-dispatch.md` and its setup-pinned
+`.github/agent-skills/` resources own workflow dispatch. Missing required resources
+are setup blockers, not permission to seed a weaker fallback contract.
 
-## Process
+## 2. Settle Missing Setup Choices
 
-### 1. Explore (read-only, assume nothing)
+Use existing evidence for repository/project, label strings, domain layout and
+instruction-file selection. Prefer the established instruction file; if both exist,
+follow their documented canonical/generated relationship. If neither exists and
+repository convention is absent, ask which one to create. Ask only unresolved
+consequential questions; do not poll the user for known decisions.
 
-```bash
-git remote -v
-gh repo view --json nameWithOwner,defaultBranchRef 2>/dev/null
-gh label list --limit 100 2>/dev/null
-gh project list --owner "@me" 2>/dev/null
-```
+Use the [triage seed](references/triage-labels.md) for the label roles. It records
+`dispatch:plan` as the OpenAI planner workflow, with models/effort selected by the
+harness. Execution gates require a current prepared contract and explicit authority;
+AFK is earned by readiness, not implied by a label. Identify human-only and
+planner-owned blockers separately.
 
-Also read, if present: `CLAUDE.md`, `AGENTS.md`, `CONTEXT.md`, `CONTEXT-MAP.md`,
-`docs/agents/`, `docs/adr/`. Note what already exists vs. what is missing — you will
-update in place, not duplicate.
+## 3. Write a Thin Index and Consumer Docs
 
-### 2. Present findings, then confirm — one decision at a time
-
-Summarize present/missing state in one short block. Walk the three decisions **individually**, each prefaced by a plain-English explainer. Do not present all three at once.
-
-**A. Issue tracker.** Default: GitHub Issues + a GitHub Projects kanban
-(Backlog / In Progress / Human Review / Done / Deferred), detected from the `origin` remote. Confirm the
-repo `owner/name` and the project board number. If the remote is not GitHub, ask
-how work is tracked instead of assuming.
-
-**B. Label vocabulary.** Show the canonical set (below) and let the user override the
-strings. The roles are fixed; the exact label text is theirs to rename.
-
-Status is the board `Status` field (Backlog / In Progress / Human Review / Done / Deferred), the sole
-source of truth — it is **not** a label. The labels that ride alongside it:
-
-| Label | Role |
-| ----- | ---- |
-| `claim:active` | An agent currently holds the issue (30-min claim lock). |
-| `loop:planning` / `loop:executing` / `loop:testing` / `loop:shipping` | AI-loop sub-phase inside the In Progress column (observability). |
-| `priority:high` / `priority:medium` / `priority:low` | Queue ordering. |
-| `rejection:N` | QA rejection count; bumped on each kickback. |
-| `dispatch:plan` | **Planning gate → drafts a plan for human review.** Human opt-in: runs `writing-plans`, posts a `## Implementation Plan` comment, stops at Human Review. Applies no execution gate. |
-| `dispatch:claude` | **Dispatch gate → Claude lane.** Human opt-in: the agent only runs on issues that carry it. |
-| `dispatch:codex` | **Dispatch gate → Codex/GPT lane.** The Codex-lane twin; apply at most one gate per issue. |
-| `dispatch:openrouter` | **Dispatch gate → OpenRouter lane.** Hosts Codex CLI via OpenRouter; apply at most one gate per issue. |
-| `type:feature` | Created by `feature-intake` on PRD epics and sub-issues. |
-
-Also explain the **AFK / HITL** body markers (not labels): `AFK` = an agent can
-finish from written context; `HITL` = a human decision is required. HITL issues must
-never receive any dispatch gate — neither the execution gates (`dispatch:claude`,
-`dispatch:codex`, `dispatch:openrouter`) nor the planning gate (`dispatch:plan`).
-
-**C. Domain docs layout.** Single-context (`CONTEXT.md` at root) vs. multi-context
-(`CONTEXT-MAP.md` indexing several `CONTEXT.md` files). Default to single-context for
-a solo or single-product repo.
-
-### 3. Show drafts, allow edits
-
-Render the full `## Agent skills` block and all three `docs/agents/*.md` files. Let
-the user edit label strings, the project number, and the domain layout before
-anything is written.
-
-### 4. Write — only after approval
-
-File-selection rules (copied from the conventions that make this safe):
-
-- If `CLAUDE.md` exists → edit it.
-- Else if `AGENTS.md` exists → edit it.
-- If neither exists → ask which to create. Never pick for the user.
-- Never create the second file when one already exists.
-- If an `## Agent skills` section already exists → update it in place, do not append a duplicate.
-- Seed `docs/agents/*.md` from the templates in `references/`. If a file already exists, show a diff and update in place.
-
-## The `## Agent skills` block
+Within existing authorization, update the `## Agent skills` block in place and seed
+only missing or stale sections of `docs/agents/`. Preserve user overrides and other
+content. Use the reference templates as location/vocabulary guidance; do not copy
+execution steps or complete issue templates into multiple documents.
 
 ```markdown
 ## Agent skills
 
 ### Issue tracker
 
-GitHub Issues + GitHub Projects kanban (Backlog / In Progress / Human Review / Done / Deferred) on
-`<owner>/<repo>`, project #<N>. See `docs/agents/issue-tracker.md`.
+GitHub Issues on <owner/repository>, project #<number>.
+See docs/agents/issue-tracker.md for verified tracker configuration.
 
-### Triage labels
+### Prepared delivery
 
-`claim:active` · `loop:*` (AI-loop phases) · `priority:*` · `rejection:*` ·
-`type:feature` · `dispatch:plan` (planning gate) · `dispatch:claude` (Claude gate) ·
-`dispatch:codex` (Codex gate) · `dispatch:openrouter` (OpenRouter gate). Status is the
-board `Status` field, not a label. See `docs/agents/triage-labels.md`.
+Resolve executing-plans and prd-quality-gate through the active skill catalog;
+read their installed delivery/readiness references. For provisioned workflows,
+read .github/agent-dispatch.md and use its pinned skill resources.
+See docs/agents/triage-labels.md for local label roles and delivery-state mapping.
 
 ### Domain docs
 
-<single-context | multi-context>. See `docs/agents/domain.md`.
+<Single-context or multi-context layout>. See docs/agents/domain.md.
 ```
 
-## References (template seeds)
+Ensure the seeded docs preserve these invariants: confirm the run ended before
+explicit claim recovery; implementation PRs use `Refs #<issue>` and hand off as
+`review_pending`; Done requires independent actual review from a different model
+provider/lab, green required CI at the final head, verified merge and required
+deployment evidence. Keep the epic open until its integrated acceptance is complete.
+A review request, self-QA or reviewer assignment cannot substitute for review.
 
-- `references/issue-tracker-github.md` — the `gh` / `gh project` command vocabulary and the column→label map.
-- `references/triage-labels.md` — the full label table and AFK/HITL markers.
-- `references/domain.md` — single- vs multi-context glossary layout.
+## 4. Verify and Report
 
-## Rules
+Read the resulting index and referenced docs. Check that resource resolution works
+in the target installation, the index is not duplicated, and no generated seed
+contradicts the shared contracts. Report changed paths, missing resources, and
+unresolved setup choices. Setup completion does not claim a live dispatch or review
+route has been exercised; verification of those routes requires actual evidence.
 
-- Never write any file before the user approves the drafts.
-- Update in place; never duplicate an existing `## Agent skills` block or `docs/agents/*.md`.
-- Keep the `CLAUDE.md`/`AGENTS.md` block as a thin index — detail lives in `docs/agents/`.
-- `dispatch:plan` (planning) / `dispatch:claude` / `dispatch:codex` / `dispatch:openrouter` (execution) are the human opt-in gates. HITL issues never carry any of them.
-- Do not invent a project board number — read it live with `gh project list` or ask.
+## Reference Seeds
+
+- [Issue tracker](references/issue-tracker-github.md) — tracker identity and native fields.
+- [Triage labels](references/triage-labels.md) — dispatch, ownership and delivery state.
+- [Domain layout](references/domain.md) — single- or multi-context glossary layout.
