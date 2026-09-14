@@ -56,5 +56,5 @@
     "pstack:verify": "python3 scripts/pstack-sync.py verify",
     "pstack:candidate": "python3 scripts/pstack-sync.py candidate"
   },
-  "version": "2.2.1"
+  "version": "2.2.2"
 }
