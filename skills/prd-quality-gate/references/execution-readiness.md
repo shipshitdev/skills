@@ -224,9 +224,8 @@ Every item must pass with evidence before declaring `READY`:
    and new artifacts agree with the repository. Proposed artifacts are explicit.
 5. **Execution:** each step names the change, inputs/dependencies, decision/pattern
    references, and finish condition. The executor need not research an approach.
-   Require Touch, Pattern, Check and Stop if on every step, validated by
-   `plan-header.mjs check`. Touch lists every permitted path, including generated
-   outputs; the executor edits only those paths.
+   Require Touch, Pattern, Check and Stop if on every step. Touch lists every
+   permitted path, including generated outputs; the executor edits only those paths.
 6. **Verification:** commands come from inspected scripts, CI, or documented tooling;
    record working directory, required host/environment, fixtures, and observable
    pass conditions. Label new checks and specify how to add and invoke them using
@@ -239,6 +238,10 @@ Every item must pass with evidence before declaring `READY`:
    by the other lab selected in harness policy, required CI at the final PR commit,
    and any project merge/deployment gates. Missing review capacity remains blocked;
    implementation, a plan review, or green CI alone is not delivery completion.
+
+After every item passes, set `Readiness: READY` and confirm that `plan-header.mjs check`
+passes against the current head before publishing. The check validates the header,
+freshness and step fields, and rejects any Readiness value other than READY.
 
 Publish draft work within authorized scope when useful. Keep blocked work in the
 repository's non-runnable state. Set `AFK` only after READY; use `HITL` for human-only
