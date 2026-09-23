@@ -1,6 +1,6 @@
 {
   "name": "shipshitdev-dev-workflow",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Code review, debugging, refactoring, release, and AI-assisted development workflows",
   "author": "Ship Shit Dev",
   "license": "MIT",

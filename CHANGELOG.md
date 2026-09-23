@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/shipshitdev/skills/compare/v2.2.2...v2.3.0) (2026-09-23)
+
+
+### Features
+
+* **executing-plans:** slim executor brief and deterministic plan-header check ([#156](https://github.com/shipshitdev/skills/issues/156)) ([a0f9899](https://github.com/shipshitdev/skills/commit/a0f9899c4254e9c000a390c00fbe5e11a52530bb))
+
 ## [2.2.2](https://github.com/shipshitdev/skills/compare/v2.2.1...v2.2.2) (2026-09-14)
 
 
