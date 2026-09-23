@@ -1,6 +1,6 @@
 {
   "name": "executing-plans",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Execute prepared issues with independent review and verified end-to-end delivery",
   "author": {
     "name": "Ship Shit Dev",

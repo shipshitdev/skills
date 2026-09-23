@@ -2,7 +2,7 @@
 name: prd-quality-gate
 description: "Validates draft requirements and blocks execution until the same issue contains a complete, current implementation contract. Owns the shared preparation templates and readiness rules."
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   tags: "prd, planning, validation, quality-gate, spec, requirements, ears"
 ---
 

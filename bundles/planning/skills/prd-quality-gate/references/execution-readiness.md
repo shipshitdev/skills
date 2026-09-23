@@ -79,13 +79,18 @@ with `Current plan:` followed by a space, join remaining lines with LF, trim lea
 then compute SHA256 of UTF-8 bytes. Adding the current-plan URL thus leaves the
 digest unchanged. Recompute after any other requirements-body edit. Record the
 date, repository identity, evidence and prior revision link below these fields.
+Compute it with the `executing-plans` skill's `scripts/plan-header.mjs digest`
+command on the saved issue body.
 The current-plan URL must select the exact plan comment, authored by an actor
 trusted under the repository dispatch policy; older comments cannot override it.
 
 Automated dispatch uses exact current default-branch HEAD matching for Base commit.
 After branch drift, the planner revalidates and republishes with the current SHA,
-even when the comparison found no relevant changes. For manual execution, compare
-the actual target checkout and record equivalent freshness evidence.
+even when the comparison found no relevant changes. For manual execution, after
+`git fetch`, obtain the head with `git rev-parse origin/<default-branch>` and create
+the execution branch from that commit. Run `plan-header.mjs check` with that head.
+Any mismatch returns to the planner; executors never judge whether drift is
+relevant. The planner records its comparison by republishing with the new SHA.
 
 Re-read the issue and compare the target checkout before dispatch. A changed
 requirement, relevant source, dependency contract, or verification setup invalidates
@@ -171,9 +176,16 @@ Readiness: BLOCKED
   concurrency/idempotency, compatibility, and migration/rollback behavior.>
 
 ### Ordered Implementation Steps
-- [ ] S-1: <Exact files/symbols to create or change, change to make, prescribed
-  pattern, required prior steps, and observable completion condition.>
-- [ ] S-2: <Next settled change, including complete cross-layer wiring.>
+- [ ] S-1: <settled change>
+  - Touch: `<path>`, `<new path>` (new)
+  - Pattern: `<existing path::symbol>` | D-<n> | None: <reason>
+  - Check: `<command>` (cwd: `<dir>`) -> <expected result>
+  - Stop if: <condition that means return to planner>
+- [ ] S-2: <settled change>
+  - Touch: `<path>`, `<new path>` (new)
+  - Pattern: `<existing path::symbol>` | D-<n> | None: <reason>
+  - Check: `<command>` (cwd: `<dir>`) -> <expected result>
+  - Stop if: <condition that means return to planner>
 
 ### Acceptance-to-Verification Mapping
 | Acceptance ID | Decisions | Steps | Verification and command source | Expected result |
@@ -212,6 +224,8 @@ Every item must pass with evidence before declaring `READY`:
    and new artifacts agree with the repository. Proposed artifacts are explicit.
 5. **Execution:** each step names the change, inputs/dependencies, decision/pattern
    references, and finish condition. The executor need not research an approach.
+   Require Touch, Pattern, Check and Stop if on every step. Touch lists every
+   permitted path, including generated outputs; the executor edits only those paths.
 6. **Verification:** commands come from inspected scripts, CI, or documented tooling;
    record working directory, required host/environment, fixtures, and observable
    pass conditions. Label new checks and specify how to add and invoke them using
@@ -224,6 +238,10 @@ Every item must pass with evidence before declaring `READY`:
    by the other lab selected in harness policy, required CI at the final PR commit,
    and any project merge/deployment gates. Missing review capacity remains blocked;
    implementation, a plan review, or green CI alone is not delivery completion.
+
+After every item passes, set `Readiness: READY` and confirm that `plan-header.mjs check`
+passes against the current head before publishing. The check validates the header,
+freshness and step fields, and rejects any Readiness value other than READY.
 
 Publish draft work within authorized scope when useful. Keep blocked work in the
 repository's non-runnable state. Set `AFK` only after READY; use `HITL` for human-only

@@ -147,6 +147,29 @@ test('plan freshness binds exact revision metadata, repository commit, and norma
   );
 });
 
+test('packaged plan header agrees with dispatch on shared freshness fixtures', async () => {
+  const { checkPlan } = await import('../skills/executing-plans/scripts/plan-header.mjs');
+  const body = `${plan.body}\n- [ ] S-1: Implement the settled change\n  - Touch: README.md\n  - Pattern: D-1\n  - Check: bun run lint\n  - Stop if: the prescribed pattern is absent\n`;
+  const fixtures = [
+    { issueBody: issue.body, planBody: body, headSha: sha, ready: true },
+    {
+      issueBody: `\r\n${issue.body}\r\nCurrent plan: https://github.com/acme/app/issues/7#issuecomment-1\r\n`,
+      planBody: body.replace(/\n/g, '\r\n'), headSha: sha, ready: true,
+    },
+    { issueBody: issue.body, planBody: body, headSha: 'b'.repeat(40), ready: false },
+    { issueBody: `${issue.body}\nChange behavior.`, planBody: body, headSha: sha, ready: false },
+    { issueBody: issue.body, planBody: body.replace('READY', 'BLOCKED'), headSha: sha, ready: false },
+  ];
+  for (const fixture of fixtures) {
+    const validate = () => validatePlan(
+      { body: fixture.planBody }, { ...issue, body: fixture.issueBody }, fixture.headSha
+    );
+    if (fixture.ready) assert.doesNotThrow(validate);
+    else assert.throws(validate);
+    assert.equal(checkPlan(fixture).ready, fixture.ready);
+  }
+});
+
 test('consumer workflow resolves complete packaged resources and fails closed if absent', () => {
   assert.equal(
     resolveSkillRoot('plan', (path) => path.startsWith('.github/agent-skills/')),
@@ -161,6 +184,10 @@ test('consumer workflow resolves complete packaged resources and fails closed if
     /resources are missing/
   );
   assert.throws(() => resolveSkillRoot('plan', () => false), /resources are missing/);
+  assert.throws(
+    () => resolveSkillRoot('codex', (path) => !path.endsWith('executor-brief.md')),
+    /resources are missing/
+  );
 });
 
 test('effort validation follows transport capabilities without rejecting supported high efforts', () => {

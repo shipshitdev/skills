@@ -422,7 +422,7 @@
     {
       "name": "executing-plans",
       "source": "./skills/executing-plans",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "description": "Executes a prepared GitHub issue without inventing product or engineering decisions, escalates plan gaps, and tracks delivery through independent cross-provider review, required CI, merge, and deployment evidence. Use when implementing an approved plan or processing an explicitly authorized issue queue."
     },
     {
@@ -752,7 +752,7 @@
     {
       "name": "prd-quality-gate",
       "source": "./skills/prd-quality-gate",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Validates draft requirements and blocks execution until the same issue contains a complete, current implementation contract. Owns the shared preparation templates and readiness rules."
     },
     {
@@ -1208,7 +1208,7 @@
     {
       "name": "writing-plans",
       "source": "./skills/writing-plans",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Resolves implementation decisions from researched requirements into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions."
     }
   ]

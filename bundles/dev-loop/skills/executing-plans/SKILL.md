@@ -2,7 +2,7 @@
 name: executing-plans
 description: Executes a prepared GitHub issue without inventing product or engineering decisions, escalates plan gaps, and tracks delivery through independent cross-provider review, required CI, merge, and deployment evidence. Use when implementing an approved plan or processing an explicitly authorized issue queue.
 metadata:
-  version: "3.0.0"
+  version: "3.1.0"
   tags: "execution, planning, agents, delivery"
 ---
 
@@ -51,7 +51,8 @@ Confirmation Required:
 
 Delegates To:
 
-- `prd-quality-gate` for the blocking execution-readiness check
+- `scripts/plan-header.mjs` and the executor brief for the pre-edit gate;
+  the planner owns `prd-quality-gate`
 - `writing-plans` for a separate planner handoff when decisions are missing
 - `tdd` for behavioral implementation under the settled plan
 - `qa-reviewer` for acceptance evidence; self-QA does not satisfy independent review
@@ -76,16 +77,16 @@ being in Human Review or having a closed issue does not prove delivery.
 
 ## 2. Validate the Prepared Contract
 
-Apply `prd-quality-gate` in **execution-readiness** mode. Resolve its installed
-`references/execution-readiness.md`; do not infer a consumer checkout path.
-Require a current requirements body and authoritative `## Implementation Plan`
-comment on the same issue, with plan revision, requirements fingerprint, repository
-revision, settled decisions, dependencies, and acceptance-to-verification mapping.
+Save the live issue body and its one current authoritative plan comment to files.
+After `git fetch`, obtain the head with `git rev-parse origin/<default-branch>`
+and create the execution branch from that commit. From this installed skill's
+directory, run `node scripts/plan-header.mjs check <issue-body-file> <plan-comment-file> <head-sha>`.
+Any mismatch returns to the planner; never judge whether drift is relevant.
+The planner records any unrelated-change comparison by republishing with the new SHA.
 
-Compare the working revision and relevant contracts with the planned baseline.
-Unrelated upstream changes may be recorded as irrelevant after inspection; a
-changed dependency, interface, requirement, or conflicting implementation requires
-the planner to amend and revalidate the plan. Do not merely change the recorded SHA.
+Follow the [executor brief](references/executor-brief.md) for the pre-edit scan,
+bounded implementation, checks, and escalation. The executor does not load
+`execution-readiness.md` or re-apply the semantic gate; the planner owns that gate.
 
 AFK requires a passing gate and no unresolved decisions or access blockers. A
 label alone is not evidence. A missing plan is not permission to plan on the
@@ -110,7 +111,8 @@ planning decision. If any such choice is necessary, report:
 
 Do not silently repair the plan, weaken tests, defer required wiring to another
 issue, or create a new feature interpretation. Resume only after the planner
-updates the canonical issue and the readiness gate passes again.
+updates the canonical issue and `scripts/plan-header.mjs check` passes again on the
+republished revision.
 
 Keep one complete feature outcome per delivery issue by default. Backend,
 frontend, integration, migration, and verification may be internal work items;

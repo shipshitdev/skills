@@ -1,6 +1,6 @@
 {
   "name": "prd-quality-gate",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Validates draft requirements and blocks execution until the same issue contains a complete, curre...",
   "author": {
     "name": "Ship Shit Dev",
