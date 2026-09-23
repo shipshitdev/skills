@@ -83,8 +83,9 @@ Delegates To:
    behaviors/fixtures and invocation through a verified runner, not full test code.
 7. Record a reproducible base commit, requirements fingerprint and plan revision.
    Compute the fingerprint with the `executing-plans` skill's
-   `scripts/plan-header.mjs digest` command on the saved issue body. Pass
-   `plan-header.mjs check` against the current head before declaring READY.
+   `scripts/plan-header.mjs digest` command on the saved issue body. Once every
+   readiness check passes, set `Readiness: READY` in the draft and confirm
+   `plan-header.mjs check` passes against the current head before publishing.
    Resolve all planner-owned unknowns. User-owned intent or unavailable prerequisites
    remain explicit blockers, never choices delegated to a smaller executor.
 

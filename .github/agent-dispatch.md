@@ -37,8 +37,8 @@ claim marker. A takeover or manually released claim prevents cleanup writes.
 
 ## Execution role
 
-Run `executing-plans`. Resolve its canonical delivery gate and the readiness
-reference from the workflow skill root verified by preflight. Missing resources block execution. Read
+Run `executing-plans`. Resolve its canonical delivery gate, executor brief and
+`scripts/plan-header.mjs` from the workflow skill root verified by preflight. Missing resources block execution. Read
 requirements plus the one current trusted `## Implementation Plan` comment.
 Run `plan-header.mjs check` with the head from `git rev-parse origin/<default-branch>`
 after `git fetch`, then follow the executor brief's pre-edit scan. Escalate any

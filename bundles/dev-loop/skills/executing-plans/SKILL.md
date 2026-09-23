@@ -111,7 +111,8 @@ planning decision. If any such choice is necessary, report:
 
 Do not silently repair the plan, weaken tests, defer required wiring to another
 issue, or create a new feature interpretation. Resume only after the planner
-updates the canonical issue and the readiness gate passes again.
+updates the canonical issue and `scripts/plan-header.mjs check` passes again on the
+republished revision.
 
 Keep one complete feature outcome per delivery issue by default. Backend,
 frontend, integration, migration, and verification may be internal work items;
