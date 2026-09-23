@@ -2,7 +2,7 @@
 name: writing-plans
 description: "Resolves implementation decisions from researched requirements into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions."
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   source: https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main
@@ -73,11 +73,18 @@ Delegates To:
 5. Make each step identify exact files/symbols, the change, selected pattern and
    decision references, prerequisites, and finish condition. Choose logical step
    size instead of fixed minute limits or a commit after every tiny edit.
+   Require Touch (all permitted paths, including generated outputs), Pattern
+   (existing path/symbol, decision ID, or None with a reason), Check (exact command,
+   cwd, and expected result), and Stop if (condition requiring planner escalation)
+   on every step, using the canonical template. The executor edits only Touch paths.
 6. Map every acceptance ID to decisions, steps, and concrete checks. Inspect the
    command definitions and CI configuration; record cwd, permitted execution host,
    environment/fixtures and expected result. Proposed new tests need exact paths,
    behaviors/fixtures and invocation through a verified runner, not full test code.
 7. Record a reproducible base commit, requirements fingerprint and plan revision.
+   Compute the fingerprint with the `executing-plans` skill's
+   `scripts/plan-header.mjs digest` command on the saved issue body. Pass
+   `plan-header.mjs check` against the current head before declaring READY.
    Resolve all planner-owned unknowns. User-owned intent or unavailable prerequisites
    remain explicit blockers, never choices delegated to a smaller executor.
 

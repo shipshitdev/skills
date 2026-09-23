@@ -149,7 +149,7 @@ function blockedSummary(reason) {
 function validatePlan(comment, issue, sha) {
   const body = comment.body;
   if (!/^## Implementation Plan\r?\n/.test(body)) fail('Plan heading missing.');
-  // The full semantic readiness gate still runs in the agent before any edit.
+  // The executor brief's pre-edit scan runs in the agent before any edit.
   const field = (name) => {
     const matches = [...body.matchAll(new RegExp(`^${name}: (.+)$`, 'gm'))];
     if (matches.length !== 1) fail(`Plan must declare exactly one ${name}.`);
@@ -175,7 +175,9 @@ function resolveSkillRoot(lane, exists = existsSync) {
     'prd-quality-gate/references/execution-readiness.md',
     ...(lane === 'plan'
       ? ['prd-writer/SKILL.md', 'writing-plans/SKILL.md']
-      : ['executing-plans/SKILL.md', 'executing-plans/references/delivery-gate.md']),
+      : ['executing-plans/SKILL.md', 'executing-plans/references/delivery-gate.md',
+        'executing-plans/references/executor-brief.md',
+        'executing-plans/scripts/plan-header.mjs']),
   ];
   const root = ['.github/agent-skills', 'skills'].find((candidate) =>
     required.every((resource) => exists(join(candidate, resource)))
