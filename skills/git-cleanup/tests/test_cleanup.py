@@ -538,6 +538,13 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
         self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
 
+    def test_unfetched_pr_merge_commit_falls_through_to_content_proof(self):
+        self.squash()
+        self.prs[0]["merge_commit_sha"] = "0123456789abcdef0123456789abcdef01234567"
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
+
     def test_squash_then_trunk_edits_same_path_still_proven(self):
         self.squash()
         self.prs = []
