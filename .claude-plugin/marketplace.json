@@ -482,7 +482,7 @@
     {
       "name": "git-cleanup",
       "source": "./skills/git-cleanup",
-      "version": "5.0.0",
+      "version": "2.2.2",
       "description": "Audits candidate code and intent against current trunk, preserves recovery history, then plans or removes only proven-safe branches and worktrees. Defaults to a read-only cleanup plan."
     },
     {
