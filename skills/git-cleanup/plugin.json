@@ -1,7 +1,7 @@
 {
   "name": "git-cleanup",
-  "version": "4.1.0",
-  "description": "Fetch trunk, prove candidate file content reached trunk, then prune merged branches and stale worktrees.",
+  "version": "5.0.0",
+  "description": "Audit current trunk code and intent, preserve history, then prune proven-safe resources.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

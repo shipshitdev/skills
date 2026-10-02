@@ -482,8 +482,8 @@
     {
       "name": "git-cleanup",
       "source": "./skills/git-cleanup",
-      "version": "4.1.0",
-      "description": "Fetches trunk, then proves candidate file content reached trunk before planning or removing merged branches and worktrees. Defaults to a read-only cleanup plan."
+      "version": "5.0.0",
+      "description": "Audits candidate code and intent against current trunk, preserves recovery history, then plans or removes only proven-safe branches and worktrees. Defaults to a read-only cleanup plan."
     },
     {
       "name": "git-safety",
