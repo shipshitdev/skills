@@ -3,7 +3,7 @@ name: weekly-review
 description: Coordinates a weekly engineering review of board accuracy, recent code changes, operational health, and scoped cleanup. Use for a recurring repository health review or a review of the last several days.
 compatibility: Requires repository history and access to the selected board; operational checks depend on existing service connections.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   tags: "review, weekly, maintenance, boards, retrospective"
   author: Ship Shit Dev
 ---
@@ -51,7 +51,7 @@ Confirmation Required:
 Delegates To:
 
 - `board-sync` for board reconciliation and approved supported field corrections
-- `full-code-review` for retrospective review using the frozen diff and commit log
+- `full-code-review` for the shared merged-history retrospective and cross-commit lens
 - `code-review` for correctness and implementation-versus-acceptance checks
 - `deslop` for scoped dry-run findings or authorized cleanup
 - `dependency-audit` for dependency checks in audit mode when evidence needs refresh
@@ -64,23 +64,12 @@ silently substituting a similarly named skill or installing dependencies.
 
 ## Freeze the review scope
 
-Resolve the default branch and pin its fetched tip as END. Review all authors,
-including automation accounts. Use the requested branch only when explicitly
-selected. Resolve an explicit checkpoint as BASE and verify it is an ancestor of
-END. Report rewritten or unavailable history instead of silently resetting it.
-
-For a date window, record absolute start/end and timezone. Identify changes
-integrated into the target branch during that interval, including older authored
-commits merged during the week. Use integration/merge evidence rather than
-author dates alone. Include root-commit content when the window spans repository
-creation. Record the commit inventory and endpoints; disclose shallow or missing
-history. Inspect individual commit/PR diffs as needed because an aggregate diff
-can hide changes later reverted.
-
-Keep uncommitted work and open PRs separate from integrated history. In a monorepo,
-list affected applications, shared packages, and downstream consumers. Apply a
-package filter without dropping cross-package contracts or claiming whole-repo
-coverage. Record any limits before drawing conclusions.
+Read [Shared merged history](references/merged-history.md), which owns the
+all-author integration inventory, frozen BASE/END, and code-history review also
+used by `standup all … audit`. Follow its freeze/inventory steps for the selected
+window and package scope, retaining complete introduced-commit history and the
+union of changed files/hunks. Use its audit mode for code review; its report-only
+boundary applies even when this weekly invocation separately authorizes repairs.
 
 ## Audit work and implementation
 
@@ -103,12 +92,10 @@ Recommend closure or reprioritization only when evidence supports it.
 
 ## Review the period
 
-Run the `code-review` skill over the frozen changes for correctness and spec
-fidelity before the broader retrospective. Run the `full-code-review` skill
-with the frozen BASE-to-END diff, changed files,
-and COMMIT_LOG. Request its retrospective backlog and cross-commit lens. Preserve
-the complete commit inventory, including changes absent from the final diff.
-Report per-commit coverage and any omitted hunks or packages.
+Complete the shared merged-history audit with the same frozen scope. Reuse its
+individual/combined correctness and cross-commit findings, PR/review history,
+exact-SHA CI/deployment evidence, and coverage ledger. Keep the board's targeted
+issue/spec comparisons separate; avoid reviewing the same frozen changes twice.
 
 Combine new findings with the issue audit. Check existing issues and open PRs
 before proposing another repair. Trace findings to files, commits, and affected
@@ -157,10 +144,8 @@ Deliver one concise report with evidence links:
   impact, evidence, and the proposed next action
 - **Repaired:** exact changes, verification, PRs, and remaining delivery gates
 - **Next priorities:** the three highest-value actions, or fewer when justified
-- **Checkpoint:** END only for completely reviewed code scope; retain the previous
-  checkpoint and exact remaining scope when review is partial. Required cross-package
-  contract and consumer checks are part of that scope; an uninspected required
-  consumer prevents advancing the affected checkpoint. Track unresolved
+- **Checkpoint:** apply the shared merged-history code-coverage gate and return
+  its scope-qualified checkpoint/remainder without saving it. Track unresolved
   findings and incomplete board/operational checks separately for the next run.
 
 An empty commit window still permits board and operational review. State no code
