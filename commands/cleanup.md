@@ -1,7 +1,7 @@
 # Cleanup - Prune Merged Branches, Stale Worktrees, and Finished Work
 
-Clean up what's already done. Default target is git hygiene: verify branches are
-provably merged into the trunk (squash-merge aware), then prune the merged
+Clean up what's already done. Default target is git hygiene: audit actual code
+and intent on current trunk despite rewritten commit IDs, then prune proven-safe
 local/remote branches and stale worktrees they leave behind. Explicit targets
 extend the sweep to completed GitHub issues and old session files.
 
@@ -11,8 +11,8 @@ extend the sweep to completed GitHub issues and old session files.
 /cleanup              # branches + worktrees: verify merged, print the prune plan (dry-run, default)
 /cleanup branches     # scope to merged local + remote branches only
 /cleanup worktrees    # scope to stale git worktrees only
-/cleanup verify       # verification gate only — classify branches, no plan, no deletion
-/cleanup prune        # execute the prune plan after you confirm it
+/cleanup verify       # read-only alias: print the same code/intent audit plan, no deletion
+/cleanup prune        # execute the reviewed plan within existing cleanup authorization
 /cleanup tasks        # close GitHub issues whose work already shipped
 /cleanup sessions     # consolidate daily session files into monthly/yearly
 /cleanup all          # git cleanup + tasks + sessions, sequentially
@@ -22,19 +22,21 @@ extend the sweep to completed GitHub issues and old session files.
 
 ## Git Cleanup (default / `branches` / `worktrees` / `verify` / `prune`)
 
-Use the `git-cleanup` skill. Fetch origin trunk first and classify by **file
-content on trunk**, not unique commit SHAs. Squash-merge rewrites every commit;
-`git patch-id` against master is not a landing signal. GitHub merged-PR metadata
-is one oracle; path blobs that already exist on trunk at the same path are the
-squash oracle.
+Use the `git-cleanup` skill and its packaged helper. Fetch origin trunk first and
+audit **current code and intended behavior**, independently of commit IDs or the
+original PR. A merged PR, ancestry or historical blob alone cannot prove the work
+is present on current master.
 
 1. Fetch origin trunk and fast-forward local trunk when it is behind. Never
    classify worktrees against a stale local master.
-2. Verify every candidate's files are on trunk; report in-flight and genuinely
-   stranded branches (unique blobs at a path) loudly.
+2. Inspect per-path current-content evidence and the intended behavior. Record
+   verified `intent_reviews` bound to candidate/base/trunk IDs with supporting
+   evidence. Keep uncertain, partial or reverted work; report why it remains.
 3. Print the prune plan — local branches, remote branches, worktrees — plus a
    skipped list with reasons. Dry-run is the default; nothing is deleted.
-4. In `prune` mode, delete only after you confirm the printed plan.
+4. In `prune` mode, use the reviewed plan within existing authorization. Ask only
+   when deletion or its scope is not authorized. Revalidate code and intent;
+   create and verify a recovery ref before removal. Preserve ignored files.
 
 ## Tasks (`tasks`)
 
@@ -63,8 +65,9 @@ Merge daily sessions into monthly, monthly into yearly.
 
 ## Gates
 
-- Git cleanup never deletes anything not proven merged into the trunk, never
-  touches dirty worktrees, and always shows the dry-run plan before pruning.
+- Git cleanup requires current-code proof and a verified intent receipt, preserves
+  tracked history under a recovery ref, keeps dirty or ignored files, and shows
+  the exact plan before pruning.
 - `tasks` closes issues only after you confirm the list.
 - `sessions` backs up before modifying and supports a preview without changes.
 
