@@ -3,7 +3,7 @@ name: domain-modeling
 description: Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a CONTEXT.md, or recording or editing an ADR.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "domain, glossary, context, adr, ddd"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/domain-modeling/SKILL.md

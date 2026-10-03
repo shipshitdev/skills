@@ -7,7 +7,7 @@ description: >-
   "backfill older data". NOT for: simple one-shot API calls, websocket/streaming
   connections, file downloads, or APIs without pagination.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "data-ingestion, api, pagination"
 ---
 

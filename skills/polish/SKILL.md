@@ -4,7 +4,7 @@ description: Runs the last pass over a functionally complete feature — pixel a
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.2"
+  version: "2.2.2"
   tags: "polish, ui, quality"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/polish.md
   upstream_version: skill-v2.1.1

@@ -2,7 +2,7 @@
 name: expo-architect
 description: Scaffold a production-ready Expo React Native app with working screens, navigation, and optional Clerk auth. Generates complete mobile app structure that runs immediately with `bun start`. Use when scaffolding a new Expo or React Native app, setting up Expo Router navigation, or adding Clerk auth to a mobile app.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "expo, react-native, mobile, scaffold, clerk"
 ---
 

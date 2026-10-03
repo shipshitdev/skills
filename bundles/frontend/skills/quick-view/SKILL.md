@@ -6,7 +6,7 @@ description: >-
   "open as webpage", or any request to review lists, tables, drafts, or
   summaries that are hard to read in the terminal.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "html, review, preview"
 ---
 

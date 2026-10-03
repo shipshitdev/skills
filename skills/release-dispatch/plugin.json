@@ -1,6 +1,6 @@
 {
   "name": "release-dispatch",
-  "version": "2.0.2",
+  "version": "2.2.2",
   "description": "Single front door for releases — routes gates/cut/notes to the right release engine.",
   "author": {
     "name": "Ship Shit Dev",

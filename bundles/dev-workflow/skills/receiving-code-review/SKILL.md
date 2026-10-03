@@ -3,7 +3,7 @@ name: receiving-code-review
 description: >-
   Evaluate incoming code-review feedback with technical rigor before implementing any change. Verify each point against the codebase, push back with reasoning when the reviewer is wrong, and never perform empty agreement. Use when you receive a review, before touching any code, especially when feedback seems unclear or technically questionable.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   source: https://github.com/obra/superpowers/blob/main/skills/receiving-code-review/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main

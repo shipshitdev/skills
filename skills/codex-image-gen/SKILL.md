@@ -5,7 +5,7 @@ description: >-
 license: MIT
 compatibility: Requires the `codex` CLI (logged in) plus `python3` and `base64`; `sips` is optional for post-processing on macOS.
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "codex, image-generation, gpt-image, cli, assets, app-icon"
 when_to_use: "generate an image, make an icon, create an app icon, render an illustration or texture, agent needs an image but has no image tool, codex image generation"
 ---

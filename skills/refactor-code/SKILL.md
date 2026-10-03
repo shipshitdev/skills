@@ -2,7 +2,7 @@
 name: refactor-code
 description: Systematic approach to safely refactoring code with tests. Use when user says 'refactor', 'clean up code', 'simplify', 'reduce complexity', or 'technical debt'.
 metadata:
-  version: "1.1.1"
+  version: "2.2.2"
   tags: "refactoring, code-quality, testing, maintenance, clean-code"
 ---
 

@@ -2,7 +2,7 @@
 name: tool-design
 description: Design tools that agents can use effectively, including when to reduce tool complexity. Use when creating, optimizing, or reducing the set of tools available to an agent.
 metadata:
-  version: "2.2.0"
+  version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/tool-design/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

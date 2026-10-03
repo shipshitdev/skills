@@ -5,7 +5,7 @@ description: |
   Run after adding, removing, or renaming skills, commands, or bundles.
 metadata:
   internal: true
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "readme, sync, maintenance, automation"
 ---
 

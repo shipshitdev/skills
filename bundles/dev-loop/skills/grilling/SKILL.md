@@ -3,7 +3,7 @@ name: grilling
 description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, asks to be grilled, or another skill needs the interview primitive.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "interview, grilling, discovery, planning, frontier"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md

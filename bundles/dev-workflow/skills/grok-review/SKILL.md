@@ -10,7 +10,7 @@ description: >-
 license: MIT
 compatibility: Requires the `grok` CLI (logged in) and git; gh for PR targets.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "code-review, second-opinion, grok, cli, cross-check"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *) Bash(grok *) Bash(command -v *) Bash(mktemp *)

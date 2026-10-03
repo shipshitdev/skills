@@ -1,6 +1,6 @@
 {
   "name": "refactor-dispatch",
-  "version": "1.0.2",
+  "version": "2.2.2",
   "description": "Front door for /refactor: deslop, code, debt, perf, structure, or stack.",
   "author": {
     "name": "Ship Shit Dev",

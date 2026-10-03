@@ -3,7 +3,7 @@ name: bug
 description: File a GitHub issue of type Bug from a description — structures a clear bug report (summary, steps to reproduce, expected vs actual, environment), previews it, then on confirmation creates the issue with the Bug issue type (falling back to a bug label when the repo has no issue types). Use when the user asks to file a bug, open a bug report, create a GitHub bug issue, log a bug, or runs /bug.
 compatibility: Requires git and GitHub CLI gh access to the target repository.
 metadata:
-  version: "1.0.3"
+  version: "2.2.2"
   tags: "github, issue, bug, report, gh, triage"
 allowed-tools: Bash(gh *) Bash(git *)
 disable-model-invocation: true

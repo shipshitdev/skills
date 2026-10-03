@@ -5,7 +5,7 @@ compatibility: Requires git; uses the repo's package manager and test runner to 
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "git, merge, rebase, conflicts, resolution, lockfiles"
 allowed-tools: Bash(git *) Bash(bun *) Bash(bunx *)
 ---

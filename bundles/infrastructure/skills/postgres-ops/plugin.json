@@ -1,6 +1,6 @@
 {
   "name": "postgres-ops",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Operate production Postgres: backups, point-in-time recovery, pooling, and disaster recovery.",
   "author": {
     "name": "Ship Shit Dev",

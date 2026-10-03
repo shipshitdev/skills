@@ -4,7 +4,7 @@ description: Turn a product's ICP into a revenue-ranked roadmap. Reads .agents/m
 user-invocable: true
 argument-hint: "[product or focus area]"
 metadata:
-  version: "2.0.1"
+  version: "2.2.2"
   tags: "roadmap, product, revenue, mrr, prioritization, icp"
   author: Ship Shit Dev
 when_to_use: "what should we build next, prioritize the roadmap, roadmap analysis, what's blocking revenue, plan toward MRR, gap analysis, product gaps, what to focus on to grow revenue"

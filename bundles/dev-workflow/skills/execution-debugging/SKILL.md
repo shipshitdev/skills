@@ -2,7 +2,7 @@
 name: execution-debugging
 description: Scoped debugging methodology for when a test or build fails during execution/stabilization. Use to diagnose the failing check without scope-creeping — read the full error, reproduce in isolation, hypothesize before changing, localize, fix the root cause not the symptom, and guard with a regression test.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "debugging, testing, root-cause, stabilization, regression, execution"
 ---
 

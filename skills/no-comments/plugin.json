@@ -1,6 +1,6 @@
 {
   "name": "no-comments",
-  "version": "1.2.0",
+  "version": "2.2.2",
   "description": "Strip narration comments and fix accepted findings.",
   "author": {
     "name": "Ship Shit Dev",

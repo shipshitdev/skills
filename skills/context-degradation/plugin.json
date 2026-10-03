@@ -1,6 +1,6 @@
 {
   "name": "context-degradation",
-  "version": "2.1.0",
+  "version": "2.2.2",
   "description": "Recognize, diagnose, and mitigate patterns of context degradation in agent systems. Use when context",
   "author": {
     "name": "Ship Shit Dev",

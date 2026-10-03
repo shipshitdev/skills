@@ -2,7 +2,7 @@
 name: skill-scout
 description: Search local, marketplace, repository, package, GitHub, and web sources before creating a new skill or custom implementation. Use when asked to create, fork, import, or evaluate a skill, or before writing code for functionality that likely already exists.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "skills, research, discovery, reuse, search-first"
 ---
 

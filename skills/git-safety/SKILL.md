@@ -6,7 +6,7 @@ description: >-
   ignore rules and pre-commit hooks, and drives the rotate-first response when a
   credential has already leaked.
 metadata:
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "git, security, secrets, pre-commit"
 when_to_use: "about to commit, check what is staged, staged secret, pre-commit hook, pre-push check, force push, push --force, reset --hard, clean -fdx, rewrite git history, filter-repo, BFG, scrub a leaked credential, rotate a leaked key, git safety check"
 ---

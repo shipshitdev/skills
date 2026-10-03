@@ -8,7 +8,7 @@ description: >-
   diagnosing unexpected re-renders in RHF-based forms. Covers client-side
   validation only — does not cover React Server Actions or useActionState.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "react, forms, performance"
 ---
 

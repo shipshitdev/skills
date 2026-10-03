@@ -3,7 +3,7 @@ name: agent-browser
 description: Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, test web applications, or extract information from web pages.
 allowed-tools: Bash(agent-browser:*)
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   source: https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md
   upstream_repo: vercel-labs/agent-browser
   upstream_ref: main

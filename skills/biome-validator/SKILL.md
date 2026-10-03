@@ -2,7 +2,7 @@
 name: biome-validator
 description: Validate Biome 2.3+ configuration and detect outdated patterns. Ensures proper schema version, domains, assists, and recommended rules. Use before any linting work or when auditing existing projects.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "biome, linter, formatter, validation, code-quality"
 ---
 

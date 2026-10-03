@@ -4,7 +4,7 @@ description: Modern React patterns and principles. Hooks, composition, performan
 metadata:
   risk: safe
   date_added: '2026-02-27'
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "react, patterns, frontend"
 ---
 

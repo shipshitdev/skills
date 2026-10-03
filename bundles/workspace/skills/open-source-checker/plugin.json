@@ -1,6 +1,6 @@
 {
   "name": "open-source-checker",
-  "version": "1.1.1",
+  "version": "2.2.2",
   "description": "Audit a private repo before publishing: license, history secrets, private references.",
   "author": {
     "name": "Ship Shit Dev",

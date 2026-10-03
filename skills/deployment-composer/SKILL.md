@@ -3,7 +3,7 @@ name: deployment-composer
 description: Compose deployment workflows from smaller skills and repo signals, including trunk-based releases, CI quality gates, provider deployment, post-deploy verification, rollback, and failed-check diagnosis. Use when the user asks for a deployment plan, release workflow, ship-to-staging/production environments, or a smart deploy process across GitHub, Vercel, EC2, Docker, or custom CI.
 compatibility: Requires local repository access. GitHub release flows require gh and git access.
 metadata:
-  version: "1.2.1"
+  version: "2.2.2"
   tags: "deployment, orchestration, release, ci-cd, github, staging, production"
 allowed-tools: Bash(git *) Bash(gh *) Bash(ls *) Bash(find *) Bash(rg *) Bash(cat *)
 ---

@@ -48,13 +48,14 @@
     "lint:md": "bunx markdownlint-cli --ignore bundles --ignore dist --ignore plugins \"**/*.md\"",
     "lint:md:fix": "bunx markdownlint-cli --ignore bundles --ignore dist --ignore plugins \"**/*.md\" --fix",
     "lint:sh": "find scripts -name \"*.sh\" -exec bash scripts/lint-shellcheck.sh {} +",
-    "marketplace:generate": "bun run catalog:generate && bun scripts/generate-marketplace-bundles.js && bun scripts/generate-marketplace-json.js",
+    "marketplace:generate": "bun run version:sync && bun run catalog:generate && bun scripts/generate-marketplace-bundles.js && bun scripts/generate-marketplace-json.js",
     "prepare": "husky",
     "validate": "bash scripts/validate-skill-sync.sh",
     "validate:skill": "bash scripts/validate-skill-sync.sh",
     "version:check": "bash scripts/check-skill-version-bumps.sh",
     "pstack:verify": "python3 scripts/pstack-sync.py verify",
-    "pstack:candidate": "python3 scripts/pstack-sync.py candidate"
+    "pstack:candidate": "python3 scripts/pstack-sync.py candidate",
+    "version:sync": "bun scripts/sync-skill-versions.js"
   },
   "version": "2.2.2"
 }

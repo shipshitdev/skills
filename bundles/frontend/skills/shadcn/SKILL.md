@@ -6,7 +6,7 @@ description: >-
   with Radix primitives, Tailwind styling, React Hook Form validation, data
   tables, theming, or component composition patterns.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   source: https://github.com/pproenca/dot-skills/blob/master/skills/.curated/shadcn/SKILL.md
   upstream_repo: pproenca/dot-skills
   upstream_ref: master

@@ -4,7 +4,7 @@ description: Re-pitch the last message in plain English using the project's CONT
 disable-model-invocation: true
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "clarification, communication, context, glossary"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/productivity/wait-what/SKILL.md

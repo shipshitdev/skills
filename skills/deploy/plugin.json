@@ -1,6 +1,6 @@
 {
   "name": "deploy",
-  "version": "1.0.2",
+  "version": "2.2.2",
   "description": "Streamline deployment workflows for web applications to staging and production",
   "author": {
     "name": "Ship Shit Dev",

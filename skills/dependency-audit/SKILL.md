@@ -6,7 +6,7 @@ argument-hint: "[audit | ci]"
 compatibility: Requires bun and git; gh to add the CI workflow. Uses gitleaks when available.
 allowed-tools: Bash(bun *) Bash(git *) Bash(gh *) Bash(gitleaks *)
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "security, dependencies, sca, secrets, supply-chain, ci"
   author: Ship Shit Dev
 when_to_use: "audit dependencies, dependency audit, vulnerable packages, CVE scan, scan for secrets, secrets scanning, supply chain, add security gate to CI, SCA"

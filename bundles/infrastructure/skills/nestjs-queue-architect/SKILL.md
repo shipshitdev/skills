@@ -2,7 +2,7 @@
 name: nestjs-queue-architect
 description: Queue job management patterns, processors, and async workflows for video/image processing. Use when building BullMQ queues, job processors, or async video/image processing workflows in NestJS.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   technology: BullMQ 5.61.0 with NestJS 11.1.7
   expertise_level: senior
   last_updated: "2025-10-22"

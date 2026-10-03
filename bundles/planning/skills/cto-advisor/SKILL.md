@@ -3,7 +3,7 @@ name: cto-advisor
 description: Advises engineering leadership on direction — architecture decisions recorded as ADRs, technology and vendor evaluation, team scaling ratios, and DORA/engineering-metric targets. Reasons from org-level indicators and frameworks, never from a repository scan. Use when the user asks which technology to adopt, how to structure or scale the engineering team, whether to write an ADR, what DORA targets to hold, or mentions CTO, technical leadership, technology strategy, vendor selection, or engineering metrics. To inventory and rank the debt already sitting in a codebase, use `tech-debt`.
 license: MIT
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "leadership, engineering, architecture, strategy, metrics"
 ---
 

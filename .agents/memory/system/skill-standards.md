@@ -368,18 +368,22 @@ Rules:
 
 ## Versioning
 
-Versions live in `metadata.version`. Use semver:
+All public and repo-maintenance skills share the repository release version
+from `package.json`.
+Set `metadata.version` and `plugin.json.version` to that exact value (currently
+`2.2.2`). Do not assign independent major, minor or patch versions to a skill.
+Repository releases use semver; release automation owns the next release number.
 
-- `1.0.0` — initial stable
-- `1.1.0` — new capability, backwards compatible
-- `2.0.0` — breaking change to workflow or output format
-
-Bump version in both `SKILL.md` (`metadata.version`) and `plugin.json` (`version`) when publishing.
-`SKILL.md` is canonical; `plugin.json` mirrors it. Both are enforced, not advisory:
-
-- `bun run validate` hard-fails when `plugin.json.version ≠ metadata.version` or the plugin description is a YAML block marker.
-- CI `version:check` (`scripts/check-skill-version-bumps.sh`) hard-fails when any file under `skills/<name>/` other than `plugin.json` changes without a `metadata.version` bump vs `origin/master`.
-- Bundle and marketplace `version` fields come from `package.json.version`, which release-please bumps.
+- Run `bun run version:sync` to align canonical skill and plugin metadata.
+- `bun run version:check` checks every pair against `package.json.version`; skill
+  instruction edits do not require an individual version increment.
+- `bun run marketplace:generate` synchronizes versions before generating bundles
+  and marketplace entries. Release automation uses this same path.
+- `bun run validate` still rejects mismatched skill/plugin metadata or invalid
+  descriptions. Shared versions do not replace instruction or runtime review.
+- Version synchronization advances Pstack fingerprints only when the destination's
+  pre-edit bytes match the accepted hash. Unreviewed body changes keep their old
+  fingerprints and remain blocked at the adaptation review gate.
 
 ---
 

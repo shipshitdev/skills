@@ -42,6 +42,16 @@ One `skills/` directory at root. No per-platform copies. Platform-neutral writin
 
 Follow agentskills.io/specification as base. Claude Code extensions (`when_to_use`, `disable-model-invocation`, `allowed-tools`, etc.) added on top. `version`/`tags` go inside `metadata:` block as strings, not top-level. See `.agents/memory/system/skill-standards.md`.
 
+### Shared release versions (2026-10-03)
+
+All public and repo-maintenance skills, their plugin manifests and generated packages use the
+repository release version from `package.json` (2.2.2 at alignment). Vincent
+explicitly replaced independent per-skill versions with one shared version.
+Run `bun run version:sync` after a repository version change; packaging and
+release automation synchronize this automatically. `version:check` verifies
+alignment rather than requiring a separate version bump for instruction edits.
+Installed metadata updates preserve local behavior and owned customization.
+
 ### External Skills Imported (2026-04-21)
 
 All referenced external repos now internal — no external dependencies:

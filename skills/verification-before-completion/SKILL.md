@@ -3,7 +3,7 @@ name: verification-before-completion
 description: >-
   Enforce evidence-based completion: no success, done, fixed, or passing claim may be made without first running the verification command and reading its full output. Use when about to claim work is complete, a bug is fixed, tests pass, a build succeeds, or before committing, pushing, or opening a PR.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   source: https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main

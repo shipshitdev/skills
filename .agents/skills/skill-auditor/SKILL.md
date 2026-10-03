@@ -5,7 +5,7 @@ description: |
   Run periodically or before releases.
 metadata:
   internal: true
-  version: "1.2.1"
+  version: "2.2.2"
   tags: "audit, skills, quality, maintenance"
 ---
 

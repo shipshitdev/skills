@@ -46,7 +46,8 @@ jobs:
           manifest-file: .release-please-manifest.json
 
   # The release PR bumps package.json, and bundle/marketplace versions are
-  # generated from it — regenerate on the release branch so CI's
+  # generated from it; canonical skill/plugin versions are synchronized too.
+  # Regenerate on the release branch so CI's
   # "Verify generated bundles are current" gate stays green.
   sync-generated:
     needs: release-please
@@ -60,7 +61,7 @@ jobs:
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           ref: ${{ env.RELEASE_BRANCH }}
-          fetch-depth: 0 # CI's version:check diffs against origin/master
+          fetch-depth: 0
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2

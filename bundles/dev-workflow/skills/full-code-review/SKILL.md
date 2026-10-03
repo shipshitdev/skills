@@ -13,7 +13,7 @@ compatibility: Requires gh CLI and git for PR diff fetching.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "code-review, security, structural, devex, orchestration, pr-gate"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)

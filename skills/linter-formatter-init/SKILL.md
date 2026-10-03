@@ -2,7 +2,7 @@
 name: linter-formatter-init
 description: Set up Biome (default) or ESLint + Prettier, Vitest testing, and pre-commit hooks for any JavaScript/TypeScript project. Uses Bun as the package manager. Use this skill when initializing code quality tooling for a new project or adding linting to an existing one.
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "linting, formatting, setup"
 ---
 

@@ -5,7 +5,7 @@ user-invocable: true
 disable-model-invocation: true
 argument-hint: "[topic, feature, issue, or decision]"
 metadata:
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "interview, discovery, requirements, planning"
   author: Ship Shit Dev
 when_to_use: "interview me, grill me, grill-me, grill me with docs, discovery interview, requirements interview, before PRD, clarify requirements, /interview"

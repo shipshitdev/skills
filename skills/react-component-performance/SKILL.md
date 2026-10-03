@@ -8,7 +8,7 @@ description: >-
   Profiler trace. API latency, database queries, caching, and infrastructure
   belong to `performance-expert`.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   source: https://github.com/Dimillian/Skills/blob/main/react-component-performance/SKILL.md
   upstream_repo: Dimillian/Skills
   upstream_ref: main

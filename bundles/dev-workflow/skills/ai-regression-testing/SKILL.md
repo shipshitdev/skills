@@ -2,7 +2,7 @@
 name: ai-regression-testing
 description: Design regression tests for AI-assisted development by targeting model blind spots such as sandbox versus production path drift, response-shape mismatches, untested bug fixes, and same-model review failures. Use after AI-generated code changes, bug fixes, API edits, or feature-flag/sandbox changes.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "testing, ai, regression, quality, api"
 ---
 

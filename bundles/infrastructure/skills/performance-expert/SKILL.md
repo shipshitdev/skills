@@ -9,7 +9,7 @@ description: >-
   shrinking a shipped bundle, or configuring CDN and edge caching. React render
   and component work belongs to `react-component-performance`.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "performance, optimization, backend, database, infrastructure"
 when_to_use: "slow API endpoint, high p95 latency, slow database query, missing index, N+1 queries, add caching, Redis cache strategy, move work to a background job, profile the server, connection pooling, bundle size too large, CDN and cache headers, cold starts, load testing"
 ---

@@ -1,6 +1,6 @@
 {
   "name": "ai-agent-cost-optimizer",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "Audit and reduce AI agent token and inference spend without sacrificing quality",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: testing-expert
 description: Framework-agnostic testing strategy — which level to test at, what coverage numbers mean, how to design a test that survives refactoring, how to choose test data, and how to kill flakes. Use when deciding what is worth testing, setting or defending a coverage target, reviewing the shape of an existing suite, or diagnosing a flaky or slow test. Framework-specific work routes to a specialist skill instead of being answered here.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "testing, strategy, coverage, flakiness, test-design"
   author: Ship Shit Dev
 when_to_use: "what should I test, testing strategy, testing pyramid, unit vs integration vs e2e, what level does this belong at, coverage target, is 80% coverage enough, coverage is gaming the number, this test is flaky, tests pass locally fail in CI, tests are slow, test data strategy, factories vs fixtures, review the shape of our test suite, are these tests worth keeping"

@@ -2,7 +2,7 @@
 name: spec-first
 description: "Coordinates preparation, prescribed implementation, independent review and verification using one shared issue contract. Use for nontrivial implementation that needs decisions settled before coding."
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "specification, planning, execution, ears"
 ---
 

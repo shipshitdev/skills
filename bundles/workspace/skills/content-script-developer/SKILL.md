@@ -2,7 +2,7 @@
 name: content-script-developer
 description: Expert in browser extension content scripts, DOM integration, and safe page augmentation across modern web apps. Use when building or updating a browser-extension content script, injecting UI into third-party pages, or handling SPA navigation and dynamic DOM changes.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "browser-extension, content-script, dom"
 ---
 

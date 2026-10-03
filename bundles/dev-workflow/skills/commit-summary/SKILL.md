@@ -6,7 +6,7 @@ allowed-tools: Bash(git *)
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "git, workflow, commits, productivity"
 ---
 

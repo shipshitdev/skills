@@ -6,7 +6,7 @@ license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "pstack, workflow"
   source: https://github.com/ericlitman/open-pstack
   upstream_commit: 56bfd14418fa733e34d98f714f357d28788470e3

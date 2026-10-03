@@ -9,7 +9,7 @@ description: >-
   work to context-degradation for attention failures and context-optimization
   for token-efficiency work.
 metadata:
-  version: "2.2.0"
+  version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-fundamentals/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

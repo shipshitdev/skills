@@ -4,7 +4,7 @@ description: "Review GitHub pull requests and post precise inline suggested chan
 compatibility: Requires GitHub CLI gh access to the repository. The bundled diff-line helper runs with Node.js or Bun.
 allowed-tools: Bash(git *) Bash(gh *) Bash(node *) Bash(bun *)
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "github, pull-requests, review, suggestions"
 ---
 

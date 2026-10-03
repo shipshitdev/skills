@@ -8,7 +8,7 @@ description: >-
   documenting required configuration, or checking that .gitignore covers env
   files. Backs the /env command.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "environment, dotenv, secrets, configuration, scaffolding, validation"
   author: Ship Shit Dev
 when_to_use: "/env, set up environment variables, create .env.example, validate .env, missing env var, document environment configuration, env template, secrets in git"
