@@ -1,7 +1,7 @@
 ---
 name: ask-dev-loop
 description: Ask which Dev Loop skill or flow fits the current situation. A router over the flagship idea-to-ship path.
-disable-model-invocation: true
+user-invocable: false
 license: MIT
 metadata:
   version: "2.2.2"

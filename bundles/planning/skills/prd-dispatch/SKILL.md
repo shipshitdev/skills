@@ -5,8 +5,8 @@ metadata:
   version: "2.2.2"
   tags: "prd, planning, dispatcher, requirements, spec, orchestration"
   author: Ship Shit Dev
-when_to_use: "/prd, create a PRD, plan a feature, write a spec, validate a PRD, feature intake, discovery interview, scope this out, write up this feature"
-disable-model-invocation: true
+when_to_use: "/prd, prepare a feature issue, write a PRD, plan a feature, validate a PRD, discovery interview"
+user-invocable: false
 ---
 
 # PRD Dispatch

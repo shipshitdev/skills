@@ -117,7 +117,7 @@
       "name": "agent-dispatch",
       "source": "./skills/agent-dispatch",
       "version": "2.2.2",
-      "description": "Single front door for agent/subagent architecture, config, and setup. Parses a subcommand — audit, config, init, or route — and routes to the right engine: agent-architecture-audit (diagnose LLM wrapper and agent failures), agent-config-audit (audit and sync AI agent config files across workspaces), agent-folder-init (add or repair .agents/ project context for a repo), or setup-agent-routing (write a machine-readable routing block in CLAUDE.md/AGENTS.md). Backs the /agent command. Use when asked to audit an agent system, check config drift, initialize agent docs, or wire up routing, and the action must be picked from an argument like \"audit\", \"config\", \"init\", or \"route\"."
+      "description": "Router behind /agent. Parses audit, config, init, or route and delegates to the matching agent-setup engine without adding logic of its own."
     },
     {
       "name": "agent-folder-init",
@@ -324,8 +324,8 @@
       "description": "Audits the dependency supply chain: CVEs in packages, secrets about to be committed, lockfile integrity, and wires checks into CI as a merge gate. Not app-level security."
     },
     {
-      "name": "deploy",
-      "source": "./skills/deploy",
+      "name": "deploy-app",
+      "source": "./skills/deploy-app",
       "version": "2.2.2",
       "description": "Runs deployment workflows for web apps to staging or production. Use when the user says deploy, push to staging, ship it, or go live. Version or tag cuts are release."
     },
@@ -333,7 +333,7 @@
       "name": "deploy-dispatch",
       "source": "./skills/deploy-dispatch",
       "version": "2.2.2",
-      "description": "Single front door for deployment and infra provisioning. Parses a subcommand — app, compose, ec2, monitor, or devcontainer — and routes to the right engine: deploy (web app deployment to staging/production), deployment-composer (compose the smallest safe deployment workflow from repo signals), ec2-backend-deployer (CI/CD pipeline to EC2 via Docker and GitHub Actions), monitoring-setup (Sentry + Google Analytics for NestJS/Next.js), or devcontainer-setup (VS Code Dev Container scaffold). Backs the /deploy command. Use when asked to deploy, set up infra, configure monitoring, or provision a dev container, and the action must be picked from an argument like \"app\", \"compose\", \"ec2\", \"monitor\", or \"devcontainer\"."
+      "description": "Router behind /deploy. Parses app, compose, ec2, monitor, or devcontainer and delegates to the matching deployment engine without adding logic of its own."
     },
     {
       "name": "deployment-composer",
@@ -351,7 +351,7 @@
       "name": "design-dispatch",
       "source": "./skills/design-dispatch",
       "version": "2.2.2",
-      "description": "Single front door for UI/design review and refinement. Parses a subcommand — audit, clarify, critique, layout, polish, quieter, shape, or consistency — and routes to the right design engine: audit (technical quality checks with scored report), clarify (UX copy and microcopy improvement), critique (UX evaluation with quantitative scoring), layout (layout and spacing improvement), polish (final pre-ship quality pass), quieter (tone down visually aggressive designs), shape (UX/UI planning and design brief), or design-consistency-auditor (cross-app design system consistency audit). Backs the /design command. Use when asked to review, audit, polish, plan, or refine UI, and the action must be picked from an argument like \"audit\", \"critique\", \"polish\", or \"shape\"."
+      "description": "Router behind /design. Parses audit, clarify, critique, layout, polish, quieter, shape, or consistency and delegates to the matching design engine."
     },
     {
       "name": "deslop",
@@ -987,7 +987,7 @@
       "name": "skill-dispatch",
       "source": "./skills/skill-dispatch",
       "version": "2.2.2",
-      "description": "Single front door for authoring and maintaining agent skills. Parses a subcommand — create, capture, comply, or scout — and routes to the right engine: skill-creator (guide for creating or updating a skill), skill-capture (extract a workflow from conversation into a SKILL.md), skill-comply (measure whether agents follow a skill or rule), or skill-scout (search for existing skills before building new ones). Backs the /skill command. Use when asked to create a skill, capture a pattern, test compliance of a skill, or scout for an existing skill, and the action must be picked from an argument like \"create\", \"capture\", \"comply\", or \"scout\"."
+      "description": "Router behind /skill. Parses create, capture, comply, or scout and delegates to the matching skill-authoring engine without adding logic of its own."
     },
     {
       "name": "skill-scout",

@@ -46,7 +46,7 @@ Delegates To:
 
 - Recommend `landing-page-vercel` for single static landing pages
 - `project-init-orchestrator` / `npx @shipshitdev/v0` for full product repos
-- `deployment-composer` or `deploy` for Vercel deployment
+- `deployment-composer` or `deploy-app` for Vercel deployment
 
 ## Concept
 

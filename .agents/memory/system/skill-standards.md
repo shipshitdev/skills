@@ -178,6 +178,7 @@ to edit files, send messages, publish, deploy, or spend beyond the user's reques
 |------|-------------|-------------|
 | **Explicit entry point** | `disable-model-invocation: true` | The human selects the workflow. Keep advisory maps and open-ended session starters here. |
 | **Reusable engine** | omit `disable-model-invocation` | A user or another workflow may invoke it within the authorized task. Its body owns action gates. |
+| **Command router** | `user-invocable: false`, omit `disable-model-invocation` | Behind a `commands/*.md` front door (`*-dispatch`, `ask-dev-loop`). The command is the user entry and is itself user-only; the model must be able to load the router the command names. |
 
 **Execution routers** such as `/test run` select a declared engine and pass the
 requested mode, target, authorized actions, and restrictions. Existing explicit

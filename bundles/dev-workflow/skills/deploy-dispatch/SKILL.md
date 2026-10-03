@@ -1,26 +1,17 @@
 ---
 name: deploy-dispatch
-description: >-
-  Single front door for deployment and infra provisioning. Parses a subcommand —
-  app, compose, ec2, monitor, or devcontainer — and routes to the right engine:
-  deploy (web app deployment to staging/production), deployment-composer (compose
-  the smallest safe deployment workflow from repo signals), ec2-backend-deployer
-  (CI/CD pipeline to EC2 via Docker and GitHub Actions), monitoring-setup (Sentry
-  + Google Analytics for NestJS/Next.js), or devcontainer-setup (VS Code Dev
-  Container scaffold). Backs the /deploy command. Use when asked to deploy, set up
-  infra, configure monitoring, or provision a dev container, and the action must be
-  picked from an argument like "app", "compose", "ec2", "monitor", or "devcontainer".
+description: Router behind /deploy. Parses app, compose, ec2, monitor, or devcontainer and delegates to the matching deployment engine without adding logic of its own.
 metadata:
   version: "2.2.2"
   tags: "deployment, dispatcher, infra, ec2, docker, devops, orchestration"
   author: Ship Shit Dev
-when_to_use: "/deploy, deploy the app, deploy to staging, deploy to production, set up EC2 deployment, configure monitoring, set up devcontainer, compose deployment workflow"
-disable-model-invocation: true
+when_to_use: "/deploy, deploy the app, compose a deploy workflow, EC2 deploy setup, monitoring setup, devcontainer"
+user-invocable: false
 ---
 
 # Deploy Dispatch
 
-Router behind `/deploy`. One job: turn a subcommand into the right deployment or infra action and delegate. Contains no deployment logic of its own — app deployments live in `deploy` and `deployment-composer`, EC2 pipeline wiring in `ec2-backend-deployer`, observability in `monitoring-setup`, and container dev environments in `devcontainer-setup`.
+Router behind `/deploy`. One job: turn a subcommand into the right deployment or infra action and delegate. Contains no deployment logic of its own — app deployments live in `deploy-app` and `deployment-composer`, EC2 pipeline wiring in `ec2-backend-deployer`, observability in `monitoring-setup`, and container dev environments in `devcontainer-setup`.
 
 ## Composition Boundary
 
@@ -61,7 +52,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `deploy` for `app` (web app deployment to staging/production).
+- `deploy-app` for `app` (web app deployment to staging/production).
 - `deployment-composer` for `compose` (repo-signal-driven deployment workflow).
 - `ec2-backend-deployer` for `ec2` (Docker + GitHub Actions + Tailscale pipeline).
 - `monitoring-setup` for `monitor` (Sentry error tracking + Google Analytics).
@@ -74,7 +65,7 @@ Resolve the raw argument into a `mode`.
 | Argument | Mode | Delegates to |
 |---|---|---|
 | _(empty)_ | `status` | none — print domain overview + Usage block |
-| `app` | `app` | `deploy` |
+| `app` | `app` | `deploy-app` |
 | `compose` | `compose` | `deployment-composer` |
 | `ec2` | `ec2` | `ec2-backend-deployer` |
 | `monitor` | `monitor` | `monitoring-setup` |
@@ -88,7 +79,7 @@ the Usage block — do not guess.
 - **status →** print a short domain overview (e.g. available deployment targets
   and any detectable deploy context such as provider config or CI presence), then
   show the Usage block. Mutate nothing.
-- **app →** apply the `deploy` skill.
+- **app →** apply the `deploy-app` skill.
 - **compose →** apply the `deployment-composer` skill.
 - **ec2 →** apply the `ec2-backend-deployer` skill.
 - **monitor →** apply the `monitoring-setup` skill.

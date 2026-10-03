@@ -25,7 +25,7 @@ CI/CD pipeline, configure production monitoring, or scaffold a dev container.
 
 ## Steps
 
-- **`app`** — the `deploy` skill: run deployment workflows for React, Next.js, or
+- **`app`** — the `deploy-app` skill: run deployment workflows for React, Next.js, or
   NestJS applications to preview, staging, or production, including pre-deploy
   gates, verification, and rollback guidance.
 - **`compose`** — the `deployment-composer` skill: inspect the repository's actual

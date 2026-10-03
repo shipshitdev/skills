@@ -1,5 +1,5 @@
 {
-  "name": "deploy",
+  "name": "deploy-app",
   "version": "2.2.2",
   "description": "Streamline deployment workflows for web applications to staging and production",
   "author": {
