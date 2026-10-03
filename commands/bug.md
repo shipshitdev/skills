@@ -1,3 +1,9 @@
+---
+description: "Draft a structured bug report, preview it, and file it as a GitHub Bug issue after you confirm."
+argument-hint: "[draft] [description]"
+disable-model-invocation: true
+---
+
 # Bug - File a GitHub Bug Issue
 
 Turn a description of something broken into a GitHub issue of type **Bug**.
@@ -11,6 +17,8 @@ typed `Bug` where the repo supports issue types, otherwise labelled `bug`.
 /bug                 # draft from the current context / recent error, preview, then file
 /bug draft <desc>    # draft and print the report only — create nothing
 ```
+
+`/bug help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

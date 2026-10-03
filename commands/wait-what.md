@@ -1,3 +1,8 @@
+---
+description: "Re-pitch the last message in plain English using CONTEXT.md vocabulary."
+disable-model-invocation: true
+---
+
 # Wait What - Re-pitch the last message
 
 The last message did not land. Re-pitch it in plain English using `CONTEXT.md`
@@ -8,6 +13,8 @@ vocabulary.
 ```bash
 /wait-what
 ```
+
+`/wait-what help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

@@ -1,3 +1,9 @@
+---
+description: "Security audit of the app and API, or of the dependency supply chain."
+argument-hint: "[deps [ci]]"
+disable-model-invocation: true
+---
+
 # Scan - Run a Security Audit
 
 Run a structured security audit of the current project — app and API
@@ -11,6 +17,8 @@ hardening — or focus on the dependency supply chain.
 /scan deps         # dependency supply chain: CVEs, secrets about to leak, lockfile integrity
 /scan deps ci      # wire the dependency + secrets checks into CI as a merge gate
 ```
+
+`/scan help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

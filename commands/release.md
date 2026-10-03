@@ -1,3 +1,9 @@
+---
+description: "Cut a release from a green trunk: prove checks, derive semver and notes, publish after you confirm."
+argument-hint: "[gates|notes|cut [patch|minor|major|vX.Y.Z]]"
+disable-model-invocation: true
+---
+
 # Release - Cut a Release From a Green Trunk
 
 One command from "is master green?" to a published, deployed release. Trunk-based:
@@ -13,6 +19,8 @@ environments driven by CI/CD and tags, not branch promotions.
 /release cut                 # infer the next semver, preview, then publish after confirmation
 /release cut patch|minor|major|vX.Y.Z   # force the bump or version
 ```
+
+`/release help` prints this Usage block and stops without running anything.
 
 Branch and worktree pruning is not a release step — that's `/cleanup`.
 
