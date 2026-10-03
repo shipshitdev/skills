@@ -1,6 +1,7 @@
 ---
 name: weekly-review
 description: Coordinates a weekly engineering review of board accuracy, recent code changes, operational health and scoped cleanup. Use for a recurring repo health check.
+argument-hint: "[7d|since <SHA>] [--report-only|--fix]"
 compatibility: Requires repository history and access to the selected board; operational checks depend on existing service connections.
 metadata:
   version: "2.2.2"
