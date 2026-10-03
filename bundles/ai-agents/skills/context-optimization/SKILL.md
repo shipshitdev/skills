@@ -1,10 +1,6 @@
 ---
 name: context-optimization
-description: >-
-  Improves context efficiency — budgets, observation masking, KV-cache
-  strategy, partitioning, retrieval scoping — and explains context-window
-  anatomy and attention mechanics behind those choices. Use when token cost or
-  context budget constrains a task, or to reason about how context works.
+description: "Improves context efficiency: budgets, observation masking, KV-cache strategy, partitioning, retrieval scoping. Use when token cost or context budget constrains a task."
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md
@@ -14,6 +10,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "context, optimization, agents"
+when_to_use: "context window anatomy, attention"
 ---
 # Context Optimization Techniques
 

@@ -52,6 +52,16 @@ release automation synchronize this automatically. `version:check` verifies
 alignment rather than requiring a separate version bump for instruction edits.
 Installed metadata updates preserve local behavior and owned customization.
 
+### Listing budget (2026-10-03)
+
+Model-invoked description + `when_to_use` load into every session, and the
+catalog's ~54.6k chars overflowed Claude Code's listing so many skills showed no
+description. Vincent approved a catalog-wide pass: descriptions ≤ 180 chars
+(validator warns > 200), `when_to_use` ≤ 80 (warns > 120) with only new trigger
+words — 54.6k → 31.4k chars. The repeated Authorized Scope and Delivery
+Readiness paragraphs were shortened in place; skills stay self-contained because
+they install individually and cannot share a reference file.
+
 ### Overlap merges (2026-10-03)
 
 Vincent approved evidence-based merges after a read-only cluster audit (#168):

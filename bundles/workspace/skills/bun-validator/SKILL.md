@@ -1,9 +1,10 @@
 ---
 name: bun-validator
-description: Validate Bun workspace configuration and detect common monorepo issues. Ensures proper workspace setup, dependency catalogs, isolated installs, and Bun 1.3+ best practices. Use when setting up a Bun monorepo, before adding workspace dependencies, auditing an existing Bun workspace, or validating package.json in CI.
+description: "Validates Bun workspace config and monorepo setup: catalogs, isolated installs, Bun 1.3+ practices. Use when setting up or auditing a Bun monorepo or adding workspace dependencies."
 metadata:
   version: "2.2.2"
   tags: "bun, monorepo, workspace, validation, package-manager"
+when_to_use: "package.json in CI"
 ---
 
 # Bun Validator

@@ -1,6 +1,6 @@
 ---
 name: multi-agent-patterns
-description: Design multi-agent architectures for complex tasks. Use when single-agent context limits are exceeded, when tasks decompose naturally into subtasks, or when specializing agents improves quality.
+description: Designs multi-agent architectures that split work across agents to isolate context. Use when one agent's context limit is exceeded or subtasks decompose in parallel.
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/multi-agent-patterns/SKILL.md
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "multi-agent, architecture, agents"
+when_to_use: "orchestrator, sub-agents, supervisor pattern"
 ---
 # Multi-Agent Architecture Patterns
 

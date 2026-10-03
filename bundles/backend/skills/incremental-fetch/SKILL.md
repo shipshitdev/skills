@@ -1,14 +1,10 @@
 ---
 name: incremental-fetch
-description: >-
-  Guides construction of resilient data ingestion pipelines from paginated APIs. Activates on:
-  "ingest data from API", "pull tweets", "fetch historical data", "sync from X",
-  "build a data pipeline", "fetch without re-downloading", "resume the download",
-  "backfill older data". NOT for: simple one-shot API calls, websocket/streaming
-  connections, file downloads, or APIs without pagination.
+description: Builds resilient data ingestion pipelines from paginated APIs using two watermarks so progress is never lost. Not for one-shot calls, websockets, or file downloads.
 metadata:
   version: "2.2.2"
   tags: "data-ingestion, api, pagination"
+when_to_use: "backfill older data, resume the download, pull tweets, sync from X"
 ---
 
 # Incremental Fetch

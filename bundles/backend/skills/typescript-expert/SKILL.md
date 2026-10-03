@@ -1,11 +1,6 @@
 ---
 name: typescript-expert
-description: >-
-  Resolves TypeScript and JavaScript problems across type-level programming,
-  performance, monorepo management, migration, and modern tooling. Invoke when
-  diagnosing "type instantiation excessively deep" errors, migrating JS to TS,
-  configuring strict tsconfig, debugging module resolution, or choosing between
-  Biome/ESLint/Turborepo/Nx.
+description: "Solves TypeScript/JS problems: type-level programming, deep-instantiation errors, strict tsconfig, module resolution, JS-to-TS migration, Biome/ESLint/Nx tooling choices."
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
@@ -14,6 +9,7 @@ metadata:
   date_added: '2026-02-27'
   version: "2.2.2"
   tags: "typescript, javascript, tooling"
+when_to_use: "type performance, monorepo config"
 ---
 
 # TypeScript Expert

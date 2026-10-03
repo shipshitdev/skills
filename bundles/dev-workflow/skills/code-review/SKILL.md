@@ -1,19 +1,12 @@
 ---
 name: code-review
-description: >-
-  Correctness, security, and spec-fidelity gate for incoming pull requests.
-  Auto-invoked when reviewing a diff, evaluating a PR, running /code-review at
-  any effort level, or asked "is this safe to merge?" Covers bugs, TypeScript
-  hygiene, security, database safety, test existence, devex regressions,
-  feature-flag leaks, and whether the diff matches the originating issue/spec.
-  Multi-PR report-only review routes through review-dispatch; non-serial queue
-  draining is exposed only through exact /merge force.
+description: Reviews a PR or diff for correctness, security, and spec fidelity, including TypeScript, database safety, tests, and flag leaks. Use for /code-review or is this safe to merge.
 metadata:
   version: "2.2.2"
   tags: "code-review, correctness, security, testing, devex, feature-flags, spec"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)
-when_to_use: "review this PR, is this safe to merge, /code-review, check the diff, look at my changes, review my code, code review"
+when_to_use: "check the diff, review my code"
 ---
 
 # Code Review

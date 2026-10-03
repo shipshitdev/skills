@@ -1,6 +1,6 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, says "grill me" (optionally against the docs), or another skill needs the interview primitive.
+description: Grills the user relentlessly about a plan, decision, or idea until every branch of the design tree is resolved. Use when stress-testing thinking or when told grill me.
 license: MIT
 metadata:
   version: "2.2.2"
@@ -12,6 +12,7 @@ metadata:
   upstream_commit: 8b78b531ab96
   last_synced: "2026-08-14"
   license: MIT
+when_to_use: "grill me, interview me"
 ---
 
 # Grilling

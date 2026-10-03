@@ -1,14 +1,6 @@
 ---
 name: full-code-review
-description: >-
-  Fan-out PR review across three parallel dimension agents (structural, security,
-  devex/flag-hygiene), adversarially verify every finding, and synthesize a
-  single prioritized verdict via a strongest-tier judge. Use when asked for a full,
-  comprehensive, or end-to-end review of a branch or PR — after /code-review
-  passes correctness, this skill covers the orthogonal dimensions it does not:
-  security depth, structural health, devex regressions, and feature-flag hygiene.
-  In retro mode (a commit log is passed in) it adds a cross-commit lens and emits a
-  prioritized backlog instead of a merge verdict.
+description: Fans out PR review to parallel structural, security, and devex/flag-hygiene agents, verifies each finding, and issues one prioritized verdict. Use for a full or end-to-end review.
 compatibility: Requires gh CLI and git for PR diff fetching.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -17,7 +9,7 @@ metadata:
   tags: "code-review, security, structural, devex, orchestration, pr-gate"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)
-when_to_use: "full code review, comprehensive review, end-to-end review, orchestrated review, production readiness review, deep PR review, multi-dimension review"
+when_to_use: "comprehensive review, production readiness review"
 ---
 
 # Full Code Review

@@ -1,15 +1,10 @@
 ---
 name: react-hook-form
-description: >-
-  Provides 41 prioritized performance rules for React Hook Form across form
-  configuration, field subscription, controlled components, validation, and
-  field arrays. Invoke when writing or reviewing forms with useForm, useWatch,
-  useController, or useFieldArray; integrating shadcn/MUI with Controller; or
-  diagnosing unexpected re-renders in RHF-based forms. Covers client-side
-  validation only — does not cover React Server Actions or useActionState.
+description: Applies 41 performance rules for React Hook Form — useForm, useWatch, useController, useFieldArray, Controller. Use when writing RHF forms or fixing re-renders. Client-side only.
 metadata:
   version: "2.2.2"
   tags: "react, forms, performance"
+when_to_use: "RHF, form re-renders, field arrays"
 ---
 
 # React Hook Form Best Practices

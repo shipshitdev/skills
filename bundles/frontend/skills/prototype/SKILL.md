@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.
+description: Builds a throwaway prototype to answer one design question about state logic or UI look. Use when sanity-checking a state model or exploring what a UI should look like.
 license: MIT
 metadata:
   version: "2.2.2"
@@ -12,6 +12,7 @@ metadata:
   upstream_commit: 8b78b531ab96
   last_synced: "2026-08-14"
   license: MIT
+when_to_use: "spike, mock up, try variants, throwaway"
 ---
 
 # Prototype

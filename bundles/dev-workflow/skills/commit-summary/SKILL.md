@@ -1,6 +1,6 @@
 ---
 name: commit-summary
-description: "Generate Conventional Commit messages from staged or unstaged git changes, split unrelated changes into logical commits, detect breaking changes, and optionally create commits after approval. Use when writing commit messages, preparing commits, or committing local work."
+description: Writes Conventional Commit messages from git changes, splits unrelated changes, flags breaking changes, and commits after approval. Use when writing messages or committing work.
 compatibility: Requires git.
 allowed-tools: Bash(git *)
 metadata:
@@ -8,6 +8,7 @@ metadata:
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
   version: "2.2.2"
   tags: "git, workflow, commits, productivity"
+when_to_use: "staged changes, split commits"
 ---
 
 # Commit Summary
@@ -16,11 +17,10 @@ Generate accurate Conventional Commits from real git diffs.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

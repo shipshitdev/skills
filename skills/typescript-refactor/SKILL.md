@@ -1,9 +1,10 @@
 ---
 name: typescript-refactor
-description: TypeScript refactoring and modernization guidelines from a principal specialist perspective. This skill should be used when refactoring, reviewing, or modernizing TypeScript code to ensure type safety, compiler performance, and idiomatic patterns. Triggers on tasks involving TypeScript type architecture, narrowing, generics, error handling, or migration to modern TypeScript features.
+description: "Refactors and modernizes TypeScript for type safety: discriminated unions, narrowing, generics, error handling, modern 4.x-5.x features, compiler speed. Use when reviewing TS."
 metadata:
   version: "2.2.2"
   tags: "typescript, refactoring, modernization"
+when_to_use: "satisfies, branded types, remove as casts"
 ---
 
 # TypeScript Refactor Best Practices

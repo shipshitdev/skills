@@ -1,6 +1,6 @@
 ---
 name: github-pr-publish
-description: "Create, update, and publish GitHub pull requests with a clean title, durable body, branch hygiene, validation notes, and safe push/PR gates. Use when opening a PR, updating a PR description, preparing a draft PR, or publishing local changes to GitHub."
+description: Creates, updates, and publishes GitHub pull requests with clean titles, durable bodies, branch hygiene, and safe push gates. Use when opening a PR or publishing local changes.
 compatibility: Requires git and GitHub CLI gh access to the target repository.
 allowed-tools: Bash(git *) Bash(gh *)
 metadata:
@@ -8,36 +8,28 @@ metadata:
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
   version: "2.2.2"
   tags: "github, pull-requests, publishing"
+when_to_use: "draft PR, update PR description"
 ---
 
 # GitHub PR Publish
 
 ## Delivery Readiness
 
-For every implementation PR, resolve the installed `executing-plans` skill and
-read its `references/delivery-gate.md` before declaring merge-ready, merging, or
-reporting Done. This is the canonical delivery contract; local menus and playbook
-shortcuts do not weaken it.
-
-Require acceptance evidence for the complete promised outcome, independent review
-from a different lab than every implementation contributor, a PASS tied to the
-current head, resolved findings, and green required CI from live repository policy.
-A different model from the same lab is not an independent cross-provider review.
-Missing reviewer capacity, credentials, check discovery, or evidence leaves a
-visible blocker. A new implementation commit invalidates previous review and CI.
-
-PR publication and a ready-for-review flag do not imply merge readiness. Merge only
-within existing authorization and bind it to the verified head. Done additionally
-requires a verified merge and the issue's required deployment, migration, enablement,
-and end-to-end smoke evidence. Partial work references its epic without closing it.
+For every implementation PR, read the installed `executing-plans` skill's
+`references/delivery-gate.md` before declaring merge-ready, merging, or reporting
+Done; nothing here weakens it. In short: acceptance evidence for the full outcome,
+a PASS from a reviewer in a different lab than every contributor, tied to the
+current head, and green required CI. Missing evidence stays a visible blocker; a
+new commit invalidates earlier review and CI. Merge only within existing
+authorization, bound to the verified head. Done also needs merge and the issue's
+required deployment evidence.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

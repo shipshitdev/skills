@@ -1,9 +1,10 @@
 ---
 name: docs
-description: Creates clear, concise technical documentation for software projects, runbooks, and developer guides. Use when writing or updating a README, guide, runbook, API reference, setup instructions, or troubleshooting notes.
+description: Writes or updates README files, guides, runbooks, API references, and setup docs matching the repo's conventions. Use when documenting software projects.
 metadata:
   version: "2.2.2"
   tags: "documentation, technical-writing, runbooks"
+when_to_use: "troubleshooting notes, onboarding docs"
 ---
 
 # Docs Writer

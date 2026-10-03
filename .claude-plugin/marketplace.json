@@ -87,31 +87,31 @@
       "name": "accessibility",
       "source": "./skills/accessibility",
       "version": "2.2.2",
-      "description": "Applies WCAG 2.1 AA to web UI work and fixes what fails — semantic HTML, ARIA roles and states, keyboard access, focus management, contrast ratios, and screen-reader verification — while a component is being built or reviewed. Use when the user names accessibility, a11y, WCAG, ARIA, keyboard navigation, focus traps, screen readers, or contrast. For a scored multi-dimension quality report, use `audit`; for design-token consistency, use `design-consistency-auditor`."
+      "description": "Applies WCAG 2.1 AA to web UI and fixes failures. Use when building or reviewing components for a11y, ARIA, keyboard navigation, focus traps, or contrast."
     },
     {
       "name": "advanced-evaluation",
       "source": "./skills/advanced-evaluation",
       "version": "2.2.2",
-      "description": "Design and operate LLM-as-a-Judge evaluation systems using direct scoring, pairwise comparison, rubric calibration, evaluator bias mitigation, confidence scoring, and automated quality assessment. Use when building LLM-as-judge systems, comparing model responses, calibrating rubrics, debugging inconsistent evaluations, or designing A/B tests for prompt or model changes."
+      "description": "Designs LLM-as-a-Judge evaluation systems with direct scoring, pairwise comparison, and rubric calibration. Use when comparing model outputs or debugging inconsistent evals."
     },
     {
       "name": "agent-architecture-audit",
       "source": "./skills/agent-architecture-audit",
       "version": "2.2.2",
-      "description": "Audit LLM and agent applications for wrapper regressions, prompt or memory contamination, tool discipline failures, hidden repair loops, and output rendering corruption. Use before shipping agent features or when an agent works in a direct model call but fails inside the product."
+      "description": "Audits LLM agent apps for wrapper regressions, prompt or memory contamination, tool misuse, and hidden retry loops. Use when an agent fails in-product but works as a direct call."
     },
     {
       "name": "agent-browser",
       "source": "./skills/agent-browser",
       "version": "2.2.2",
-      "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, test web applications, or extract information from web pages."
+      "description": "Automates a browser to navigate sites, fill forms, take screenshots, test web apps, and extract page data. Use when a task needs real page interaction."
     },
     {
       "name": "agent-config-audit",
       "source": "./skills/agent-config-audit",
       "version": "2.2.2",
-      "description": "Audit AI agent instruction files (AGENTS.override.md, AGENTS.md, configured fallbacks, CLAUDE.md, hooks, and settings) across workspaces in read-only report mode. Use when agent configs drift, rules duplicate, files go stale, or after workspace restructuring; apply fixes only when explicitly requested."
+      "description": "Audits agent instruction files (AGENTS.md, CLAUDE.md, hooks, settings) across workspaces, report-only. Use when configs drift, rules duplicate, or files go stale."
     },
     {
       "name": "agent-dispatch",
@@ -123,43 +123,43 @@
       "name": "agent-folder-init",
       "source": "./skills/agent-folder-init",
       "version": "2.2.2",
-      "description": "Add or repair .agents/ project context for an existing repo. Use for AI agent documentation, session tracking, task management, and coding standards; do not use as the primary new-product scaffold."
+      "description": "Adds or repairs .agents/ project context in an existing repo: docs, session tracking, tasks, coding standards. Not for scaffolding a new product."
     },
     {
       "name": "ai-agent-cost-optimizer",
       "source": "./skills/ai-agent-cost-optimizer",
       "version": "2.2.2",
-      "description": "Audit and reduce AI agent token and inference spend through context discipline, prompt caching, model routing, batching, and workflow capture. Use when discussing AI coding bills, token waste, model selection, prompt caching, or agent cost optimization."
+      "description": "Audits and cuts AI agent token and inference spend via context discipline, prompt caching, model routing, and batching. Use when AI coding bills or token waste are too high."
     },
     {
       "name": "ai-loading-ux",
       "source": "./skills/ai-loading-ux",
       "version": "2.2.2",
-      "description": "Design AI loading, thinking, and progress indicator UX. Use when explicitly asked to improve AI waiting states, add thinking indicators, or design loading UX for AI interfaces. Covers reasoning display (chain-of-thought), progress steps, streaming states, and the \"elevator mirror effect\" for reducing perceived wait time."
+      "description": "Designs AI waiting-state UX: thinking indicators, reasoning display, progress steps, and streaming states. Use when asked to improve loading or perceived wait in AI interfaces."
     },
     {
       "name": "api-design-expert",
       "source": "./skills/api-design-expert",
       "version": "2.2.2",
-      "description": "Expert in RESTful API design, OpenAPI/Swagger documentation, versioning, error handling, and API best practices for NestJS applications. Use when designing API endpoints, building RESTful APIs, writing OpenAPI/Swagger docs, implementing versioning, or designing error responses and DTOs."
+      "description": "Designs RESTful APIs for NestJS: endpoints, OpenAPI/Swagger docs, versioning, error responses, DTOs, and pagination. Use when designing or documenting API endpoints."
     },
     {
       "name": "architect",
       "source": "./skills/architect",
       "version": "2.2.2",
-      "description": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for architect this, design this, or non-trivial work where jumping to code would lock in the wrong shape."
+      "description": "Sketches types, signatures, and module structure before code, then guides implementation. Use for architect this, or non-trivial work where coding first locks in the wrong shape."
     },
     {
       "name": "arena",
       "source": "./skills/arena",
       "version": "2.2.2",
-      "description": "Spawn N parallel candidates at the same task, pick a base, and graft the strongest parts of the losers into it. Use for arena this, throw it in the arena, or when one attempt at a non-trivial artifact would lock in the wrong shape."
+      "description": "Runs N parallel candidates at the same task, picks a base, and grafts the best parts of the others into it. Use for arena this, or when one attempt would lock in the wrong shape."
     },
     {
       "name": "artifacts-builder",
       "source": "./skills/artifacts-builder",
       "version": "2.2.2",
-      "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, @agenticindiedev/ui). Use for complex artifacts requiring state management or shared UI components - not for simple single-file HTML/JSX artifacts."
+      "description": "Builds multi-component claude.ai HTML artifacts with React, Tailwind, and shared UI. Use for complex artifacts needing state management, not simple single-file HTML."
     },
     {
       "name": "ask-dev-loop",
@@ -171,31 +171,31 @@
       "name": "audit",
       "source": "./skills/audit",
       "version": "2.2.2",
-      "description": "Sweeps implemented frontend code across five dimensions at once — accessibility, performance, theming, responsive design, and anti-patterns — scoring each 0-4 and emitting a single P0-P3 report with a prioritized plan. Reports only; it changes no code. Reach for it as the broad first pass when no one dimension has been named. For a deep WCAG conformance pass, use `accessibility`; for design-token drift, use `design-consistency-auditor`."
+      "description": "Sweeps frontend code across accessibility, performance, theming, responsive design, and anti-patterns, scoring each 0-4 in one P0-P3 report. Report only. Use as a broad first pass."
     },
     {
       "name": "aws-infrastructure",
       "source": "./skills/aws-infrastructure",
       "version": "2.2.2",
-      "description": "Expert in AWS infrastructure setup including EC2, VPC, security groups, Application Load Balancers, Route53 DNS, and SSL/TLS certificates. Use this skill for AWS infrastructure configuration and deployment."
+      "description": "Sets up AWS infrastructure: EC2, VPC, security groups, load balancers, Route53 DNS, and ACM certificates. Use when configuring or deploying AWS resources."
     },
     {
       "name": "biome-validator",
       "source": "./skills/biome-validator",
       "version": "2.2.2",
-      "description": "Validate Biome 2.3+ configuration and detect outdated patterns. Ensures proper schema version, domains, assists, and recommended rules. Use before any linting work or when auditing existing projects."
+      "description": "Validates Biome 2.3+ config and flags outdated patterns such as schema version, domains, and recommended rules. Use before linting work or when auditing biome.json."
     },
     {
       "name": "blast-radius",
       "source": "./skills/blast-radius",
       "version": "2.2.2",
-      "description": "Find what a small-looking change could break somewhere else, and prove the one fact it is safe because of by running real code. Use for blast radius of X, what could this break, or reviewing a small diff you do not trust."
+      "description": "Finds what a small change could break elsewhere and proves it with real code. Use for blast radius of X, what could this break, or a small diff you do not trust."
     },
     {
       "name": "board-sync",
       "source": "./skills/board-sync",
       "version": "2.2.2",
-      "description": "Reconciles a project board with current work and delivery evidence, reports incomplete coverage and metadata gaps, and applies only approved provider-supported field changes. Use when auditing board drift, reviewing blocked work, or assessing upcoming delivery."
+      "description": "Reconciles a project board with current work and delivery evidence, reporting gaps; applies only approved field changes. Use for board drift or blocked-work review."
     },
     {
       "name": "bug",
@@ -207,31 +207,31 @@
       "name": "bun-validator",
       "source": "./skills/bun-validator",
       "version": "2.2.2",
-      "description": "Validate Bun workspace configuration and detect common monorepo issues. Ensures proper workspace setup, dependency catalogs, isolated installs, and Bun 1.3+ best practices. Use when setting up a Bun monorepo, before adding workspace dependencies, auditing an existing Bun workspace, or validating package.json in CI."
+      "description": "Validates Bun workspace config and monorepo setup: catalogs, isolated installs, Bun 1.3+ practices. Use when setting up or auditing a Bun monorepo or adding workspace dependencies."
     },
     {
       "name": "changelog-generator",
       "source": "./skills/changelog-generator",
       "version": "2.2.2",
-      "description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation. Use when preparing release notes, summarizing product updates, or turning git commits into customer-facing changelog entries."
+      "description": "Turns git commit history into categorized, customer-friendly changelogs and release notes. Use when preparing release notes or summarizing product updates."
     },
     {
       "name": "clarify",
       "source": "./skills/clarify",
       "version": "2.2.2",
-      "description": "Improve unclear UX copy, error messages, microcopy, labels, and instructions to make interfaces easier to understand. Use when the user mentions confusing text, unclear labels, bad error messages, hard-to-follow instructions, or wanting better UX writing."
+      "description": "Improves unclear UX copy, error messages, microcopy, labels, and instructions. Use when text is confusing or the user wants better UX writing."
     },
     {
       "name": "clerk-validator",
       "source": "./skills/clerk-validator",
       "version": "2.2.2",
-      "description": "Validate Clerk authentication configuration and detect deprecated patterns. Ensures proper proxy.ts usage (Next.js 16), ClerkProvider setup, and modern auth patterns. Use before any Clerk work or when auditing existing auth implementations."
+      "description": "Validates Clerk auth config and flags deprecated patterns: proxy.ts on Next.js 16, ClerkProvider setup. Use before Clerk work or when auditing an auth implementation."
     },
     {
       "name": "code-review",
       "source": "./skills/code-review",
       "version": "2.2.2",
-      "description": "Correctness, security, and spec-fidelity gate for incoming pull requests. Auto-invoked when reviewing a diff, evaluating a PR, running /code-review at any effort level, or asked \"is this safe to merge?\" Covers bugs, TypeScript hygiene, security, database safety, test existence, devex regressions, feature-flag leaks, and whether the diff matches the originating issue/spec. Multi-PR report-only review routes through review-dispatch; non-serial queue draining is exposed only through exact /merge force."
+      "description": "Reviews a PR or diff for correctness, security, and spec fidelity, including TypeScript, database safety, tests, and flag leaks. Use for /code-review or is this safe to merge."
     },
     {
       "name": "codebase-advisor",
@@ -243,13 +243,13 @@
       "name": "codebase-design",
       "source": "./skills/codebase-design",
       "version": "2.2.2",
-      "description": "Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary."
+      "description": "Supplies shared deep-module vocabulary. Use when designing or improving a module interface, placing a seam, or making code more testable or AI-navigable."
     },
     {
       "name": "codex-image-gen",
       "source": "./skills/codex-image-gen",
       "version": "2.2.2",
-      "description": "Generate raster images (icons, illustrations, textures, app icons) from a text prompt by driving the Codex CLI's image tool, then extracting the finished PNG from the Codex session rollout. Use when an agent needs a real generated image and has no native image-generation tool. Requires the `codex` CLI, logged in."
+      "description": "Generates raster images (icons, illustrations, textures) via the logged-in Codex CLI image tool. Use when an agent needs a real image but has no native image generation."
     },
     {
       "name": "comment-mode",
@@ -261,73 +261,73 @@
       "name": "commit-summary",
       "source": "./skills/commit-summary",
       "version": "2.2.2",
-      "description": "Generate Conventional Commit messages from staged or unstaged git changes, split unrelated changes into logical commits, detect breaking changes, and optionally create commits after approval. Use when writing commit messages, preparing commits, or committing local work."
+      "description": "Writes Conventional Commit messages from git changes, splits unrelated changes, flags breaking changes, and commits after approval. Use when writing messages or committing work."
     },
     {
       "name": "component-library",
       "source": "./skills/component-library",
       "version": "2.2.2",
-      "description": "Expert React/Next.js component architect specializing in creating consistent, reusable, and maintainable components for monorepo projects. Use when creating or refactoring UI components, reviewing component architecture, or setting up shared component patterns in a monorepo."
+      "description": "Guides React/Next.js component architecture for monorepos: naming, reuse, shared patterns. Use when creating or refactoring UI components or reviewing component structure."
     },
     {
       "name": "content-script-developer",
       "source": "./skills/content-script-developer",
       "version": "2.2.2",
-      "description": "Expert in browser extension content scripts, DOM integration, and safe page augmentation across modern web apps. Use when building or updating a browser-extension content script, injecting UI into third-party pages, or handling SPA navigation and dynamic DOM changes."
+      "description": "Builds browser-extension content scripts: DOM integration, injecting UI into third-party pages, SPA navigation, dynamic DOM changes. Use when writing or updating a content script."
     },
     {
       "name": "context-degradation",
       "source": "./skills/context-degradation",
       "version": "2.2.2",
-      "description": "Recognize, diagnose, and mitigate patterns of context degradation in agent systems. Use when context grows large, agent performance degrades unexpectedly, or debugging agent failures."
+      "description": "Diagnoses and mitigates context degradation in agents: lost-in-middle, poisoning, distraction, confusion, clash. Use when context grows large or agent quality drops unexpectedly."
     },
     {
       "name": "context-engineering",
       "source": "./skills/context-engineering",
       "version": "2.2.2",
-      "description": "Supplementary context protocol for agents executing in a repo that has a CLAUDE.md / AGENTS.md (or equivalent config). Use to make an execution agent read project conventions first, treat inputs by trust level, surface plan-vs-convention conflicts instead of silently picking a side, and reuse existing patterns before writing new code."
+      "description": "Makes execution agents read CLAUDE.md/AGENTS.md first, flag plan-vs-convention conflicts, and reuse existing patterns. Use when executing a plan in a repo with agent config."
     },
     {
       "name": "context-optimization",
       "source": "./skills/context-optimization",
       "version": "2.2.2",
-      "description": "Improves context efficiency — budgets, observation masking, KV-cache strategy, partitioning, retrieval scoping — and explains context-window anatomy and attention mechanics behind those choices. Use when token cost or context budget constrains a task, or to reason about how context works."
+      "description": "Improves context efficiency: budgets, observation masking, KV-cache strategy, partitioning, retrieval scoping. Use when token cost or context budget constrains a task."
     },
     {
       "name": "create-verification-skill",
       "source": "./skills/create-verification-skill",
       "version": "2.2.2",
-      "description": "Generate a project-local verification skill that drives the app the way a user does. Use for create-verification-skill, make a verify skill for this repo, or when a project has no scripted way to prove UI, CLI, or service behavior."
+      "description": "Generates a project-local verification skill that drives the app like a user. Use when a repo has no scripted way to prove UI, CLI, or service behavior."
     },
     {
       "name": "critique",
       "source": "./skills/critique",
       "version": "2.2.2",
-      "description": "Evaluate design from a UX perspective, assessing visual hierarchy, information architecture, emotional resonance, cognitive load, and overall quality with quantitative scoring, persona-based testing, automated anti-pattern detection, and actionable feedback. Use when the user asks to review, critique, evaluate, or give feedback on a design or component."
+      "description": "Critiques design from a UX view: hierarchy, IA, cognitive load, with scoring, persona testing, and actionable feedback. Use when asked to review or critique a design."
     },
     {
       "name": "cto-advisor",
       "source": "./skills/cto-advisor",
       "version": "2.2.2",
-      "description": "Advises engineering leadership on direction — architecture decisions recorded as ADRs, technology and vendor evaluation, team scaling ratios, and DORA/engineering-metric targets. Reasons from org-level indicators and frameworks, never from a repository scan. Use when the user asks which technology to adopt, how to structure or scale the engineering team, whether to write an ADR, what DORA targets to hold, or mentions CTO, technical leadership, technology strategy, vendor selection, or engineering metrics. To inventory and rank the debt already sitting in a codebase, use `tech-debt`."
+      "description": "Advises engineering leadership: ADRs, technology and vendor evaluation, team scaling, DORA targets. Org-level, not a repo scan. Use for CTO or tech strategy questions."
     },
     {
       "name": "debug",
       "source": "./skills/debug",
       "version": "2.2.2",
-      "description": "Debugs failures end to end: builds a deterministic repro loop, ranks falsifiable hypotheses, instruments the narrowest point, and fixes the root cause with a regression test. Escalates to a four-phase root-cause loop after a failed fix, and has a scoped mode for a test or build breaking mid-task."
+      "description": "Debugs failures end to end: builds a repro loop, ranks hypotheses, instruments, and fixes the root cause with a regression test. Use for bugs, crashes, or a fix that failed."
     },
     {
       "name": "dependency-audit",
       "source": "./skills/dependency-audit",
       "version": "2.2.2",
-      "description": "Audit a project's dependency supply chain — known CVEs in installed packages, secrets about to be committed, and lockfile/provenance integrity — and wire the checks into CI as a merge gate. Use when asked to audit dependencies, check for vulnerable packages, scan for leaked secrets, add a security gate to CI, or harden the supply chain. Complements security-audit (app-level) and git-safety (git history)."
+      "description": "Audits the dependency supply chain: CVEs in packages, secrets about to be committed, lockfile integrity, and wires checks into CI as a merge gate. Not app-level security."
     },
     {
       "name": "deploy",
       "source": "./skills/deploy",
       "version": "2.2.2",
-      "description": "Run deployment workflows for web applications (staging, production). Use when user says 'deploy', 'push to staging', 'ship it', or 'go live'. Cutting a version or tag is `release`."
+      "description": "Runs deployment workflows for web apps to staging or production. Use when the user says deploy, push to staging, ship it, or go live. Version or tag cuts are release."
     },
     {
       "name": "deploy-dispatch",
@@ -339,13 +339,13 @@
       "name": "deployment-composer",
       "source": "./skills/deployment-composer",
       "version": "2.2.2",
-      "description": "Compose deployment workflows from smaller skills and repo signals, including trunk-based releases, CI quality gates, provider deployment, post-deploy verification, rollback, and failed-check diagnosis. Use when the user asks for a deployment plan, release workflow, ship-to-staging/production environments, or a smart deploy process across GitHub, Vercel, EC2, Docker, or custom CI."
+      "description": "Composes deployment workflows from repo signals: CI gates, provider deploy, verification, rollback. Use for a deploy plan across GitHub, Vercel, EC2, Docker, or custom CI."
     },
     {
       "name": "design-consistency-auditor",
       "source": "./skills/design-consistency-auditor",
       "version": "2.2.2",
-      "description": "Hunts design-token drift across a frontend — hardcoded hex values where semantic tokens belong, arbitrary spacing outside the scale, one-off classes duplicating a design-system component, and patterns that diverge screen to screen. Measures against the project's own tokens and class conventions, discovered from the codebase first rather than assumed. Triggers on audit design consistency, review component styling, check color palette usage, find hardcoded colors, or identify design debt. For a scored multi-dimension quality report, use `audit`; for WCAG conformance, use `accessibility`."
+      "description": "Hunts design-token drift in frontends: hardcoded colors, off-scale spacing, one-off classes duplicating components. Use when auditing styling consistency or design debt."
     },
     {
       "name": "design-dispatch",
@@ -357,79 +357,79 @@
       "name": "deslop",
       "source": "./skills/deslop",
       "version": "2.2.2",
-      "description": "Strip AI-generated slop from a codebase, product, and prose. Code slop — console statements, `any` types, unused imports, commented-out code, redundant comments, needless defensive try-catch on trusted paths, over-nesting. Product slop (with --product) — marketing-filler copy, generic AI phrasing, default-shadcn look, unstyled loading/error states, dead buttons and half-wired flows. UI slop (`ui`) runs a project-derived design-system primitive pass. Prose slop (`prose`) cuts AI tells from writing. Can scope to the current branch's diff or sweep the whole tree. Use when asked to clean up AI-generated code, unslop writing, remove slop, or make an app feel finished before shipping to customers."
+      "description": "Strips AI slop from code, product, and prose: console logs, any types, dead comments, filler copy, dead buttons. Use when asked to unslop, clean AI code, or polish before shipping."
     },
     {
       "name": "devcontainer-setup",
       "source": "./skills/devcontainer-setup",
       "version": "2.2.2",
-      "description": "Scaffolds a complete VS Code Dev Container configuration with Docker, docker-compose, and optional Claude Code CLI support. Activates when asked to \"set up devcontainer\", \"add docker development environment\", \"configure dev container\", or containerize a development workflow."
+      "description": "Scaffolds a VS Code Dev Container with Docker, docker-compose, and optional Claude Code CLI. Use when setting up a devcontainer or containerized dev environment."
     },
     {
       "name": "docker-expert",
       "source": "./skills/docker-expert",
       "version": "2.2.2",
-      "description": "Expert in Docker, docker-compose, Dockerfile patterns, and container orchestration for NestJS and Next.js applications. Use this skill when users need Docker setup, containerization, or docker-compose configuration."
+      "description": "Writes Dockerfiles, multi-stage builds, and docker-compose setups for NestJS and Next.js apps. Use when containerizing an app or fixing container networking or health checks."
     },
     {
       "name": "docs",
       "source": "./skills/docs",
       "version": "2.2.2",
-      "description": "Creates clear, concise technical documentation for software projects, runbooks, and developer guides. Use when writing or updating a README, guide, runbook, API reference, setup instructions, or troubleshooting notes."
+      "description": "Writes or updates README files, guides, runbooks, API references, and setup docs matching the repo's conventions. Use when documenting software projects."
     },
     {
       "name": "domain-modeling",
       "source": "./skills/domain-modeling",
       "version": "2.2.2",
-      "description": "Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a CONTEXT.md, or recording or editing an ADR."
+      "description": "Builds and sharpens a project's domain model. Use when discussing codebase terminology, writing or editing a CONTEXT.md, or recording or editing an ADR."
     },
     {
       "name": "ec2-backend-deployer",
       "source": "./skills/ec2-backend-deployer",
       "version": "2.2.2",
-      "description": "Deploys backend applications to EC2 instances using Docker, GitHub Actions CI/CD, and Tailscale for secure SSH access. Activates when setting up EC2 deployment pipelines, configuring container registries, or wiring automated deploys for NestJS, Next.js, or Express backends."
+      "description": "Deploys backends to EC2 via Docker, GitHub Actions CI/CD, and Tailscale SSH. Use when wiring automated deploys for NestJS, Next.js, or Express to EC2."
     },
     {
       "name": "env-setup",
       "source": "./skills/env-setup",
       "version": "2.2.2",
-      "description": "Discover the environment variables a codebase actually reads, generate or update a grouped .env.example template, validate that required variables are set, and keep secrets out of git. Use when setting up environment variables for a project, scaffolding .env templates, validating an existing .env file, documenting required configuration, or checking that .gitignore covers env files. Backs the /env command."
+      "description": "Finds the env vars a codebase reads, generates .env.example, validates .env, and checks .gitignore covers secrets. Use for /env or environment configuration setup."
     },
     {
       "name": "error-handling-expert",
       "source": "./skills/error-handling-expert",
       "version": "2.2.2",
-      "description": "Expert in error handling patterns, exception management, error responses, logging, and error recovery strategies for React, Next.js, and NestJS applications. Use when implementing error handling, exception filters, error responses, error logging, or recovery strategies."
+      "description": "Designs error handling, exception filters, error responses, logging, and recovery for React, Next.js, and NestJS. Use when implementing or reviewing error flows."
     },
     {
       "name": "evaluation",
       "source": "./skills/evaluation",
       "version": "2.2.2",
-      "description": "Build evaluation frameworks for agent systems. Use when testing agent performance, validating context engineering choices, or measuring improvements over time."
+      "description": "Builds evaluation frameworks for agent systems. Use when testing agent performance, validating context engineering choices, or measuring improvements over time."
     },
     {
       "name": "executing-plans",
       "source": "./skills/executing-plans",
       "version": "2.2.2",
-      "description": "Executes a prepared GitHub issue without inventing product or engineering decisions, escalates plan gaps, and tracks delivery through independent cross-provider review, required CI, merge, and deployment evidence. Use when implementing an approved plan or processing an explicitly authorized issue queue."
+      "description": "Executes a prepared GitHub issue without inventing decisions, escalates plan gaps, and tracks review, CI, merge, and deploy evidence. Use for an approved plan or issue queue."
     },
     {
       "name": "expo-architect",
       "source": "./skills/expo-architect",
       "version": "2.2.2",
-      "description": "Scaffold a production-ready Expo React Native app with working screens, navigation, and optional Clerk auth. Generates complete mobile app structure that runs immediately with `bun start`. Use when scaffolding a new Expo or React Native app, setting up Expo Router navigation, or adding Clerk auth to a mobile app."
+      "description": "Scaffolds a runnable Expo React Native app with screens, Expo Router navigation, and optional Clerk auth. Use when starting a new Expo or mobile app."
     },
     {
       "name": "feature-intake",
       "source": "./skills/feature-intake",
       "version": "2.2.2",
-      "description": "Coordinates a rough request into one complete, execution-ready issue by composing the shared requirements, planning, readiness, and issue-publishing engines. Use for /prd prepare or feature intake."
+      "description": "Turns a rough request into one execution-ready issue via the shared requirements, planning, and issue-publishing engines. Use for /prd prepare or feature intake."
     },
     {
       "name": "figure-it-out",
       "source": "./skills/figure-it-out",
       "version": "2.2.2",
-      "description": "Design an auditable playbook when no narrower one fits. Use for figure it out, a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions via show-me-your-work."
+      "description": "Designs an auditable playbook when no narrower one fits. Use for a large migration, an ambitious multi-part change, or work a human reviews later. Logs via show-me-your-work."
     },
     {
       "name": "finishing-a-development-branch",
@@ -441,25 +441,25 @@
       "name": "fix-merge-conflicts",
       "source": "./skills/fix-merge-conflicts",
       "version": "2.2.2",
-      "description": "Resolve git merge conflicts correctness-first, then prove the tree still builds. Use when a merge, rebase, cherry-pick, or stash pop leaves conflict markers, when git status shows unmerged paths, or when the user asks to fix conflicts, resolve a merge, or rebase onto the trunk and clear the conflicts."
+      "description": "Resolves git merge conflicts correctness-first, then proves the tree still builds. Use when a merge, rebase, cherry-pick, or stash pop leaves conflict markers or unmerged paths."
     },
     {
       "name": "frontend-design",
       "source": "./skills/frontend-design",
       "version": "2.2.2",
-      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics."
+      "description": "Builds distinctive, production-grade frontend interfaces that avoid generic AI aesthetics. Use when creating web components, pages, landing pages, dashboards, or styling web UI."
     },
     {
       "name": "full-code-review",
       "source": "./skills/full-code-review",
       "version": "2.2.2",
-      "description": "Fan-out PR review across three parallel dimension agents (structural, security, devex/flag-hygiene), adversarially verify every finding, and synthesize a single prioritized verdict via a strongest-tier judge. Use when asked for a full, comprehensive, or end-to-end review of a branch or PR — after /code-review passes correctness, this skill covers the orthogonal dimensions it does not: security depth, structural health, devex regressions, and feature-flag hygiene. In retro mode (a commit log is passed in) it adds a cross-commit lens and emits a prioritized backlog instead of a merge verdict."
+      "description": "Fans out PR review to parallel structural, security, and devex/flag-hygiene agents, verifies each finding, and issues one prioritized verdict. Use for a full or end-to-end review."
     },
     {
       "name": "fullstack-workspace-init",
       "source": "./skills/fullstack-workspace-init",
       "version": "2.2.2",
-      "description": "Initialize Shipshit.dev full-stack product workspaces through npx @shipshitdev/v0, then customize and verify the generated repo. Use for new product scaffolds or post-v0 workspace setup."
+      "description": "Scaffolds a Shipshit.dev full-stack product workspace via npx @shipshitdev/v0, then customizes and verifies it. Use for new product repos or post-v0 setup."
     },
     {
       "name": "git-cleanup",
@@ -471,7 +471,7 @@
       "name": "git-safety",
       "source": "./skills/git-safety",
       "version": "2.2.2",
-      "description": "Guards day-to-day git work in an existing repository: blocks secrets from entering a commit, gates destructive git operations before they run, installs ignore rules and pre-commit hooks, and drives the rotate-first response when a credential has already leaked."
+      "description": "Guards daily git work: blocks staged secrets, gates destructive git commands, installs pre-commit hooks, drives leak response. Use before commits, pushes, or history rewrites."
     },
     {
       "name": "github-actions-author",
@@ -483,85 +483,85 @@
       "name": "github-address-comments",
       "source": "./skills/github-address-comments",
       "version": "2.2.2",
-      "description": "Implements the fixes a PR review asked for — maps each thread to the code it touches, edits that code, and drafts a reply per thread for approval before anything is posted. Starts from feedback that is already understood; producing the read-only digest is `pr-comments`."
+      "description": "Implements the fixes a PR review asked for and drafts a reply per thread for approval before posting. Starts from understood feedback; the read-only digest is pr-comments."
     },
     {
       "name": "github-fix-ci",
       "source": "./skills/github-fix-ci",
       "version": "2.2.2",
-      "description": "Diagnoses failing or setup-stuck GitHub Actions checks on a PR, identifies root cause, and proposes or applies targeted fixes. Triggers when the user asks to fix CI, diagnose failing checks, fix a failing workflow, address GitHub Actions errors, get a green build, or continue PR queue work without waiting on unrelated pending checks. Can run autonomously in a loop — fix, push, recheck — until all required checks are green when the user asks to loop on CI."
+      "description": "Diagnoses failing or stuck GitHub Actions checks on a PR, finds root cause, and applies targeted fixes, optionally looping until green. Use to fix CI or get a green build."
     },
     {
       "name": "github-inbox",
       "source": "./skills/github-inbox",
       "version": "2.2.2",
-      "description": "Collect and triage a GitHub work inbox from assigned issues, review requests, mentions, authored PRs with failing checks, and optional project filters. Use when checking what needs attention across GitHub or prioritizing GitHub tasks."
+      "description": "Triages a GitHub work inbox of assigned issues, review requests, mentions, and authored PRs with failing checks. Use when checking what needs attention or prioritizing tasks."
     },
     {
       "name": "github-pr-publish",
       "source": "./skills/github-pr-publish",
       "version": "2.2.2",
-      "description": "Create, update, and publish GitHub pull requests with a clean title, durable body, branch hygiene, validation notes, and safe push/PR gates. Use when opening a PR, updating a PR description, preparing a draft PR, or publishing local changes to GitHub."
+      "description": "Creates, updates, and publishes GitHub pull requests with clean titles, durable bodies, branch hygiene, and safe push gates. Use when opening a PR or publishing local changes."
     },
     {
       "name": "github-review-suggestions",
       "source": "./skills/github-review-suggestions",
       "version": "2.2.2",
-      "description": "Review GitHub pull requests and post precise inline suggested changes with GitHub suggestion blocks. Use when asked to review a PR, leave actionable GitHub comments, propose applyable fixes, or submit review suggestions through gh."
+      "description": "Reviews GitHub PRs and posts inline comments with applyable suggestion blocks through gh. Use when asked to leave actionable review comments or propose fixes on a PR."
     },
     {
       "name": "graphql-architect",
       "source": "./skills/graphql-architect",
       "version": "2.2.2",
-      "description": "Design and review GraphQL schemas, resolvers, mutations, pagination, and data-loading patterns. Use when building or refactoring GraphQL APIs, adding fields, fixing resolver design, or improving GraphQL performance and safety."
+      "description": "Designs and reviews GraphQL schemas, resolvers, mutations, pagination, and data loading. Use when building or refactoring GraphQL APIs or fixing N+1 and resolver design."
     },
     {
       "name": "grilling",
       "source": "./skills/grilling",
       "version": "2.2.2",
-      "description": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, says \"grill me\" (optionally against the docs), or another skill needs the interview primitive."
+      "description": "Grills the user relentlessly about a plan, decision, or idea until every branch of the design tree is resolved. Use when stress-testing thinking or when told grill me."
     },
     {
       "name": "grok-review",
       "source": "./skills/grok-review",
       "version": "2.2.2",
-      "description": "Independent second-opinion code review through the Grok CLI. Builds a self-contained review prompt from the exact diff, runs one headless Grok invocation on the CLI's own default model and effort, then verifies every returned finding against the code before reporting. Use when asked to review with Grok, get a second opinion on a branch, worktree, or PR from another CLI, or cross-check a review with an independent engine."
+      "description": "Runs an independent second-opinion review of a diff through the Grok CLI and verifies every finding against the code. Use when asked to review with Grok or cross-check a branch."
     },
     {
       "name": "how",
       "source": "./skills/how",
       "version": "2.2.2",
-      "description": "Walk through how a subsystem works. Use for \"how does X work\", code walkthroughs before changing something, and placement or ownership questions. Explains architecture, runtime flow, and onboarding mental models. Can critique architecture. Use why for motivation."
+      "description": "Explains how a subsystem works: architecture, runtime flow, onboarding mental models; can critique architecture. Use for how does X work or code walkthroughs. Not for motivation."
     },
     {
       "name": "html-style",
       "source": "./skills/html-style",
       "version": "2.2.2",
-      "description": "Apply opinionated styling to barebones HTML. Use when user has plain/unstyled HTML and wants to apply consistent visual styling. Triggers: style this HTML, apply styling, make this look good, /html-style, or when user shares HTML that needs CSS. Transforms tables, lists, status indicators, buttons, and layouts into a cohesive design system."
+      "description": "Applies opinionated styling to barebones HTML, turning tables, lists, status text, buttons, and layouts into a cohesive design. Use when the user has plain unstyled HTML."
     },
     {
       "name": "husky-test-coverage",
       "source": "./skills/husky-test-coverage",
       "version": "2.2.2",
-      "description": "Sets up or verifies Husky git hooks to enforce test coverage above 80% (configurable) for Node.js/TypeScript projects. Activates when enforcing coverage through pre-commit hooks, verifying existing Husky/test setup, or configuring coverage thresholds for Jest, Vitest, or Mocha test runners."
+      "description": "Sets up or verifies Husky pre-commit hooks that enforce test coverage above 80% (configurable) for Node/TypeScript projects using Jest, Vitest, or Mocha."
     },
     {
       "name": "icp",
       "source": "./skills/icp",
       "version": "2.2.2",
-      "description": "Discover and document a product's Ideal Customer Profile as a durable .agents/memory/icp.md — segments ranked by revenue potential, each with acute pain, willingness-to-pay, buying trigger, and churn reasons. Use when a user says \"define our ICP\", \"who is our customer\", \"who are we selling to\", \"document our ideal customer\", or before roadmap-analyzer / roadmap-to-milestones need a customer to prioritize against."
+      "description": "Documents a product's Ideal Customer Profile as .agents/memory/icp.md, with segments ranked by revenue potential. Use for define our ICP or before roadmap prioritization."
     },
     {
       "name": "incremental-fetch",
       "source": "./skills/incremental-fetch",
       "version": "2.2.2",
-      "description": "Guides construction of resilient data ingestion pipelines from paginated APIs. Activates on: \"ingest data from API\", \"pull tweets\", \"fetch historical data\", \"sync from X\", \"build a data pipeline\", \"fetch without re-downloading\", \"resume the download\", \"backfill older data\". NOT for: simple one-shot API calls, websocket/streaming connections, file downloads, or APIs without pagination."
+      "description": "Builds resilient data ingestion pipelines from paginated APIs using two watermarks so progress is never lost. Not for one-shot calls, websockets, or file downloads."
     },
     {
       "name": "interrogate",
       "source": "./skills/interrogate",
       "version": "2.2.2",
-      "description": "Adversarial multi-reviewer pass over a diff. Use for interrogate, adversarial review, multi-model review, challenge this, stress test this code, find blind spots, or tear this apart. Several independent reviewers challenge the change. The lead synthesizes a verdict and does not auto-apply fixes."
+      "description": "Runs several independent adversarial reviewers over a diff and synthesizes one verdict without auto-applying fixes. Use to challenge a change or find blind spots."
     },
     {
       "name": "interview",
@@ -579,25 +579,25 @@
       "name": "layout",
       "source": "./skills/layout",
       "version": "2.2.2",
-      "description": "Reworks the structure underneath a UI — spacing scale, visual hierarchy, grid and composition, rhythm, and density — turning monotonous or crowded arrangements into intentional ones. Applies while the composition itself is still wrong, ahead of any detail pass. Use when the user says the layout feels off, every section looks the same, the UI is crowded or too sparse, hierarchy is unclear, or nothing guides the eye. For the last-mile pass on a finished feature, use `polish`."
+      "description": "Reworks the structure under a UI: spacing scale, hierarchy, grid, rhythm, and density. Use when layout feels off, crowded, sparse, or monotonous. Last-mile finish is polish."
     },
     {
       "name": "linter-formatter-init",
       "source": "./skills/linter-formatter-init",
       "version": "2.2.2",
-      "description": "Set up Biome (default) or ESLint + Prettier, Vitest testing, and pre-commit hooks for any JavaScript/TypeScript project. Uses Bun as the package manager. Use this skill when initializing code quality tooling for a new project or adding linting to an existing one."
+      "description": "Sets up Biome (default) or ESLint + Prettier, Vitest, and pre-commit hooks for JavaScript/TypeScript projects with Bun. Use when initializing quality tooling or adding linting."
     },
     {
       "name": "llm-structured-output",
       "source": "./skills/llm-structured-output",
       "version": "2.2.2",
-      "description": "Design prompts, schemas, validation, and recovery logic for reliable machine-readable model outputs. Use when generating JSON, typed objects, extraction results, tool arguments, or any output another system must parse safely."
+      "description": "Designs prompts, schemas, validation, and retry logic for reliable machine-readable model output. Use for JSON, typed objects, extractions, or tool arguments a system must parse."
     },
     {
       "name": "maintain-verification-skill",
       "source": "./skills/maintain-verification-skill",
       "version": "2.2.2",
-      "description": "Keep a project's verification skill and feature map honest. Parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for maintain-verification-skill or audit the verify skill."
+      "description": "Keeps a project's verification skill and feature map accurate using parallel source readers and one live session, ending in at most one PR of proven corrections."
     },
     {
       "name": "mcp-builder",
@@ -609,7 +609,7 @@
       "name": "memory-systems",
       "source": "./skills/memory-systems",
       "version": "2.2.2",
-      "description": "Design and implement memory architectures for agent systems that persist state across sessions, maintain entity consistency, and reason over structured knowledge. Use when building agents that persist knowledge across sessions, choosing between memory frameworks, maintaining entity consistency, or designing memory architectures for production."
+      "description": "Designs memory architectures for agents that persist state across sessions and keep entities consistent. Use when choosing among Mem0, Zep/Graphiti, Letta, LangMem, or Cognee."
     },
     {
       "name": "merge-open-prs",
@@ -627,91 +627,91 @@
       "name": "mongodb-atlas-checker",
       "source": "./skills/mongodb-atlas-checker",
       "version": "2.2.2",
-      "description": "Verify MongoDB Atlas setup and configuration for backend applications. Checks connection strings, environment variables, connection pooling, and ensures proper setup for Next.js and NestJS applications. Use when verifying MongoDB Atlas setup, checking connection strings or environment variables, or troubleshooting database connection issues before deployment."
+      "description": "Verifies MongoDB Atlas setup for Next.js and NestJS backends: connection strings, env vars, and pooling. Use before deployment or when troubleshooting database connections."
     },
     {
       "name": "mongodb-migration-expert",
       "source": "./skills/mongodb-migration-expert",
       "version": "2.2.2",
-      "description": "Database schema design, indexing, and migration guidance for MongoDB-based applications. Use when adding or changing MongoDB collections, indexes, or fields, designing schema for multi-tenant or large datasets, or planning forward-only migrations."
+      "description": "Guides MongoDB schema design, indexing, and forward-only migrations. Use when adding or changing collections, indexes, or fields, or designing multi-tenant or large-dataset schema."
     },
     {
       "name": "monitoring-setup",
       "source": "./skills/monitoring-setup",
       "version": "2.2.2",
-      "description": "Sets up production monitoring for NestJS and Next.js apps — Sentry error tracking, Google Analytics, and operational signals (BullMQ queue depth, Postgres slow queries, connection saturation) with alerts on each. Activates when users need error tracking, production monitoring, analytics, queue/database observability, or alerting on operational health."
+      "description": "Sets up production monitoring for NestJS and Next.js: Sentry, Google Analytics, and alerts on BullMQ queue depth and Postgres slow queries or connection saturation."
     },
     {
       "name": "multi-agent-patterns",
       "source": "./skills/multi-agent-patterns",
       "version": "2.2.2",
-      "description": "Design multi-agent architectures for complex tasks. Use when single-agent context limits are exceeded, when tasks decompose naturally into subtasks, or when specializing agents improves quality."
+      "description": "Designs multi-agent architectures that split work across agents to isolate context. Use when one agent's context limit is exceeded or subtasks decompose in parallel."
     },
     {
       "name": "nestjs-expert",
       "source": "./skills/nestjs-expert",
       "version": "2.2.2",
-      "description": "NestJS architecture, modules, DI, guards, interceptors, pipes, MongoDB/Mongoose integration, auth, and production patterns. Use when building NestJS APIs, designing module structure, implementing auth, handling errors, writing DTOs, or debugging NestJS-specific issues."
+      "description": "Guides NestJS APIs with MongoDB/Mongoose — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues."
     },
     {
       "name": "nestjs-queue-architect",
       "source": "./skills/nestjs-queue-architect",
       "version": "2.2.2",
-      "description": "Queue job management patterns, processors, and async workflows for video/image processing. Use when building BullMQ queues, job processors, or async video/image processing workflows in NestJS."
+      "description": "Designs BullMQ queues, processors, and async job workflows in NestJS for video/image processing. Use when building queue processors or media pipelines."
     },
     {
       "name": "nestjs-testing-expert",
       "source": "./skills/nestjs-testing-expert",
       "version": "2.2.2",
-      "description": "NestJS testing mechanics with Jest — building testing modules, mocking providers and repositories, writing service and controller specs, and driving HTTP end-to-end tests through the real application. Use for any test touching a NestJS service, controller, guard, module, or API endpoint, including test-module setup, provider overrides, database fakes, and Supertest request flows."
+      "description": "Writes NestJS Jest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint."
     },
     {
       "name": "nextjs-validator",
       "source": "./skills/nextjs-validator",
       "version": "2.2.2",
-      "description": "Validate Next.js 16 configuration and detect/prevent deprecated patterns. Ensures proxy.ts usage, Turbopack, Cache Components, and App Router best practices. Use before any Next.js work or when auditing existing projects."
+      "description": "Validates Next.js 16 config and flags deprecated 14/15 patterns — proxy.ts, Turbopack, Cache Components, App Router. Use before Next.js work or when auditing a project."
     },
     {
       "name": "nextra-writer",
       "source": "./skills/nextra-writer",
       "version": "2.2.2",
-      "description": "Expert in creating clear, comprehensive technical documentation with Nextra (Next.js-based docs framework), MDX, and modern documentation patterns. Use for documentation sites that need Next.js integration."
+      "description": "Writes Nextra documentation sites with MDX — config, navigation, search, API docs. Use when creating or updating Nextra docs on Next.js."
     },
     {
       "name": "no-comments",
       "source": "./skills/no-comments",
       "version": "2.2.2",
-      "description": "Review comments on a diff, delete narration and workaround sermons, fix accepted findings, and offer encodings for claimed constraints. Use before review or when asked to strip comments."
+      "description": "Reviews comments on a diff, deletes narration, fixes accepted findings, and offers encodings for claimed constraints. Use before review or when asked to strip comments."
     },
     {
       "name": "open-source-checker",
       "source": "./skills/open-source-checker",
       "version": "2.2.2",
-      "description": "Audits a whole private repository once, at the decision to make it public. Runs four passes — license and attribution, secrets across the entire git history, private references (internal hostnames, employee emails, client and customer names, staging URLs), and publication readiness — then returns a publish or block verdict. Use when the user is preparing to open source a repository, asks whether a codebase is safe to publish, wants a pre-release audit before flipping a repo public, or needs to know what is still private in code that is about to ship publicly."
+      "description": "Audits a private repo once before it goes public: license, secrets in git history, private references, publish readiness. Returns a publish or block verdict."
     },
     {
       "name": "package-architect",
       "source": "./skills/package-architect",
       "version": "2.2.2",
-      "description": "Design and maintain TypeScript packages in a monorepo, including exports and build configuration. Use when creating or restructuring monorepo packages, defining package.json exports, or setting up tsconfig references."
+      "description": "Designs TypeScript monorepo packages — package.json exports, tsconfig references, build config. Use when creating or restructuring workspace packages."
     },
     {
       "name": "performance-expert",
       "source": "./skills/performance-expert",
       "version": "2.2.2",
-      "description": "Backend, database, and infrastructure performance expert covering API response times, query and index optimization, N+1 elimination, caching and background jobs, server profiling, and build/asset delivery. Use when improving API latency, optimizing database queries or indexes, designing a caching layer, moving heavy work to a queue, profiling a server process, shrinking a shipped bundle, or configuring CDN and edge caching. React render and component work belongs to `react-component-performance`."
+      "description": "Optimizes backend, database, and delivery performance — API latency, queries and indexes, N+1, caching, queues, profiling, bundles, CDN. Not for React render issues."
     },
     {
       "name": "playwright-e2e-init",
       "source": "./skills/playwright-e2e-init",
       "version": "2.2.2",
-      "description": "Initialize Playwright end-to-end testing for Next.js and React projects. Sets up configuration, creates example tests, and integrates with existing CI/CD. Use when adding E2E tests to a frontend project."
+      "description": "Initializes Playwright end-to-end testing for Next.js/React projects: config, example tests, Bun scripts, CI integration. Use when adding E2E tests to a frontend project."
     },
     {
       "name": "polish",
       "source": "./skills/polish",
       "version": "2.2.2",
-      "description": "Runs the last pass over a functionally complete feature — pixel alignment, interaction and loading states, empty and error states, copy consistency, transition smoothness, and micro-details measured against the design system. Requires the work to be finished first; it refines, it never restructures. Use when the user asks for polish, finishing touches, a pre-launch review, or wants to go from good to great. To fix the underlying composition instead, use `layout`."
+      "description": "Runs the final refinement pass on a finished feature — alignment, states, copy, transitions, micro-details. Use for polish or pre-launch review. Not for restructuring."
     },
     {
       "name": "postgres-ops",
@@ -723,7 +723,7 @@
       "name": "pr-comments",
       "source": "./skills/pr-comments",
       "version": "2.2.2",
-      "description": "Reads a pull request's review threads and returns a digest — grouped by thread, severity-tagged, priority-ordered, with the open questions called out. Strictly read-only: no code edits, no replies, no thread resolution. Reach for it to triage feedback before deciding what to fix; implementing those fixes is `github-address-comments`."
+      "description": "Reads a PR's review threads and returns a read-only digest grouped by thread, severity-tagged, with open questions. Use to triage feedback; fixing it is github-address-comments."
     },
     {
       "name": "prd-dispatch",
@@ -735,49 +735,49 @@
       "name": "prd-quality-gate",
       "source": "./skills/prd-quality-gate",
       "version": "2.2.2",
-      "description": "Validates draft requirements and blocks execution until the same issue contains a complete, current implementation contract. Owns the shared preparation templates and readiness rules."
+      "description": "Validates draft requirements and blocks execution until the issue holds a complete, current implementation contract. Use when checking a PRD or plan for execution readiness."
     },
     {
       "name": "prd-task-creator",
       "source": "./skills/prd-task-creator",
       "version": "2.2.2",
-      "description": "Publishes prepared requirements and implementation plans as one complete feature issue, with independently complete child outcomes only when justified. Reuses shared readiness and decomposition rules."
+      "description": "Publishes prepared requirements and plans as one GitHub feature issue, with child issues only when justified. Use when filing a PRD or bug as issues or sub-issues."
     },
     {
       "name": "prd-writer",
       "source": "./skills/prd-writer",
       "version": "2.2.2",
-      "description": "Authors repository-grounded requirements with complete feature scope and observable acceptance criteria. Reuses the canonical preparation contract; implementation planning is writing-plans."
+      "description": "Writes repository-grounded requirements with full scope and observable EARS acceptance criteria. Use when drafting a PRD or scoping a feature. Plans: writing-plans."
     },
     {
       "name": "production-audit",
       "source": "./skills/production-audit",
       "version": "2.2.2",
-      "description": "Audit an application for production readiness using local evidence from code, CI, config, migrations, runtime checks, observability, and deployment paths. Use before launch, after risky merges, or when asked whether an app is ready to ship."
+      "description": "Audits an app's production readiness from code, CI, config, migrations, observability, and deploy paths, returning a ship/block verdict. Use before launch or after risky merges."
     },
     {
       "name": "project-board",
       "source": "./skills/project-board",
       "version": "2.2.2",
-      "description": "Audits project board configuration and prepares explicitly requested setup, copy, or normalization changes while preserving the existing workflow and provider boundaries. Use when inspecting a board's fields, columns, scope, or configuration."
+      "description": "Audits a project board's fields, columns, and scope, and applies requested setup, copy, or normalization on GitHub or Jira boards. Use when inspecting or configuring a board."
     },
     {
       "name": "project-init-orchestrator",
       "source": "./skills/project-init-orchestrator",
       "version": "2.2.2",
-      "description": "Selects the correct project initialization route and orchestrates setup. Triggers on \"initialize project\", \"set up new project\", \"bootstrap project\", or when scaffolding a new Shipshit.dev product repo. Use v0 for new Shipshit.dev product repos; use lower-level setup skills only for existing repo repair, customization, or small additions."
+      "description": "Picks the project initialization route and orchestrates setup, preferring npx @shipshitdev/v0 for new Shipshit.dev repos. Use when bootstrapping or initializing a project."
     },
     {
       "name": "prompt-engineering",
       "source": "./skills/prompt-engineering",
       "version": "2.2.2",
-      "description": "Expert guide on prompt engineering patterns, best practices, and optimization techniques. Use when user wants to improve prompts, learn prompting strategies, debug agent behavior, or design content generation prompts."
+      "description": "Applies prompt engineering patterns — few-shot, chain-of-thought, templates, optimization. Use when improving prompts, debugging agent behavior, or designing generation prompts."
     },
     {
       "name": "prototype",
       "source": "./skills/prototype",
       "version": "2.2.2",
-      "description": "Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like."
+      "description": "Builds a throwaway prototype to answer one design question about state logic or UI look. Use when sanity-checking a state model or exploring what a UI should look like."
     },
     {
       "name": "pstack",
@@ -795,79 +795,79 @@
       "name": "qa-reviewer",
       "source": "./skills/qa-reviewer",
       "version": "2.2.2",
-      "description": "Runs a structured multi-phase verification pass on completed AI agent work — catching bugs, missed requirements, and incorrect assumptions before changes are committed. Triggers on: \"check your work\", \"review this\", after complex multi-step implementations, before committing major refactors, or proactively after any task longer than five steps."
+      "description": "Runs a multi-phase verification pass on finished AI agent work to catch bugs, missed requirements, and bad assumptions. Use after long multi-step tasks or on check your work."
     },
     {
       "name": "quick-view",
       "source": "./skills/quick-view",
       "version": "2.2.2",
-      "description": "Generates minimal HTML pages to review structured data in a browser with maximum readability. Triggers on: \"show me\", \"view this\", \"make reviewable\", \"open as webpage\", or any request to review lists, tables, drafts, or summaries that are hard to read in the terminal."
+      "description": "Generates minimal HTML pages to review lists, tables, drafts, or summaries in a browser. Use when output is hard to read in the terminal."
     },
     {
       "name": "quieter",
       "source": "./skills/quieter",
       "version": "2.2.2",
-      "description": "Tones down visually aggressive or overstimulating designs, reducing intensity while preserving quality. Use when the user mentions too bold, too loud, overwhelming, aggressive, garish, or wants a calmer, more refined aesthetic."
+      "description": "Tones down visually aggressive or overstimulating designs while preserving quality. Use when a design is too bold, loud, overwhelming, or garish and needs a calmer look."
     },
     {
       "name": "react-component-performance",
       "source": "./skills/react-component-performance",
       "version": "2.2.2",
-      "description": "Diagnose slow React components and apply targeted render-time fixes. Use when profiling a slow React component, cutting re-renders or props churn, fixing list lag or janky typing and scrolling, deciding where `memo`, `useMemo`, or `useCallback` pay off, virtualizing a long list, or reading a React DevTools Profiler trace. API latency, database queries, caching, and infrastructure belong to `performance-expert`."
+      "description": "Diagnoses slow React components and applies render-time fixes — re-renders, memo/useMemo/useCallback, list virtualization, Profiler traces. Not for API or database latency."
     },
     {
       "name": "react-hook-form",
       "source": "./skills/react-hook-form",
       "version": "2.2.2",
-      "description": "Provides 41 prioritized performance rules for React Hook Form across form configuration, field subscription, controlled components, validation, and field arrays. Invoke when writing or reviewing forms with useForm, useWatch, useController, or useFieldArray; integrating shadcn/MUI with Controller; or diagnosing unexpected re-renders in RHF-based forms. Covers client-side validation only — does not cover React Server Actions or useActionState."
+      "description": "Applies 41 performance rules for React Hook Form — useForm, useWatch, useController, useFieldArray, Controller. Use when writing RHF forms or fixing re-renders. Client-side only."
     },
     {
       "name": "react-native-components",
       "source": "./skills/react-native-components",
       "version": "2.2.2",
-      "description": "Master React Native 0.79.5 components, styling, performance optimization, and mobile UI best practices with real-world examples. Use when building React Native UI components, implementing StyleSheet or dynamic styling, optimizing list performance, or creating accessible mobile interfaces."
+      "description": "Guides React Native component building — StyleSheet, dynamic styling, FlatList performance, accessible mobile UI. Use when building React Native UI components."
     },
     {
       "name": "react-patterns",
       "source": "./skills/react-patterns",
       "version": "2.2.2",
-      "description": "Modern React patterns and principles. Hooks, composition, performance, TypeScript best practices. Use when writing or reviewing React components, applying hooks and composition patterns, or improving React performance and TypeScript usage."
+      "description": "Applies modern React patterns — hooks, composition, performance, TypeScript. Use when writing or reviewing React components or improving React code quality."
     },
     {
       "name": "react-refactor",
       "source": "./skills/react-refactor",
       "version": "2.2.2",
-      "description": "Architectural refactoring guide for React applications covering component architecture, state architecture, hook patterns, component decomposition, coupling and cohesion, data flow, and refactoring safety. Triggers when refactoring React codebases, reviewing PRs for architectural issues, decomposing oversized components, or improving module boundaries."
+      "description": "Guides architectural React refactoring — state architecture, hook extraction, decomposition, coupling. Use when splitting oversized components or reviewing PR architecture."
     },
     {
       "name": "react-testing-library",
       "source": "./skills/react-testing-library",
       "version": "2.2.2",
-      "description": "React Testing Library mechanics for testing React components and hooks — query selection, async handling, user interaction, assertions, provider setup, and the anti-patterns that make tests brittle. Use for any test that renders a React component or a hook, including choosing between getBy/queryBy/findBy, userEvent flows, waitFor usage, renderHook, custom render wrappers, and reviewing RTL tests for implementation-detail assertions."
+      "description": "Covers React Testing Library for component and hook tests — queries, async, userEvent, providers, brittle-test anti-patterns. Use for any test rendering a component or hook."
     },
     {
       "name": "recall",
       "source": "./skills/recall",
       "version": "2.2.2",
-      "description": "Rebuild recent working context from chat history, live state, and the shared record, then hand back a tight current-state brief. Use for recall my work on X, catch me up, what have I been working on, or where did I leave off."
+      "description": "Rebuilds recent working context from chat history, live state, and the shared record into a tight current-state brief. Use to resume or catch up on past work."
     },
     {
       "name": "receiving-code-review",
       "source": "./skills/receiving-code-review",
       "version": "2.2.2",
-      "description": "Evaluate incoming code-review feedback with technical rigor before implementing any change. Verify each point against the codebase, push back with reasoning when the reviewer is wrong, and never perform empty agreement. Use when you receive a review, before touching any code, especially when feedback seems unclear or technically questionable."
+      "description": "Evaluates incoming review feedback technically before changing code: verifies each point, pushes back when wrong, avoids empty agreement. Use when you receive a review."
     },
     {
       "name": "redis-caching",
       "source": "./skills/redis-caching",
       "version": "2.2.2",
-      "description": "Redis caching, rate limiting, session storage, pub/sub, and production integration patterns for TypeScript, Next.js, NestJS, and Prisma applications. Use when adding cache-aside or write-through caching, rate limiting, session or lock storage, pub/sub fanout, or reviewing Redis key design and TTLs."
+      "description": "Implements Redis caching, rate limiting, sessions, locks, and pub/sub for Next.js/NestJS/Prisma apps. Use when adding cache-aside caching or reviewing Redis keys and TTLs."
     },
     {
       "name": "refactor-code",
       "source": "./skills/refactor-code",
       "version": "2.2.2",
-      "description": "Systematic approach to safely refactoring code with tests. Use when user says 'refactor', 'clean up code', 'simplify', 'reduce complexity', or 'technical debt'."
+      "description": "Refactors code safely behind tests without changing behavior. Use when asked to refactor, clean up, simplify, reduce complexity, or pay down technical debt in specific code."
     },
     {
       "name": "refactor-dispatch",
@@ -879,19 +879,19 @@
       "name": "release",
       "source": "./skills/release",
       "version": "2.2.2",
-      "description": "Cuts a release from a green trunk. Proves the required checks on the exact trunk SHA, derives the next semver and plain-English notes, then publishes through the repo's own mechanism — release-please PR, guarded release workflow, or annotated tag — and reports deploy evidence. Backs /release."
+      "description": "Cuts a release from a green trunk: proves checks on the trunk SHA, derives semver and notes, publishes via release-please, workflow, or tag. Backs /release."
     },
     {
       "name": "review-dispatch",
       "source": "./skills/review-dispatch",
       "version": "2.2.2",
-      "description": "Single front door for code review. Resolves a target — working-tree changes, one PR, all open PRs, the last N commits, a time window, or a retrospective over merged history — into the right workflow, natively or through an external second-opinion engine (grok). Keeps every /review mode report-only except confirmation-gated retrospective issue filing. Backs the /review command. Use when asked to review changes, a PR, all PRs, recent commits, or merged history, or to get a second opinion from another CLI."
+      "description": "Routes /review to the right code-review workflow for working-tree changes, a PR, all open PRs, recent commits, or merged-history retro, or a Grok second opinion. Report-only."
     },
     {
       "name": "roadmap-analyzer",
       "source": "./skills/roadmap-analyzer",
       "version": "2.2.2",
-      "description": "Turn a product's ICP into a revenue-ranked roadmap. Reads .agents/memory/icp.md (from the icp skill), inventories what already ships, finds the gaps that block landing/retaining/expanding the primary segment, and outputs a prioritized backlog plus strategic themes. Use when asked what to build next, how to prioritize the roadmap, what's blocking revenue, or to plan toward MRR. Hands off to roadmap-to-milestones."
+      "description": "Turns the ICP in .agents/memory/icp.md into a revenue-ranked roadmap, finding gaps that block landing, retaining, or expanding customers. Use to decide what to build next."
     },
     {
       "name": "roadmap-to-milestones",
@@ -903,31 +903,31 @@
       "name": "rules-capture",
       "source": "./skills/rules-capture",
       "version": "2.2.2",
-      "description": "Automatically detects and documents user preferences, coding standards, and workflow rules from conversation — capturing them to `.agents/memory/captured-rules.md` for promotion to permanent project or user rules. Triggers on: \"always do X\", \"never do X\", \"from now on\", \"the rule is\", \"stop doing X\", \"I prefer\", frustration indicators, or any correction to AI behavior."
+      "description": "Detects user preferences and workflow rules in conversation and records them in .agents/memory/captured-rules.md for promotion. Use on always/never or corrections to the AI."
     },
     {
       "name": "scaffold",
       "source": "./skills/scaffold",
       "version": "2.2.2",
-      "description": "Generate incremental local code modules following existing codebase patterns. Use for endpoints, components, packages, collections, or modules inside an existing repo; not for full project scaffolds."
+      "description": "Generates incremental code modules inside an existing repo following local patterns — endpoints, components, packages, collections. Not for new full-project scaffolds."
     },
     {
       "name": "security-audit",
       "source": "./skills/security-audit",
       "version": "2.2.2",
-      "description": "Run a self-contained security audit workflow for web applications and APIs, covering scoping, reconnaissance, manual testing, API review, hardening, and reporting. Use when auditing a web app or API for security issues, reviewing auth or session handling, checking input validation and injection risk, or hardening before release."
+      "description": "Runs a scoped security audit of a web app or API: recon, manual testing, auth and injection review, hardening, report. Use before release or when probing auth and input validation."
     },
     {
       "name": "security-expert",
       "source": "./skills/security-expert",
       "version": "2.2.2",
-      "description": "Expert in application security, OWASP Top 10, authentication, authorization, data protection, and security best practices for React, Next.js, and NestJS applications. Use when implementing authentication or authorization, reviewing code for vulnerabilities, handling sensitive data, or implementing encryption or hashing."
+      "description": "Applies OWASP Top 10 security practices to React, Next.js and NestJS code. Use for auth, sensitive data, encryption or hashing, CORS/CSP, or reviewing vulnerabilities."
     },
     {
       "name": "setup-agent-routing",
       "source": "./skills/setup-agent-routing",
       "version": "2.2.2",
-      "description": "Sets up an `## Agent skills` routing block in CLAUDE.md/AGENTS.md plus docs/agents/ so the dev-loop skills (executing-plans, feature-intake, prd-writer, qa-reviewer) know this repo's GitHub issue tracker, kanban label vocabulary, and domain doc layout. Run once per repo before first use of the loop, or when those skills appear to lack tracker, label, or domain context."
+      "description": "Writes an Agent skills routing block in CLAUDE.md/AGENTS.md plus docs/agents/ recording issue tracker, kanban labels and domain docs. Use once per repo before the dev-loop skills."
     },
     {
       "name": "setup-pstack",
@@ -939,13 +939,13 @@
       "name": "shadcn",
       "source": "./skills/shadcn",
       "version": "2.2.2",
-      "description": "Provides shadcn/ui component library best practices and patterns. Triggers when writing, reviewing, or refactoring shadcn/ui components; when working with Radix primitives, Tailwind styling, React Hook Form validation, data tables, theming, or component composition patterns."
+      "description": "Applies shadcn/ui best practices when writing, reviewing or refactoring components: Radix primitives, React Hook Form, data tables, theming, composition."
     },
     {
       "name": "shadcn-setup",
       "source": "./skills/shadcn-setup",
       "version": "2.2.2",
-      "description": "Sets up shadcn/ui with Tailwind CSS v4 CSS-first configuration — installs packages, generates globals.css with @theme tokens, creates components.json, and adds the cn() utility. Use when starting a new Next.js or React project that needs a shadcn component library, or migrating from shadcn + Tailwind v3."
+      "description": "Sets up shadcn/ui with Tailwind v4 CSS-first config: packages, @theme globals.css, components.json, cn(). Use for new Next.js/React projects or migrating from Tailwind v3."
     },
     {
       "name": "shape",
@@ -957,25 +957,25 @@
       "name": "show-me-your-work",
       "source": "./skills/show-me-your-work",
       "version": "2.2.2",
-      "description": "Keep a reviewable decision trail for long-running or unattended work. A TSV log with one row per decision (what, why, evidence, result). Local by default. Commit it when a reviewer needs the trail to trust the result. Use for show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away."
+      "description": "Keeps a TSV decision log (what, why, evidence, result) for long or unattended work. Use for autonomous or multi-phase runs a human reviews afterward."
     },
     {
       "name": "skill-capture",
       "source": "./skills/skill-capture",
       "version": "2.2.2",
-      "description": "Extracts valuable workflows, patterns, and domain knowledge from conversations and persists them as reusable SKILL.md files. Triggers on: \"save this as a skill\", \"capture this as a skill\", \"make this reusable\", \"this workflow should be reusable\", \"this was tricky to figure out\", \"I wish I knew this earlier\", or on completion of complex multi-step procedures."
+      "description": "Turns workflows and hard-won knowledge from a conversation into reusable SKILL.md files. Use when asked to save something as a skill, or after a complex procedure succeeds."
     },
     {
       "name": "skill-comply",
       "source": "./skills/skill-comply",
       "version": "2.2.2",
-      "description": "Measure whether agents actually follow a skill, rule, command, or agent definition by deriving expected behaviors, running representative scenarios, and comparing observed action timelines against the spec. Use after adding or changing instructions, before publishing skills, or when rules appear to be ignored."
+      "description": "Measures whether agents follow a skill, rule or agent definition by running scenarios and comparing action timelines to it. Use before publishing skills or when rules get ignored."
     },
     {
       "name": "skill-creator",
       "source": "./skills/skill-creator",
       "version": "2.2.2",
-      "description": "Guide for creating effective skills. Use when creating a new skill or updating an existing one to extend agent capabilities with specialized knowledge, workflows, or tool integrations."
+      "description": "Guides creating or updating a skill with specialized knowledge, workflows or tool integrations. Use when authoring a new SKILL.md or editing an existing skill."
     },
     {
       "name": "skill-dispatch",
@@ -987,19 +987,19 @@
       "name": "skill-scout",
       "source": "./skills/skill-scout",
       "version": "2.2.2",
-      "description": "Search local, marketplace, repository, package, GitHub, and web sources before creating a new skill or custom implementation. Use when asked to create, fork, import, or evaluate a skill, or before writing code for functionality that likely already exists."
+      "description": "Searches local, marketplace, GitHub, package and web sources for existing skills or implementations. Use before creating or importing a skill, or writing code that likely exists."
     },
     {
       "name": "spec-first",
       "source": "./skills/spec-first",
       "version": "2.2.2",
-      "description": "Coordinates preparation, prescribed implementation, independent review and verification using one shared issue contract. Use for nontrivial implementation that needs decisions settled before coding."
+      "description": "Coordinates preparation, implementation, independent review and verification on one shared issue contract. Use for nontrivial work needing decisions settled before coding."
     },
     {
       "name": "stack-modernization",
       "source": "./skills/stack-modernization",
       "version": "2.2.2",
-      "description": "Modernize a project's stack — outdated dependencies, dead/unused packages, deprecated packages, and framework-pattern drift (old patterns lingering after a major upgrade). Verifies the current latest of each package before proposing an upgrade, then applies changes incrementally with tests between each. Use when asked to update dependencies, modernize the stack, remove dead packages, or migrate stale framework patterns, across frontend and backend."
+      "description": "Modernizes a stack: upgrades outdated dependencies, removes dead or deprecated packages, migrates stale framework patterns, verifying latest versions first. Edits package.json."
     },
     {
       "name": "standup",
@@ -1011,61 +1011,61 @@
       "name": "stripe-implementer",
       "source": "./skills/stripe-implementer",
       "version": "2.2.2",
-      "description": "Implement Stripe payment processing, subscription management, webhook handling, and customer management in Next.js and NestJS applications. Use when integrating Stripe payments, subscription billing, webhooks, customer management, or checkout and payment intents."
+      "description": "Implements Stripe payments, subscriptions, webhooks and customer management in Next.js and NestJS. Use for checkout, payment intents, billing, Stripe Connect."
     },
     {
       "name": "structural-review",
       "source": "./skills/structural-review",
       "version": "2.2.2",
-      "description": "Perform a structural and maintainability review of a PR or codebase diff — covering file-size blockers, abstraction quality, layer violations, type structural discipline, spaghetti branching, non-atomic mutations, stack-specific hygiene (Bun, Tailwind v4, Next.js 16, shadcn/ui), design purity (code-judo), and directness over magic (no speculative generality). Use when asked to review code quality, maintainability, structural health, or architecture of a change. Orthogonal to /code-review (which owns correctness bugs and repo rule compliance) — run after correctness passes or in parallel when a thorough PR review is requested."
+      "description": "Reviews a PR diff for structure and maintainability: file size, abstractions, layering, types, stack hygiene. Report-only. Not for correctness bugs."
     },
     {
       "name": "swarm",
       "source": "./skills/swarm",
       "version": "2.2.2",
-      "description": "Fan out N parallel workers, drain them, and return one report. Use for swarm this, or parallel coverage, races, gauntlets, and exploration partitions."
+      "description": "Fans out N parallel workers, drains them, and returns one aggregated report. Use for swarm this, parallel coverage, races, gauntlets and exploration partitions."
     },
     {
       "name": "table-filters",
       "source": "./skills/table-filters",
       "version": "2.2.2",
-      "description": "Designs optimal filtering UX for data tables. Use when building a table that needs filters - analyzes the data columns and determines the best filter type for each. Outputs a unified filter field with inline header filters."
+      "description": "Designs filtering UX for data tables: picks a filter type per column and builds a unified filter field with inline header filters. Use when building a table that needs filters."
     },
     {
       "name": "tailwind",
       "source": "./skills/tailwind",
       "version": "2.2.2",
-      "description": "Provides Tailwind CSS v4 performance optimization and best practices guidelines. Triggers when writing, reviewing, or refactoring Tailwind CSS v4 code; when working with Tailwind configuration, @theme directive, utility classes, responsive design, dark mode, container queries, or CSS generation optimization."
+      "description": "Applies Tailwind CSS v4 best practices when writing, reviewing or refactoring styles: @theme, build config, responsive, dark mode, container queries, CSS size and performance."
     },
     {
       "name": "tailwind-validator",
       "source": "./skills/tailwind-validator",
       "version": "2.2.2",
-      "description": "Validate Tailwind CSS v4 configuration and detect/prevent Tailwind v3 patterns. Use this skill when setting up Tailwind, auditing CSS configuration, or when you suspect outdated Tailwind patterns are being used. Ensures CSS-first configuration with @theme blocks."
+      "description": "Validates Tailwind v4 CSS-first setup and flags v3 patterns such as tailwind.config.js. Use when setting up or auditing Tailwind, or when AI output may contain v3 code."
     },
     {
       "name": "tdd",
       "source": "./skills/tdd",
       "version": "2.2.2",
-      "description": "Test-driven development workflow for feature work and bug fixes. Use when the user asks for TDD, red-green-refactor, test-first implementation, regression-first bug fixes, or vertical-slice delivery. For bugs, require a cheap local test path; skip a new test when the path is unclear, expensive, or integration-heavy."
+      "description": "Drives feature work and bug fixes test-first with red-green-refactor and vertical slices. Use for TDD, test-first implementation, or regression-first fixes."
     },
     {
       "name": "teach",
       "source": "./skills/teach",
       "version": "2.2.2",
-      "description": "Explain a body of work so a person actually understands it. Runs how and why and weaves what they find into one plain explanation, built up diagram by diagram. Use for teach me this, help me really understand X, or explain this change or subsystem."
+      "description": "Explains a change, subsystem or concept in one plain, diagram-built account so the person truly understands it; changes nothing. Use for teach me this or help me understand X."
     },
     {
       "name": "tech-debt",
       "source": "./skills/tech-debt",
       "version": "2.2.2",
-      "description": "Inventories a real codebase and ranks its technical debt into a register scored by interest (how often it hurts) over principal (effort to fix), every item anchored to a file-and-line or a metric. Covers code smells, dependency debt, test gaps, and architectural churn hotspots across frontend and backend. Use when asked what to pay down, where the codebase is rotting, or to turn debt into a tracked backlog. Files the register as GitHub issues on request. For org-level technology strategy and architecture direction, use `cto-advisor`."
+      "description": "Ranks a codebase's tech debt into a register scored by interest over principal, each item tied to file:line. Use for what to pay down or where code rots. Files issues on request."
     },
     {
       "name": "technical-writing",
       "source": "./skills/technical-writing",
       "version": "2.2.2",
-      "description": "Layered technical-writing standard for docs, RFCs, READMEs, PR descriptions, and commit messages. Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for technical-writing or when writing or reviewing those surfaces."
+      "description": "Applies a layered technical-writing standard (Diataxis, Google style, STE) to docs, RFCs, READMEs, PR descriptions and commit messages. Use when writing or reviewing those."
     },
     {
       "name": "test-dispatch",
@@ -1077,49 +1077,49 @@
       "name": "test-runner",
       "source": "./skills/test-runner",
       "version": "2.2.2",
-      "description": "Run a project's tests at the right scope — changed-only, focused, full, type-check, or e2e — then report failures with evidence. Repair and rerun only when fixing failures is explicitly authorized. Detects the test runner in a Bun-managed repo. Use when the user asks to run tests, run the suite, run smoke/e2e tests, type-check, check the build compiles, fix failing tests, or runs /test run."
+      "description": "Runs tests at the right scope (changed, focused, full, type-check, e2e) in Bun repos and reports failures with evidence; repairs only if authorized. Use for /test run."
     },
     {
       "name": "testing-cicd-init",
       "source": "./skills/testing-cicd-init",
       "version": "2.2.2",
-      "description": "Installs Vitest testing infrastructure and GitHub Actions CI/CD for TypeScript projects (Next.js, NestJS, React). Configures 80% coverage thresholds, test setup files, and Bun-based CI workflows. Use when adding tests to a new project, migrating from Jest to Vitest, or setting up GitHub Actions CI/CD for the first time."
+      "description": "Installs Vitest and GitHub Actions CI on Bun for Next.js, NestJS and React projects, with 80% coverage thresholds. Use when adding tests, migrating from Jest, or first CI setup."
     },
     {
       "name": "testing-expert",
       "source": "./skills/testing-expert",
       "version": "2.2.2",
-      "description": "Framework-agnostic testing strategy — test level, coverage targets, refactor-proof test design, test data, flake diagnosis — plus regression tests aimed at AI blind spots (sandbox vs production drift, response-shape mismatches). Use when deciding what to test, reviewing a suite, fixing flakes, or guarding AI-written changes."
+      "description": "Sets testing strategy: test level, coverage targets, test data, flake diagnosis, plus regression tests for AI blind spots. Use when deciding what to test or fixing flakes."
     },
     {
       "name": "theme-factory",
       "source": "./skills/theme-factory",
       "version": "2.2.2",
-      "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly. Use when styling an artifact such as slides, docs, or an HTML landing page with a preset or custom theme of colors and fonts."
+      "description": "Styles slides, docs and HTML pages with one of 10 preset color/font themes or a generated custom theme. Use when theming an artifact."
     },
     {
       "name": "tool-design",
       "source": "./skills/tool-design",
       "version": "2.2.2",
-      "description": "Design tools that agents can use effectively, including when to reduce tool complexity. Use when creating, optimizing, or reducing the set of tools available to an agent."
+      "description": "Designs agent-facing tools: descriptions, schemas, responses, errors, naming, and consolidating overlapping tool sets. Use when creating tools or when agents pick the wrong one."
     },
     {
       "name": "turborepo",
       "source": "./skills/turborepo",
       "version": "2.2.2",
-      "description": "Turborepo monorepo build system guidance. Triggers on: `turbo.json`, task pipelines, `dependsOn`, caching, remote cache, the `turbo` CLI, `--filter`, `--affected`, CI optimization, environment variables, internal packages, monorepo structure, and package boundaries. Use when the user configures tasks or workflows, creates packages, sets up a monorepo, shares code between apps, runs changed packages, debugs cache behavior, or works in an `apps/` plus `packages/` workspace."
+      "description": "Guides Turborepo monorepos: turbo.json tasks, dependsOn, caching and remote cache, --filter/--affected, internal packages. Use when configuring tasks or debugging cache."
     },
     {
       "name": "typescript-expert",
       "source": "./skills/typescript-expert",
       "version": "2.2.2",
-      "description": "Resolves TypeScript and JavaScript problems across type-level programming, performance, monorepo management, migration, and modern tooling. Invoke when diagnosing \"type instantiation excessively deep\" errors, migrating JS to TS, configuring strict tsconfig, debugging module resolution, or choosing between Biome/ESLint/Turborepo/Nx."
+      "description": "Solves TypeScript/JS problems: type-level programming, deep-instantiation errors, strict tsconfig, module resolution, JS-to-TS migration, Biome/ESLint/Nx tooling choices."
     },
     {
       "name": "typescript-refactor",
       "source": "./skills/typescript-refactor",
       "version": "2.2.2",
-      "description": "TypeScript refactoring and modernization guidelines from a principal specialist perspective. This skill should be used when refactoring, reviewing, or modernizing TypeScript code to ensure type safety, compiler performance, and idiomatic patterns. Triggers on tasks involving TypeScript type architecture, narrowing, generics, error handling, or migration to modern TypeScript features."
+      "description": "Refactors and modernizes TypeScript for type safety: discriminated unions, narrowing, generics, error handling, modern 4.x-5.x features, compiler speed. Use when reviewing TS."
     },
     {
       "name": "vercel-deploy",
@@ -1131,7 +1131,7 @@
       "name": "verification-before-completion",
       "source": "./skills/verification-before-completion",
       "version": "2.2.2",
-      "description": "Enforce evidence-based completion: no success, done, fixed, or passing claim may be made without first running the verification command and reading its full output. Use when about to claim work is complete, a bug is fixed, tests pass, a build succeeds, or before committing, pushing, or opening a PR."
+      "description": "Blocks done, fixed or passing claims until the verification command has run fresh and its full output was read. Use before claiming completion, committing, pushing or opening a PR."
     },
     {
       "name": "wait-what",
@@ -1143,37 +1143,37 @@
       "name": "weekly-review",
       "source": "./skills/weekly-review",
       "version": "2.2.2",
-      "description": "Coordinates a weekly engineering review of board accuracy, recent code changes, operational health, and scoped cleanup. Use for a recurring repository health review or a review of the last several days."
+      "description": "Coordinates a weekly engineering review of board accuracy, recent code changes, operational health and scoped cleanup. Use for a recurring repo health check."
     },
     {
       "name": "why",
       "source": "./skills/why",
       "version": "2.2.2",
-      "description": "Investigate why code is shaped the way it is. Use for design rationale, regressions, postmortems, or data-backed thresholds. Queries available evidence categories in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior."
+      "description": "Investigates why code is shaped as it is: design rationale, regressions, postmortems, data-backed thresholds, with cited evidence. Use how for runtime behavior."
     },
     {
       "name": "wizard",
       "source": "./skills/wizard",
       "version": "2.2.2",
-      "description": "Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover."
+      "description": "Generates an interactive bash wizard guiding a human through manual steps: provisioning, credentials, CI secrets, third-party dashboards, one-off migrations or cutovers."
     },
     {
       "name": "workspace-performance-audit",
       "source": "./skills/workspace-performance-audit",
       "version": "2.2.2",
-      "description": "Orchestrates comprehensive performance audits across full-stack monorepos. Coordinates performance-expert, design-consistency-auditor, accessibility, security-expert, and qa-reviewer skills to audit frontend, backend, database, browser extensions, and shared packages. Use when asked for a full workspace performance review, monorepo audit, or to identify bottlenecks across frontend, backend, and extensions."
+      "description": "Orchestrates a full-stack monorepo performance audit across frontend, backend, database, extensions and shared packages. Use for workspace-wide bottleneck reviews."
     },
     {
       "name": "worktree",
       "source": "./skills/worktree",
       "version": "2.2.2",
-      "description": "Create an isolated git worktree from the correct base branch and check it out into a clean, gitignored directory. Use when the user asks to make a worktree, spin up a parallel/isolated workspace, work on something without disturbing the current checkout, branch off the current work, or run multiple agents on the same repo at once. Picks the base branch smartly — the current feature branch when you are on one, otherwise the repository's default/trunk branch — so worktrees continue your in-progress work by default instead of forking from the wrong place."
+      "description": "Creates an isolated git worktree from the right base branch (current feature branch, else trunk), gitignored. Use for parallel or isolated workspaces and multi-agent runs."
     },
     {
       "name": "writing-plans",
       "source": "./skills/writing-plans",
       "version": "2.2.2",
-      "description": "Resolves implementation decisions from researched requirements into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions."
+      "description": "Resolves implementation decisions into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions."
     }
   ]
 }
