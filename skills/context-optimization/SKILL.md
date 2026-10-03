@@ -11,6 +11,7 @@ metadata:
   license: MIT
   tags: "context, optimization, agents"
 when_to_use: "context window anatomy, attention"
+user-invocable: false
 ---
 # Context Optimization Techniques
 

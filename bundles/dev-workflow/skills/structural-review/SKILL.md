@@ -6,6 +6,7 @@ metadata:
   tags: "code-quality, maintainability, architecture, refactoring, structural"
   author: Ship Shit Dev
 when_to_use: "maintainability review, code judo, simplify this PR"
+user-invocable: false
 ---
 
 # Structural Review

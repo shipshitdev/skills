@@ -11,6 +11,7 @@ metadata:
   license: MIT
   tags: "context, agents, reliability"
 when_to_use: "long-context failures"
+user-invocable: false
 ---
 # Context Degradation Patterns
 

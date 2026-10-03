@@ -5,6 +5,7 @@ metadata:
   version: "2.2.2"
   tags: "context, conventions, execution, agents, codebase-patterns, trust-levels"
 when_to_use: "project conventions protocol"
+user-invocable: false
 ---
 
 <context_protocol>

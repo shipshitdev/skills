@@ -7,6 +7,7 @@ metadata:
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)
 when_to_use: "/review, /review prs, commit retro, second opinion"
+user-invocable: false
 ---
 
 # Review Dispatch
