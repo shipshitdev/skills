@@ -26,7 +26,7 @@ Diagnose and fix context failures before they cascade. Context degradation is no
 
 Do not activate this skill for adjacent work owned by other skills:
 
-- Explaining foundational context mechanics without an active failure: `context-fundamentals`.
+- Explaining foundational context mechanics without an active failure: `context-optimization` (`references/fundamentals.md`).
 - Applying token-efficiency tactics after the failure pattern is known: `context-optimization`.
 
 ## Core Concepts
@@ -214,7 +214,7 @@ conflict:
 
 This skill owns diagnosis and mitigation of active context failures. Adjacent skills own the implementation tactics once the failure is identified:
 
-- `context-fundamentals`: conceptual explanation of attention and context windows before a failure exists.
+- `context-optimization` (`references/fundamentals.md`): conceptual explanation of attention and context windows before a failure exists.
 - `context-optimization`: masking, caching, partitioning, and other token-efficiency tactics after diagnosis.
 - `multi-agent-patterns`: isolating tasks into separate contexts to prevent confusion and clash.
 - `evaluation`: degradation tests and production monitoring.
@@ -227,7 +227,7 @@ Internal reference:
 
 Related skills in this collection:
 
-- context-fundamentals - Read when: lacking foundational understanding of context windows, token budgets, or placement mechanics
+- context-optimization (fundamentals reference) - Read when: lacking foundational understanding of context windows, token budgets, or placement mechanics
 - context-optimization - Read when: degradation is diagnosed and specific mitigation techniques (compaction, compression, masking) are needed
 - evaluation - Read when: setting up production monitoring to detect degradation before it impacts users
 

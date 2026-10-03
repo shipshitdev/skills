@@ -200,7 +200,10 @@ Adversarial pass: <N raw> → <M surviving>
 
 ## Thermo Nuclear Code Quality Review procedure
 
-Read [thermo-nuclear-code-quality-review procedure](references/thermo-nuclear-code-quality-review-procedure.md) when the request calls for the exhaustive review workflow.
+The exhaustive code-quality workflow (file-size limits, spaghetti, canonical
+layers, atomic mutations, "code judo", the approval bar) is the `structural-review`
+skill's rubric — run that skill when the request calls for it. It is the single
+copy of this rubric in the catalog; the structural lens above uses its axes.
 Apply the authorized scope and mode of this entry point to every step.
 Resolve other skills through this distribution’s active catalog; resolve
 resources relative to the installed skill directory.

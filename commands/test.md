@@ -55,8 +55,8 @@ runs the suite with coverage, while `/test coverage` installs the Husky gate.
 - **`init`** — the `testing-cicd-init` skill: install Vitest testing
   infrastructure and GitHub Actions CI/CD for TypeScript projects, configuring
   80% coverage thresholds and Bun-based workflows.
-- **`regression`** — the `ai-regression-testing` skill: design regression tests
-  that target AI model blind spots such as sandbox vs. production path drift,
+- **`regression`** — the `testing-expert` skill in AI regression mode: design
+  regression tests that target AI model blind spots such as sandbox vs. production path drift,
   response-shape mismatches, and same-model review failures.
 
 ## Workflow

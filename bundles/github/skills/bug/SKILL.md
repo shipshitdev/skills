@@ -54,8 +54,8 @@ Confirmation Required:
 Delegates To:
 
 - `github-fix-ci` when the bug is a failing CI check the user wants fixed instead of filed
-- `debug` when the user wants to root-cause before filing (it escalates to
-  `systematic-debugging` on its own when a fix attempt has already failed)
+- `debug` when the user wants to root-cause before filing (it escalates to its
+  four-phase loop on its own when a fix attempt has already failed)
 
 ## When to Use
 

@@ -203,7 +203,7 @@ Three worked examples — direct scoring for factual accuracy, pairwise comparis
 This skill owns judge design and bias mitigation. Adjacent skills own broader quality gates and infrastructure:
 
 - `evaluation`: general deterministic checks, regression suites, quality gates, and production monitoring.
-- `context-fundamentals`: context structure for judge prompts.
+- `context-optimization` (`references/fundamentals.md`): context structure for judge prompts.
 - `tool-design`: schemas and error handling for evaluation tools.
 - `context-optimization`: token and latency efficiency for high-volume evals.
 
@@ -227,5 +227,5 @@ External research:
 Related skills in this collection:
 
 - evaluation - Foundational evaluation concepts
-- context-fundamentals - Context structure for evaluation prompts
+- context-optimization (fundamentals reference) - Context structure for evaluation prompts
 - tool-design - Building evaluation tools

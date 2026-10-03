@@ -6,7 +6,7 @@ The front door for a reported failure, and the lookup library behind it. Based o
 
 This skill provides 54 rules across 10 categories to help developers debug systematically instead of randomly. Rules are prioritized by impact, from critical problem definition techniques to prevention practices.
 
-It owns first contact: build a deterministic feedback loop, reproduce the symptom, rank falsifiable hypotheses, instrument the narrowest point that separates them, and land the fix with a regression test. Cases that escalate — a fix attempt already failed, the defect keeps returning, each fix exposes a new problem — hand off to `systematic-debugging` for the full four-phase root-cause loop. A test or build breaking during stabilization goes to `execution-debugging`, which keeps scope on that one check.
+It owns every entry: first contact (build a deterministic feedback loop, reproduce, rank falsifiable hypotheses, instrument, fix with a regression test), escalation after a failed fix (the four-phase loop in `references/systematic-debugging.md`), and scoped mode for a test or build breaking mid-task.
 
 | Category | Rules | Impact |
 |----------|-------|--------|
@@ -170,6 +170,25 @@ Examples:
 4. **Find WHERE Before WHAT** - Locate first, understand second
 5. **One Change at a Time** - Isolate variables to avoid confounding
 6. **Question Assumptions** - Many bugs hide behind unquestioned beliefs
+
+## Upstream: systematic-debugging reference
+
+Derived from **[obra/superpowers](https://github.com/obra/superpowers)** (MIT).
+
+| Field | Value |
+|-------|-------|
+| Source | [`skills/systematic-debugging/SKILL.md`](https://github.com/obra/superpowers/blob/main/skills/systematic-debugging/SKILL.md) |
+| Upstream ref | `main` |
+| Synced at commit | `030a222af19c` |
+| Last synced | 2026-06-12 |
+| License | MIT |
+
+**Local modifications:** Adapted from obra/superpowers as a standalone, platform-neutral marketplace plugin. The four phases, the Iron Law, and the red flags are unchanged from upstream. Locally narrowed to the **escalation lane**: `description` and `when_to_use` now trigger on failed-fix and recurring-defect wording rather than on any bug, and an `## Entry Point` section names `debug` as the front door that hands cases here. That keeps the two skills' trigger phrases disjoint in this catalog — upstream ships no `debug` counterpart, so the split does not travel back.
+
+**Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/systematic-debugging/SKILL.md`](https://github.com/obra/superpowers/blob/main/skills/systematic-debugging/SKILL.md) on `main` since commit `030a222af19c`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.
+
+
+Folded into `debug` as `references/systematic-debugging.md` on 2026-10-03 (#168). Rolling sync ended; port upstream changes by hand when worth it.
 
 ## Acknowledgments
 

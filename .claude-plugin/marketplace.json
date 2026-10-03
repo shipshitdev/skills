@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "186 AI agent skills for development workflows",
+  "description": "182 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -136,12 +136,6 @@
       "source": "./skills/ai-loading-ux",
       "version": "2.2.2",
       "description": "Design AI loading, thinking, and progress indicator UX. Use when explicitly asked to improve AI waiting states, add thinking indicators, or design loading UX for AI interfaces. Covers reasoning display (chain-of-thought), progress steps, streaming states, and the \"elevator mirror effect\" for reducing perceived wait time."
-    },
-    {
-      "name": "ai-regression-testing",
-      "source": "./skills/ai-regression-testing",
-      "version": "2.2.2",
-      "description": "Design regression tests for AI-assisted development by targeting model blind spots such as sandbox versus production path drift, response-shape mismatches, untested bug fixes, and same-model review failures. Use after AI-generated code changes, bug fixes, API edits, or feature-flag/sandbox changes."
     },
     {
       "name": "api-design-expert",
@@ -294,16 +288,10 @@
       "description": "Supplementary context protocol for agents executing in a repo that has a CLAUDE.md / AGENTS.md (or equivalent config). Use to make an execution agent read project conventions first, treat inputs by trust level, surface plan-vs-convention conflicts instead of silently picking a side, and reuse existing patterns before writing new code."
     },
     {
-      "name": "context-fundamentals",
-      "source": "./skills/context-fundamentals",
-      "version": "2.2.2",
-      "description": "Explain or reason about foundational context engineering concepts: what context is, the anatomy of a context window, attention mechanics, the U-shaped attention curve, why context quality matters more than quantity, and the mental models needed to interpret context-engineering decisions. Use for conceptual explanation, onboarding, and background reading. Route operational work to context-degradation for attention failures and context-optimization for token-efficiency work."
-    },
-    {
       "name": "context-optimization",
       "source": "./skills/context-optimization",
       "version": "2.2.2",
-      "description": "Improve context efficiency through context budgeting, observation masking, prefix or KV-cache strategy, partitioning, token-cost reduction, retrieval scoping, and extending effective context capacity without lowering answer quality. Use when token costs or context budgets constrain a task, tool outputs are verbose, cache hit rate is low, or context must be partitioned across agents."
+      "description": "Improves context efficiency — budgets, observation masking, KV-cache strategy, partitioning, retrieval scoping — and explains context-window anatomy and attention mechanics behind those choices. Use when token cost or context budget constrains a task, or to reason about how context works."
     },
     {
       "name": "create-verification-skill",
@@ -327,7 +315,7 @@
       "name": "debug",
       "source": "./skills/debug",
       "version": "2.2.2",
-      "description": "Front door for a freshly reported failure: build a deterministic feedback loop, reproduce the symptom, rank falsifiable hypotheses, and instrument the narrowest point that separates them. Carries the lookup library — 54 rules across 10 categories covering observation technique, common bug patterns, and triage priority. Use on first contact with a bug, crash, wrong output, or performance regression before any fix has been attempted, and to look up a debugging technique or bug pattern by name. Hands off to `systematic-debugging` when a fix attempt has already failed or the cause survives the loop."
+      "description": "Debugs failures end to end: builds a deterministic repro loop, ranks falsifiable hypotheses, instruments the narrowest point, and fixes the root cause with a regression test. Escalates to a four-phase root-cause loop after a failed fix, and has a scoped mode for a test or build breaking mid-task."
     },
     {
       "name": "dependency-audit",
@@ -424,12 +412,6 @@
       "source": "./skills/executing-plans",
       "version": "2.2.2",
       "description": "Executes a prepared GitHub issue without inventing product or engineering decisions, escalates plan gaps, and tracks delivery through independent cross-provider review, required CI, merge, and deployment evidence. Use when implementing an approved plan or processing an explicitly authorized issue queue."
-    },
-    {
-      "name": "execution-debugging",
-      "source": "./skills/execution-debugging",
-      "version": "2.2.2",
-      "description": "Scoped debugging methodology for when a test or build fails during execution/stabilization. Use to diagnose the failing check without scope-creeping — read the full error, reproduce in isolation, hypothesize before changing, localize, fix the root cause not the symptom, and guard with a regression test."
     },
     {
       "name": "expo-architect",
@@ -537,7 +519,7 @@
       "name": "grilling",
       "source": "./skills/grilling",
       "version": "2.2.2",
-      "description": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, asks to be grilled, or another skill needs the interview primitive."
+      "description": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, says \"grill me\" (optionally against the docs), or another skill needs the interview primitive."
     },
     {
       "name": "grok-review",
@@ -1044,12 +1026,6 @@
       "description": "Fan out N parallel workers, drain them, and return one report. Use for swarm this, or parallel coverage, races, gauntlets, and exploration partitions."
     },
     {
-      "name": "systematic-debugging",
-      "source": "./skills/systematic-debugging",
-      "version": "2.2.2",
-      "description": "Full four-phase root-cause loop — investigate, analyze patterns, hypothesize, implement — for a failure that survived a first pass. Bars any further fix until the cause is proven, counts failed attempts, and turns the third failure into an architecture question. Use when a fix attempt has already failed, the same defect keeps coming back, each fix exposes a new problem elsewhere, or the root cause must be proven before another line changes — including when time pressure makes guessing tempting. `debug` is the front door that hands cases here."
-    },
-    {
       "name": "table-filters",
       "source": "./skills/table-filters",
       "version": "2.2.2",
@@ -1095,7 +1071,7 @@
       "name": "test-dispatch",
       "source": "./skills/test-dispatch",
       "version": "2.2.2",
-      "description": "Single front door for testing. Parses a subcommand — run, qa, tdd, e2e, coverage, init, or regression — and routes to the right testing engine: test-runner (run tests, repair authorized failures), qa-reviewer (structured verification pass on completed work), tdd (red-green-refactor workflow), playwright-e2e-init (scaffold E2E tests for frontend projects), husky-test-coverage (enforce coverage thresholds via git hooks), testing-cicd-init (Vitest + GitHub Actions CI setup), or ai-regression-testing (design regression tests targeting AI blind spots). Backs the /test command. Use when asked to run tests, write tests, set up testing, check coverage, or start TDD, and the action must be picked from an argument like \"run\", \"qa\", \"tdd\", \"e2e\", \"coverage\", \"init\", or \"regression\"."
+      "description": "Router behind /test. Parses run, qa, tdd, e2e, coverage, init, or regression and delegates to the matching testing engine without adding testing logic of its own."
     },
     {
       "name": "test-runner",
@@ -1113,7 +1089,7 @@
       "name": "testing-expert",
       "source": "./skills/testing-expert",
       "version": "2.2.2",
-      "description": "Framework-agnostic testing strategy — which level to test at, what coverage numbers mean, how to design a test that survives refactoring, how to choose test data, and how to kill flakes. Use when deciding what is worth testing, setting or defending a coverage target, reviewing the shape of an existing suite, or diagnosing a flaky or slow test. Framework-specific work routes to a specialist skill instead of being answered here."
+      "description": "Framework-agnostic testing strategy — test level, coverage targets, refactor-proof test design, test data, flake diagnosis — plus regression tests aimed at AI blind spots (sandbox vs production drift, response-shape mismatches). Use when deciding what to test, reviewing a suite, fixing flakes, or guarding AI-written changes."
     },
     {
       "name": "theme-factory",

@@ -278,7 +278,7 @@ Internal reference:
 
 Related skills in this collection:
 
-- context-fundamentals - Read when: needing to understand context window mechanics before designing agent partitioning
+- context-optimization (fundamentals reference) - Read when: needing to understand context window mechanics before designing agent partitioning
 - memory-systems - Read when: agents need to share state across context boundaries or persist information between runs
 - context-optimization - Read when: individual agent contexts are too large and need partitioning or compression strategies
 

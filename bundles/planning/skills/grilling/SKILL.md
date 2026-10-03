@@ -1,6 +1,6 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, asks to be grilled, or another skill needs the interview primitive.
+description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, says "grill me" (optionally against the docs), or another skill needs the interview primitive.
 license: MIT
 metadata:
   version: "2.2.2"

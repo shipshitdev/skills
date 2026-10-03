@@ -220,7 +220,7 @@ Internal references:
 
 Related skills in this collection:
 
-- context-fundamentals - Read when: designing the context layer that memory feeds into
+- context-optimization (fundamentals reference) - Read when: designing the context layer that memory feeds into
 - multi-agent-patterns - Read when: multiple agents need to share or coordinate memory state
 
 External resources:
