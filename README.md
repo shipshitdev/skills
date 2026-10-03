@@ -252,6 +252,13 @@ or another Agent Skills-compatible harness.
 
 ### Weekly engineering review
 
+Run `/standup 24` for a personal recap, `/standup all 24` for everyone's merged
+changes, or `/standup all 24 audit` to double-check individual and combined
+changes with frozen commits, PR/review links, deployment evidence, and safe
+checkpoints. Bare numbers mean hours; `7d`, `since <SHA>`, and dated timezone
+windows also work. See [standup modes and routing](docs/skills/standup.md) and the
+[Anthropic engineering coverage comparison](docs/skills/engineering-comparison.md).
+
 Run `/weekly-review 7d` with a repository and board URL for an evidence-backed
 report on issue accuracy, recent changes, operational gaps, and deslop findings.
 Use `since <SHA>` to resume from a completed review checkpoint. Add `--fix` for

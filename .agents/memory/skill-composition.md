@@ -1,6 +1,6 @@
 # Scoped Workflow Composition
 
-last_verified: 2026-09-05
+last_verified: 2026-10-02
 
 Skill discovery and action authorization are separate. Explicit execution routers
 may invoke reusable engines only within the selected task, carrying target,
@@ -27,3 +27,15 @@ GitHub CLI named `gh`. Board configuration and reconciliation use `project-board
 and `board-sync`, resolving the provider from the target. Existing workflows and
 all 29 command names remain; the house board layout is an optional preset.
 The complete historical map is `docs/skills/catalog-naming.md`.
+
+## Standup integrated history (2026-10-02)
+
+Keep the personal default and use positional `/standup all 24` for integrated
+all-author recap; `/standup all 24 audit` adds report-only review. Bare numbers
+mean hours. Do not create a competing merged-audit entry point.
+`weekly-review/references/merged-history.md` owns the shared frozen integration
+scope, recap/audit procedure, exact-SHA evidence, and scope-qualified checkpoint
+gate. Standup resolves that installed resource without invoking board maintenance.
+Audit findings grant no writes, repair, merge, deployment, scheduling, or policy
+authority. Source comparison and broader proposals live in
+`docs/skills/engineering-comparison.md`; no Anthropic catalog was imported.

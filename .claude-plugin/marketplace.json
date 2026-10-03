@@ -1011,7 +1011,7 @@
       "name": "standup",
       "source": "./skills/standup",
       "version": "2.2.2",
-      "description": "Summarize what you personally shipped over a time window from git history — an engineer standup or weekly recap, not a customer changelog. Scopes commits to your git author identity, reads the diffs, and classifies each as a feature, fix, refactor, tech-debt, or docs change. Use when the user asks what did I get done, write my standup, what did I ship this week, weekly recap, or runs /standup."
+      "description": "Summarizes personal git activity by default, all authors' integrated changes with /standup all 24, and an opt-in merged-history audit with /standup all 24 audit. Reads diffs, links PR/review evidence, and separates merged from deployed. Use for an engineer standup, recap, or double-check of everything merged since a time or checkpoint."
     },
     {
       "name": "stripe-implementer",
