@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "182 AI agent skills for development workflows",
+  "description": "183 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -514,6 +514,12 @@
       "source": "./skills/graphql-architect",
       "version": "2.2.2",
       "description": "Design and review GraphQL schemas, resolvers, mutations, pagination, and data-loading patterns. Use when building or refactoring GraphQL APIs, adding fields, fixing resolver design, or improving GraphQL performance and safety."
+    },
+    {
+      "name": "grill-me",
+      "source": "./skills/grill-me",
+      "version": "2.2.2",
+      "description": "Relentless interview to sharpen a plan or design. Shortcut for the grilling skill."
     },
     {
       "name": "grilling",
