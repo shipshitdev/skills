@@ -24,9 +24,7 @@ GitHub workflow and automation skills
 - `feature-intake`
 - `merge-open-prs`
 - `release`
-- `release-dispatch`
 - `git-cleanup`
-- `release-pr-gates`
 - `worktree`
 - `finishing-a-development-branch`
 - `pr-comments`

@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **188 skills · 30 commands · 13 bundles · 201 plugins**.
+Generated catalog: **186 skills · 30 commands · 13 bundles · 199 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 188 | `skills/*/SKILL.md` |
+| Skills | 186 | `skills/*/SKILL.md` |
 | Commands | 30 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 201 | skills + bundles |
+| Plugins | 199 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -51,6 +51,18 @@ Run `bun run version:sync` after a repository version change; packaging and
 release automation synchronize this automatically. `version:check` verifies
 alignment rather than requiring a separate version bump for instruction edits.
 Installed metadata updates preserve local behavior and owned customization.
+
+### One release skill (2026-10-03)
+
+Vincent merged `release-pr-gates` and `release-dispatch` into `release`; `/release`
+routes straight to it. Rationale: `release-pr-gates` also tagged locally without
+the clean-trunk checks or guarded-workflow detection, which side-doored promote
+gates such as Genfeed's `release.yml`. `release` now proves checks for the exact
+trunk SHA (runs on the SHA plus the producing PR's required checks, because
+required checks usually run only on PRs), detects release-please, guarded
+`workflow_dispatch`, or tag mode, reads the workflow's declared inputs, and
+reports deploy evidence. `deploy` no longer triggers on "release". Supersedes the
+earlier backlog row that kept the release skills separate (#166).
 
 ### External Skills Imported (2026-04-21)
 

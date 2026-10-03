@@ -64,7 +64,7 @@ git-safety
 landing-page-vercel
 micro-landing-builder
 project-init-orchestrator
-release-pr-gates
+release
 rules-capture
 scaffold
 prd-task-creator

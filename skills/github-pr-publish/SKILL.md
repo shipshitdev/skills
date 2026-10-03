@@ -80,7 +80,7 @@ Delegates To:
 
 - `commit-summary` to create a Conventional Commit
 - `github-fix-ci` when PR checks fail
-- `release-pr-gates` / `release` for trunk-based releases
+- `release` for trunk-based releases
 - `project-board` for a separately requested board configuration change
 - For explicitly requested PR membership, use a separately scoped GitHub item-add
   action; board configuration and reconciliation do not add cards

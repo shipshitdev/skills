@@ -3262,12 +3262,12 @@
         {
           "executable": false,
           "path": "skills/github-pr-publish/SKILL.md",
-          "sha256": "1856f15aef5cec29e20d57e9958a9e118c2a1872d2363bf84d21a2cd5f7a8ffb"
+          "sha256": "0fdb384137bb110967cbd111499eb36a28b7dbb4e3d4ee795131d262254c2b6c"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "Issue #166: Delegates To now names the single release skill after release-pr-gates was merged into release; no upstream behavior changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
