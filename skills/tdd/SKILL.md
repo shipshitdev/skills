@@ -53,7 +53,7 @@ Confirmation Required:
 Delegates To:
 
 - `testing-expert` for broad test strategy or framework setup
-- `ai-regression-testing` for bug-specific regression coverage and path parity
+- `testing-expert` (AI regression mode) for bug-specific regression coverage and path parity
 - `debug` when the root cause is still unknown
 - `codebase-design` when the test boundary is a module **seam** that still needs shaping
 - `verification-before-completion` when about to claim the work is done

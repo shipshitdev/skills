@@ -1,60 +1,17 @@
----
-name: ai-regression-testing
-description: Design regression tests for AI-assisted development by targeting model blind spots such as sandbox versus production path drift, response-shape mismatches, untested bug fixes, and same-model review failures. Use after AI-generated code changes, bug fixes, API edits, or feature-flag/sandbox changes.
-metadata:
-  version: "2.2.2"
-  tags: "testing, ai, regression, quality, api"
----
-
 # AI Regression Testing
 
+<!-- Folded from the former `ai-regression-testing` skill on 2026-10-03 (#168). -->
+
 Add tests that catch the failures AI agents commonly miss when the same model
-writes code and reviews its own assumptions.
+writes code and reviews its own assumptions. Use after AI changed API routes,
+serializers, or response schemas; after a bug fix that must not return; when a
+feature has sandbox/mock and production paths or a feature flag changed; or when
+a model review calls a change correct but no test proves it.
 
-## Contract
-
-Inputs:
-
-- Bug report, code diff, API change, route, component, feature flag, or sandbox path
-- Existing test commands and project conventions
-- Optional known production incident or regression id
-
-Outputs:
-
-- Regression test plan
-- New or updated tests when implementation is requested
-- Parity checklist for sandbox, mock, feature-flag, and production paths
-- Verification commands and results
-
-Creates/Modifies:
-
-- Test files, fixtures, mocks, and minimal helpers when asked to implement
-- Application code only when the user also asks to fix the failing behavior
-
-External Side Effects:
-
-- None by default
-- Do not hit production services; use sandbox, fixtures, local test databases, or mocked providers
-
-Confirmation Required:
-
-- Before changing production data, external accounts, CI settings, or destructive test fixtures
-
-Delegates To:
-
-- `testing-expert` for general testing strategy
-- `react-testing-library` for React component tests
-- `playwright-e2e-init` for browser setup or `test-runner` for existing browser tests
-- `debug` when the root cause is still unknown
-
-## When to Use
-
-- AI modified API routes, backend logic, serializers, or response schemas.
-- A bug was fixed and must not reappear.
-- A feature has sandbox/mock and production paths.
-- A model-generated review says the change is correct but no test proves it.
-- Build and lint pass, but the user-facing contract may still be wrong.
-- A feature flag, mock mode, fallback path, or error path was changed.
+Never hit production services: use sandbox, fixtures, local test databases, or
+mocked providers. Confirm before changing production data, external accounts,
+CI settings, or destructive fixtures. Write application code only when the user
+also asks to fix the behavior; use `debug` while the root cause is unknown.
 
 ## Core Principle
 

@@ -14,7 +14,6 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `agent-architecture-audit`
 - `agent-config-audit`
 - `ai-agent-cost-optimizer`
-- `ai-regression-testing`
 - `changelog-generator`
 - `code-review`
 - `codebase-advisor`
@@ -26,7 +25,6 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `deploy-dispatch`
 - `deployment-composer`
 - `docs`
-- `execution-debugging`
 - `full-code-review`
 - `grok-review`
 - `llm-structured-output`
@@ -47,7 +45,6 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `stack-modernization`
 - `standup`
 - `structural-review`
-- `systematic-debugging`
 - `tech-debt`
 - `verification-before-completion`
 - `weekly-review`

@@ -154,7 +154,7 @@ When auditing a workflow, return:
 
 Related skills:
 
-- `context-fundamentals` - Understand what consumes context
+- `context-optimization` (`references/fundamentals.md`) - Understand what consumes context
 - `context-optimization` - Apply compaction, masking, caching, and partitioning
 - `multi-agent-patterns` - Evaluate when sub-agent context isolation is worth the overhead
 - `tool-design` - Reduce tool ambiguity and response bloat

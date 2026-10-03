@@ -14,7 +14,6 @@ AI agent development and prompt engineering
 - `prompt-engineering`
 - `mcp-builder`
 - `skill-creator`
-- `context-fundamentals`
 - `context-optimization`
 - `context-degradation`
 - `context-engineering`

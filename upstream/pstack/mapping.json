@@ -3052,11 +3052,12 @@
         {
           "executable": false,
           "path": "skills/fix-merge-conflicts/SKILL.md",
-          "sha256": "b4c26a4c443d86fee526fdca76b8e287951488feb2447245e2c0db9de8ef3169"
+          "sha256": "2a5a220ac9ab0151a40c06250074cb54d0a76172175a1fc5335e9adf41caea18"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Issue #168: tdd and fix-merge-conflicts retarget merged skills (testing-expert AI regression mode, debug scoped mode); the thermo-nuclear procedure is superseded by structural-review, the single code-quality rubric.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4807,11 +4808,12 @@
         {
           "executable": false,
           "path": "skills/tdd/SKILL.md",
-          "sha256": "edc7526967993df20dd83e8ab3b4e1f34de7474605b165060c39786e3ac302ea"
+          "sha256": "63cee096bb42ee76efd11dd2024bfbc92a71085c457d3071755eb7be8821c18f"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Issue #168: tdd and fix-merge-conflicts retarget merged skills (testing-expert AI regression mode, debug scoped mode); the thermo-nuclear procedure is superseded by structural-review, the single code-quality rubric.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4860,17 +4862,18 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/full-code-review/references/thermo-nuclear-code-quality-review-procedure.md",
-          "sha256": "398363cf1fc379a728e29ae1724023bbe7d40437368e0ae4c9658992a12955fb"
+          "path": "skills/full-code-review/SKILL.md",
+          "sha256": "7f0575f18e6d1cb269aa4efc6d8c0f37452b03485e4b7ff85eb45e0af2cbc317"
         },
         {
           "executable": false,
-          "path": "skills/full-code-review/SKILL.md",
-          "sha256": "2e334b60e8a02a576600560d871a7f1b8cd4c3a3870a11dbd2dcb0d516ab1b4d"
+          "path": "skills/structural-review/SKILL.md",
+          "sha256": "73d52c918e3513ac3adb195bfe96191868aec33f72bcf8ef3a7fc9c314b76d37"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "superseded",
+      "reason": "structural-review is the catalog's single code-quality rubric (#168); full-code-review points to it instead of carrying a duplicate procedure.",
+      "review_note": "Issue #168: structural-review absorbed the canonical-helper and parallelization checks from the superseded thermo-nuclear procedure; full-code-review's embedded structural prompt mirrors them. tdd and fix-merge-conflicts retarget merged skills.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

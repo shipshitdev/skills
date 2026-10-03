@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **186 skills · 30 commands · 13 bundles · 199 plugins**.
+Generated catalog: **182 skills · 30 commands · 13 bundles · 195 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 186 | `skills/*/SKILL.md` |
+| Skills | 182 | `skills/*/SKILL.md` |
 | Commands | 30 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 199 | skills + bundles |
+| Plugins | 195 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -51,6 +51,18 @@ Run `bun run version:sync` after a repository version change; packaging and
 release automation synchronize this automatically. `version:check` verifies
 alignment rather than requiring a separate version bump for instruction edits.
 Installed metadata updates preserve local behavior and owned customization.
+
+### Overlap merges (2026-10-03)
+
+Vincent approved evidence-based merges after a read-only cluster audit (#168):
+`debug` absorbed `execution-debugging` (scoped mode) and `systematic-debugging`
+(`references/systematic-debugging.md`, Iron Law verbatim, rolling obra sync
+ended); `context-optimization` absorbed `context-fundamentals`
+(`references/fundamentals.md` + `scripts/context_manager.py`); `testing-expert`
+absorbed `ai-regression-testing` (AI regression mode, `/test regression`);
+`structural-review` is the single code-quality rubric and the pstack
+thermo-nuclear procedure is `superseded`. Review, interview, `bug`, and `why`
+skills stay separate: different side effects, upstream tracking, or pinned tests.
 
 ### One release skill (2026-10-03)
 
