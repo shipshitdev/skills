@@ -1,3 +1,9 @@
+---
+description: "Improve existing code: strip slop, safe refactor, tech-debt register, perf, structure review, or stack modernization."
+argument-hint: "[deslop|code|debt|perf|structure|stack] [target]"
+disable-model-invocation: true
+---
+
 # Refactor - One Front Door for Improving Existing Code
 
 Point it at what you want improved and it routes to the right engine: strip AI slop,
@@ -15,6 +21,8 @@ frontend and backend.
 /refactor stack                           # modernize deps + framework-pattern drift
 /refactor                                 # show what this repo most needs, then Usage
 ```
+
+`/refactor help` prints this Usage block and stops without running anything.
 
 ## Modes
 

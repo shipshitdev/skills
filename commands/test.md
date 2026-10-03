@@ -1,3 +1,9 @@
+---
+description: "Run, author, or set up tests: run and repair, QA pass, TDD, Playwright E2E, coverage gates, or CI init."
+argument-hint: "[run [scope]|qa|tdd|e2e|coverage|init|regression]"
+disable-model-invocation: true
+---
+
 # Test - One Front Door for Running, Authoring, and Setting Up Tests
 
 Drive the whole testing lifecycle from one command — run tests and repair
@@ -26,6 +32,8 @@ AI-targeted regression suites.
 /test init               # install Vitest + GitHub Actions CI with 80% coverage threshold
 /test regression         # design regression tests targeting AI-generated code blind spots
 ```
+
+`/test help` prints this Usage block and stops without running anything.
 
 Note the run/setup split: `/test run e2e` executes existing E2E tests, while
 `/test e2e` scaffolds Playwright from scratch. Likewise `/test run coverage`

@@ -1,3 +1,9 @@
+---
+description: "Recap what you shipped over a time window from your git history."
+argument-hint: "[7d|today|yesterday|since <ref>|from <date> to <date>] [--author <email>] [--all-repos <dir>]"
+disable-model-invocation: true
+---
+
 # Standup - What Did I Get Done
 
 Summarize what **you** shipped over a time window from git history — an engineer
@@ -16,6 +22,8 @@ status update, not customer release notes.
 /standup --author <email>     # scope to a different identity
 /standup --all-repos <dir>    # sweep sibling repos under <dir>, grouped by repo
 ```
+
+`/standup help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

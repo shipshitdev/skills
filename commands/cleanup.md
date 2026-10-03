@@ -1,3 +1,9 @@
+---
+description: "Prune provably merged branches and stale worktrees (dry-run first); optionally close shipped issues or consolidate sessions."
+argument-hint: "[branches|worktrees|verify|prune|tasks|sessions|all]"
+disable-model-invocation: true
+---
+
 # Cleanup - Prune Merged Branches, Stale Worktrees, and Finished Work
 
 Clean up what's already done. Default target is git hygiene: verify branches are
@@ -17,6 +23,8 @@ extend the sweep to completed GitHub issues and old session files.
 /cleanup sessions     # consolidate daily session files into monthly/yearly
 /cleanup all          # git cleanup + tasks + sessions, sequentially
 ```
+
+`/cleanup help` prints this Usage block and stops without running anything.
 
 `prune` combines with a scope, e.g. `/cleanup prune branches`.
 
