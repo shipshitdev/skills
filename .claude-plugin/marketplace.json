@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "188 AI agent skills for development workflows",
+  "description": "186 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -339,7 +339,7 @@
       "name": "deploy",
       "source": "./skills/deploy",
       "version": "2.2.2",
-      "description": "Run deployment workflows for web applications (staging, production). Use when user says 'deploy', 'push to staging', 'release', 'ship it', or 'go live'."
+      "description": "Run deployment workflows for web applications (staging, production). Use when user says 'deploy', 'push to staging', 'ship it', or 'go live'. Cutting a version or tag is `release`."
     },
     {
       "name": "deploy-dispatch",
@@ -897,19 +897,7 @@
       "name": "release",
       "source": "./skills/release",
       "version": "2.2.2",
-      "description": "Cuts the release itself — derives the next semantic version from commits since the last tag, writes plain-English patch notes, previews the plan, then on confirmation creates an annotated tag plus GitHub release, or dispatches the repo's guarded release workflow where production sits behind a workflow_dispatch promote gate. Trunk-based; no develop or staging branch promotion. Assumes the trunk is already green — to open a release PR or wait on required checks first, use `release-pr-gates`."
-    },
-    {
-      "name": "release-dispatch",
-      "source": "./skills/release-dispatch",
-      "version": "2.2.2",
-      "description": "Single front door for releases. Parses a subcommand — gates, cut, or notes — and routes to the right release engine: release-pr-gates (verify CI green, then cut a tag/release or open a release PR) or release (semver bump + plain-English patch notes). Backs the /release command. Use when asked to release, cut a tag, open a release PR, wait for CI to go green, or generate patch notes, and the action must be picked from an argument like \"gates\", \"cut\", or \"notes\". Branch/worktree pruning is not a release step — that is git-cleanup, behind /cleanup."
-    },
-    {
-      "name": "release-pr-gates",
-      "source": "./skills/release-pr-gates",
-      "version": "2.2.2",
-      "description": "Holds a release at the gate — opens or reuses a release PR into the trunk, runs local format, lint, and type-check, watches required GitHub checks through to green, and summarizes the failing run's root cause when they are not. Tags only after the gate passes. Reach for it during the pre-merge wait; for version derivation and plain-English patch notes, use `release`."
+      "description": "Cuts a release from a green trunk. Proves the required checks on the exact trunk SHA, derives the next semver and plain-English notes, then publishes through the repo's own mechanism — release-please PR, guarded release workflow, or annotated tag — and reports deploy evidence. Backs /release."
     },
     {
       "name": "review-dispatch",

@@ -41,7 +41,7 @@ Delegates To:
 
 - `security-audit` for application security findings
 - `deploy` or `deployment-composer` for release mechanics
-- `release-pr-gates` for GitHub release promotion
+- `release` for gating the trunk SHA and cutting the release
 - `playwright-e2e-init` for missing launch-critical browser coverage; `test-runner` for existing tests
 
 ## When to Use
