@@ -4869,7 +4869,7 @@
         {
           "executable": false,
           "path": "skills/full-code-review/SKILL.md",
-          "sha256": "a33d61f7ab6078663c84f0c61c2c7c0f7698bbca929d4acef67f30d08a0aeed2"
+          "sha256": "15937ad445e2aa6f94a54a669ce614236bd973b9dc57b97b9ac94bfb4e3e947d"
         },
         {
           "executable": false,
@@ -4879,7 +4879,7 @@
       ],
       "disposition": "superseded",
       "reason": "structural-review is the catalog's single code-quality rubric (#168); full-code-review points to it instead of carrying a duplicate procedure.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Listing-budget pass (2026-10-03, #175): description/when_to_use trimmed to the catalog listing budget after independent review; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

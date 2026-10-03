@@ -1,6 +1,6 @@
 ---
 name: review-dispatch
-description: Routes /review to the right code-review workflow for working-tree changes, a PR, all open PRs, recent commits, or merged-history retro, or a Grok second opinion. Report-only.
+description: Routes /review for diffs, one/all PRs, commit windows, retros, or Grok second opinions. Report-only except confirmation-gated GitHub issue filing from retros.
 metadata:
   version: "2.2.2"
   tags: "code-review, dispatcher, pull-requests, commits, retro, orchestration, second-opinion"

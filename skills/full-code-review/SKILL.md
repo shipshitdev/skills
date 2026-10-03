@@ -1,6 +1,6 @@
 ---
 name: full-code-review
-description: Fans out PR review to parallel structural, security, and devex/flag-hygiene agents, verifies each finding, and issues one prioritized verdict. Use for a full or end-to-end review.
+description: Reviews PR structure, security depth, and devex/flag hygiene with parallel agents after code-review passes correctness. Use for a full or comprehensive PR review.
 compatibility: Requires gh CLI and git for PR diff fetching.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -9,7 +9,7 @@ metadata:
   tags: "code-review, security, structural, devex, orchestration, pr-gate"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)
-when_to_use: "comprehensive review, production readiness review"
+when_to_use: "end-to-end PR review, deep branch review"
 ---
 
 # Full Code Review

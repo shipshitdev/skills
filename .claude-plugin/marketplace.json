@@ -453,7 +453,7 @@
       "name": "full-code-review",
       "source": "./skills/full-code-review",
       "version": "2.2.2",
-      "description": "Fans out PR review to parallel structural, security, and devex/flag-hygiene agents, verifies each finding, and issues one prioritized verdict. Use for a full or end-to-end review."
+      "description": "Reviews PR structure, security depth, and devex/flag hygiene with parallel agents after code-review passes correctness. Use for a full or comprehensive PR review."
     },
     {
       "name": "fullstack-workspace-init",
@@ -885,7 +885,7 @@
       "name": "review-dispatch",
       "source": "./skills/review-dispatch",
       "version": "2.2.2",
-      "description": "Routes /review to the right code-review workflow for working-tree changes, a PR, all open PRs, recent commits, or merged-history retro, or a Grok second opinion. Report-only."
+      "description": "Routes /review for diffs, one/all PRs, commit windows, retros, or Grok second opinions. Report-only except confirmation-gated GitHub issue filing from retros."
     },
     {
       "name": "roadmap-analyzer",
@@ -1083,7 +1083,7 @@
       "name": "testing-cicd-init",
       "source": "./skills/testing-cicd-init",
       "version": "2.2.2",
-      "description": "Installs Vitest and GitHub Actions CI on Bun for Next.js, NestJS and React projects, with 80% coverage thresholds. Use when adding tests, migrating from Jest, or first CI setup."
+      "description": "Installs Vitest and GitHub Actions CI with Bun and 80% coverage for Next.js, NestJS, or React. Use for new test infrastructure, Jest migration, or first CI setup."
     },
     {
       "name": "testing-expert",

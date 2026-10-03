@@ -1,6 +1,6 @@
 ---
 name: testing-cicd-init
-description: Installs Vitest and GitHub Actions CI on Bun for Next.js, NestJS and React projects, with 80% coverage thresholds. Use when adding tests, migrating from Jest, or first CI setup.
+description: Installs Vitest and GitHub Actions CI with Bun and 80% coverage for Next.js, NestJS, or React. Use for new test infrastructure, Jest migration, or first CI setup.
 metadata:
   version: "2.2.2"
   tags: "testing, ci, vitest"
