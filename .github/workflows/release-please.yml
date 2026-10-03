@@ -1,8 +1,9 @@
 name: Release Please
 
 # Every push to master feeds a rolling "chore(master): release X.Y.Z" PR that
-# bumps package.json + CHANGELOG.md from conventional-commit PR titles
-# (feat → minor, fix/chore/refactor → patch, ! → major). It opens as a draft
+# bumps package.json + CHANGELOG.md from conventional-commit PR titles.
+# Every release is a patch bump, including feat and ! commits
+# (`versioning: always-bump-patch`). It opens as a draft
 # (`draft-pull-request` in release-please-config.json) because it accumulates
 # every merge until someone decides to cut a release — mark it ready for
 # review when that moment comes. Merging it cuts the vX.Y.Z tag and release.
