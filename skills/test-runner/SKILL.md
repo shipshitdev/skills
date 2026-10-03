@@ -1,11 +1,12 @@
 ---
 name: test-runner
-description: "Run a project's tests at the right scope — changed-only, focused, full, type-check, or e2e — then report failures with evidence. Repair and rerun only when fixing failures is explicitly authorized. Detects the test runner in a Bun-managed repo. Use when the user asks to run tests, run the suite, run smoke/e2e tests, type-check, check the build compiles, fix failing tests, or runs /test run."
+description: Runs tests at the right scope (changed, focused, full, type-check, e2e) in Bun repos and reports failures with evidence; repairs only if authorized. Use for /test run.
 compatibility: Requires a Bun-managed JavaScript/TypeScript project with Vitest, Jest, Bun test, or Playwright.
 metadata:
   version: "2.2.2"
   tags: "testing, vitest, jest, playwright, e2e, smoke, type-check, ci, scoped-tests"
 allowed-tools: Bash(bun *) Bash(bunx *) Bash(git *)
+when_to_use: "smoke tests, build compiles"
 ---
 
 # Test Runner
@@ -20,11 +21,10 @@ type errors in a loop" workflows behind one scoped entry point.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

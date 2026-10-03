@@ -1,20 +1,11 @@
 ---
 name: structural-review
-description: >-
-  Perform a structural and maintainability review of a PR or codebase diff —
-  covering file-size blockers, abstraction quality, layer violations, type
-  structural discipline, spaghetti branching, non-atomic mutations,
-  stack-specific hygiene (Bun, Tailwind v4, Next.js 16, shadcn/ui), design
-  purity (code-judo), and directness over magic (no speculative generality). Use when
-  asked to review code quality, maintainability, structural health, or
-  architecture of a change. Orthogonal to /code-review (which owns correctness
-  bugs and repo rule compliance) — run after correctness passes or in parallel
-  when a thorough PR review is requested.
+description: "Reviews a PR diff for structure and maintainability: file size, abstractions, layering, types, stack hygiene. Report-only. Not for correctness bugs."
 metadata:
   version: "2.2.2"
   tags: "code-quality, maintainability, architecture, refactoring, structural"
   author: Ship Shit Dev
-when_to_use: "structural review, maintainability review, code quality review, architecture review, thermo-nuclear review, code judo, simplify this PR, is this code clean, before merge review"
+when_to_use: "maintainability review, code judo, simplify this PR"
 ---
 
 # Structural Review

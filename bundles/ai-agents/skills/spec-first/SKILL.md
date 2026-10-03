@@ -1,9 +1,10 @@
 ---
 name: spec-first
-description: "Coordinates preparation, prescribed implementation, independent review and verification using one shared issue contract. Use for nontrivial implementation that needs decisions settled before coding."
+description: Coordinates preparation, implementation, independent review and verification on one shared issue contract. Use for nontrivial work needing decisions settled before coding.
 metadata:
   version: "2.2.2"
   tags: "specification, planning, execution, ears"
+when_to_use: "spec before code, prepare then implement"
 ---
 
 # Spec-First Development

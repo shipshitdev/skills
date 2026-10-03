@@ -1,12 +1,6 @@
 ---
 name: grok-review
-description: >-
-  Independent second-opinion code review through the Grok CLI. Builds a
-  self-contained review prompt from the exact diff, runs one headless Grok
-  invocation on the CLI's own default model and effort, then verifies every
-  returned finding against the code before reporting. Use when asked to review
-  with Grok, get a second opinion on a branch, worktree, or PR from another
-  CLI, or cross-check a review with an independent engine.
+description: Runs an independent second-opinion review of a diff through the Grok CLI and verifies every finding against the code. Use when asked to review with Grok or cross-check a branch.
 license: MIT
 compatibility: Requires the `grok` CLI (logged in) and git; gh for PR targets.
 metadata:
@@ -14,7 +8,7 @@ metadata:
   tags: "code-review, second-opinion, grok, cli, cross-check"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *) Bash(grok *) Bash(command -v *) Bash(mktemp *)
-when_to_use: "/review grok, review with grok, grok second opinion, cross-check this diff with another CLI, independent review of my branch or worktree"
+when_to_use: "/review grok, second opinion from another CLI"
 ---
 
 # Grok Review

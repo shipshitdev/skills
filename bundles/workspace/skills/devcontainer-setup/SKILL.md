@@ -1,20 +1,20 @@
 ---
 name: devcontainer-setup
-description: Scaffolds a complete VS Code Dev Container configuration with Docker, docker-compose, and optional Claude Code CLI support. Activates when asked to "set up devcontainer", "add docker development environment", "configure dev container", or containerize a development workflow.
+description: Scaffolds a VS Code Dev Container with Docker, docker-compose, and optional Claude Code CLI. Use when setting up a devcontainer or containerized dev environment.
 metadata:
   version: "2.2.2"
   tags: "devcontainer, docker, setup"
+when_to_use: "configure dev container, docker development environment"
 ---
 
 # Devcontainer Setup Skill
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

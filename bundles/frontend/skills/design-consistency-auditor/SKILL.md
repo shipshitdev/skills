@@ -1,9 +1,10 @@
 ---
 name: design-consistency-auditor
-description: Hunts design-token drift across a frontend — hardcoded hex values where semantic tokens belong, arbitrary spacing outside the scale, one-off classes duplicating a design-system component, and patterns that diverge screen to screen. Measures against the project's own tokens and class conventions, discovered from the codebase first rather than assumed. Triggers on audit design consistency, review component styling, check color palette usage, find hardcoded colors, or identify design debt. For a scored multi-dimension quality report, use `audit`; for WCAG conformance, use `accessibility`.
+description: "Hunts design-token drift in frontends: hardcoded colors, off-scale spacing, one-off classes duplicating components. Use when auditing styling consistency or design debt."
 metadata:
   version: "2.2.2"
   tags: "design, ux, ui, consistency, design-tokens, design-debt, tailwind"
+when_to_use: "hardcoded hex, palette usage"
 ---
 
 # Design Consistency Auditor

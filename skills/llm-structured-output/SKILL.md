@@ -1,9 +1,10 @@
 ---
 name: llm-structured-output
-description: Design prompts, schemas, validation, and recovery logic for reliable machine-readable model outputs. Use when generating JSON, typed objects, extraction results, tool arguments, or any output another system must parse safely.
+description: Designs prompts, schemas, validation, and retry logic for reliable machine-readable model output. Use for JSON, typed objects, extractions, or tool arguments a system must parse.
 metadata:
   version: "2.2.2"
   tags: "llm, structured-output, json, prompt-engineering"
+when_to_use: "malformed model output"
 ---
 
 # LLM Structured Output

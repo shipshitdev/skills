@@ -1,6 +1,6 @@
 ---
 name: codebase-design
-description: Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
+description: Supplies shared deep-module vocabulary. Use when designing or improving a module interface, placing a seam, or making code more testable or AI-navigable.
 license: MIT
 metadata:
   version: "2.2.2"
@@ -12,6 +12,7 @@ metadata:
   upstream_commit: 8b78b531ab96
   last_synced: "2026-08-14"
   license: MIT
+when_to_use: "deepening opportunities"
 ---
 
 # Codebase Design

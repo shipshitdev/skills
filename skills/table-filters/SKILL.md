@@ -1,9 +1,10 @@
 ---
 name: table-filters
-description: Designs optimal filtering UX for data tables. Use when building a table that needs filters - analyzes the data columns and determines the best filter type for each. Outputs a unified filter field with inline header filters.
+description: "Designs filtering UX for data tables: picks a filter type per column and builds a unified filter field with inline header filters. Use when building a table that needs filters."
 metadata:
   version: "2.2.2"
   tags: "tables, filters, ux"
+when_to_use: "column filters, filter bar"
 ---
 
 # Table Filters

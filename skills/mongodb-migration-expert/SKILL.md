@@ -1,9 +1,10 @@
 ---
 name: mongodb-migration-expert
-description: Database schema design, indexing, and migration guidance for MongoDB-based applications. Use when adding or changing MongoDB collections, indexes, or fields, designing schema for multi-tenant or large datasets, or planning forward-only migrations.
+description: Guides MongoDB schema design, indexing, and forward-only migrations. Use when adding or changing collections, indexes, or fields, or designing multi-tenant or large-dataset schema.
 metadata:
   version: "2.2.2"
   tags: "mongodb, migration, database"
+when_to_use: "backwards compatible schema change"
 ---
 
 # MongoDB Migration Expert

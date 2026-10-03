@@ -1,14 +1,10 @@
 ---
 name: git-safety
-description: >-
-  Guards day-to-day git work in an existing repository: blocks secrets from
-  entering a commit, gates destructive git operations before they run, installs
-  ignore rules and pre-commit hooks, and drives the rotate-first response when a
-  credential has already leaked.
+description: "Guards daily git work: blocks staged secrets, gates destructive git commands, installs pre-commit hooks, drives leak response. Use before commits, pushes, or history rewrites."
 metadata:
   version: "2.2.2"
   tags: "git, security, secrets, pre-commit"
-when_to_use: "about to commit, check what is staged, staged secret, pre-commit hook, pre-push check, force push, push --force, reset --hard, clean -fdx, rewrite git history, filter-repo, BFG, scrub a leaked credential, rotate a leaked key, git safety check"
+when_to_use: "staged secret, force push, reset --hard, filter-repo, BFG"
 ---
 
 # Git Safety
@@ -24,11 +20,10 @@ different moment — see [Related](#related).
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

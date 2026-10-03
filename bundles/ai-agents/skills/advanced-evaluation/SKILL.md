@@ -1,6 +1,6 @@
 ---
 name: advanced-evaluation
-description: Design and operate LLM-as-a-Judge evaluation systems using direct scoring, pairwise comparison, rubric calibration, evaluator bias mitigation, confidence scoring, and automated quality assessment. Use when building LLM-as-judge systems, comparing model responses, calibrating rubrics, debugging inconsistent evaluations, or designing A/B tests for prompt or model changes.
+description: Designs LLM-as-a-Judge evaluation systems with direct scoring, pairwise comparison, and rubric calibration. Use when comparing model outputs or debugging inconsistent evals.
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/advanced-evaluation/SKILL.md
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "evaluation, llm-as-judge, quality, bias-mitigation"
+when_to_use: "bias mitigation, A/B test prompts"
 ---
 # Advanced Evaluation
 

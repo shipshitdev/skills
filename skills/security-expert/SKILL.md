@@ -1,9 +1,10 @@
 ---
 name: security-expert
-description: Expert in application security, OWASP Top 10, authentication, authorization, data protection, and security best practices for React, Next.js, and NestJS applications. Use when implementing authentication or authorization, reviewing code for vulnerabilities, handling sensitive data, or implementing encryption or hashing.
+description: Applies OWASP Top 10 security practices to React, Next.js and NestJS code. Use for auth, sensitive data, encryption or hashing, CORS/CSP, or reviewing vulnerabilities.
 metadata:
   version: "2.2.2"
   tags: "security, owasp, application-security"
+when_to_use: "security headers, multi-tenancy isolation"
 ---
 
 # Security Expert Skill

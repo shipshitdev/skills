@@ -1,9 +1,10 @@
 ---
 name: monitoring-setup
-description: Sets up production monitoring for NestJS and Next.js apps — Sentry error tracking, Google Analytics, and operational signals (BullMQ queue depth, Postgres slow queries, connection saturation) with alerts on each. Activates when users need error tracking, production monitoring, analytics, queue/database observability, or alerting on operational health.
+description: "Sets up production monitoring for NestJS and Next.js: Sentry, Google Analytics, and alerts on BullMQ queue depth and Postgres slow queries or connection saturation."
 metadata:
   version: "2.2.2"
   tags: "monitoring, sentry, analytics, observability, alerting, bullmq, postgres"
+when_to_use: "error tracking, observability, alerting"
 ---
 
 # Monitoring Setup

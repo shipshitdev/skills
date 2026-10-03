@@ -1,6 +1,6 @@
 ---
 name: tool-design
-description: Design tools that agents can use effectively, including when to reduce tool complexity. Use when creating, optimizing, or reducing the set of tools available to an agent.
+description: "Designs agent-facing tools: descriptions, schemas, responses, errors, naming, and consolidating overlapping tool sets. Use when creating tools or when agents pick the wrong one."
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/tool-design/SKILL.md
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "tools, agents, architecture"
+when_to_use: "MCP tool naming, tool catalog"
 ---
 # Tool Design for Agents
 

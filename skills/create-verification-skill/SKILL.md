@@ -1,6 +1,6 @@
 ---
 name: create-verification-skill
-description: Generate a project-local verification skill that drives the app the way a user does. Use for create-verification-skill, make a verify skill for this repo, or when a project has no scripted way to prove UI, CLI, or service behavior.
+description: Generates a project-local verification skill that drives the app like a user. Use when a repo has no scripted way to prove UI, CLI, or service behavior.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -14,7 +14,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
-when_to_use: "create verification skill, make a verify skill, scripted app proof"
+when_to_use: "make a verify skill, scripted app proof"
 ---
 
 # Create a verification skill
@@ -28,11 +28,10 @@ gate. This skill authors the project harness that gate can run.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

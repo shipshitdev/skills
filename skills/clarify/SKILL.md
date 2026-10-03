@@ -1,6 +1,6 @@
 ---
 name: clarify
-description: Improve unclear UX copy, error messages, microcopy, labels, and instructions to make interfaces easier to understand. Use when the user mentions confusing text, unclear labels, bad error messages, hard-to-follow instructions, or wanting better UX writing.
+description: Improves unclear UX copy, error messages, microcopy, labels, and instructions. Use when text is confusing or the user wants better UX writing.
 user-invocable: true
 argument-hint: "[target]"
 metadata:
@@ -11,6 +11,7 @@ metadata:
   upstream_latest: skill-v3.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
+when_to_use: "hard-to-follow instructions"
 ---
 
 ## Context Gathering

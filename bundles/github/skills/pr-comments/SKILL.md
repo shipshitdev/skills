@@ -1,14 +1,14 @@
 ---
 name: pr-comments
-description: "Reads a pull request's review threads and returns a digest — grouped by thread, severity-tagged, priority-ordered, with the open questions called out. Strictly read-only: no code edits, no replies, no thread resolution. Reach for it to triage feedback before deciding what to fix; implementing those fixes is `github-address-comments`."
+description: Reads a PR's review threads and returns a read-only digest grouped by thread, severity-tagged, with open questions. Use to triage feedback; fixing it is github-address-comments.
 compatibility: Requires git and GitHub CLI gh access to the target repository.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
   version: "2.2.2"
   tags: "github, pull-requests, code-review, comments, triage, digest"
-when_to_use: "what are the comments on my PR, summarize the review feedback, what's blocking this PR, what do I still need to address, triage the review comments, /pr comments"
 allowed-tools: Bash(gh *) Bash(git *)
+when_to_use: "what's blocking this PR, summarize review feedback, /pr comments"
 ---
 
 # PR Comments
@@ -17,11 +17,10 @@ Turns a PR's scattered review threads into one ordered action list: fetches inli
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

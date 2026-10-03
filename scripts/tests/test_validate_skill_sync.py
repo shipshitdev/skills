@@ -72,6 +72,12 @@ class SkillValidatorFixtureTests(unittest.TestCase):
             0,
         )
 
+    def test_listing_budget_is_reported(self) -> None:
+        result = self.run_fixture("invalid-listing-budget")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("(>200 listing budget)", result.stdout)
+        self.assertIn("(>120 listing budget)", result.stdout)
+
     def test_missing_mutation_guard_is_reported(self) -> None:
         self.assert_finding(
             "invalid-side-effect",

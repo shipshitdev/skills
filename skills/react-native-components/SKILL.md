@@ -1,11 +1,12 @@
 ---
 name: react-native-components
-description: Master React Native 0.79.5 components, styling, performance optimization, and mobile UI best practices with real-world examples. Use when building React Native UI components, implementing StyleSheet or dynamic styling, optimizing list performance, or creating accessible mobile interfaces.
+description: Guides React Native component building — StyleSheet, dynamic styling, FlatList performance, accessible mobile UI. Use when building React Native UI components.
 metadata:
   version: "2.2.2"
   tags: "[react-native, components, styling, performance, ui, accessibility, hooks]"
   category: mobile
   difficulty: advanced
+when_to_use: "expo, View Text Image, mobile UI"
 ---
 
 # React Native Component Patterns Expert

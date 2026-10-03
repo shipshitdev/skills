@@ -1,12 +1,12 @@
 ---
 name: release
-description: Cuts a release from a green trunk. Proves the required checks on the exact trunk SHA, derives the next semver and plain-English notes, then publishes through the repo's own mechanism — release-please PR, guarded release workflow, or annotated tag — and reports deploy evidence. Backs /release.
+description: "Cuts a release from a green trunk: proves checks on the trunk SHA, derives semver and notes, publishes via release-please, workflow, or tag. Backs /release."
 compatibility: Requires git, GitHub CLI gh, and jq access to the target repository.
 metadata:
   version: "2.2.2"
   tags: "git, github, release, tag, semver, changelog, patch-notes, trunk-based, ci-cd, quality-gates"
-when_to_use: "/release, cut a release, tag a release, ship to production, is master green, is the trunk ready to release, wait for release checks, release notes, changelog for the next version, release-please PR"
 allowed-tools: Bash(git *) Bash(gh *) Bash(jq *)
+when_to_use: "/release, tag a release, is master green, release notes"
 ---
 
 # Release

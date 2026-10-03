@@ -1,11 +1,11 @@
 ---
 name: testing-expert
-description: Framework-agnostic testing strategy — test level, coverage targets, refactor-proof test design, test data, flake diagnosis — plus regression tests aimed at AI blind spots (sandbox vs production drift, response-shape mismatches). Use when deciding what to test, reviewing a suite, fixing flakes, or guarding AI-written changes.
+description: "Sets testing strategy: test level, coverage targets, test data, flake diagnosis, plus regression tests for AI blind spots. Use when deciding what to test or fixing flakes."
 metadata:
   version: "2.2.2"
   tags: "testing, strategy, coverage, flakiness, test-design"
   author: Ship Shit Dev
-when_to_use: "ai regression tests, guard this AI-generated change, sandbox vs production path parity, response shape drift, regression test for this bug fix, what should I test, testing strategy, testing pyramid, unit vs integration vs e2e, what level does this belong at, coverage target, is 80% coverage enough, coverage is gaming the number, this test is flaky, tests pass locally fail in CI, tests are slow, test data strategy, factories vs fixtures, review the shape of our test suite, are these tests worth keeping"
+when_to_use: "testing pyramid, sandbox vs production drift"
 ---
 
 # Testing Expert

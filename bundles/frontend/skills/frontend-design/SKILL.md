@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
+description: Builds distinctive, production-grade frontend interfaces that avoid generic AI aesthetics. Use when creating web components, pages, landing pages, dashboards, or styling web UI.
 license: Complete terms in LICENSE.txt
 metadata:
   version: "2.2.2"
@@ -11,6 +11,7 @@ metadata:
   last_synced: "2026-06-12"
   license: Apache-2.0
   tags: "frontend, design, ui"
+when_to_use: "poster, beautify UI, HTML/CSS layout"
 ---
 Build distinctive frontend interfaces that avoid generic "AI slop" aesthetics. Implement real working code with attention to aesthetic detail and creative choices.
 

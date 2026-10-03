@@ -1,6 +1,6 @@
 ---
 name: quieter
-description: Tones down visually aggressive or overstimulating designs, reducing intensity while preserving quality. Use when the user mentions too bold, too loud, overwhelming, aggressive, garish, or wants a calmer, more refined aesthetic.
+description: Tones down visually aggressive or overstimulating designs while preserving quality. Use when a design is too bold, loud, overwhelming, or garish and needs a calmer look.
 user-invocable: true
 argument-hint: "[target]"
 metadata:
@@ -11,6 +11,7 @@ metadata:
   upstream_latest: skill-v3.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
+when_to_use: "too much, calmer, refined, less intense"
 ---
 
 Reduce visual intensity in designs that are too bold, aggressive, or overstimulating, creating a more refined and approachable aesthetic without losing effectiveness.
