@@ -36,7 +36,12 @@ FAILURES = (Refused, OSError, ValueError, KeyError, TypeError)
 
 class Repository:
     def __init__(self, root: Path):
-        self.root = root.resolve()
+        # Audit the whole repository even when invoked from a subdirectory:
+        # tree listings, pathspecs and `git apply` are all cwd-relative.
+        top = subprocess.run(["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+                             capture_output=True, text=True, check=False)
+        self.root = Path(top.stdout.strip() if top.returncode == 0 and top.stdout.strip()
+                         else root).resolve()
         self._trunk_entries: tuple[str, dict, set | None] | None = None
 
     def run(self, *args: str, input_text: str | None = None,

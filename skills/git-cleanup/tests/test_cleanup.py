@@ -804,6 +804,30 @@ class GitFixtureTests(unittest.TestCase):
         result = self.repo.apply(plan, "local-branches")
         self.assertEqual([a["result"] for a in result["actions"]], ["removed", "removed"])
 
+    def test_subdirectory_invocation_audits_the_whole_repository(self):
+        (self.root / "sub").mkdir()
+        (self.root / "sub/a.txt").write_text("a\n")
+        (self.root / "top.txt").write_text("t\n")
+        self.git("add", "sub/a.txt", "top.txt")
+        self.git("commit", "-m", "two areas")
+        self.git("push", "origin", "main")
+        self.git("switch", "-c", "feature")
+        (self.root / "sub/a.txt").write_text("a2\n")
+        (self.root / "top.txt").write_text("t2\n")
+        self.git("commit", "-am", "edit both")
+        self.git("switch", "main")
+        self.commit("land only sub", "a2\n", "sub/a.txt")
+        self.git("push", "origin", "main")
+        scoped = Repository(self.root / "sub")
+        self.assertEqual(scoped.root, self.root.resolve())
+        original = scoped.run
+        scoped.run = lambda *args, **kwargs: (
+            self.repo.run(*args, **kwargs) if args[:1] == ("gh",) else original(*args, **kwargs))
+        plan = scoped.plan("local-branches")
+        self.assertEqual(plan["actions"], [])
+        self.assertEqual({item["path"] for item in plan["skipped"][0]["content_audit"]["paths"]},
+                         {"sub/a.txt", "top.txt"})
+
     def test_v1_historical_plan_is_refused(self):
         self.git("branch", "feature")
         plan = self.plan("local-branches")
