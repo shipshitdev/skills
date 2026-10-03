@@ -1,6 +1,7 @@
 ---
 name: release
 description: "Cuts a release from a green trunk: proves checks on the trunk SHA, derives semver and notes, publishes via release-please, workflow, or tag. Backs /release."
+argument-hint: "[gates|notes|cut [patch|minor|major|vX.Y.Z]]"
 compatibility: Requires git, GitHub CLI gh, and jq access to the target repository.
 metadata:
   version: "2.2.2"
