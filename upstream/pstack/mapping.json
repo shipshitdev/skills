@@ -1517,12 +1517,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "8b189feee5f843fe34b424d0a8b0c879fe7cdc58558537271c5cdba37f4a2d41"
+          "sha256": "a8939ac63e1c0fa74b687ee7c31f021cc75638b44d1127ffa81df2bd825bc9a9"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "Reviewed git-cleanup destination: treat an absent PR merge commit as missing squash evidence, not a Git error.",
+      "review_note": "Cleanup current-content safety adaptation: per-path exact/reverse patch evidence, enforced SHA-bound code/intent review, recovery refs and ignored-file preservation. Regression verification and independent delivery gates tracked in issue #162.",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4187,12 +4187,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "8b189feee5f843fe34b424d0a8b0c879fe7cdc58558537271c5cdba37f4a2d41"
+          "sha256": "a8939ac63e1c0fa74b687ee7c31f021cc75638b44d1127ffa81df2bd825bc9a9"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "Reviewed git-cleanup destination: treat an absent PR merge commit as missing squash evidence, not a Git error.",
+      "review_note": "Cleanup current-content safety adaptation: per-path exact/reverse patch evidence, enforced SHA-bound code/intent review, recovery refs and ignored-file preservation. Regression verification and independent delivery gates tracked in issue #162.",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"

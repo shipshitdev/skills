@@ -4,11 +4,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -24,18 +26,28 @@ SCOPES = {
 class Refused(RuntimeError):
     """Evidence is missing, changed, or unsafe."""
 
+    def __init__(self, message: str, audit: dict | None = None):
+        super().__init__(message)
+        self.audit = audit
+
 
 FAILURES = (Refused, OSError, ValueError, KeyError, TypeError)
 
 
 class Repository:
     def __init__(self, root: Path):
-        self.root = root.resolve()
-        self._trunk_patches: dict[str, set[str]] = {}
+        # Audit the whole repository even when invoked from a subdirectory:
+        # tree listings, pathspecs and `git apply` are all cwd-relative.
+        top = subprocess.run(["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+                             capture_output=True, text=True, check=False)
+        self.root = Path(top.stdout.strip() if top.returncode == 0 and top.stdout.strip()
+                         else root).resolve()
+        self._trunk_entries: tuple[str, dict, set | None] | None = None
 
     def run(self, *args: str, input_text: str | None = None,
-            accepted: tuple[int, ...] = (0,)) -> subprocess.CompletedProcess:
+            accepted: tuple[int, ...] = (0,), extra_env: dict | None = None) -> subprocess.CompletedProcess:
         env = dict(os.environ, GIT_OPTIONAL_LOCKS="0", GIT_NO_REPLACE_OBJECTS="1")
+        env.update(extra_env or {})
         payload = input_text.encode("utf-8", "surrogateescape") if input_text is not None else None
         raw = subprocess.run(args, cwd=self.root, input=payload,
                              capture_output=True, env=env, check=False)
@@ -69,23 +81,6 @@ class Repository:
         return self.patch_id(self.run("git", "diff", "--no-ext-diff", "--no-textconv",
                                       "--binary", older, newer, "--").stdout)
 
-    def final_paths_match(self, oid: str, trunk: str) -> bool:
-        base = self.git("merge-base", oid, trunk)
-        changed = self.run("git", "diff", "--no-renames", "--name-only", "-z",
-                           base, oid, "--").stdout.split("\0")
-        trees = []
-        for commit in (oid, trunk):
-            entries = {}
-            output = self.run("git", "ls-tree", "-r", "-t", "-z", commit).stdout
-            for entry in output.split("\0"):
-                if entry:
-                    metadata, path = entry.split("\t", 1)
-                    entries[path] = metadata
-            trees.append(entries)
-        # Compare blob IDs, modes, symlinks, gitlinks, directories, and deletion.
-        # Independent historical patches do not prove their final combination.
-        return all(trees[0].get(path) == trees[1].get(path) for path in changed if path)
-
     def worktrees(self) -> list[dict]:
         records = []
         for block in self.run("git", "worktree", "list", "--porcelain", "-z").stdout.split("\0\0"):
@@ -109,6 +104,10 @@ class Repository:
                           "--untracked-files=all", "--ignore-submodules=none").stdout
         if status or "locked" in record or "prunable" in record:
             raise Refused("dirty, untracked files, locked, or stale worktree")
+        ignored = self.run("git", "-C", str(path), "ls-files", "--others", "--ignored",
+                           "--exclude-standard", "-z").stdout
+        if ignored:
+            raise Refused("ignored files present; preserve or relocate them before cleanup")
         return {"path": str(path.resolve()), "oid": head, "ref": branch}
 
     def remote_heads(self) -> dict[str, str]:
@@ -138,52 +137,102 @@ class Repository:
         self.git("update-ref", local_ref, remote_oid, local_oid)
         return remote_oid
 
-    def blob_at(self, commit: str, path: str) -> str | None:
-        output = self.run("git", "ls-tree", "-z", "--full-tree", commit, "--", path).stdout
-        if not output:
-            return None
-        metadata, _, _rest = output.partition("\t")
-        parts = metadata.split()
-        return parts[2] if len(parts) >= 3 else None
+    def tree_entries(self, commit: str) -> dict[str, dict]:
+        entries = {}
+        for entry in self.run("git", "ls-tree", "-r", "-z", commit).stdout.split("\0"):
+            if entry:
+                metadata, path = entry.split("\t", 1)
+                mode, kind, blob = metadata.split()
+                entries[path] = {"mode": mode, "type": kind, "oid": blob}
+        return entries
 
-    def path_has_blob(self, trunk: str, path: str, blob: str) -> bool:
-        if self.blob_at(trunk, path) == blob:
-            return True
-        found = self.git("log", "-1", "--pretty=%H", f"--find-object={blob}",
-                         trunk, "--", path)
-        return bool(found)
-
-    def content_on_trunk(self, oid: str, trunk: str) -> bool:
-        """True when every path the candidate changed already reached trunk.
-
-        Squash-merge rewrites commit SHAs, so unique commits are not evidence.
-        Compare blobs at each changed path against current trunk and that path's
-        trunk history. An empty file delta is not proof (empty commits stay).
-        """
-        base = self.git("merge-base", oid, trunk)
-        raw = self.run("git", "diff", "--raw", "--full-index", "-z", "--no-renames",
-                       "--no-ext-diff", base, oid, "--").stdout
-        if not raw:
-            return False
-        parts = raw.split("\0")
-        index = 0
-        saw_path = False
-        while index < len(parts) and parts[index]:
-            metadata = parts[index]
-            path = parts[index + 1]
-            index += 2
-            fields = metadata.split()
-            if len(fields) < 5:
-                return False
-            new_blob, status = fields[3], fields[4]
-            saw_path = True
-            if status == "D" or new_blob == "0" * 40:
-                if self.blob_at(trunk, path) is not None:
-                    return False
-                continue
-            if not self.path_has_blob(trunk, path, new_blob):
-                return False
-        return saw_path
+    def current_content_audit(self, oid: str, trunk: str, prs: list[dict]) -> dict:
+        bases = self.git("merge-base", "--all", oid, trunk).splitlines()
+        if len(bases) != 1:
+            raise Refused("ambiguous merge base; current content cannot be proven")
+        base = bases[0]
+        scope = "branch-delta"
+        # An ancestor has no ahead delta. Recover a complete PR boundary when
+        # available; otherwise compare its entire snapshot conservatively.
+        if base == oid:
+            for pr in prs:
+                merge = pr.get("merge_commit_sha")
+                if (pr.get("merged_at") and pr["head"].get("sha") == oid
+                        and merge and self.has_commit(merge) and self.ancestor(merge, trunk)):
+                    parents = self.git("rev-list", "--parents", "-n", "1", merge).split()[1:]
+                    if parents:
+                        boundaries = self.git("merge-base", "--all", oid, parents[0]).splitlines()
+                        if len(boundaries) == 1 and boundaries[0] != oid:
+                            base = boundaries[0]
+                            break
+            if base == oid:
+                scope = "candidate-snapshot"
+        if self._trunk_entries is None or self._trunk_entries[0] != trunk:
+            self._trunk_entries = (trunk, self.tree_entries(trunk), None)
+        trunk_entries = self._trunk_entries[1]
+        candidate_entries = trunk_entries if oid == trunk else self.tree_entries(oid)
+        base_entries = {} if scope == "candidate-snapshot" else self.tree_entries(base)
+        paths = sorted(path for path in base_entries.keys() | candidate_entries.keys()
+                       if base_entries.get(path) != candidate_entries.get(path))
+        if self._trunk_entries[2] is None:
+            self._trunk_entries = (*self._trunk_entries[:2], {
+                parent for path in trunk_entries
+                for parent in (path.rsplit("/", i)[0] for i in range(1, path.count("/") + 1))})
+        trunk_dirs = self._trunk_entries[2]
+        evidence = []
+        for path in paths:
+            before, candidate, current = (entries.get(path) for entries in
+                                          (base_entries, candidate_entries, trunk_entries))
+            # Trunk may replace a deleted file or symlink with a directory; the
+            # blob-only listing omits it, so absence must not be inferred there.
+            if current is None and path in trunk_dirs:
+                current = {"mode": "040000", "type": "tree", "oid": None}
+            state = "exact-entry" if candidate == current else (
+                "unchanged-on-trunk" if current == before else "both-changed")
+            item = {"path": path, "base": before, "candidate": candidate,
+                    "trunk": current, "state": state}
+            if (state != "exact-entry" and scope != "candidate-snapshot"
+                    and candidate and candidate["type"] == "blob"):
+                item["history_reference"] = self.git("log", "-1", "--pretty=%H",
+                    f"--find-object={candidate['oid']}", trunk, "--", path) or None
+            evidence.append(item)
+        # For ordinary text modifications, a reverse application against an
+        # isolated index proves the complete candidate patch is still present
+        # despite independent trunk edits. Never touch the real index/worktree.
+        unmatched = [item for item in evidence if item["state"] != "exact-entry"]
+        if unmatched and scope == "branch-delta":
+            eligible = []
+            for item in unmatched:
+                before, candidate, current = item["base"], item["candidate"], item["trunk"]
+                if (before and candidate and current
+                        and before["mode"] in ("100644", "100755")
+                        and candidate["mode"] == current["mode"]
+                        and candidate["mode"] in ("100644", "100755")):
+                    stat = self.run("git", "diff", "--no-ext-diff", "--no-textconv",
+                        "--numstat", "-z", base, oid, "--", ":(literal)" + item["path"]).stdout
+                    if stat and not stat.startswith("-\t"):
+                        eligible.append(item)
+            if eligible:
+                patch = self.run("git", "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
+                    "--src-prefix=a/", "--dst-prefix=b/",
+                    "--binary", base, oid, "--", *[":(literal)" + item["path"] for item in eligible]).stdout
+                with tempfile.TemporaryDirectory(prefix="git-cleanup-index-") as directory:
+                    env = {"GIT_INDEX_FILE": str(Path(directory) / "index")}
+                    self.run("git", "read-tree", trunk, extra_env=env)
+                    check = self.run("git", "-c", "apply.ignoreWhitespace=no", "apply", "--cached",
+                        "--reverse", "--check", "--whitespace=nowarn", input_text=patch,
+                        accepted=(0, 1), extra_env=env)
+                if check.returncode == 0:
+                    digest = hashlib.sha256(patch.encode("utf-8", "surrogateescape")).hexdigest()
+                    for item in eligible:
+                        item.update(state="patch-present", patch_sha256=digest)
+        present = bool(evidence) and all(item["state"] in ("exact-entry", "patch-present")
+                                        for item in evidence)
+        if not evidence and self.git("rev-parse", oid + "^{tree}") == self.git("rev-parse", trunk + "^{tree}"):
+            present = self.ancestor(oid, trunk)
+        return {"base_oid": base, "candidate_oid": oid, "trunk_oid": trunk,
+                "scope": scope, "candidate_in_trunk_history": self.ancestor(oid, trunk),
+                "current_content_present": present, "paths": evidence}
 
     def context(self, trunk: str | None = None) -> dict:
         metadata = json.loads(self.run("gh", "repo", "view", "--json",
@@ -272,24 +321,15 @@ class Repository:
                         records.append(pr)
         return records
 
-    def trunk_patches(self, trunk: str) -> set[str]:
-        if trunk not in self._trunk_patches:
-            patches = set()
-            for commit in self.git("rev-list", "--max-count=500", trunk).splitlines():
-                parents = self.git("rev-list", "--parents", "-n", "1", commit).split()[1:]
-                if len(parents) == 1:
-                    patch = self.patch(parents[0], commit)
-                    if patch:
-                        patches.add(patch)
-            self._trunk_patches[trunk] = patches
-        return self._trunk_patches[trunk]
-
     def proof(self, oid: str, trunk: str, prs: list[dict]) -> dict:
         if any(pr.get("state") == "open" for pr in prs):
             raise Refused("in-flight open PR")
         ahead = self.git("rev-list", trunk + ".." + oid).splitlines()
+        audit = self.current_content_audit(oid, trunk, prs)
+        if not audit["current_content_present"]:
+            raise Refused("current trunk content not proven; inspect code and intent, preserve candidate", audit)
         if self.ancestor(oid, trunk):
-            return {"kind": "ancestor", "ahead": ahead}
+            return {"kind": "ancestor", "ahead": ahead, "content_audit": audit}
         # Squash proof binds the entire candidate history to the exact merged
         # PR head, then compares its cumulative content with the landed commit.
         for pr in prs:
@@ -307,23 +347,9 @@ class Repository:
             candidate_patch = self.patch(base, oid)
             if candidate_patch and candidate_patch == self.patch(parents[0], merge):
                 return {"kind": "exact-pr-head-squash", "pr": pr["number"],
-                        "head": oid, "merge": merge, "ahead": ahead}
-        # Squash-merge rewrites commit SHAs. Unique commits and per-commit
-        # patch IDs are not merge evidence. Path blobs that already exist on
-        # trunk (current tree or that path's history) prove the codebase landed.
-        if self.content_on_trunk(oid, trunk):
-            return {"kind": "content-on-trunk", "ahead": ahead}
-        # Every non-upstream commit is accounted for. Merge commits and empty
-        # patches are deliberately not silently omitted as they are by git cherry.
-        upstream_patches = self.trunk_patches(trunk)
-        covered = []
-        for commit in ahead:
-            parents = self.git("rev-list", "--parents", "-n", "1", commit).split()[1:]
-            if len(parents) == 1 and self.patch(parents[0], commit) in upstream_patches:
-                covered.append(commit)
-        if ahead and covered == ahead and self.final_paths_match(oid, trunk):
-            return {"kind": "every-commit-patch", "ahead": ahead}
-        raise Refused("candidate history not proven in trunk")
+                        "head": oid, "merge": merge, "ahead": ahead, "content_audit": audit}
+        # Current content, independent of commit identities or the original PR.
+        return {"kind": "content-on-trunk", "ahead": ahead, "content_audit": audit}
 
     def evaluate(self, candidate: dict, context: dict, scope: str, *,
                  worktrees: list[dict] | None = None, heads: dict | None = None,
@@ -371,6 +397,7 @@ class Repository:
         else:
             prs = []
         result["proof"] = self.proof(oid, context["trunk_oid"], prs)
+        result["recovery_ref"] = "refs/cleanup/recovery/" + oid
         return result
 
     def plan(self, scope: str, trunk: str | None = None) -> dict:
@@ -400,8 +427,12 @@ class Repository:
                 actions.append(self.evaluate(candidate, context, scope, worktrees=worktrees,
                                              heads=remote_heads, pr_cache=pr_cache))
             except FAILURES as error:
-                skipped.append({**candidate, "reason": str(error)})
-        return {"version": 1, "scope": scope, "context": context, "actions": actions, "skipped": skipped}
+                item = {**candidate, "reason": str(error)}
+                if isinstance(error, Refused) and error.audit is not None:
+                    item["content_audit"] = error.audit
+                skipped.append(item)
+        return {"version": 2, "scope": scope, "context": context, "actions": actions,
+                "skipped": skipped, "intent_reviews": {}}
 
     def revalidate(self, context: dict, action: dict) -> None:
         if self.context(context["trunk"]) != context:
@@ -424,8 +455,21 @@ class Repository:
             if any(state[key] != action[key] for key in ("path", "oid", "ref")):
                 raise Refused("worktree HEAD changed immediately before deletion")
 
+    def preserve_history(self, action: dict) -> None:
+        ref, oid = action["recovery_ref"], action["oid"]
+        if self.run("git", "symbolic-ref", "-q", ref, accepted=(0, 1)).returncode == 0:
+            raise Refused("symbolic recovery ref is not durable; preserve candidate")
+        existing = self.run("git", "rev-parse", "--verify", "--quiet", ref, accepted=(0, 1)).stdout.strip()
+        if existing:
+            if existing != oid:
+                raise Refused("recovery ref differs; preserve candidate")
+        else:
+            self.git("update-ref", "--no-deref", ref, oid, "0" * len(oid))
+        if self.oid(ref) != oid:
+            raise Refused("candidate history recovery could not be verified")
+
     def apply(self, plan: dict, scope: str, *, exclusive_worktrees: bool = False) -> dict:
-        if (not isinstance(plan, dict) or plan.get("version") != 1 or plan.get("scope") != scope
+        if (not isinstance(plan, dict) or plan.get("version") != 2 or plan.get("scope") != scope
                 or not isinstance(plan.get("actions"), list) or not isinstance(plan.get("skipped"), list)
                 or not all(isinstance(item, dict) for item in plan["actions"] + plan["skipped"])):
             raise Refused("plan format or authorized scope differs")
@@ -434,12 +478,28 @@ class Repository:
         results = []
         for action in plan["actions"]:
             try:
+                reviews = plan.get("intent_reviews", {})
+                if not isinstance(reviews, dict):
+                    raise Refused("invalid intent review records; preserve candidate")
+                audit = action["proof"]["content_audit"]
+                review = reviews.get(f"{action['oid']}:{audit['base_oid']}", {})
+                if not isinstance(review, dict):
+                    raise Refused("invalid intent review record; preserve candidate")
+                if (review.get("status") != "verified"
+                        or review.get("candidate_oid") != action["oid"]
+                        or review.get("trunk_oid") != plan["context"]["trunk_oid"]
+                        or review.get("base_oid") != audit["base_oid"]
+                        or not isinstance(review.get("summary"), str) or not review["summary"].strip()
+                        or not isinstance(review.get("evidence"), list) or not review["evidence"]
+                        or not all(isinstance(item, str) and item.strip() for item in review["evidence"])):
+                    raise Refused("verified code/intent review missing or stale; preserve candidate")
                 if action["kind"] == "worktree" and not exclusive_worktrees:
                     raise Refused("exclusive worktree access not established")
                 # Recompute proof and state immediately before each mutation.
                 fresh = self.evaluate(action, plan["context"], scope)
                 if fresh != action:
                     raise Refused("candidate evidence differs from the reviewed plan")
+                self.preserve_history(action)
                 self.revalidate(plan["context"], action)
                 if action["kind"] == "local":
                     # CAS prevents deleting newer commits; never branch -D.
