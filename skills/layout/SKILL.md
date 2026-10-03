@@ -1,16 +1,17 @@
 ---
 name: layout
-description: Reworks the structure underneath a UI — spacing scale, visual hierarchy, grid and composition, rhythm, and density — turning monotonous or crowded arrangements into intentional ones. Applies while the composition itself is still wrong, ahead of any detail pass. Use when the user says the layout feels off, every section looks the same, the UI is crowded or too sparse, hierarchy is unclear, or nothing guides the eye. For the last-mile pass on a finished feature, use `polish`.
+description: "Reworks the structure under a UI: spacing scale, hierarchy, grid, rhythm, and density. Use when layout feels off, crowded, sparse, or monotonous. Last-mile finish is polish."
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.2"
+  version: "2.2.2"
   tags: "layout, ux, frontend"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/layout.md
   upstream_version: skill-v2.1.1
   upstream_latest: skill-v3.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
+when_to_use: "every section looks the same, nothing guides the eye"
 ---
 
 Assess and improve layout and spacing that feels monotonous, crowded, or structurally weak — turning generic arrangements into intentional, rhythmic compositions.

@@ -1,16 +1,12 @@
 ---
 name: skill-capture
-description: >-
-  Extracts valuable workflows, patterns, and domain knowledge from
-  conversations and persists them as reusable SKILL.md files. Triggers on:
-  "save this as a skill", "capture this as a skill", "make this reusable",
-  "this workflow should be reusable", "this was tricky to figure out", "I wish
-  I knew this earlier", or on completion of complex multi-step procedures.
+description: Turns workflows and hard-won knowledge from a conversation into reusable SKILL.md files. Use when asked to save something as a skill, or after a complex procedure succeeds.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "skills, capture, automation, knowledge-management"
+when_to_use: "make this reusable, save this pattern"
 ---
 
 # Skill Capture

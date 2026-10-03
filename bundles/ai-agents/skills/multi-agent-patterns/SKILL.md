@@ -1,8 +1,8 @@
 ---
 name: multi-agent-patterns
-description: Design multi-agent architectures for complex tasks. Use when single-agent context limits are exceeded, when tasks decompose naturally into subtasks, or when specializing agents improves quality.
+description: Designs multi-agent architectures that split work across agents to isolate context. Use when one agent's context limit is exceeded or subtasks decompose in parallel.
 metadata:
-  version: "2.1.1"
+  version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/multi-agent-patterns/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "multi-agent, architecture, agents"
+when_to_use: "orchestrator, sub-agents, supervisor pattern"
 ---
 # Multi-Agent Architecture Patterns
 
@@ -278,7 +279,7 @@ Internal reference:
 
 Related skills in this collection:
 
-- context-fundamentals - Read when: needing to understand context window mechanics before designing agent partitioning
+- context-optimization (fundamentals reference) - Read when: needing to understand context window mechanics before designing agent partitioning
 - memory-systems - Read when: agents need to share state across context boundaries or persist information between runs
 - context-optimization - Read when: individual agent contexts are too large and need partitioning or compression strategies
 

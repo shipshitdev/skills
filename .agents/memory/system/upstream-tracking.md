@@ -59,10 +59,11 @@ Agent workflow skills. **The prior `author: Ship Shit Dev` frontmatter on three 
 | Skill | Synced commit |
 |-------|---------------|
 | writing-plans | `f2cbfbefebbf` |
-| systematic-debugging | `030a222af19c` |
 | verification-before-completion | `48410c7f1973` |
 | receiving-code-review | `1455ac0631e2` |
 | finishing-a-development-branch | `f2cbfbefebbf` |
+
+`systematic-debugging` (`030a222af19c`) was folded into `debug/references/systematic-debugging.md` on 2026-10-03 (#168); its rolling sync ended. `execution-debugging` became `debug`'s scoped mode.
 
 ### anthropics/skills — Apache-2.0 — `rolling` (`main`)
 
@@ -94,10 +95,11 @@ Eight skills derive from this repo, all verified by fetching the live upstream f
 
 | Skill | Synced commit | Local version |
 |-------|---------------|---------------|
-| context-fundamentals | `cbc2c978133d` | v2.2.0 (routing framework + gotchas) |
 | context-optimization | `cbc2c978133d` | v2.1.0 |
 
 **Ported to upstream HEAD on 2026-06-13** (synced commit `25e1fa79a33f`). Originally imported 2026-01-20 (this repo's commit `ef42a98`) at v1.0.0-era content; now brought forward to current upstream HEAD. Each carries the upstream additions home — Gotchas sections, `claim-*` evidence IDs, "Do not activate" routing, and the expanded tables/examples each gained. Cross-references to upstream siblings **not vendored here** (`context-compression`, `filesystem-context`, `project-development`, `latent-briefing`, `hosted-agents`, `bdi-mental-states`, `harness-engineering`) were stripped so routing names only marketplace skills; cross-links to vendored siblings (`tool-design`, `evaluation`, `context-fundamentals`, `context-optimization`) were retained. Local divergences preserved: `multi-agent-patterns` keeps its local-only "Dispatching Parallel Agents" section (no upstream equivalent); `tool-design` genericizes Vercel-specific case-study/Sandbox references (the model name in its code example is genericized to a `YOUR_MODEL` placeholder); `advanced-evaluation` renamed `references/full-guide.md` → `references/evaluation-pipeline.md` to match upstream; carried-forward upstream improvements include `context-degradation`'s numpy→stdlib detector rewrite and `evaluation`'s citation-detection regex fix. Re-check by diffing each upstream path on `main` since `25e1fa79a33f`.
+
+`context-fundamentals` (`cbc2c978133d`) was folded into `context-optimization/references/fundamentals.md` with its components reference and `scripts/context_manager.py` on 2026-10-03 (#168). Diff upstream `skills/context-fundamentals/` against that reference when re-syncing.
 
 | Skill | Synced commit | Local version | Notable upstream content carried |
 |-------|---------------|---------------|----------------------------------|
@@ -136,7 +138,6 @@ Ported from Vincent's own private spec-pipeline repo. No public upstream → not
 | prd-writer | private `vitae` spec-pipeline |
 | prd-quality-gate | private `vitae` spec-pipeline |
 | context-engineering | private `vitae` spec-pipeline |
-| execution-debugging | private `vitae` spec-pipeline |
 
 If `vitae` ever goes public, promote these to Bucket 1 with a real `source` + commit.
 

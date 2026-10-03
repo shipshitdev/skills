@@ -1,11 +1,11 @@
 ---
 name: arena
-description: Spawn N parallel candidates at the same task, pick a base, and graft the strongest parts of the losers into it. Use for arena this, throw it in the arena, or when one attempt at a non-trivial artifact would lock in the wrong shape.
+description: Runs N parallel candidates at the same task, picks a base, and grafts the best parts of the others into it. Use for arena this, or when one attempt would lock in the wrong shape.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "fan-out, bakeoff, design, synthesis"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/arena/SKILL.md
@@ -14,7 +14,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
-when_to_use: "arena this, throw it in the arena, compare N attempts, bakeoff"
+when_to_use: "bakeoff, compare N attempts"
 ---
 
 # Arena
@@ -28,11 +28,10 @@ returns a report. Arena synthesizes one artifact.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

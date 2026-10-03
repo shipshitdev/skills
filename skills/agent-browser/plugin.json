@@ -1,6 +1,6 @@
 {
   "name": "agent-browser",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction",
   "author": {
     "name": "Ship Shit Dev",

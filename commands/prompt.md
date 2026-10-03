@@ -1,3 +1,9 @@
+---
+description: "Optimize a prompt or prompt template, or debug why an AI response is poor."
+argument-hint: "[path]"
+disable-model-invocation: true
+---
+
 # Prompt - Optimize a Prompt
 
 Transform a vague prompt into a precision-crafted one — for AI generation,
@@ -10,6 +16,8 @@ AI response is poor.
 /prompt              # optimize the prompt you provide or point at
 /prompt <path>       # optimize a prompt template file in the codebase
 ```
+
+`/prompt help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

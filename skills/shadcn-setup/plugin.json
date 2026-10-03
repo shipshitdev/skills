@@ -1,6 +1,6 @@
 {
   "name": "shadcn-setup",
-  "version": "1.1.0",
+  "version": "2.2.2",
   "description": "Set up shadcn/ui component library with Tailwind CSS v4 configuration",
   "author": {
     "name": "Ship Shit Dev",

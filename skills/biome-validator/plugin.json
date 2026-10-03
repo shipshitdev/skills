@@ -1,6 +1,6 @@
 {
   "name": "biome-validator",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Validate Biome 2.3+ configuration and detect outdated patterns",
   "author": {
     "name": "Ship Shit Dev",

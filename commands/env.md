@@ -1,3 +1,9 @@
+---
+description: "Discover the env vars the code reads, keep .env.example truthful, validate .env, and keep secrets out of git."
+argument-hint: "[validate|scaffold]"
+disable-model-invocation: true
+---
+
 # Env - Environment Variable Management
 
 Discover the environment variables the code actually reads, keep
@@ -11,6 +17,8 @@ no secret file can reach git.
 /env validate     # check only — code vs .env.example vs local .env, report gaps
 /env scaffold     # regenerate .env.example templates from the code
 ```
+
+`/env help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

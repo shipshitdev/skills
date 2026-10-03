@@ -1,8 +1,8 @@
 ---
 name: deploy
-description: Run deployment workflows for web applications (staging, production). Use when user says 'deploy', 'push to staging', 'release', 'ship it', or 'go live'.
+description: Runs deployment workflows for web apps to staging or production. Use when the user says deploy, push to staging, ship it, or go live. Version or tag cuts are release.
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "deployment, devops, ci-cd, production, staging"
 ---
 
@@ -26,7 +26,7 @@ Outputs:
 Creates/Modifies:
 
 - Local changes only when fixing failed gates before deployment
-- Release PRs only when delegated to `release-pr-gates`
+- Release PRs or tags only through the `release` skill
 
 External Side Effects:
 
@@ -44,7 +44,7 @@ Confirmation Required:
 Delegates To:
 
 - `deployment-composer` for route discovery across providers
-- `release-pr-gates` for branch promotion PRs
+- `release` for gating the trunk SHA and cutting the release
 - `github-fix-ci` for failed GitHub Actions checks
 - `ec2-backend-deployer` for EC2/Docker deployment setup
 
@@ -56,33 +56,10 @@ Delegates To:
 
 ## Local Quality Gates (MANDATORY)
 
-Always run format, lint, and type-check locally before every release PR or
-deployment. These mirror the expected GitHub Actions gates and are cheap enough
-to run before pushing.
-
-Use the repository's package manager and scripts when present. Prefer existing
-scripts in `package.json`; fall back only when a script is missing.
-
-```bash
-# 1. Format - required
-bun run format || npm run format || npx biome check --write .
-
-# 2. Lint - required
-bun run lint || npm run lint || bunx turbo lint
-
-# 3. Type-check - required
-bun run typecheck || bun run type-check || npm run typecheck || npm run type-check || npx tsc --noEmit
-
-# 4. Tests - run when configured
-npm test || bun run test --filter=[changed-package]
-
-# 5. Build - run when configured
-npm run build
-```
-
-If format, lint, or type-check fails, fix it before pushing, opening a release
-PR, or triggering deployment. Do not hand known local quality failures to GitHub
-Actions.
+Before every deployment, run the repository's own format, lint, and type-check
+scripts (and tests and build when configured), on the host the repo designates
+for them. Resolve the real script names from `package.json`; never guess or
+chain package managers. Fix failures before pushing or deploying.
 
 ## Deployment Process
 

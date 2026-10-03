@@ -1,3 +1,9 @@
+---
+description: "Deploy an app or set up deploy infra: compose a workflow, EC2 CI/CD, monitoring, or a dev container."
+argument-hint: "[app|compose|ec2|monitor|devcontainer]"
+disable-model-invocation: true
+---
+
 # Deploy - Single Front Door for Deployment and Infra Provisioning
 
 Drive the full deployment and infra lifecycle from one command — ship an app to
@@ -14,6 +20,8 @@ CI/CD pipeline, configure production monitoring, or scaffold a dev container.
 /deploy monitor          # set up Sentry error tracking and Google Analytics
 /deploy devcontainer     # scaffold a VS Code Dev Container with Docker
 ```
+
+`/deploy help` prints this Usage block and stops without running anything.
 
 ## Steps
 

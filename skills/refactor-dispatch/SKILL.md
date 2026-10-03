@@ -12,7 +12,7 @@ compatibility: Requires git; gh for filing debt as issues.
 disable-model-invocation: true
 allowed-tools: Bash(git *) Bash(gh *)
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "refactor, deslop, tech-debt, performance, modernization, dispatcher, orchestration"
   author: Ship Shit Dev
 when_to_use: "/refactor, refactor this, clean up the code, deslop, pay down tech debt, tech debt register, optimize performance, modernize the stack, update dependencies, which refactor for this"

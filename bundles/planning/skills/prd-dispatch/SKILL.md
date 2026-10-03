@@ -2,7 +2,7 @@
 name: prd-dispatch
 description: "Routes /prd prepare to complete issue preparation and retains focused requirements, planning, draft lint, intake, and discovery modes."
 metadata:
-  version: "3.0.0"
+  version: "2.2.2"
   tags: "prd, planning, dispatcher, requirements, spec, orchestration"
   author: Ship Shit Dev
 when_to_use: "/prd, create a PRD, plan a feature, write a spec, validate a PRD, feature intake, discovery interview, scope this out, write up this feature"

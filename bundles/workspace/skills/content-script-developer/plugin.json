@@ -1,6 +1,6 @@
 {
   "name": "content-script-developer",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "Expert in browser extension content scripts, DOM integration, and safe page augmentation across mode",
   "author": {
     "name": "Ship Shit Dev",

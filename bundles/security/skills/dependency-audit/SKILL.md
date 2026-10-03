@@ -1,15 +1,15 @@
 ---
 name: dependency-audit
-description: Audit a project's dependency supply chain — known CVEs in installed packages, secrets about to be committed, and lockfile/provenance integrity — and wire the checks into CI as a merge gate. Use when asked to audit dependencies, check for vulnerable packages, scan for leaked secrets, add a security gate to CI, or harden the supply chain. Complements security-audit (app-level) and git-safety (git history).
+description: "Audits the dependency supply chain: CVEs in packages, secrets about to be committed, lockfile integrity, and wires checks into CI as a merge gate. Not app-level security."
 user-invocable: true
 argument-hint: "[audit | ci]"
 compatibility: Requires bun and git; gh to add the CI workflow. Uses gitleaks when available.
 allowed-tools: Bash(bun *) Bash(git *) Bash(gh *) Bash(gitleaks *)
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "security, dependencies, sca, secrets, supply-chain, ci"
   author: Ship Shit Dev
-when_to_use: "audit dependencies, dependency audit, vulnerable packages, CVE scan, scan for secrets, secrets scanning, supply chain, add security gate to CI, SCA"
+when_to_use: "vulnerable packages, SCA, secrets scan"
 ---
 
 # Dependency Audit

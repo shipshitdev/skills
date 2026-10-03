@@ -1,3 +1,9 @@
+---
+description: "Resolve PR review comments: map each thread to code, propose fixes, and draft replies; posts only after you confirm."
+argument-hint: "[PR#|PR-URL]"
+disable-model-invocation: true
+---
+
 # Address - Resolve PR Review Comments
 
 Fetch the review and issue comments on a pull request, map each to the exact code
@@ -11,6 +17,8 @@ only after you confirm.
 /address <PR#>        # address comments on a specific PR by number
 /address <PR-URL>     # address comments on a PR by URL
 ```
+
+`/address help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

@@ -15,20 +15,6 @@
       "modifications": "Adapted from obra/superpowers. Preparation uses shared execution readiness, complete feature scope, issue-bound versioned plans, repository evidence, and no full implementation code dumps. Preserve these local contracts on upstream review."
     },
     {
-      "skill": "systematic-debugging",
-      "desc": "A disciplined root-cause debugging methodology — reproduce, isolate, hypothesize, verify — instead of guess-and-check.",
-      "source": "https://github.com/obra/superpowers/blob/main/skills/systematic-debugging/SKILL.md",
-      "source_path": "skills/systematic-debugging/SKILL.md",
-      "upstream_repo": "obra/superpowers",
-      "upstream_ref": "main",
-      "upstream_commit": "030a222af19c",
-      "last_synced": "2026-06-12",
-      "license": "MIT",
-      "mode": "rolling",
-      "drop_author": true,
-      "modifications": "Vendored from obra/superpowers as a standalone, platform-neutral marketplace plugin; ported self-contained with no behavioral changes beyond provenance metadata."
-    },
-    {
       "skill": "verification-before-completion",
       "desc": "Force explicit verification of every claim before marking work done — no “should work” without proof.",
       "source": "https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md",
@@ -173,19 +159,6 @@
       "license": "Unspecified (no upstream LICENSE)",
       "mode": "rolling",
       "modifications": "Vendored from ComposioHQ/awesome-claude-skills. NOTE: upstream repo ships NO LICENSE file — content is all-rights-reserved by default; redistribution permission is unconfirmed. Flag for review before relying on it."
-    },
-    {
-      "skill": "context-fundamentals",
-      "desc": "Understand the components, mechanics, and constraints of context in agent systems — for designing architectures and debugging context failures.",
-      "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-fundamentals/SKILL.md",
-      "source_path": "skills/context-fundamentals/SKILL.md",
-      "upstream_repo": "muratcankoylan/Agent-Skills-for-Context-Engineering",
-      "upstream_ref": "main",
-      "upstream_commit": "cbc2c978133d",
-      "last_synced": "2026-06-12",
-      "license": "MIT",
-      "mode": "rolling",
-      "modifications": "Ported to upstream v2.2.0 (2026-05-15 corpus, commit cbc2c978133d) on 2026-06-12 — body, references, and scripts now match upstream, including the routing framework and gotchas sections. Cross-references to upstream sibling skills not vendored here (context-compression, filesystem-context, project-development, latent-briefing) were removed so routing only names skills present in this marketplace."
     },
     {
       "skill": "context-optimization",

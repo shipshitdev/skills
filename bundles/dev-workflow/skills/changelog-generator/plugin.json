@@ -1,6 +1,6 @@
 {
   "name": "changelog-generator",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categoriz",
   "author": {
     "name": "Ship Shit Dev",

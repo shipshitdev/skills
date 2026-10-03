@@ -1,9 +1,10 @@
 ---
 name: executing-plans
-description: Executes a prepared GitHub issue without inventing product or engineering decisions, escalates plan gaps, and tracks delivery through independent cross-provider review, required CI, merge, and deployment evidence. Use when implementing an approved plan or processing an explicitly authorized issue queue.
+description: Executes a prepared GitHub issue without inventing decisions, escalates plan gaps, and tracks review, CI, merge, and deploy evidence. Use for an approved plan or issue queue.
 metadata:
-  version: "3.1.0"
+  version: "2.2.2"
   tags: "execution, planning, agents, delivery"
+when_to_use: "implement the issue"
 ---
 
 # Executing Plans

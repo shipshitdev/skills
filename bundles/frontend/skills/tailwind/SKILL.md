@@ -1,13 +1,8 @@
 ---
 name: tailwind
-description: >-
-  Provides Tailwind CSS v4 performance optimization and best practices
-  guidelines. Triggers when writing, reviewing, or refactoring Tailwind CSS v4
-  code; when working with Tailwind configuration, @theme directive, utility
-  classes, responsive design, dark mode, container queries, or CSS generation
-  optimization.
+description: "Applies Tailwind CSS v4 best practices when writing, reviewing or refactoring styles: @theme, build config, responsive, dark mode, container queries, CSS size and performance."
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   source: https://github.com/pproenca/dot-skills/blob/master/skills/.curated/tailwind/SKILL.md
   upstream_repo: pproenca/dot-skills
   upstream_ref: master
@@ -15,6 +10,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "tailwind, css, frontend"
+when_to_use: "utility classes, Vite plugin"
 ---
 # Community Tailwind CSS v4 Best Practices
 

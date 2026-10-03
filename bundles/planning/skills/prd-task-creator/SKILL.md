@@ -1,11 +1,11 @@
 ---
 name: prd-task-creator
-description: "Publishes prepared requirements and implementation plans as one complete feature issue, with independently complete child outcomes only when justified. Reuses shared readiness and decomposition rules."
+description: Publishes prepared requirements and plans as one GitHub feature issue, with child issues only when justified. Use when filing a PRD or bug as issues or sub-issues.
 allowed-tools: Bash(gh *)
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "tasks, prd, github, ears"
-when_to_use: "create a task, open a GitHub issue, create a sub-issue, break this epic down into issues, file this PRD as work items, write up this bug as an issue"
+when_to_use: "open a GitHub issue, create sub-issue, break epic into issues"
 ---
 
 # PRD Task Creator

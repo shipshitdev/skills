@@ -3,7 +3,7 @@ name: standup
 description: "Summarize what you personally shipped over a time window from git history — an engineer standup or weekly recap, not a customer changelog. Scopes commits to your git author identity, reads the diffs, and classifies each as a feature, fix, refactor, tech-debt, or docs change. Use when the user asks what did I get done, write my standup, what did I ship this week, weekly recap, or runs /standup."
 compatibility: Requires git; optional GitHub CLI gh for merged-PR enrichment.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "git, standup, recap, weekly-review, activity, reporting, personal"
 allowed-tools: Bash(git *) Bash(gh *)
 disable-model-invocation: true

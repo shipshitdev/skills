@@ -1,3 +1,9 @@
+---
+description: "Inspect, audit, configure, or reconcile a GitHub or Jira project board."
+argument-hint: "[audit|init|normalize|copy <source>|sync [--apply]|schedule [days]|review] [board-url]"
+disable-model-invocation: true
+---
+
 # Board
 
 Inspect, configure, and reconcile the selected board through one provider-aware
@@ -17,6 +23,8 @@ or another connected system with clearly stated capability limits.
 /board schedule [days]          # report upcoming work (default horizon 7 days)
 /board review                  # report every item mapped to human review
 ```
+
+`/board help` prints this Usage block and stops without running anything.
 
 A board URL can identify the target. `--preset shipshit` selects the optional
 house layout in configuration modes; it is a workflow option, not a flag to

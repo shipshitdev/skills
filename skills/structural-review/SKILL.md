@@ -1,20 +1,11 @@
 ---
 name: structural-review
-description: >-
-  Perform a structural and maintainability review of a PR or codebase diff —
-  covering file-size blockers, abstraction quality, layer violations, type
-  structural discipline, spaghetti branching, non-atomic mutations,
-  stack-specific hygiene (Bun, Tailwind v4, Next.js 16, shadcn/ui), design
-  purity (code-judo), and directness over magic (no speculative generality). Use when
-  asked to review code quality, maintainability, structural health, or
-  architecture of a change. Orthogonal to /code-review (which owns correctness
-  bugs and repo rule compliance) — run after correctness passes or in parallel
-  when a thorough PR review is requested.
+description: "Reviews a PR diff for structure and maintainability: file size, abstractions, layering, types, stack hygiene. Report-only. Not for correctness bugs."
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "code-quality, maintainability, architecture, refactoring, structural"
   author: Ship Shit Dev
-when_to_use: "structural review, maintainability review, code quality review, architecture review, thermo-nuclear review, code judo, simplify this PR, is this code clean, before merge review"
+when_to_use: "maintainability review, code judo, simplify this PR"
 ---
 
 # Structural Review
@@ -103,6 +94,8 @@ In this stack, logic belongs in a specific layer. Violating the layer model is a
 - A mutation is wired directly to a DOM event handler when a server action exists in the project.
 - A computation that could be a hook is inlined in JSX and repeated in 2+ components.
 - A raw HTML element appears in a file that already imports from `packages/ui` or shadcn.
+- A bespoke helper duplicates a canonical utility the codebase already has —
+  reuse the existing helper instead of adding a near-duplicate.
 
 **Phrase:** "`<button onClick={...}>` in a component that already imports `Button` from `packages/ui` — swap it; raw HTML is a regression in this codebase."
 
@@ -147,6 +140,8 @@ Functions that orchestrate 5+ sequential steps with no intermediate abstraction 
 
 - A new function has 5+ sequential `await` calls with no intermediate named steps or helper functions.
 - A route handler or server action reads, transforms, validates, writes, and notifies — all inline.
+- Independent work (two unrelated reads or fetches) is awaited serially for no
+  reason — run it in parallel when that also simplifies the flow.
 
 **Preferred remedy:** Extract named phases. Each phase is testable in isolation. The orchestrator becomes a readable list of intents.
 

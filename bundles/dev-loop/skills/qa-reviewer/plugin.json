@@ -1,6 +1,6 @@
 {
   "name": "qa-reviewer",
-  "version": "1.1.0",
+  "version": "2.2.2",
   "description": "Systematically review AI agent work for quality, accuracy, and completeness. Catches bugs, verifies ",
   "author": {
     "name": "Ship Shit Dev",

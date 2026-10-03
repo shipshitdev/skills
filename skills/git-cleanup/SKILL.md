@@ -65,7 +65,7 @@ Confirmation Required:
 
 Delegates To:
 
-- Suggest `release-pr-gates` when unmerged work needs to be shipped first
+- Suggest `github-pr-publish` when unmerged work needs to be shipped first
 - Suggest `git-safety` when preserved history needs investigation
 
 ## Code and Intent Audit

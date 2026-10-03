@@ -1,15 +1,10 @@
 ---
 name: rules-capture
-description: >-
-  Automatically detects and documents user preferences, coding standards, and
-  workflow rules from conversation — capturing them to
-  `.agents/memory/captured-rules.md` for promotion to permanent project or
-  user rules. Triggers on: "always do X", "never do X", "from now on", "the
-  rule is", "stop doing X", "I prefer", frustration indicators, or any
-  correction to AI behavior.
+description: Detects user preferences and workflow rules in conversation and records them in .agents/memory/captured-rules.md for promotion. Use on always/never or corrections to the AI.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "preferences, rules, documentation, automation"
+when_to_use: "from now on, I prefer, stop doing X, the rule is"
 ---
 
 # Rules Capture Skill

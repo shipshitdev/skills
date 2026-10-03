@@ -1,3 +1,9 @@
+---
+description: "Run, author, or set up tests: run and repair, QA pass, TDD, Playwright E2E, coverage gates, or CI init."
+argument-hint: "[run [scope]|qa|tdd|e2e|coverage|init|regression]"
+disable-model-invocation: true
+---
+
 # Test - One Front Door for Running, Authoring, and Setting Up Tests
 
 Drive the whole testing lifecycle from one command — run tests and repair
@@ -27,6 +33,8 @@ AI-targeted regression suites.
 /test regression         # design regression tests targeting AI-generated code blind spots
 ```
 
+`/test help` prints this Usage block and stops without running anything.
+
 Note the run/setup split: `/test run e2e` executes existing E2E tests, while
 `/test e2e` scaffolds Playwright from scratch. Likewise `/test run coverage`
 runs the suite with coverage, while `/test coverage` installs the Husky gate.
@@ -55,8 +63,8 @@ runs the suite with coverage, while `/test coverage` installs the Husky gate.
 - **`init`** — the `testing-cicd-init` skill: install Vitest testing
   infrastructure and GitHub Actions CI/CD for TypeScript projects, configuring
   80% coverage thresholds and Bun-based workflows.
-- **`regression`** — the `ai-regression-testing` skill: design regression tests
-  that target AI model blind spots such as sandbox vs. production path drift,
+- **`regression`** — the `testing-expert` skill in AI regression mode: design
+  regression tests that target AI model blind spots such as sandbox vs. production path drift,
   response-shape mismatches, and same-model review failures.
 
 ## Workflow
