@@ -54,7 +54,7 @@ CONTRACT_REQUIRED_SKILLS="
 agent-config-audit
 agent-folder-init
 codebase-advisor
-deploy
+deploy-app
 deployment-composer
 feature-intake
 fullstack-workspace-init
