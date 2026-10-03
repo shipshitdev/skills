@@ -120,7 +120,8 @@ PR=$(gh api "repos/{owner}/{repo}/commits/$SHA/pulls" \
   --jq ".[] | select(.merge_commit_sha==\"$SHA\") | .number")
 HEAD=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
 git fetch origin "$HEAD"
-[ "$(git rev-parse "$SHA^{tree}")" = "$(git rev-parse "$HEAD^{tree}")" ] && gh pr checks "$PR" --required
+[ "$(git rev-parse "$SHA^{tree}")" = "$(git rev-parse "$HEAD^{tree}")" ] && echo same-tree
+# If same tree: read the check-runs and status queries above again for "$HEAD"
 ```
 
 A protection lookup returning `404 Branch not protected` means no classic
@@ -137,8 +138,9 @@ Verdict per required context, labelled `on SHA` or `via PR #n (same tree)`:
 - **pending** — missing or still running. **fail** — any other conclusion.
 
 The overall verdict is green only when every required context passes. With no
-required checks configured, say so and require every completed run on `SHA` to
-pass. For unproven contexts, offer to run the CI workflow on `SHA` through its
+required checks configured, say so: the verdict is green only when CI evidence
+exists for the tree (runs on `SHA` or on a same-tree PR head) and every
+completed run there is `success`. No CI evidence at all is **unproven**. For unproven contexts, offer to run the CI workflow on `SHA` through its
 `workflow_dispatch` (confirm first), or — in dispatch mode — name the release
 workflow's own verification of `SHA` as the gate and get explicit approval.
 
@@ -179,8 +181,9 @@ still equals `SHA`. If the trunk moved, re-run Phase 2 and get a new approval.
 - **release-please** — the release PR must change only release-managed files
   (the manifest, changelogs, and version files named in the config); anything
   else goes through the `executing-plans` skill's `references/delivery-gate.md`.
-  Require `git merge-base --is-ancestor "$SHA" <pr-head-sha>`, a passing
-  `gh pr checks <n> --required`, then
+  Require `git merge-base --is-ancestor "$SHA" <pr-head-sha>` and a green
+  Phase 2 verdict for the release PR's head commit (same queries, same
+  success-only rule), then
   `gh pr merge <n> --squash --match-head-commit <pr-head-sha>` (use the repo's
   merge method). Its workflow creates the tag and release.
 - **dispatch** — read the workflow's `workflow_dispatch.inputs` at `SHA` and map
