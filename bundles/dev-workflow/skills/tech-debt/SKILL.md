@@ -1,14 +1,14 @@
 ---
 name: tech-debt
-description: Inventories a real codebase and ranks its technical debt into a register scored by interest (how often it hurts) over principal (effort to fix), every item anchored to a file-and-line or a metric. Covers code smells, dependency debt, test gaps, and architectural churn hotspots across frontend and backend. Use when asked what to pay down, where the codebase is rotting, or to turn debt into a tracked backlog. Files the register as GitHub issues on request. For org-level technology strategy and architecture direction, use `cto-advisor`.
+description: Ranks a codebase's tech debt into a register scored by interest over principal, each item tied to file:line. Use for what to pay down or where code rots. Files issues on request.
 user-invocable: true
 argument-hint: "[directory, or 'issues' to file]"
 compatibility: Requires git; gh to file issues; optional bun/npm audit for dependency debt.
 metadata:
-  version: "1.0.3"
+  version: "2.2.2"
   tags: "tech-debt, refactor, prioritization, code-quality, maintenance"
   author: Ship Shit Dev
-when_to_use: "what to pay down, debt register, where is the codebase rotting, scan this repo for tech debt, prioritize refactoring, debt backlog, /refactor debt"
+when_to_use: "debt register, debt backlog, /refactor debt"
 ---
 
 # Tech Debt

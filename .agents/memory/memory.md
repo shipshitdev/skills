@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **188 skills · 30 commands · 13 bundles · 201 plugins**.
+Generated catalog: **183 skills · 30 commands · 13 bundles · 196 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 188 | `skills/*/SKILL.md` |
+| Skills | 183 | `skills/*/SKILL.md` |
 | Commands | 30 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 201 | skills + bundles |
+| Plugins | 196 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -41,6 +41,50 @@ One `skills/` directory at root. No per-platform copies. Platform-neutral writin
 ### Agent Skills Spec Compliance (2026-04-21)
 
 Follow agentskills.io/specification as base. Claude Code extensions (`when_to_use`, `disable-model-invocation`, `allowed-tools`, etc.) added on top. `version`/`tags` go inside `metadata:` block as strings, not top-level. See `.agents/memory/system/skill-standards.md`.
+
+### Shared release versions (2026-10-03)
+
+All public and repo-maintenance skills, their plugin manifests and generated packages use the
+repository release version from `package.json` (2.2.2 at alignment). Vincent
+explicitly replaced independent per-skill versions with one shared version.
+Run `bun run version:sync` after a repository version change; packaging and
+release automation synchronize this automatically. `version:check` verifies
+alignment rather than requiring a separate version bump for instruction edits.
+Installed metadata updates preserve local behavior and owned customization.
+
+### Listing budget (2026-10-03)
+
+Model-invoked description + `when_to_use` load into every session, and the
+catalog's ~54.6k chars overflowed Claude Code's listing so many skills showed no
+description. Vincent approved a catalog-wide pass: descriptions ≤ 180 chars
+(validator warns > 200), `when_to_use` ≤ 80 (warns > 120) with only new trigger
+words — 54.6k → 31.4k chars. The repeated Authorized Scope and Delivery
+Readiness paragraphs were shortened in place; skills stay self-contained because
+they install individually and cannot share a reference file.
+
+### Overlap merges (2026-10-03)
+
+Vincent approved evidence-based merges after a read-only cluster audit (#168):
+`debug` absorbed `execution-debugging` (scoped mode) and `systematic-debugging`
+(`references/systematic-debugging.md`, Iron Law verbatim, rolling obra sync
+ended); `context-optimization` absorbed `context-fundamentals`
+(`references/fundamentals.md` + `scripts/context_manager.py`); `testing-expert`
+absorbed `ai-regression-testing` (AI regression mode, `/test regression`);
+`structural-review` is the single code-quality rubric and the pstack
+thermo-nuclear procedure is `superseded`. Review, interview, `bug`, and `why`
+skills stay separate: different side effects, upstream tracking, or pinned tests.
+
+### One release skill (2026-10-03)
+
+Vincent merged `release-pr-gates` and `release-dispatch` into `release`; `/release`
+routes straight to it. Rationale: `release-pr-gates` also tagged locally without
+the clean-trunk checks or guarded-workflow detection, which side-doored promote
+gates such as Genfeed's `release.yml`. `release` now proves checks for the exact
+trunk SHA (runs on the SHA plus the producing PR's required checks, because
+required checks usually run only on PRs), detects release-please, guarded
+`workflow_dispatch`, or tag mode, reads the workflow's declared inputs, and
+reports deploy evidence. `deploy` no longer triggers on "release". Supersedes the
+earlier backlog row that kept the release skills separate (#166).
 
 ### External Skills Imported (2026-04-21)
 

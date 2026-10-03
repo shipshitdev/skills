@@ -11,7 +11,7 @@ description: >-
   drift, initialize agent docs, or wire up routing, and the action must be picked
   from an argument like "audit", "config", "init", or "route".
 metadata:
-  version: "1.1.1"
+  version: "2.2.2"
   tags: "agents, dispatcher, architecture, config, setup, routing, orchestration"
   author: Ship Shit Dev
 when_to_use: "/agent, agent audit, config audit, init agent folder, setup agent routing, audit LLM wrappers, check agent config drift, add .agents/ folder, wire up dev-loop routing"

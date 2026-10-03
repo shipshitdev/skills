@@ -1,3 +1,9 @@
+---
+description: "Review a PR and post one-click inline suggested changes after you confirm."
+argument-hint: "[PR#|PR-URL] [scope]"
+disable-model-invocation: true
+---
+
 # Suggest - Post Inline Suggested Changes on a PR
 
 Review a pull request and post precise inline GitHub *suggested-change* blocks —
@@ -12,6 +18,8 @@ suggestions onto the PR.
 /suggest <PR#>        # target a specific PR by number
 /suggest <PR-URL>     # target a PR by URL
 ```
+
+`/suggest help` prints this Usage block and stops without running anything.
 
 Optional scope: name files or a severity threshold, e.g. `/suggest 142 src/auth only`.
 

@@ -76,7 +76,7 @@ Current consolidation backlog:
 | Cluster | Direction |
 |---------|-----------|
 | Init/scaffold | `project-init-orchestrator` owns route selection; new Shipshit.dev products route to `npx @shipshitdev/v0`; setup skills become repair/customization helpers |
-| Deployment/release | `deployment-composer` owns route selection; `release-pr-gates`, `deploy`, and provider skills stay separate by side-effect boundary |
+| Deployment/release | `release` is the single release path (gate the trunk SHA, cut via release-please, guarded workflow, or tag); `deployment-composer` routes deploys; `deploy` and provider skills stay separate by side-effect boundary |
 | Agent config | Split read-only audit from write/sync if `fix` mode grows further |
 | Landing pages | Keep scaffold and deploy/domain attach as separate contracts; route full products through v0 |
 | Session learning | Keep `rules-capture` and `skill-capture` separate; promotion to permanent skills/rules must remain explicit |

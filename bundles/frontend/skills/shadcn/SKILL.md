@@ -1,12 +1,8 @@
 ---
 name: shadcn
-description: >-
-  Provides shadcn/ui component library best practices and patterns. Triggers
-  when writing, reviewing, or refactoring shadcn/ui components; when working
-  with Radix primitives, Tailwind styling, React Hook Form validation, data
-  tables, theming, or component composition patterns.
+description: "Applies shadcn/ui best practices when writing, reviewing or refactoring components: Radix primitives, React Hook Form, data tables, theming, composition."
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   source: https://github.com/pproenca/dot-skills/blob/master/skills/.curated/shadcn/SKILL.md
   upstream_repo: pproenca/dot-skills
   upstream_ref: master
@@ -14,6 +10,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "shadcn, ui, react"
+when_to_use: "shadcn components, dark mode"
 ---
 # shadcn/ui Community Best Practices
 

@@ -1,11 +1,12 @@
 ---
 name: react-patterns
-description: Modern React patterns and principles. Hooks, composition, performance, TypeScript best practices. Use when writing or reviewing React components, applying hooks and composition patterns, or improving React performance and TypeScript usage.
+description: Applies modern React patterns — hooks, composition, performance, TypeScript. Use when writing or reviewing React components or improving React code quality.
 metadata:
   risk: safe
   date_added: '2026-02-27'
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "react, patterns, frontend"
+when_to_use: "custom hook, composition, server vs client component"
 ---
 
 # React Patterns

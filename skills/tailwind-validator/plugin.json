@@ -1,6 +1,6 @@
 {
   "name": "tailwind-validator",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Validate Tailwind CSS v4 configuration and detect/prevent Tailwind v3 patterns",
   "author": {
     "name": "Ship Shit Dev",

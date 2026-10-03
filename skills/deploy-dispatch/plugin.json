@@ -1,6 +1,6 @@
 {
   "name": "deploy-dispatch",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Front door for deploys — routes app/compose/ec2/monitor/devcontainer to the engine.",
   "author": {
     "name": "Ship Shit Dev",

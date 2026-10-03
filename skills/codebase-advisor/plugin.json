@@ -1,6 +1,6 @@
 {
   "name": "codebase-advisor",
-  "version": "1.1.0",
+  "version": "2.2.2",
   "description": "Audit a codebase read-only for agent-ready plans or an architecture report.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,17 +1,11 @@
 ---
 name: env-setup
-description: >-
-  Discover the environment variables a codebase actually reads, generate or
-  update a grouped .env.example template, validate that required variables are
-  set, and keep secrets out of git. Use when setting up environment variables
-  for a project, scaffolding .env templates, validating an existing .env file,
-  documenting required configuration, or checking that .gitignore covers env
-  files. Backs the /env command.
+description: Finds the env vars a codebase reads, generates .env.example, validates .env, and checks .gitignore covers secrets. Use for /env or environment configuration setup.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "environment, dotenv, secrets, configuration, scaffolding, validation"
   author: Ship Shit Dev
-when_to_use: "/env, set up environment variables, create .env.example, validate .env, missing env var, document environment configuration, env template, secrets in git"
+when_to_use: "missing env var, secrets in git, env template"
 ---
 
 # Env Setup

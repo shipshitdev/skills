@@ -1,6 +1,6 @@
 {
   "name": "clerk-validator",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Validate Clerk authentication configuration and detect deprecated patterns",
   "author": {
     "name": "Ship Shit Dev",

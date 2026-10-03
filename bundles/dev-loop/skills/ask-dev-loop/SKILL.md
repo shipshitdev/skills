@@ -4,7 +4,7 @@ description: Ask which Dev Loop skill or flow fits the current situation. A rout
 disable-model-invocation: true
 license: MIT
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "dev-loop, router, planning, dispatch"
   author: Ship Shit Dev
 when_to_use: "which skill, what should I run, ask-dev-loop, how do I start, idea to ship, which flow"
@@ -76,7 +76,7 @@ Keep grilling, spec, and tickets in **one context window**. Each `/loop` /
 - **Bugs and incoming requests piling up** → `/prd intake` (`feature-intake`) or
   `github-inbox`. Tickets that `prd-task-creator` already wrote are agent-ready; do not
   re-intake them.
-- **Something's broken** → `/debug` (or `systematic-debugging` when previous fixes
+- **Something's broken** → `/debug` (it escalates on its own when previous fixes
   failed). Tight red loop first; no theory without a loop.
 - **A huge, foggy effort** → `roadmap-analyzer` / `roadmap-to-milestones` to chart
   the destination, then merge onto the main flow at `/interview` or `/prd write`.

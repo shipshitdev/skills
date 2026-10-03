@@ -3,7 +3,7 @@ name: merge-open-prs
 description: Review and land open pull requests through one /merge command. The default mode runs a confirmation-gated trunk sweep and reports cleanup candidates; exact /merge force drains the queue non-serially by merging green PRs and narrowly fixing red PRs. Use when asked to review and merge open PRs, batch-merge to trunk, drain PR WIP, or run /merge.
 compatibility: Requires git, GitHub CLI gh, and jq access to the target repository.
 metadata:
-  version: "2.1.0"
+  version: "2.2.2"
   tags: "git, github, pull-request, merge, review, trunk, cleanup, batch"
 allowed-tools: Bash(git *) Bash(gh *) Bash(jq *)
 disable-model-invocation: true
@@ -25,22 +25,14 @@ not cut a release (use the `release` skill to tag from trunk) and does not deplo
 
 ## Delivery Readiness
 
-For every implementation PR, resolve the installed `executing-plans` skill and
-read its `references/delivery-gate.md` before declaring merge-ready, merging, or
-reporting Done. This is the canonical delivery contract; local menus and playbook
-shortcuts do not weaken it.
-
-Require acceptance evidence for the complete promised outcome, independent review
-from a different lab than every implementation contributor, a PASS tied to the
-current head, resolved findings, and green required CI from live repository policy.
-A different model from the same lab is not an independent cross-provider review.
-Missing reviewer capacity, credentials, check discovery, or evidence leaves a
-visible blocker. A new implementation commit invalidates previous review and CI.
-
-PR publication and a ready-for-review flag do not imply merge readiness. Merge only
-within existing authorization and bind it to the verified head. Done additionally
-requires a verified merge and the issue's required deployment, migration, enablement,
-and end-to-end smoke evidence. Partial work references its epic without closing it.
+For every implementation PR, read the installed `executing-plans` skill's
+`references/delivery-gate.md` before declaring merge-ready, merging, or reporting
+Done; nothing here weakens it. In short: acceptance evidence for the full outcome,
+a PASS from a reviewer in a different lab than every contributor, tied to the
+current head, and green required CI. Missing evidence stays a visible blocker; a
+new commit invalidates earlier review and CI. Merge only within existing
+authorization, bound to the verified head. Done also needs merge and the issue's
+required deployment evidence.
 
 ## Contract
 

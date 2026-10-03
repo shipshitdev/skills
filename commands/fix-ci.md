@@ -1,3 +1,9 @@
+---
+description: "Diagnose failing GitHub Actions checks on a PR from the logs and fix the root cause."
+argument-hint: "[PR#|PR-URL]"
+disable-model-invocation: true
+---
+
 # Fix CI - Diagnose and Fix Failing Checks
 
 Diagnose the failing GitHub Actions checks on a pull request, find the root cause
@@ -11,6 +17,8 @@ instead of guessing from the red X.
 /fix-ci <PR#>        # target a specific PR by number
 /fix-ci <PR-URL>     # target a PR by URL
 ```
+
+`/fix-ci help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

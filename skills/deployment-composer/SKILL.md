@@ -1,11 +1,12 @@
 ---
 name: deployment-composer
-description: Compose deployment workflows from smaller skills and repo signals, including trunk-based releases, CI quality gates, provider deployment, post-deploy verification, rollback, and failed-check diagnosis. Use when the user asks for a deployment plan, release workflow, ship-to-staging/production environments, or a smart deploy process across GitHub, Vercel, EC2, Docker, or custom CI.
+description: "Composes deployment workflows from repo signals: CI gates, provider deploy, verification, rollback. Use for a deploy plan across GitHub, Vercel, EC2, Docker, or custom CI."
 compatibility: Requires local repository access. GitHub release flows require gh and git access.
 metadata:
-  version: "1.2.1"
+  version: "2.2.2"
   tags: "deployment, orchestration, release, ci-cd, github, staging, production"
 allowed-tools: Bash(git *) Bash(gh *) Bash(ls *) Bash(find *) Bash(rg *) Bash(cat *)
+when_to_use: "release workflow, failed-check diagnosis"
 ---
 
 # Deployment Composer
@@ -14,11 +15,10 @@ Compose the smallest safe deployment workflow from the repository's actual branc
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 
@@ -39,7 +39,7 @@ Creates/Modifies:
 
 - Nothing during discovery
 - May create local release notes or PR body files
-- May create GitHub PRs only through `release-pr-gates` after confirmation rules are satisfied
+- May cut releases only through `release` after its confirmation rules are satisfied
 
 External Side Effects:
 
@@ -54,7 +54,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `release-pr-gates`
+- `release`
 - `deploy`
 - `github-fix-ci`
 - `ec2-backend-deployer`
@@ -65,7 +65,7 @@ Delegates To:
 
 | Stage | Use |
 |-------|-----|
-| `release-pr-gates` | GitHub release PRs, branch discovery, gate + cut releases on the trunk, waiting for checks |
+| `release` | Gate the exact trunk SHA, then cut via release-please, a guarded release workflow, or a tag |
 | `deploy` | General staging/production deploy checklist, local quality gates, post-deploy monitoring |
 | `github-fix-ci` | Failed GitHub Actions checks on release or deploy PRs |
 | `ec2-backend-deployer` | Docker + GitHub Actions + EC2 backend deployment setup |
@@ -107,11 +107,9 @@ Capture:
 
 If the user wants to cut a release:
 
-1. Use `release-pr-gates` to gate the release on the trunk (default branch).
-2. A short-lived feature or fix branch is merged into the trunk via PR; the release is then cut from the trunk as a semver tag + GitHub release.
-3. `staging` and `production` are deployment environments driven by CI/tags — not git branches.
-4. Wait for quality gates before calling the release ready.
-5. Use `github-fix-ci` if checks fail.
+1. Use `release`: it gates the exact trunk SHA and cuts through the repo's own release mechanism.
+2. `staging` and `production` are deployment environments driven by CI/tags — not git branches.
+3. Use `github-fix-ci` if checks fail.
 
 ### Direct Provider Deploy
 
@@ -144,18 +142,10 @@ If the release needs user-facing notes or a PR body:
 
 1. Discover repo topology and deployment provider.
 2. Choose the narrowest route from the routing rules.
-3. Run local gates before every release PR or deployment. Format, lint, and type-check are mandatory:
-
-   ```bash
-   bun run format || npm run format || npx biome check --write .
-   bun run lint || npm run lint || bunx turbo lint
-   bun run typecheck || bun run type-check || npm run typecheck || npm run type-check || npx tsc --noEmit
-   bun run test || npm test
-   bun run build || npm run build
-   ```
-
-   Fix format, lint, and type-check failures before pushing or deploying. Tests
-   and build should run when configured; report absent scripts as coverage gaps.
+3. Before a direct deploy, run the repository's own format, lint, and type-check
+   scripts (tests and build when configured) on the host the repo designates.
+   Never guess or chain package managers; report absent scripts as coverage gaps.
+   Releases rely on CI for the exact SHA instead (see `release`).
 
 4. Execute the selected release or deploy path.
 5. Wait for remote checks or deployment status.

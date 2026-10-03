@@ -1,9 +1,10 @@
 ---
 name: ai-agent-cost-optimizer
-description: Audit and reduce AI agent token and inference spend through context discipline, prompt caching, model routing, batching, and workflow capture. Use when discussing AI coding bills, token waste, model selection, prompt caching, or agent cost optimization.
+description: Audits and cuts AI agent token and inference spend via context discipline, prompt caching, model routing, and batching. Use when AI coding bills or token waste are too high.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "ai, agents, cost, tokens, context"
+when_to_use: "model tier choice, cache misses"
 ---
 
 # AI Agent Cost Optimizer
@@ -154,7 +155,7 @@ When auditing a workflow, return:
 
 Related skills:
 
-- `context-fundamentals` - Understand what consumes context
+- `context-optimization` (`references/fundamentals.md`) - Understand what consumes context
 - `context-optimization` - Apply compaction, masking, caching, and partitioning
 - `multi-agent-patterns` - Evaluate when sub-agent context isolation is worth the overhead
 - `tool-design` - Reduce tool ambiguity and response bloat

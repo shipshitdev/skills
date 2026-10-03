@@ -1,6 +1,6 @@
 {
   "name": "evaluation",
-  "version": "1.2.0",
+  "version": "2.2.2",
   "description": "Build evaluation frameworks for agent systems. Use when testing agent performance, validating contex",
   "author": {
     "name": "Ship Shit Dev",

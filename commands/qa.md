@@ -1,3 +1,9 @@
+---
+description: "Structured verification pass on your changes before commit: bugs, missed requirements, wrong assumptions."
+argument-hint: "[scope]"
+disable-model-invocation: true
+---
+
 # QA - Structured Verification Pass on Your Work
 
 Run a multi-phase verification pass over completed work — checking for bugs,
@@ -10,6 +16,8 @@ on-demand version of the QA gate that `/loop` runs automatically.
 /qa              # verify the current uncommitted/branch changes (default)
 /qa <scope>      # focus the pass on a path, feature, or set of files
 ```
+
+`/qa help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

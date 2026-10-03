@@ -11,7 +11,7 @@ description: >-
   existing skill, and the action must be picked from an argument like "create",
   "capture", "comply", or "scout".
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "skills, dispatcher, authoring, compliance, orchestration"
   author: Ship Shit Dev
 when_to_use: "/skill, create a skill, capture this as a skill, test skill compliance, scout for an existing skill, make a workflow reusable, check if a rule is followed"

@@ -1,8 +1,8 @@
 ---
 name: tool-design
-description: Design tools that agents can use effectively, including when to reduce tool complexity. Use when creating, optimizing, or reducing the set of tools available to an agent.
+description: "Designs agent-facing tools: descriptions, schemas, responses, errors, naming, and consolidating overlapping tool sets. Use when creating tools or when agents pick the wrong one."
 metadata:
-  version: "2.2.0"
+  version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/tool-design/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "tools, agents, architecture"
+when_to_use: "MCP tool naming, tool catalog"
 ---
 # Tool Design for Agents
 
@@ -276,7 +277,7 @@ This skill owns the tool-interface layer. Adjacent decisions are owned elsewhere
 
 - `multi-agent-patterns`: deciding whether one agent with more tools is better than two agents with smaller tool catalogs. If the question is "should this split into sub-agents," route there.
 - `context-optimization`: trajectory-level token efficiency, observation masking, choosing response-format options across many tool calls. If the question is "how do we reduce token weight of accumulated tool outputs," route there.
-- `context-fundamentals`: the conceptual question of how tool definitions consume the attention budget. If the question is "why does adding tools degrade routing accuracy," start there.
+- `context-optimization` (`references/fundamentals.md`): the conceptual question of how tool definitions consume the attention budget. If the question is "why does adding tools degrade routing accuracy," start there.
 - `evaluation`: judging whether the tool set improved agent outcomes overall.
 
 ## References
@@ -288,7 +289,7 @@ Internal references:
 
 Related skills in this collection:
 
-- context-fundamentals - Tool context interactions
+- context-optimization (fundamentals reference) - Tool context interactions
 - evaluation - Tool testing patterns
 
 External resources:

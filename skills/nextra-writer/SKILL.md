@@ -1,9 +1,10 @@
 ---
 name: nextra-writer
-description: Expert in creating clear, comprehensive technical documentation with Nextra (Next.js-based docs framework), MDX, and modern documentation patterns. Use for documentation sites that need Next.js integration.
+description: Writes Nextra documentation sites with MDX — config, navigation, search, API docs. Use when creating or updating Nextra docs on Next.js.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "documentation, nextra, nextjs, mdx, technical-writing, api-docs, react, typescript"
+when_to_use: "theme.config, next.config.mjs, .mdx docs"
 ---
 
 # Nextra Technical Writer

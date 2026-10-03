@@ -1,9 +1,10 @@
 ---
 name: accessibility
-description: Applies WCAG 2.1 AA to web UI work and fixes what fails — semantic HTML, ARIA roles and states, keyboard access, focus management, contrast ratios, and screen-reader verification — while a component is being built or reviewed. Use when the user names accessibility, a11y, WCAG, ARIA, keyboard navigation, focus traps, screen readers, or contrast. For a scored multi-dimension quality report, use `audit`; for design-token consistency, use `design-consistency-auditor`.
+description: Applies WCAG 2.1 AA to web UI and fixes failures. Use when building or reviewing components for a11y, ARIA, keyboard navigation, focus traps, or contrast.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "accessibility, a11y, wcag, aria, keyboard-navigation, screen-reader, inclusive-design"
+when_to_use: "screen readers, semantic HTML"
 ---
 
 # Accessibility (a11y) Skill

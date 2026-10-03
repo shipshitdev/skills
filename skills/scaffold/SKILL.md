@@ -1,9 +1,10 @@
 ---
 name: scaffold
-description: Generate incremental local code modules following existing codebase patterns. Use for endpoints, components, packages, collections, or modules inside an existing repo; not for full project scaffolds.
+description: Generates incremental code modules inside an existing repo following local patterns — endpoints, components, packages, collections. Not for new full-project scaffolds.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "scaffolding, code-generation, boilerplate, productivity"
+when_to_use: "add a module, new endpoint, new component"
 ---
 
 # Scaffold

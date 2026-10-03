@@ -1,11 +1,11 @@
 ---
 name: no-comments
-description: Review comments on a diff, delete narration and workaround sermons, fix accepted findings, and offer encodings for claimed constraints. Use before review or when asked to strip comments.
+description: Reviews comments on a diff, deletes narration, fixes accepted findings, and offers encodings for claimed constraints. Use before review or when asked to strip comments.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "comments, review, cleanup"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/no-comments/SKILL.md
@@ -30,11 +30,10 @@ comment pass.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

@@ -1,6 +1,6 @@
 {
   "name": "nestjs-expert",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "Enterprise NestJS architecture: DI, guards, interceptors, TypeORM/Prisma, JWT auth, and testing.",
   "author": {
     "name": "Ship Shit Dev",

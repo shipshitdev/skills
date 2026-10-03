@@ -1,9 +1,10 @@
 ---
 name: ai-loading-ux
-description: Design AI loading, thinking, and progress indicator UX. Use when explicitly asked to improve AI waiting states, add thinking indicators, or design loading UX for AI interfaces. Covers reasoning display (chain-of-thought), progress steps, streaming states, and the "elevator mirror effect" for reducing perceived wait time.
+description: "Designs AI waiting-state UX: thinking indicators, reasoning display, progress steps, and streaming states. Use when asked to improve loading or perceived wait in AI interfaces."
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "ai, loading, ux"
+when_to_use: "chain-of-thought display"
 ---
 
 # AI Loading UX

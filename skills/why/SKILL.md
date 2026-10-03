@@ -1,11 +1,11 @@
 ---
 name: why
-description: Investigate why code is shaped the way it is. Use for design rationale, regressions, postmortems, or data-backed thresholds. Queries available evidence categories in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.
+description: "Investigates why code is shaped as it is: design rationale, regressions, postmortems, data-backed thresholds, with cited evidence. Use how for runtime behavior."
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "investigation, rationale, history, evidence"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/why/SKILL.md
@@ -14,6 +14,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
+when_to_use: "why was this built this way, decision history"
 ---
 
 # Why

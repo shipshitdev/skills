@@ -1,18 +1,10 @@
 ---
 name: open-source-checker
-description: >-
-  Audits a whole private repository once, at the decision to make it public.
-  Runs four passes — license and attribution, secrets across the entire git
-  history, private references (internal hostnames, employee emails, client and
-  customer names, staging URLs), and publication readiness — then returns a
-  publish or block verdict. Use when the user is preparing to open source a
-  repository, asks whether a codebase is safe to publish, wants a pre-release
-  audit before flipping a repo public, or needs to know what is still private in
-  code that is about to ship publicly.
+description: "Audits a private repo once before it goes public: license, secrets in git history, private references, publish readiness. Returns a publish or block verdict."
 metadata:
-  version: "1.1.1"
+  version: "2.2.2"
   tags: "open-source, publishing, license, audit"
-when_to_use: "open source this repo, make this repository public, is this safe to publish, pre-release audit, what is private in this codebase, check licensing before publishing, going public with this code"
+when_to_use: "open source this repo, make repo public, is this safe to publish"
 ---
 
 # Open Source Checker

@@ -1,8 +1,8 @@
 ---
 name: agent-folder-init
-description: Add or repair .agents/ project context for an existing repo. Use for AI agent documentation, session tracking, task management, and coding standards; do not use as the primary new-product scaffold.
+description: "Adds or repairs .agents/ project context in an existing repo: docs, session tracking, tasks, coding standards. Not for scaffolding a new product."
 metadata:
-  version: "2.1.0"
+  version: "2.2.2"
   tags: "agents, setup, documentation"
 ---
 
@@ -10,11 +10,10 @@ metadata:
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

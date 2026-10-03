@@ -1,3 +1,9 @@
+---
+description: "Review working changes, a PR, every open PR, the last N commits, or a time window such as 7d."
+argument-hint: "[PR#|prs|commits <N>|7d|retro [window]] [--deep|--structural|grok]"
+disable-model-invocation: true
+---
+
 # Review - One Front Door for Every Code Review
 
 Review whatever you point it at — your working changes, a single PR, every open
@@ -18,6 +24,8 @@ PR, the last N commits, or a time window — through the same review engine.
 /review --structural [target]  # structural/maintainability lens only (the thermo-nuclear pass)
 /review grok [target]    # second opinion: same target, reviewed by the Grok CLI instead
 ```
+
+`/review help` prints this Usage block and stops without running anything.
 
 `--deep` and `--structural` combine with review targets, e.g. `/review --deep
 142`, `/review --deep prs`, or `/review --structural commits 5`. They are

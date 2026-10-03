@@ -1,21 +1,20 @@
 ---
 name: agent-config-audit
-description: Audit AI agent instruction files (AGENTS.override.md, AGENTS.md, configured fallbacks, CLAUDE.md, hooks, and settings) across workspaces in read-only report mode. Use when agent configs drift, rules duplicate, files go stale, or after workspace restructuring; apply fixes only when explicitly requested.
+description: Audits agent instruction files (AGENTS.md, CLAUDE.md, hooks, settings) across workspaces, report-only. Use when configs drift, rules duplicate, or files go stale.
 metadata:
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "audit, claude-md, agents-md, config, documentation, maintenance"
-when_to_use: "audit AGENTS.md, audit CLAUDE.md, agent config audit, sync agent configs, check AGENTS.md, docs out of date, rules duplicated, config drift, stale cursorrules, agent config maintenance"
+when_to_use: "stale cursorrules, sync agent configs"
 ---
 
 # Agent Config Audit
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 
