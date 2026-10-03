@@ -1,20 +1,20 @@
 ---
 name: ec2-backend-deployer
-description: Deploys backend applications to EC2 instances using Docker, GitHub Actions CI/CD, and Tailscale for secure SSH access. Activates when setting up EC2 deployment pipelines, configuring container registries, or wiring automated deploys for NestJS, Next.js, or Express backends.
+description: Deploys backends to EC2 via Docker, GitHub Actions CI/CD, and Tailscale SSH. Use when wiring automated deploys for NestJS, Next.js, or Express to EC2.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "ec2, deployment, backend"
+when_to_use: "container registry"
 ---
 
 # EC2 Backend Deployer
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

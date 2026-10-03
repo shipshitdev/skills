@@ -1,28 +1,22 @@
 ---
 name: github-fix-ci
-description: >-
-  Diagnoses failing or setup-stuck GitHub Actions checks on a PR, identifies
-  root cause, and proposes or applies targeted fixes. Triggers when the user asks
-  to fix CI, diagnose failing checks, fix a failing workflow, address GitHub
-  Actions errors, get a green build, or continue PR queue work without waiting on
-  unrelated pending checks. Can run autonomously in a loop — fix, push, recheck —
-  until all required checks are green when the user asks to loop on CI.
+description: Diagnoses failing or stuck GitHub Actions checks on a PR, finds root cause, and applies targeted fixes, optionally looping until green. Use to fix CI or get a green build.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "2.1.0"
+  version: "2.2.2"
   tags: "github, ci, actions"
+when_to_use: "failing workflow, failing checks"
 ---
 
 # GitHub Fix CI
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

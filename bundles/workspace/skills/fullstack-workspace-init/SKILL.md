@@ -1,9 +1,10 @@
 ---
 name: fullstack-workspace-init
-description: Initialize Shipshit.dev full-stack product workspaces through npx @shipshitdev/v0, then customize and verify the generated repo. Use for new product scaffolds or post-v0 workspace setup.
+description: Scaffolds a Shipshit.dev full-stack product workspace via npx @shipshitdev/v0, then customizes and verifies it. Use for new product repos or post-v0 setup.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "fullstack, workspace, v0"
+when_to_use: "new product scaffold"
 ---
 
 # Full Stack Workspace Init

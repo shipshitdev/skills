@@ -1,7 +1,7 @@
 {
   "name": "release",
-  "version": "2.1.2",
-  "description": "Cut a trunk release with semantic versioning, patch notes, tags, and GitHub release.",
+  "version": "2.2.2",
+  "description": "Gate the trunk SHA, then cut a release via release-please, a guarded workflow, or a tag.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

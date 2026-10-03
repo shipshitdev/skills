@@ -1,16 +1,17 @@
 ---
 name: audit
-description: Sweeps implemented frontend code across five dimensions at once — accessibility, performance, theming, responsive design, and anti-patterns — scoring each 0-4 and emitting a single P0-P3 report with a prioritized plan. Reports only; it changes no code. Reach for it as the broad first pass when no one dimension has been named. For a deep WCAG conformance pass, use `accessibility`; for design-token drift, use `design-consistency-auditor`.
+description: Sweeps frontend code across accessibility, performance, theming, responsive design, and anti-patterns, scoring each 0-4 in one P0-P3 report. Report only. Use as a broad first pass.
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
-  version: "2.1.2"
+  version: "2.2.2"
   tags: "audit, quality, accessibility"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/audit.md
   upstream_version: skill-v2.1.1
   upstream_latest: skill-v3.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
+when_to_use: "UI quality report, no code changes"
 ---
 
 Run systematic **technical** quality checks and generate the report below. Do

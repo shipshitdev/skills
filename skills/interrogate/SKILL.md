@@ -1,11 +1,11 @@
 ---
 name: interrogate
-description: Adversarial multi-reviewer pass over a diff. Use for interrogate, adversarial review, multi-model review, challenge this, stress test this code, find blind spots, or tear this apart. Several independent reviewers challenge the change. The lead synthesizes a verdict and does not auto-apply fixes.
+description: Runs several independent adversarial reviewers over a diff and synthesizes one verdict without auto-applying fixes. Use to challenge a change or find blind spots.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "review, adversarial, multi-reviewer, quality"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/interrogate/SKILL.md
@@ -14,7 +14,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
-when_to_use: "interrogate, adversarial review, tear this apart, find blind spots, stress test this diff"
+when_to_use: "interrogate, tear this apart, stress test this diff"
 ---
 
 # Interrogate
@@ -32,11 +32,10 @@ this skill when the ask is a multi-reviewer adversarial pass.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

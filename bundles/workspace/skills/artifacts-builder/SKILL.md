@@ -1,9 +1,9 @@
 ---
 name: artifacts-builder
-description: Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, @agenticindiedev/ui). Use for complex artifacts requiring state management or shared UI components - not for simple single-file HTML/JSX artifacts.
+description: Builds multi-component claude.ai HTML artifacts with React, Tailwind, and shared UI. Use for complex artifacts needing state management, not simple single-file HTML.
 license: Complete terms in LICENSE.txt
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   source: https://github.com/anthropics/skills/blob/main/skills/web-artifacts-builder/SKILL.md
   upstream_repo: anthropics/skills
   upstream_ref: main
@@ -11,6 +11,7 @@ metadata:
   last_synced: "2026-06-12"
   license: Apache-2.0
   tags: "artifacts, frontend, html"
+when_to_use: "bundle artifact"
 ---
 # Artifacts Builder
 

@@ -1,6 +1,6 @@
 {
   "name": "ec2-backend-deployer",
-  "version": "1.1.0",
+  "version": "2.2.2",
   "description": "Expert in deploying backends to EC2 instances using CI/CD pipelines, Docker containers, and GitHub A",
   "author": {
     "name": "Ship Shit Dev",

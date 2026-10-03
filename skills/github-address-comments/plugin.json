@@ -1,6 +1,6 @@
 {
   "name": "github-address-comments",
-  "version": "2.0.0",
+  "version": "2.2.2",
   "description": "Implement the fixes a PR review asked for and draft a reply per thread for approval.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,3 +1,9 @@
+---
+description: "UI/design review and refinement: audit, critique, fix layout or copy, polish, or check design consistency."
+argument-hint: "[audit|clarify|critique|layout|polish|quieter|shape|consistency]"
+disable-model-invocation: true
+---
+
 # Design - UI/Design Review and Refinement
 
 Drive the full UI/design lifecycle from one command — run a technical quality
@@ -17,6 +23,8 @@ design, plan a feature before coding, or audit consistency across the app.
 /design shape            # hand off to the explicit /shape discovery workflow
 /design consistency      # audit design system consistency across color, components, and accessibility
 ```
+
+`/design help` prints this Usage block and stops without running anything.
 
 ## Steps
 

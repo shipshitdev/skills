@@ -1,14 +1,8 @@
 ---
 name: react-component-performance
-description: >-
-  Diagnose slow React components and apply targeted render-time fixes. Use when
-  profiling a slow React component, cutting re-renders or props churn, fixing
-  list lag or janky typing and scrolling, deciding where `memo`, `useMemo`, or
-  `useCallback` pay off, virtualizing a long list, or reading a React DevTools
-  Profiler trace. API latency, database queries, caching, and infrastructure
-  belong to `performance-expert`.
+description: Diagnoses slow React components and applies render-time fixes — re-renders, memo/useMemo/useCallback, list virtualization, Profiler traces. Not for API or database latency.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   source: https://github.com/Dimillian/Skills/blob/main/react-component-performance/SKILL.md
   upstream_repo: Dimillian/Skills
   upstream_ref: main
@@ -18,7 +12,7 @@ metadata:
   tags: "react, performance, components"
   risk: safe
   date_added: "2026-03-25"
-when_to_use: "slow React component, too many re-renders, component re-renders on every keystroke, props churn, memo useMemo useCallback, virtualize a long list, React DevTools Profiler flamegraph, laggy list or scroll in React UI, expensive render work"
+when_to_use: "laggy typing, janky scroll, props churn, flamegraph"
 ---
 # React Component Performance
 

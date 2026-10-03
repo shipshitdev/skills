@@ -1,3 +1,9 @@
+---
+description: "Agent architecture, config, and setup: audit an agent system, sync agent configs, scaffold .agents/, or wire routing."
+argument-hint: "[audit|config|init|route]"
+disable-model-invocation: true
+---
+
 # Agent - One Front Door for Agent Architecture, Config, and Setup
 
 Drive agent/subagent architecture, configuration, and setup from one command —
@@ -13,6 +19,8 @@ the `.agents/` folder, or wire up dev-loop routing.
 /agent init         # scaffold or repair the .agents/ folder and root agent entry files for a repo
 /agent route        # write the ## Agent skills routing block in CLAUDE.md/AGENTS.md + docs/agents/
 ```
+
+`/agent help` prints this Usage block and stops without running anything.
 
 ## Steps
 

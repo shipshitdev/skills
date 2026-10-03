@@ -1,9 +1,10 @@
 ---
 name: security-audit
-description: Run a self-contained security audit workflow for web applications and APIs, covering scoping, reconnaissance, manual testing, API review, hardening, and reporting. Use when auditing a web app or API for security issues, reviewing auth or session handling, checking input validation and injection risk, or hardening before release.
+description: "Runs a scoped security audit of a web app or API: recon, manual testing, auth and injection review, hardening, report. Use before release or when probing auth and input validation."
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "security, audit, web, api, hardening"
+when_to_use: "pentest, vulnerability assessment"
 ---
 
 # Security Audit

@@ -162,7 +162,7 @@ Rules:
 - Lead with the capability, follow with the trigger context
 - Write in the third person ("Extracts text from PDFs…", not "I extract…" or "You can…")
 - Include specific keywords users will say
-- Max 1024 chars (spec limit)
+- Max 1024 chars (spec limit); model-invoked skills stay within the **listing budget**: description ≤ 200 chars (aim for 180) and `when_to_use` ≤ 120 chars of trigger phrases the description lacks. Every model-invoked description loads into every session; the validator warns past the budget.
 - No filler ("This skill is designed to help you...")
 - **Model-invoked** descriptions keep rich trigger phrasing ("Use when the user wants…, mentions…, asks for…")
 - **User-invoked** descriptions are human-facing one-liners. Put trigger lists in `when_to_use`, not in `description`
@@ -209,7 +209,7 @@ explanation and fenced examples are not execution dependencies.
 
 ## Writing craft
 
-Skills are documents an agent runs, not essays. These levers keep a run predictable — the same *process* every time, not the same output. Apply them to new and edited skills; do not rewrite the catalog in one pass. Keep Contract blocks.
+Skills are documents an agent runs, not essays. These levers keep a run predictable — the same *process* every time, not the same output. Apply them to new and edited skills. Catalog-wide passes are fine when Vincent approves one (the 2026-10-03 listing-budget pass). Keep Contract blocks.
 
 **Leading words.** Collapse a restated idea into one pretrained token the agent already thinks with (`frontier`, `seam`, `tight`, `red`). Repeat the token; do not re-explain the sentence. A coined word recruits no priors — prefer a word the model already knows.
 
@@ -368,18 +368,22 @@ Rules:
 
 ## Versioning
 
-Versions live in `metadata.version`. Use semver:
+All public and repo-maintenance skills share the repository release version
+from `package.json`.
+Set `metadata.version` and `plugin.json.version` to that exact value (currently
+`2.2.2`). Do not assign independent major, minor or patch versions to a skill.
+Repository releases use semver; release automation owns the next release number.
 
-- `1.0.0` — initial stable
-- `1.1.0` — new capability, backwards compatible
-- `2.0.0` — breaking change to workflow or output format
-
-Bump version in both `SKILL.md` (`metadata.version`) and `plugin.json` (`version`) when publishing.
-`SKILL.md` is canonical; `plugin.json` mirrors it. Both are enforced, not advisory:
-
-- `bun run validate` hard-fails when `plugin.json.version ≠ metadata.version` or the plugin description is a YAML block marker.
-- CI `version:check` (`scripts/check-skill-version-bumps.sh`) hard-fails when any file under `skills/<name>/` other than `plugin.json` changes without a `metadata.version` bump vs `origin/master`.
-- Bundle and marketplace `version` fields come from `package.json.version`, which release-please bumps.
+- Run `bun run version:sync` to align canonical skill and plugin metadata.
+- `bun run version:check` checks every pair against `package.json.version`; skill
+  instruction edits do not require an individual version increment.
+- `bun run marketplace:generate` synchronizes versions before generating bundles
+  and marketplace entries. Release automation uses this same path.
+- `bun run validate` still rejects mismatched skill/plugin metadata or invalid
+  descriptions. Shared versions do not replace instruction or runtime review.
+- Version synchronization advances Pstack fingerprints only when the destination's
+  pre-edit bytes match the accepted hash. Unreviewed body changes keep their old
+  fingerprints and remain blocked at the adaptation review gate.
 
 ---
 

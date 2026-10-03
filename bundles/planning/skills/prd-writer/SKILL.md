@@ -1,10 +1,10 @@
 ---
 name: prd-writer
-description: "Authors repository-grounded requirements with complete feature scope and observable acceptance criteria. Reuses the canonical preparation contract; implementation planning is writing-plans."
+description: "Writes repository-grounded requirements with full scope and observable EARS acceptance criteria. Use when drafting a PRD or scoping a feature. Plans: writing-plans."
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "prd, planning, requirements, spec, scoping, ears"
-when_to_use: "write a PRD for X, draft a PRD, scope this out, what should X do, formalize this feature, flesh out this issue before planning"
+when_to_use: "write a PRD, scope this out, formalize this feature"
 ---
 
 # PRD Writer

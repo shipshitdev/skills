@@ -1,3 +1,9 @@
+---
+description: "Recap what you shipped, or what everyone merged, over a time window; add audit to double-check it."
+argument-hint: "[all] [24|7d|today|yesterday|since <ref|date>|from <date> to <date>] [audit] [--author <email>] [--all-repos <dir>] [--branch <name>] [--scope <path>] [--timezone <IANA-zone>]"
+disable-model-invocation: true
+---
+
 # Standup
 
 Return a personal engineer recap by default. Use `all` for everyone's changes
@@ -22,6 +28,8 @@ integrated into the selected default branch, and add `audit` for review.
 /standup all from 2026-10-01T09:00 to 2026-10-02T09:00 --timezone Europe/Malta audit
 /standup all 7d --scope apps/api audit
 ```
+
+`/standup help` prints this Usage block and stops without running anything.
 
 Pass the mode, window/checkpoint, timezone, repository, and limits to the
 `standup` skill. Bare positive numbers mean hours. Default to personal and `24h`;

@@ -16,7 +16,7 @@ const ROOT = join(__dirname, '..');
 const SKILLS_DIR = join(ROOT, 'skills');
 const BUNDLES_DIR = join(ROOT, 'bundles');
 const CATEGORIES = JSON.parse(readFileSync(join(__dirname, 'plugin-categories.json'), 'utf-8'));
-// Bundles are versioned with the repo release, not per skill — release-please bumps package.json.
+// Skills and bundles share the repo release; version:sync aligns canonical metadata.
 const PACKAGE_VERSION = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf-8')).version;
 
 function ensureDir(dir) {

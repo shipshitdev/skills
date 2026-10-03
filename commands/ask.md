@@ -1,3 +1,9 @@
+---
+description: "Name the Dev Loop skill that fits your current situation, and why."
+argument-hint: "[situation]"
+disable-model-invocation: true
+---
+
 # Ask - Which Dev Loop skill to run
 
 Name the flagship skill that fits the current situation. Hint only — do not fire
@@ -10,6 +16,8 @@ other user-invoked skills.
 /ask "I have an idea"
 /ask "this bug keeps coming back"
 ```
+
+`/ask help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

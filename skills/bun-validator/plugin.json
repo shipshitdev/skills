@@ -1,6 +1,6 @@
 {
   "name": "bun-validator",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Validate Bun workspace configuration and detect common monorepo issues",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,13 +1,10 @@
 ---
 name: quick-view
-description: >-
-  Generates minimal HTML pages to review structured data in a browser with
-  maximum readability. Triggers on: "show me", "view this", "make reviewable",
-  "open as webpage", or any request to review lists, tables, drafts, or
-  summaries that are hard to read in the terminal.
+description: Generates minimal HTML pages to review lists, tables, drafts, or summaries in a browser. Use when output is hard to read in the terminal.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "html, review, preview"
+when_to_use: "show me, view this, open as webpage, make reviewable"
 ---
 
 # Quick View

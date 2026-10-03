@@ -1,11 +1,11 @@
 ---
 name: nestjs-testing-expert
-description: NestJS testing mechanics with Jest — building testing modules, mocking providers and repositories, writing service and controller specs, and driving HTTP end-to-end tests through the real application. Use for any test touching a NestJS service, controller, guard, module, or API endpoint, including test-module setup, provider overrides, database fakes, and Supertest request flows.
+description: Writes NestJS Jest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "nestjs, testing, jest, supertest, backend"
   author: Ship Shit Dev
-when_to_use: "test a NestJS service, test a NestJS controller, Test.createTestingModule, createNestApplication, mock a NestJS provider, override a provider in tests, inject a repository mock, NestJS unit test, NestJS integration test, NestJS e2e test, supertest an API endpoint, test a guard or interceptor, spec file for a Nest module"
+when_to_use: "Test.createTestingModule, override provider, supertest"
 ---
 
 # NestJS Testing Expert

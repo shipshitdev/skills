@@ -1,6 +1,6 @@
 {
   "name": "arena",
-  "version": "1.2.0",
+  "version": "2.2.2",
   "description": "N parallel attempts, pick a base, graft the best parts.",
   "author": {
     "name": "Ship Shit Dev",

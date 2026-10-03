@@ -3,7 +3,7 @@ name: git-cleanup
 description: Fetches trunk, then proves candidate file content reached trunk before planning or removing merged branches and worktrees. Defaults to a read-only cleanup plan.
 compatibility: Requires Python 3.9+, git with patch-id --verbatim, authenticated GitHub CLI gh.
 metadata:
-  version: "4.1.0"
+  version: "2.2.2"
   tags: "git, cleanup, branches, worktrees, prune, ci-cd, squash-merge, trunk-based"
 disable-model-invocation: true
 ---
@@ -60,7 +60,7 @@ Confirmation Required:
 
 Delegates To:
 
-- Suggest `release-pr-gates` when unmerged work needs to be shipped first
+- Suggest `github-pr-publish` when unmerged work needs to be shipped first
 - Suggest `git-safety` when preserved history needs investigation
 
 ## Proof Rules

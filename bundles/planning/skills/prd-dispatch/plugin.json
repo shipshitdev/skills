@@ -1,6 +1,6 @@
 {
   "name": "prd-dispatch",
-  "version": "3.0.0",
+  "version": "2.2.2",
   "description": "Routes PRD preparation, requirements, planning, readiness checks, and issue intake.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,11 +1,11 @@
 ---
 name: tdd
-description: Test-driven development workflow for feature work and bug fixes. Use when the user asks for TDD, red-green-refactor, test-first implementation, regression-first bug fixes, or vertical-slice delivery. For bugs, require a cheap local test path; skip a new test when the path is unclear, expensive, or integration-heavy.
+description: Drives feature work and bug fixes test-first with red-green-refactor and vertical slices. Use for TDD, test-first implementation, or regression-first fixes.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "testing, tdd, red-green-refactor, quality, verification"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md
@@ -14,6 +14,7 @@ metadata:
   upstream_commit: 8b78b531ab96
   last_synced: "2026-09-05"
   license: MIT
+when_to_use: "failing test first"
 ---
 
 # Test-Driven Development
@@ -53,7 +54,7 @@ Confirmation Required:
 Delegates To:
 
 - `testing-expert` for broad test strategy or framework setup
-- `ai-regression-testing` for bug-specific regression coverage and path parity
+- `testing-expert` (AI regression mode) for bug-specific regression coverage and path parity
 - `debug` when the root cause is still unknown
 - `codebase-design` when the test boundary is a module **seam** that still needs shaping
 - `verification-before-completion` when about to claim the work is done

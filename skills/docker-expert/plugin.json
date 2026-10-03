@@ -1,6 +1,6 @@
 {
   "name": "docker-expert",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "Expert in Docker, docker-compose, Dockerfile patterns, and container orchestration for NestJS and Ne",
   "author": {
     "name": "Ship Shit Dev",

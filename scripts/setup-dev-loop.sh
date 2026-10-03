@@ -55,7 +55,7 @@ BOARD_SCRIPT="${SCRIPT_DIR}/../skills/project-board/scripts/setup-github-board.m
 DISPATCH_SKILLS=(
   prd-writer prd-task-creator feature-intake writing-plans prd-quality-gate
   executing-plans tdd qa-reviewer github-pr-publish verification-before-completion
-  commit-summary github-fix-ci testing-expert ai-regression-testing
+  commit-summary github-fix-ci testing-expert
 )
 
 WORKFLOWS=(

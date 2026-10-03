@@ -3,7 +3,7 @@ name: standup
 description: "Summarizes personal git activity by default, all authors' integrated changes with /standup all 24, and an opt-in merged-history audit with /standup all 24 audit. Reads diffs, links PR/review evidence, and separates merged from deployed. Use for an engineer standup, recap, or double-check of everything merged since a time or checkpoint."
 compatibility: Requires git; host access enriches PR/integration evidence. All-author modes require the installed weekly-review shared history procedure; audit also requires code-review and full-code-review.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "git, standup, recap, weekly-review, activity, reporting, personal, audit"
 allowed-tools: Bash(git *) Bash(gh *)
 disable-model-invocation: true
