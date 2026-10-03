@@ -52,6 +52,10 @@ class Repository:
     def oid(self, ref: str) -> str:
         return self.git("rev-parse", "--verify", f"{ref}^{{commit}}")
 
+    def has_commit(self, oid: str) -> bool:
+        return self.run("git", "rev-parse", "--verify", "--quiet", f"{oid}^{{commit}}",
+                        accepted=(0, 1)).returncode == 0
+
     def ancestor(self, older: str, newer: str) -> bool:
         return self.run("git", "merge-base", "--is-ancestor", older, newer,
                         accepted=(0, 1)).returncode == 0
@@ -292,7 +296,9 @@ class Repository:
             merge = pr.get("merge_commit_sha")
             if not pr.get("merged_at") or pr["head"].get("sha") != oid or not merge:
                 continue
-            if not self.ancestor(merge, trunk):
+            # A PR merged into a branch that was never fetched (stacked PRs)
+            # leaves its merge commit absent locally: no evidence, not an error.
+            if not self.has_commit(merge) or not self.ancestor(merge, trunk):
                 continue
             parents = self.git("rev-list", "--parents", "-n", "1", merge).split()[1:]
             if len(parents) != 1:
