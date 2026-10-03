@@ -4,6 +4,7 @@ description: "Validates draft requirements and blocks execution until the same i
 metadata:
   version: "2.2.2"
   tags: "prd, planning, validation, quality-gate, spec, requirements, ears"
+user-invocable: false
 ---
 
 # PRD Quality Gate

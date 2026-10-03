@@ -4,6 +4,7 @@ description: Supplementary context protocol for agents executing in a repo that 
 metadata:
   version: "2.2.2"
   tags: "context, conventions, execution, agents, codebase-patterns, trust-levels"
+user-invocable: false
 ---
 
 <context_protocol>

@@ -14,6 +14,7 @@ metadata:
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)
 when_to_use: "/review, /review prs, /review grok, review all open PRs, review the last N commits, review 24h of changes, commit retro, retro 14d, retrospective, find bugs/refactors in the last week, run the structural lens, review with grok, second opinion on this branch, which review for this scope"
+user-invocable: false
 ---
 
 # Review Dispatch

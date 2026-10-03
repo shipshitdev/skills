@@ -4,6 +4,7 @@ description: Scoped debugging methodology for when a test or build fails during 
 metadata:
   version: "2.2.2"
   tags: "debugging, testing, root-cause, stabilization, regression, execution"
+user-invocable: false
 ---
 
 <debugging_methodology>

@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "context, agents, reliability"
+user-invocable: false
 ---
 # Context Degradation Patterns
 

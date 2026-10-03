@@ -16,6 +16,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "context, optimization, agents"
+user-invocable: false
 ---
 # Context Optimization Techniques
 

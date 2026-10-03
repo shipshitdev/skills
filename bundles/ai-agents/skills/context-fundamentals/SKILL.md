@@ -17,6 +17,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "context, agents, architecture"
+user-invocable: false
 ---
 # Context Engineering Fundamentals
 
