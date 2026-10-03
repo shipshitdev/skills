@@ -82,7 +82,9 @@ SHA=$(git rev-parse "origin/$TRUNK")
 LAST_TAG=$(git describe --tags --abbrev=0 --match 'v*' "$SHA" 2>/dev/null || true)
 ```
 
-If `TRUNK` is empty, stop and ask for it. Detect the release mode, first match wins:
+If `TRUNK` is empty, stop and ask for it. Detect the release mode from the
+gated commit, never the local checkout (`git ls-tree -r --name-only "$SHA"`,
+`git show "$SHA:<path>"`); first match wins:
 
 1. **release-please** — `release-please-config.json`, `.release-please-manifest.json`,
    or a workflow using `googleapis/release-please-action`.
@@ -96,37 +98,49 @@ release PR (`gh pr list --label 'autorelease: pending' --state open`).
 
 ## Phase 2: Checks for the Exact SHA
 
-The gate is CI evidence for `SHA` — never a local run, never the latest run on
-another commit. Required checks usually run on pull requests, so the evidence
-has two sources: runs on `SHA` itself, and the required checks of the PR that
+The gate is CI evidence for the tree at `SHA` — never a local run, never a run on
+a different tree. Required checks often run only on pull requests, so evidence
+comes from runs on `SHA` and, when the trees are identical, from the PR that
 produced `SHA`.
 
 ```bash
-# Required contexts: rulesets, then classic branch protection (404 = none)
-gh api "repos/{owner}/{repo}/rules/branches/$TRUNK" \
-  --jq '.[] | select(.type=="required_status_checks") | .parameters.required_status_checks[].context'
+# Required contexts with their app ids. Rulesets, then classic protection.
+gh api "repos/{owner}/{repo}/rules/branches/$TRUNK" --jq '.[]
+  | select(.type=="required_status_checks") | .parameters.required_status_checks[]
+  | [.context, (.integration_id // "")] | @tsv'
 gh api "repos/{owner}/{repo}/branches/$TRUNK/protection/required_status_checks" \
-  --jq '(.contexts[]?), (.checks[]?.context)' 2>/dev/null | sort -u
-# Runs on SHA (push, schedule, and release workflows)
+  --jq 'if (.checks | length) > 0 then .checks[] | [.context, (.app_id // "")]
+         else .contexts[] | [., ""] end | @tsv'
+# Results on SHA, with the app that produced each check run
 gh api --paginate "repos/{owner}/{repo}/commits/$SHA/check-runs?per_page=100" \
-  --jq '.check_runs[] | [.name, .status, (.conclusion // "")] | @tsv'
+  --jq '.check_runs[] | [.name, .app.id, .status, (.conclusion // "")] | @tsv'
 gh api "repos/{owner}/{repo}/commits/$SHA/status" --jq '.statuses[] | [.context, .state] | @tsv'
-# The PR merged as SHA, and its required checks at its final head
+# The PR merged as SHA; its checks count only if it tested the same tree
 PR=$(gh api "repos/{owner}/{repo}/commits/$SHA/pulls" \
   --jq ".[] | select(.merge_commit_sha==\"$SHA\") | .number")
-gh pr checks "$PR" --required
+HEAD=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
+git fetch origin "$HEAD"
+[ "$(git rev-parse "$SHA^{tree}")" = "$(git rev-parse "$HEAD^{tree}")" ] && gh pr checks "$PR" --required
 ```
 
-Verdict, labelling the source of each result (`on SHA` or `via PR #n`):
+A protection lookup returning `404 Branch not protected` means no classic
+requirements. Any other lookup error (403, auth, network) blocks the verdict:
+unknown requirements are never "none". When a requirement names an app id, only
+a check run from that app satisfies it.
 
-- **pass** — every required context passed on `SHA` or on the producing PR,
-  and nothing that ran on `SHA` failed. `success`, `neutral`, and `skipped` pass.
-- **pending** — a required context is missing or still running, or `SHA` has
-  no producing PR (direct push) and PR-only checks have no evidence.
-- **fail** — any other conclusion.
+Verdict per required context, labelled `on SHA` or `via PR #n (same tree)`:
 
-With no required checks configured, say so and require every completed run on
-`SHA` and on the producing PR to pass.
+- **pass** — conclusion `success`. Nothing else that ran on `SHA` failed.
+- **not green** — `neutral` or `skipped`; report it, it needs an override.
+- **unproven** — evidence exists only on a PR whose tree differs from `SHA`
+  (trunk moved before a squash merge), or `SHA` was a direct push.
+- **pending** — missing or still running. **fail** — any other conclusion.
+
+The overall verdict is green only when every required context passes. With no
+required checks configured, say so and require every completed run on `SHA` to
+pass. For unproven contexts, offer to run the CI workflow on `SHA` through its
+`workflow_dispatch` (confirm first), or — in dispatch mode — name the release
+workflow's own verification of `SHA` as the gate and get explicit approval.
 
 - `status` reports the verdict and stops.
 - `gates` watches pending runs (`gh run list --commit "$SHA"`, then
@@ -159,18 +173,25 @@ in the final status.
 
 ## Phase 6: Cut
 
-Re-run Phase 2 first if the trunk moved; a release always targets the gated `SHA`.
+Immediately before mutating, confirm `git ls-remote origin "refs/heads/$TRUNK"`
+still equals `SHA`. If the trunk moved, re-run Phase 2 and get a new approval.
 
-- **release-please** — require `gh pr checks <n> --required` to pass on the
-  release PR, then `gh pr merge <n> --squash --match-head-commit <pr-head-sha>`
-  (use the repo's merge method). Its workflow creates the tag and release.
-- **dispatch** — read the workflow's `workflow_dispatch.inputs` and map the
-  version to the declared input name and format (e.g. `tag=vX.Y.Z` vs
-  `version=X.Y.Z`). Run `gh workflow run <file> --ref "$TRUNK" -f <input>=<value>`,
-  then find the run (`gh run list --workflow <file> --event workflow_dispatch
-  --limit 1 --json databaseId,url,headSha`). If its `headSha` differs from `SHA`,
-  report it and stop. Never tag or publish locally in this mode: that bypasses
-  the workflow's own gates.
+- **release-please** — the release PR must change only release-managed files
+  (the manifest, changelogs, and version files named in the config); anything
+  else goes through the `executing-plans` skill's `references/delivery-gate.md`.
+  Require `git merge-base --is-ancestor "$SHA" <pr-head-sha>`, a passing
+  `gh pr checks <n> --required`, then
+  `gh pr merge <n> --squash --match-head-commit <pr-head-sha>` (use the repo's
+  merge method). Its workflow creates the tag and release.
+- **dispatch** — read the workflow's `workflow_dispatch.inputs` at `SHA` and map
+  the version to the declared input name and format (e.g. `tag=vX.Y.Z` vs
+  `version=X.Y.Z`); pass an expected-SHA input when one is declared. Note the time,
+  run `gh workflow run <file> --ref "$TRUNK" -f <input>=<value>`, then select the
+  run with `event == workflow_dispatch`, `createdAt` after that time, and
+  `headSha == SHA` (`gh run list --workflow <file> --json
+  databaseId,url,headSha,createdAt,event`). No such run, or a different
+  `headSha`: report it at once and ask before anything else. Never tag or publish
+  locally in this mode: that bypasses the workflow's own gates.
 - **tag** —
 
   ```bash
@@ -183,11 +204,15 @@ Never force-push, move, or overwrite a tag.
 
 ## Phase 7: Deploy Evidence
 
-A release is not deployed until evidence says so.
+A release is not deployed until evidence says so. Use the commit the published
+tag points to — release-please and some release workflows tag a new commit, not
+the gated `SHA`.
 
 ```bash
-gh run list --commit "$SHA" --json workflowName,event,status,conclusion,url
-gh api "repos/{owner}/{repo}/deployments?sha=$SHA" --jq '.[] | [.id, .environment] | @tsv'
+git fetch origin --tags
+RELEASED_SHA=$(git rev-parse "$VERSION^{commit}")
+gh run list --commit "$RELEASED_SHA" --json workflowName,event,status,conclusion,url
+gh api "repos/{owner}/{repo}/deployments?sha=$RELEASED_SHA" --jq '.[] | [.id, .environment] | @tsv'
 gh api "repos/{owner}/{repo}/deployments/<id>/statuses" --jq '.[0].state'
 ```
 
@@ -196,5 +221,5 @@ If nothing deploys automatically, say so and recommend `deploy`.
 
 ## Final Status
 
-Repository, trunk, released `SHA`, check verdict (or override), version and bump
+Repository, trunk, gated `SHA` and `RELEASED_SHA`, check verdict (or override), version and bump
 reason, release URL or run URL, deploy result per environment, and next step.
