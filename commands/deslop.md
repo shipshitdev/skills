@@ -1,3 +1,9 @@
+---
+description: "Strip AI slop from code, UI, product copy, or prose while keeping the project buildable."
+argument-hint: "[ui|prose|all|dry-run] [--changed] [--product]"
+disable-model-invocation: true
+---
+
 # Deslop - Remove AI Slop From Code and Product
 
 Strip AI-generated slop while keeping the project buildable. Code slop: console
@@ -17,6 +23,8 @@ copy, default-shadcn UI, missing loading/error states, dead buttons and half-wir
 /deslop all          # sweep every package in a monorepo
 /deslop dry-run      # preview the cleanup, change nothing
 ```
+
+`/deslop help` prints this Usage block and stops without running anything.
 
 Also reachable as `/refactor deslop`.
 

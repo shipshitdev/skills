@@ -1,6 +1,6 @@
 ---
 name: memory-systems
-description: Design and implement memory architectures for agent systems that persist state across sessions, maintain entity consistency, and reason over structured knowledge. Use when building agents that persist knowledge across sessions, choosing between memory frameworks, maintaining entity consistency, or designing memory architectures for production.
+description: Designs memory architectures for agents that persist state across sessions and keep entities consistent. Use when choosing among Mem0, Zep/Graphiti, Letta, LangMem, or Cognee.
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/memory-systems/SKILL.md
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "memory, agents, architecture"
+when_to_use: "knowledge graph memory, long-term agent memory"
 ---
 # Memory System Design
 
@@ -220,7 +221,7 @@ Internal references:
 
 Related skills in this collection:
 
-- context-fundamentals - Read when: designing the context layer that memory feeds into
+- context-optimization (fundamentals reference) - Read when: designing the context layer that memory feeds into
 - multi-agent-patterns - Read when: multiple agents need to share or coordinate memory state
 
 External resources:

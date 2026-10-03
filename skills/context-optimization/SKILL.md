@@ -1,12 +1,6 @@
 ---
 name: context-optimization
-description: >-
-  Improve context efficiency through context budgeting, observation masking,
-  prefix or KV-cache strategy, partitioning, token-cost reduction, retrieval
-  scoping, and extending effective context capacity without lowering answer
-  quality. Use when token costs or context budgets constrain a task, tool
-  outputs are verbose, cache hit rate is low, or context must be partitioned
-  across agents.
+description: "Improves context efficiency: budgets, observation masking, KV-cache strategy, partitioning, retrieval scoping. Use when token cost or context budget constrains a task."
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md
@@ -16,6 +10,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "context, optimization, agents"
+when_to_use: "context window anatomy, attention"
 user-invocable: false
 ---
 # Context Optimization Techniques
@@ -33,7 +28,6 @@ Context optimization extends the effective capacity of limited context windows t
 
 Do not activate this skill for adjacent work owned by other skills:
 
-- Explaining why attention or context windows behave this way: `context-fundamentals`.
 - Diagnosing active lost-in-middle, poisoning, distraction, confusion, or clash: `context-degradation`.
 
 ## Core Concepts
@@ -204,7 +198,6 @@ triggers:
 
 This skill owns token-efficiency tactics and budget policy. Adjacent skills own diagnosis, storage, and architecture:
 
-- `context-fundamentals`: mental models for why context quality and attention placement matter.
 - `context-degradation`: diagnosis when output quality has already dropped.
 - `multi-agent-patterns`: partitioning work across isolated agent contexts.
 - `evaluation`: measuring whether the optimization improved quality, cost, or latency.
@@ -212,13 +205,14 @@ This skill owns token-efficiency tactics and budget policy. Adjacent skills own 
 
 ## References
 
-Internal reference:
+Internal references:
+
+- [Context Fundamentals](./references/fundamentals.md) - Read when: explaining what context is, window anatomy, attention mechanics and the U-shaped curve, or onboarding someone to context engineering; also carries the component-by-component reference and `scripts/context_manager.py` usage
 
 - [Optimization Techniques Reference](./references/optimization_techniques.md) - Read when: implementing a specific optimization technique and needing detailed code patterns, threshold tables, or integration examples beyond what the skill body provides
 
 Related skills in this collection:
 
-- context-fundamentals - Read when: unfamiliar with context window mechanics, token counting, or attention distribution basics
 - context-degradation - Read when: diagnosing why agent performance has dropped and needing to identify which degradation pattern is occurring before selecting an optimization
 - evaluation - Read when: setting up metrics and benchmarks to measure whether an optimization technique actually improved outcomes
 

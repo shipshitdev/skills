@@ -1,9 +1,10 @@
 ---
 name: mongodb-atlas-checker
-description: Verify MongoDB Atlas setup and configuration for backend applications. Checks connection strings, environment variables, connection pooling, and ensures proper setup for Next.js and NestJS applications. Use when verifying MongoDB Atlas setup, checking connection strings or environment variables, or troubleshooting database connection issues before deployment.
+description: "Verifies MongoDB Atlas setup for Next.js and NestJS backends: connection strings, env vars, and pooling. Use before deployment or when troubleshooting database connections."
 metadata:
   version: "2.2.2"
   tags: "mongodb, atlas, database, backend, nestjs, nextjs"
+when_to_use: "MONGODB_URI, Atlas connection error"
 ---
 
 # MongoDB Atlas Checker

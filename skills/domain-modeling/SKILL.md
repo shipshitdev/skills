@@ -1,6 +1,6 @@
 ---
 name: domain-modeling
-description: Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a CONTEXT.md, or recording or editing an ADR.
+description: Builds and sharpens a project's domain model. Use when discussing codebase terminology, writing or editing a CONTEXT.md, or recording or editing an ADR.
 license: MIT
 metadata:
   version: "2.2.2"
@@ -12,6 +12,7 @@ metadata:
   upstream_commit: 8b78b531ab96
   last_synced: "2026-08-14"
   license: MIT
+when_to_use: "glossary, ubiquitous language"
 ---
 
 # Domain Modeling

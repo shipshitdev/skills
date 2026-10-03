@@ -1,6 +1,6 @@
 ---
 name: stack-modernization
-description: Modernize a project's stack — outdated dependencies, dead/unused packages, deprecated packages, and framework-pattern drift (old patterns lingering after a major upgrade). Verifies the current latest of each package before proposing an upgrade, then applies changes incrementally with tests between each. Use when asked to update dependencies, modernize the stack, remove dead packages, or migrate stale framework patterns, across frontend and backend.
+description: "Modernizes a stack: upgrades outdated dependencies, removes dead or deprecated packages, migrates stale framework patterns, verifying latest versions first. Edits package.json."
 argument-hint: "[deps | dead | patterns | all]"
 compatibility: Requires bun and git. Uses WebSearch to confirm current package versions.
 allowed-tools: Bash(git *) Bash(bun *)
@@ -8,7 +8,7 @@ metadata:
   version: "2.2.2"
   tags: "modernization, dependencies, upgrades, framework-migration, maintenance"
   author: Ship Shit Dev
-when_to_use: "update dependencies, modernize the stack, upgrade packages, remove dead packages, migrate framework patterns, dependency upgrades, /refactor stack"
+when_to_use: "update dependencies, upgrade packages, /refactor stack"
 ---
 
 # Stack Modernization
@@ -23,11 +23,10 @@ recalled.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

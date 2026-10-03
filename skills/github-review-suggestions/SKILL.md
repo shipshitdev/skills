@@ -1,22 +1,22 @@
 ---
 name: github-review-suggestions
-description: "Review GitHub pull requests and post precise inline suggested changes with GitHub suggestion blocks. Use when asked to review a PR, leave actionable GitHub comments, propose applyable fixes, or submit review suggestions through gh."
+description: Reviews GitHub PRs and posts inline comments with applyable suggestion blocks through gh. Use when asked to leave actionable review comments or propose fixes on a PR.
 compatibility: Requires GitHub CLI gh access to the repository. The bundled diff-line helper runs with Node.js or Bun.
 allowed-tools: Bash(git *) Bash(gh *) Bash(node *) Bash(bun *)
 metadata:
   version: "2.2.2"
   tags: "github, pull-requests, review, suggestions"
+when_to_use: "submit review suggestions"
 ---
 
 # GitHub Review Suggestions
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

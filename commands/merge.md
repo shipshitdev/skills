@@ -1,3 +1,9 @@
+---
+description: "Review every open PR, confirm one plan, and merge all approved PRs into the trunk."
+argument-hint: "[review|force|--no-prune] [base]"
+disable-model-invocation: true
+---
+
 # Merge - Merge ALL Approved Open PRs Into the Trunk
 
 **Default = merge them all.** `/merge` reviews every open pull request targeting
@@ -14,6 +20,8 @@ It is not a single-PR tool and not review-only (that's `/merge review`).
 /merge --no-prune   # review + merge all; skip the cleanup inventory
 /merge <base>       # use an explicit base branch instead of the auto-detected trunk
 ```
+
+`/merge help` prints this Usage block and stops without running anything.
 
 `review` and `--no-prune` combine with an explicit base, e.g.
 `/merge my-branch --no-prune` or `/merge review my-branch`.

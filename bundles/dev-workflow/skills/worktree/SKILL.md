@@ -1,13 +1,13 @@
 ---
 name: worktree
-description: Create an isolated git worktree from the correct base branch and check it out into a clean, gitignored directory. Use when the user asks to make a worktree, spin up a parallel/isolated workspace, work on something without disturbing the current checkout, branch off the current work, or run multiple agents on the same repo at once. Picks the base branch smartly — the current feature branch when you are on one, otherwise the repository's default/trunk branch — so worktrees continue your in-progress work by default instead of forking from the wrong place.
+description: Creates an isolated git worktree from the right base branch (current feature branch, else trunk), gitignored. Use for parallel or isolated workspaces and multi-agent runs.
 compatibility: Requires git 2.5+ (worktree support).
 metadata:
   version: "2.2.2"
   tags: "git, worktree, branch, isolation, parallel, workspace"
   author: Ship Shit Dev
 allowed-tools: Bash(git *)
-when_to_use: "make a worktree, create a worktree, new worktree, isolated workspace, parallel workspace, work on this separately, branch off current work, spin up a sibling checkout, run another agent on this repo"
+when_to_use: "branch off current work, sibling checkout"
 ---
 
 # Worktree
@@ -19,11 +19,10 @@ pruning merged worktrees is `git-cleanup`'s job (`/cleanup`) — do not delete h
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

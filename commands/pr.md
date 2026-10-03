@@ -1,3 +1,9 @@
+---
+description: "Pull request lifecycle: create or update the PR, review it, digest comments, tidy, address, fix CI, or suggest."
+argument-hint: "[review|comments|tidy|address|fix-ci|suggest]"
+disable-model-invocation: true
+---
+
 # PR - Pull Request Lifecycle
 
 One entry point for the pull-request lifecycle: open or update a PR, review it,
@@ -15,6 +21,8 @@ CI, or post inline suggestions.
 /pr fix-ci          # diagnose and fix failing CI checks on the PR
 /pr suggest         # post inline suggested changes on the PR
 ```
+
+`/pr help` prints this Usage block and stops without running anything.
 
 `/pr comments` accepts the same arguments as the `pr-comments` skill, e.g.
 `/pr comments <number>`, `/pr comments unresolved`, `/pr comments from <reviewer>`.

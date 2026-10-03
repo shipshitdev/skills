@@ -1,7 +1,7 @@
 {
-  "name": "systematic-debugging",
+  "name": "grill-me",
   "version": "2.2.2",
-  "description": "Four-phase root-cause loop for a bug that survived a first fix attempt.",
+  "description": "Shortcut for grilling: relentless interview to sharpen a plan or design.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

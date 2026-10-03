@@ -1,25 +1,7 @@
----
-name: systematic-debugging
-description: >-
-  Full four-phase root-cause loop — investigate, analyze patterns, hypothesize,
-  implement — for a failure that survived a first pass. Bars any further fix
-  until the cause is proven, counts failed attempts, and turns the third failure
-  into an architecture question. Use when a fix attempt has already failed, the
-  same defect keeps coming back, each fix exposes a new problem elsewhere, or
-  the root cause must be proven before another line changes — including when
-  time pressure makes guessing tempting. `debug` is the front door that hands
-  cases here.
-metadata:
-  version: "2.2.2"
-  source: https://github.com/obra/superpowers/blob/main/skills/systematic-debugging/SKILL.md
-  upstream_repo: obra/superpowers
-  upstream_ref: main
-  upstream_commit: 030a222af19c
-  last_synced: "2026-06-12"
-  license: MIT
-  tags: "debugging, root-cause, diagnosis, investigation, methodology, hypothesis"
-when_to_use: "that fix did not work, the fix failed, keeps breaking, the bug came back, tried several fixes already, third attempt failed, still failing after the fix, each fix breaks something else, prove the root cause before changing anything, stop guessing and investigate properly, escalate this debugging, thrashing on this bug"
----
+<!-- Upstream: obra/superpowers skills/systematic-debugging/SKILL.md @ 030a222af19c
+(MIT, last synced 2026-06-12). Folded into `debug` on 2026-10-03 (#168); the four
+phases, the Iron Law, and the red flags are unchanged from upstream. -->
+
 # Systematic Debugging
 
 ## Core Principle
@@ -38,11 +20,10 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 
 ## Entry Point
 
-`debug` is the front door for a freshly reported failure — it owns the first
-reproduction loop and hands cases here on escalation. The normal arrival carries
-its loop, its evidence, and its attempt count. Start at Phase 1 regardless and
-re-verify that evidence; an escalated case is escalated precisely because the
-earlier read was wrong somewhere.
+The `debug` front door hands cases here on escalation, carrying its loop, its
+evidence, and its attempt count. Start at Phase 1 regardless and re-verify that
+evidence; an escalated case is escalated because the earlier read was wrong
+somewhere.
 
 ## When to Use
 

@@ -20,7 +20,8 @@ last_verified: 2026-06-07
 ### Commands
 
 - DO put commands as flat `.md` files in `commands/` — no subdirectories
-- DO use a clear H1 and usage section; commands do not currently use skill frontmatter
+- DO start each command with frontmatter: a quoted `description`, an `argument-hint` when it takes arguments, and `disable-model-invocation: true` (commands are user front doors; the routed skills stay model-invocable)
+- DO use a clear H1 and a `## Usage` section, followed by the standard line `` `/<name> help` prints this Usage block and stops without running anything. `` — `validate-skill-sync.sh` enforces all of this
 
 ### Generation
 

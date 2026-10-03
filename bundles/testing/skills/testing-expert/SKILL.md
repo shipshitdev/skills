@@ -1,11 +1,11 @@
 ---
 name: testing-expert
-description: Framework-agnostic testing strategy — which level to test at, what coverage numbers mean, how to design a test that survives refactoring, how to choose test data, and how to kill flakes. Use when deciding what is worth testing, setting or defending a coverage target, reviewing the shape of an existing suite, or diagnosing a flaky or slow test. Framework-specific work routes to a specialist skill instead of being answered here.
+description: "Sets testing strategy: test level, coverage targets, test data, flake diagnosis, plus regression tests for AI blind spots. Use when deciding what to test or fixing flakes."
 metadata:
   version: "2.2.2"
   tags: "testing, strategy, coverage, flakiness, test-design"
   author: Ship Shit Dev
-when_to_use: "what should I test, testing strategy, testing pyramid, unit vs integration vs e2e, what level does this belong at, coverage target, is 80% coverage enough, coverage is gaming the number, this test is flaky, tests pass locally fail in CI, tests are slow, test data strategy, factories vs fixtures, review the shape of our test suite, are these tests worth keeping"
+when_to_use: "testing pyramid, sandbox vs production drift"
 ---
 
 # Testing Expert
@@ -31,8 +31,10 @@ Outputs:
 
 Creates/Modifies:
 
-- Nothing. Reasoning and recommendations only; the caller or the delegated skill
-  writes tests.
+- Strategy work: nothing — reasoning and recommendations only.
+- AI regression mode (`references/ai-regression.md`): test files, fixtures, and
+  minimal helpers only when the user asks to implement; application code only
+  when the user also asks to fix the behavior.
 
 External Side Effects:
 
@@ -41,7 +43,8 @@ External Side Effects:
 
 Confirmation Required:
 
-- None.
+- Before changing production data, external accounts, CI settings, or
+  destructive fixtures in AI regression mode.
 
 Delegates To:
 
@@ -58,8 +61,12 @@ Delegates To:
 
 ## Step 1 — Route Before Answering
 
-Read the question for framework signal first. Delegate on a hit; the specialist
-has depth this skill deliberately does not carry.
+If the request is AI regression work (`/test regression`, sandbox/production
+parity, response-shape drift, guarding an AI-written change or bug fix), select
+AI regression mode first and read `references/ai-regression.md`; then delegate
+framework mechanics below, forwarding its parity checklist and no-production
+rule. Otherwise read the question for framework signal first. Delegate on a hit;
+the specialist has depth this skill deliberately does not carry.
 
 | Signal in the request | Route to |
 |---|---|
@@ -67,10 +74,11 @@ has depth this skill deliberately does not carry.
 | NestJS module, provider, controller, service spec, testing module, HTTP e2e | `nestjs-testing-expert` |
 | "run the tests", "fix the failures" | `test-runner` |
 | "write the test first", red-green-refactor | `tdd` |
+| AI-written change, sandbox/production parity, response-shape drift, regression for a bug fix | AI regression mode — read `references/ai-regression.md` |
 | No framework signal — level, coverage, design, data, flakes | Answer here |
 
-Completion bound: either a specialist is named, or the question is one of the
-five framework-agnostic concerns below.
+Completion bound: a specialist is named, AI regression mode is selected, or the
+question is one of the five framework-agnostic concerns below.
 
 ## Step 2 — Pick the Level
 

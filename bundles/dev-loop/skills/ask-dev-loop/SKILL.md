@@ -76,7 +76,7 @@ Keep grilling, spec, and tickets in **one context window**. Each `/loop` /
 - **Bugs and incoming requests piling up** → `/prd intake` (`feature-intake`) or
   `github-inbox`. Tickets that `prd-task-creator` already wrote are agent-ready; do not
   re-intake them.
-- **Something's broken** → `/debug` (or `systematic-debugging` when previous fixes
+- **Something's broken** → `/debug` (it escalates on its own when previous fixes
   failed). Tight red loop first; no theory without a loop.
 - **A huge, foggy effort** → `roadmap-analyzer` / `roadmap-to-milestones` to chart
   the destination, then merge onto the main flow at `/interview` or `/prd write`.

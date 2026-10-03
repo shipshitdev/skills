@@ -1,6 +1,6 @@
 ---
 name: how
-description: Walk through how a subsystem works. Use for "how does X work", code walkthroughs before changing something, and placement or ownership questions. Explains architecture, runtime flow, and onboarding mental models. Can critique architecture. Use why for motivation.
+description: "Explains how a subsystem works: architecture, runtime flow, onboarding mental models; can critique architecture. Use for how does X work or code walkthroughs. Not for motivation."
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -14,6 +14,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
+when_to_use: "where does this belong, ownership"
 ---
 
 # How

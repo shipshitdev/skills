@@ -1,6 +1,6 @@
 ---
 name: polish
-description: Runs the last pass over a functionally complete feature — pixel alignment, interaction and loading states, empty and error states, copy consistency, transition smoothness, and micro-details measured against the design system. Requires the work to be finished first; it refines, it never restructures. Use when the user asks for polish, finishing touches, a pre-launch review, or wants to go from good to great. To fix the underlying composition instead, use `layout`.
+description: Runs the final refinement pass on a finished feature — alignment, states, copy, transitions, micro-details. Use for polish or pre-launch review. Not for restructuring.
 user-invocable: true
 argument-hint: "[target]"
 metadata:
@@ -11,6 +11,7 @@ metadata:
   upstream_latest: skill-v3.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
+when_to_use: "good to great, pixel alignment, pre-launch"
 ---
 
 Perform a meticulous final pass to catch the small details that separate good work from great work.

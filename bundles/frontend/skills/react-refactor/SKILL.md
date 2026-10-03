@@ -1,14 +1,10 @@
 ---
 name: react-refactor
-description: >-
-  Architectural refactoring guide for React applications covering component
-  architecture, state architecture, hook patterns, component decomposition,
-  coupling and cohesion, data flow, and refactoring safety. Triggers when
-  refactoring React codebases, reviewing PRs for architectural issues,
-  decomposing oversized components, or improving module boundaries.
+description: Guides architectural React refactoring — state architecture, hook extraction, decomposition, coupling. Use when splitting oversized components or reviewing PR architecture.
 metadata:
   version: "2.2.2"
   tags: "react, refactoring, architecture"
+when_to_use: "god component, module boundaries, extract hooks"
 ---
 
 # React Refactor Best Practices

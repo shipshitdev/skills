@@ -184,6 +184,14 @@ elif len(description) > 1024:
 combined_len = len(description) + len(when_to_use)
 if combined_len > 1536:
     print(f"description + when_to_use is {combined_len} chars (>1536)")
+
+# Model-invoked skills load description + when_to_use into every session's
+# listing; keep them inside the catalog budget (skill-standards.md).
+model_invoked = not re.search(r"^disable-model-invocation:\s*true\s*$", frontmatter, re.M)
+if model_invoked and len(description) > 200:
+    print(f"description is {len(description)} chars (>200 listing budget)")
+if model_invoked and len(when_to_use) > 120:
+    print(f"when_to_use is {len(when_to_use)} chars (>120 listing budget)")
 PY
 )
 
@@ -919,6 +927,44 @@ validate_adapter_examples() {
     return $issues
 }
 
+# Commands are user front doors: the picker needs a description, the model must not
+# auto-run them, and `/<name> help` must print Usage instead of starting the workflow.
+check_command_surfaces() {
+    local issues=0
+    local file name frontmatter
+
+    for file in "$REPO_ROOT"/commands/*.md; do
+        [[ -f "$file" ]] || continue
+        name=$(basename "$file" .md)
+
+        if [[ "$(head -n 1 "$file")" != "---" ]]; then
+            echo -e "${RED}✗${NC} commands/$name.md: missing frontmatter"
+            ((++issues))
+            continue
+        fi
+
+        frontmatter=$(awk 'NR == 1 { next } /^---$/ { exit } { print }' "$file")
+        if ! grep -q '^description: ' <<< "$frontmatter"; then
+            echo -e "${RED}✗${NC} commands/$name.md: frontmatter missing description"
+            ((++issues))
+        fi
+        if ! grep -q '^disable-model-invocation: true$' <<< "$frontmatter"; then
+            echo -e "${RED}✗${NC} commands/$name.md: frontmatter missing disable-model-invocation: true"
+            ((++issues))
+        fi
+        if ! grep -q '^## Usage$' "$file"; then
+            echo -e "${RED}✗${NC} commands/$name.md: missing ## Usage section"
+            ((++issues))
+        fi
+        if ! grep -Fq "\`/$name help\` prints this Usage block and stops without running anything." "$file"; then
+            echo -e "${RED}✗${NC} commands/$name.md: missing the standard /$name help line"
+            ((++issues))
+        fi
+    done
+
+    return $issues
+}
+
 # Function to check for external skill handoffs
 check_external_handoffs() {
     local file="$1"
@@ -1393,6 +1439,10 @@ check_legacy_installer_retired || installer_issues=$?
 adapter_issues=0
 validate_adapter_examples || adapter_issues=$?
 ((TOTAL_ISSUES += adapter_issues, 1))
+
+command_issues=0
+check_command_surfaces || command_issues=$?
+((TOTAL_ISSUES += command_issues, 1))
 
 # Check live public entry points once, including installer and bundle membership.
 if ! python3 "$SCRIPT_DIR/check-skill-composition.py" "$SKILLS_DIR" --catalog; then

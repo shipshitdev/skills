@@ -1,16 +1,6 @@
 ---
 name: deslop
-description: >-
-  Strip AI-generated slop from a codebase, product, and prose. Code slop —
-  console statements, `any` types, unused imports, commented-out code, redundant
-  comments, needless defensive try-catch on trusted paths, over-nesting. Product
-  slop (with --product) — marketing-filler copy, generic AI phrasing,
-  default-shadcn look, unstyled loading/error states, dead buttons and half-wired
-  flows. UI slop (`ui`) runs a project-derived design-system primitive pass.
-  Prose slop (`prose`) cuts AI tells from writing. Can scope to the current
-  branch's diff or sweep the whole tree. Use when asked to clean up AI-generated
-  code, unslop writing, remove slop, or make an app feel finished before
-  shipping to customers.
+description: "Strips AI slop from code, product, and prose: console logs, any types, dead comments, filler copy, dead buttons. Use when asked to unslop, clean AI code, or polish before shipping."
 argument-hint: "[ui | prose | --changed | all | dry-run | --product]"
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -23,6 +13,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
+when_to_use: "--product, ui, prose, dry-run"
 ---
 
 # Deslop
@@ -45,11 +36,10 @@ skill.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

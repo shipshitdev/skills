@@ -1,3 +1,9 @@
+---
+description: "Weekly repository health review over the last 7 days: shipped work, board drift, operational health, scoped cleanup."
+argument-hint: "[7d|since <SHA>] [--report-only|--fix]"
+disable-model-invocation: true
+---
+
 # Weekly Review
 
 Coordinate the recurring repository maintenance review through `weekly-review`.
@@ -11,6 +17,8 @@ Coordinate the recurring repository maintenance review through `weekly-review`.
 /weekly-review 14d --report-only
 /weekly-review 7d --fix
 ```
+
+`/weekly-review help` prints this Usage block and stops without running anything.
 
 Pass the repository, board URL, optional package scope, window, and existing
 authorization to the `weekly-review` skill. Default to seven days and report-only.

@@ -2770,11 +2770,12 @@
         {
           "executable": false,
           "path": "skills/architect/SKILL.md",
-          "sha256": "6663fa22d87e9c1e3eeaa11385602c9708d65cd3f8905077e7a7c10e0970f753"
+          "sha256": "dab7064967a4d541e0cb888768e87975662bd03c990ee98a9445070f47d00113"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2832,12 +2833,12 @@
         {
           "executable": false,
           "path": "skills/arena/SKILL.md",
-          "sha256": "61afd6f085ac97c5deccf9286274d26cbec4ff7f3d8f3ea8ca20d5411a3d7d5a"
+          "sha256": "ca03eac377a629834809caa10c7b771f74c799efea4b1b6817d36e284724f832"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2892,11 +2893,12 @@
         {
           "executable": false,
           "path": "skills/blast-radius/SKILL.md",
-          "sha256": "a933e15ca2f21a6ec0470d1b3d02138d045553a281289ab1dc3f81eff5b6c0c0"
+          "sha256": "0a5c420a5a42a6839c3c2c32ab606db3b0f4c326def74a72d54ec048af7bc139"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2931,12 +2933,12 @@
         {
           "executable": false,
           "path": "skills/create-verification-skill/SKILL.md",
-          "sha256": "b611e39c0b012c255397a898199b14a286c4ff512cfe0cf5396aff6ad9daff6e"
+          "sha256": "bf49a3b60e4aee97a4545f7a64a9fb8f1f7f76944a7cea399fb19b1efbb52405"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2994,11 +2996,12 @@
         {
           "executable": false,
           "path": "skills/deslop/SKILL.md",
-          "sha256": "e6bd45c52671f3c51875983bcb2b32dd218c910a5f0fe52851b65aac6725edff"
+          "sha256": "102822b709c7163a5476f28777c095a6e53e675026de194e0e2f075edbe4f1ef"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3013,12 +3016,12 @@
         {
           "executable": false,
           "path": "skills/figure-it-out/SKILL.md",
-          "sha256": "750eca5c4e5943129e8fbf0a8150da097777d5df3d40fc1fbc78d6e497b1a248"
+          "sha256": "cc51059b33e74498fb1b4500629bdf7d867ad7131557376275e323c084079215"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3033,11 +3036,12 @@
         {
           "executable": false,
           "path": "skills/github-fix-ci/SKILL.md",
-          "sha256": "368f0f66d8f0b8c2936e3c9f57c7b05a26b393d59d3a777ddfb78a6417542fcc"
+          "sha256": "bf9836ac99167f0c132550904ae34f01feb1de95b83d7e0ff1ca53214f2a0f9f"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3052,11 +3056,12 @@
         {
           "executable": false,
           "path": "skills/fix-merge-conflicts/SKILL.md",
-          "sha256": "b4c26a4c443d86fee526fdca76b8e287951488feb2447245e2c0db9de8ef3169"
+          "sha256": "5b5ca08fa14dac55e24ae4c270c166dbd1c0bb155a5cdaba33904971fade87df"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3071,11 +3076,12 @@
         {
           "executable": false,
           "path": "skills/pr-comments/SKILL.md",
-          "sha256": "1996a42fe6f5a93edeedd34ab2b94a999a5e4f07bb4cd4ee1c3096c33d983acc"
+          "sha256": "2a60ac49e29779ffd6d67b48d8a123191607216ac2e67373ecfd8882fd3391ba"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3090,12 +3096,12 @@
         {
           "executable": false,
           "path": "skills/how/SKILL.md",
-          "sha256": "02d94ab77bf883822b5b03f850a032aa6a35b0b4ef9e7da3919c9c676eb42a72"
+          "sha256": "cad4f317d5e5608814cc2376b125c921c5fd16efed68cab16f8f1a6e743cff82"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3166,12 +3172,12 @@
         {
           "executable": false,
           "path": "skills/interrogate/SKILL.md",
-          "sha256": "ad75ade117a6759e9bf2be7e79ae379873a8e5d9c9a460fe7b8752962ab92390"
+          "sha256": "1c40e3028285f3a0730dc1de33baad31a0ee4dbb11bc09edd2c58a96cc510557"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3242,12 +3248,12 @@
         {
           "executable": false,
           "path": "skills/maintain-verification-skill/SKILL.md",
-          "sha256": "a2243daa6b4b121219067e8e5ea4cbaf7d61b6e2881789a1edf32e56e48ce23b"
+          "sha256": "aebc8839930e153a01ddd985e6a2e4e6e8e6bf1b99972d9edd7c967e456cd048"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3262,12 +3268,12 @@
         {
           "executable": false,
           "path": "skills/github-pr-publish/SKILL.md",
-          "sha256": "0fdb384137bb110967cbd111499eb36a28b7dbb4e3d4ee795131d262254c2b6c"
+          "sha256": "487111fb8d51f63349fa2110faf94fe49ec819dea9a04b5b43152937c22b9241"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Issue #166: Delegates To now names the single release skill after release-pr-gates was merged into release; no upstream behavior changed.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3282,11 +3288,12 @@
         {
           "executable": false,
           "path": "skills/no-comments/SKILL.md",
-          "sha256": "241fd0bd574be99db8b0f87d7141db14fa3603fbc5299030e7fc35baec16101e"
+          "sha256": "fe590f6adc297401cd63ae7155eb092ee7ca551e13e08bb729f2538fa30a81a9"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4621,12 +4628,12 @@
         {
           "executable": false,
           "path": "skills/recall/SKILL.md",
-          "sha256": "903d8f1f6c74fbf610e87c38fecc08763bb4c59a1600bacce8933670c48914f3"
+          "sha256": "e04893b55cad181b1236196e4b11ba060b92b6e662c3501af4987c5bf392982e"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4641,12 +4648,12 @@
         {
           "executable": false,
           "path": "skills/skill-capture/SKILL.md",
-          "sha256": "85bbb5a323805525da4ee318d8fc63da3864fdc644903a9e59eb46bcc6fca68a"
+          "sha256": "04a6520ae4fd5210b1833d419008c6d68f3c99196f10d9b077ea2134da216143"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4739,12 +4746,12 @@
         {
           "executable": false,
           "path": "skills/show-me-your-work/SKILL.md",
-          "sha256": "2821520070b8a80b2094173bab36ea365b75bebf9cb23703263184af02ecae8e"
+          "sha256": "d566500a7afdc46d9bc02b57f17bf2488a79165352224161b2d5575c4cc7a5b8"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4787,12 +4794,12 @@
         {
           "executable": false,
           "path": "skills/swarm/SKILL.md",
-          "sha256": "d25852461600b93d59b57a317ba8a0de71ce1e0707a1e8bae43dfb3e4f4e8767"
+          "sha256": "5cfb6116f5f19c8b4f41032caad07efe0d40fbe5f6af2e9d5cfd27bf0a815808"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4807,11 +4814,12 @@
         {
           "executable": false,
           "path": "skills/tdd/SKILL.md",
-          "sha256": "edc7526967993df20dd83e8ab3b4e1f34de7474605b165060c39786e3ac302ea"
+          "sha256": "1c4b1f82f81b3a772d6f346174d04422dfb7acf6b519b1bf834ceb98114d5b36"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4826,12 +4834,12 @@
         {
           "executable": false,
           "path": "skills/teach/SKILL.md",
-          "sha256": "4e777219c7f7faebdc1f0770d2fcdb5e061a191c095282f531fe19592993b93b"
+          "sha256": "bdad094768666341655d5c6f6977d609521e741167c7e05b339454af9b2b6b1f"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4846,12 +4854,12 @@
         {
           "executable": false,
           "path": "skills/technical-writing/SKILL.md",
-          "sha256": "6810ac6957da29e42fe13a36c7d76e23a23da2e89ae9a1496970b47e97b3b413"
+          "sha256": "7fcfca6f47019397bab37e03eb44947520bf2d59795e44ab67d61d8286b74715"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4860,17 +4868,18 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/full-code-review/references/thermo-nuclear-code-quality-review-procedure.md",
-          "sha256": "398363cf1fc379a728e29ae1724023bbe7d40437368e0ae4c9658992a12955fb"
+          "path": "skills/full-code-review/SKILL.md",
+          "sha256": "15937ad445e2aa6f94a54a669ce614236bd973b9dc57b97b9ac94bfb4e3e947d"
         },
         {
           "executable": false,
-          "path": "skills/full-code-review/SKILL.md",
-          "sha256": "2e334b60e8a02a576600560d871a7f1b8cd4c3a3870a11dbd2dcb0d516ab1b4d"
+          "path": "skills/structural-review/SKILL.md",
+          "sha256": "9e19d53341ae9facd0bf0f3087b3edee9c78713d9ec665196a364672f288097d"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "superseded",
+      "reason": "structural-review is the catalog's single code-quality rubric (#168); full-code-review points to it instead of carrying a duplicate procedure.",
+      "review_note": "Listing-budget pass (2026-10-03, #175): description/when_to_use trimmed to the catalog listing budget after independent review; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4885,11 +4894,12 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/SKILL.md",
-          "sha256": "87ca280d232735900ae46ca430c1110b5a58b63c63f5ba29e3466fa6b69fb1d8"
+          "sha256": "23038f38f4ef6b10907fcebde2ccb9faba33a6551ecfb88e762e50fcb922a15f"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4918,11 +4928,12 @@
         {
           "executable": false,
           "path": "skills/deslop/SKILL.md",
-          "sha256": "e6bd45c52671f3c51875983bcb2b32dd218c910a5f0fe52851b65aac6725edff"
+          "sha256": "102822b709c7163a5476f28777c095a6e53e675026de194e0e2f075edbe4f1ef"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4937,11 +4948,12 @@
         {
           "executable": false,
           "path": "skills/commit-summary/SKILL.md",
-          "sha256": "8e320a0c86f4ab103879dff2c3830c56b2b7449763823788727d1a71adda96d3"
+          "sha256": "979df24467d5bc2524953d6cf102dd66db6bca8272d1a6a402f62ace524b43cf"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4956,11 +4968,12 @@
         {
           "executable": false,
           "path": "skills/why/SKILL.md",
-          "sha256": "f56a16e5470bd1344894d5aeeb2c07e698547160e89167eba4caf3aded99e3d0"
+          "sha256": "be8b1d745929fdf9deedae872478d9208f4b75ec7f074c67737491f959a8de2f"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

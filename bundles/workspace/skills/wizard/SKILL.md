@@ -1,6 +1,6 @@
 ---
 name: wizard
-description: Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.
+description: "Generates an interactive bash wizard guiding a human through manual steps: provisioning, credentials, CI secrets, third-party dashboards, one-off migrations or cutovers."
 license: MIT
 metadata:
   version: "2.2.2"
@@ -12,6 +12,7 @@ metadata:
   upstream_commit: 8b78b531ab96
   last_synced: "2026-08-14"
   license: MIT
+when_to_use: "setup script, walk me through"
 ---
 
 # Wizard

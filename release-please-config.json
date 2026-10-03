@@ -4,6 +4,7 @@
   "include-component-in-tag": false,
   "include-v-in-tag": true,
   "bump-minor-pre-major": false,
+  "versioning": "always-bump-patch",
   "draft-pull-request": true,
   "changelog-sections": [
     { "type": "feat", "section": "Features" },

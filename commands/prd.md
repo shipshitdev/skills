@@ -1,3 +1,9 @@
+---
+description: "Prepare work for agents: turn a request into an execution-ready issue with requirements, plan, and readiness gate."
+argument-hint: "[prepare|intake|write|new|plan|lint|gate|spec|interview] <request|issue>"
+disable-model-invocation: true
+---
+
 # Prd - Prepare Work for Agents
 
 Use `/prd prepare <request>` to turn a rough request into an execution-ready issue
@@ -18,6 +24,8 @@ Preparation finishes before implementation begins.
 /prd interview <topic>  # discover missing product requirements
 /prd                   # read-only status and usage
 ```
+
+`/prd help` prints this Usage block and stops without running anything.
 
 ## Workflow
 

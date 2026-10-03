@@ -1,16 +1,10 @@
 ---
 name: turborepo
-description: |
-  Turborepo monorepo build system guidance. Triggers on: `turbo.json`, task pipelines,
-  `dependsOn`, caching, remote cache, the `turbo` CLI, `--filter`, `--affected`, CI optimization,
-  environment variables, internal packages, monorepo structure, and package boundaries.
-
-  Use when the user configures tasks or workflows, creates packages, sets up a
-  monorepo, shares code between apps, runs changed packages, debugs cache behavior,
-  or works in an `apps/` plus `packages/` workspace.
+description: "Guides Turborepo monorepos: turbo.json tasks, dependsOn, caching and remote cache, --filter/--affected, internal packages. Use when configuring tasks or debugging cache."
 metadata:
   version: "2.2.2"
   tags: "turborepo, monorepo, build, caching, ci"
+when_to_use: "monorepo, package boundaries"
 ---
 
 # Turborepo Skill

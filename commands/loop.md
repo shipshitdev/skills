@@ -1,3 +1,9 @@
+---
+description: "Execute one authorized dispatch:claude prepared issue through executing-plans."
+argument-hint: "[--status|--list]"
+disable-model-invocation: true
+---
+
 # Loop — Execute one prepared issue
 
 Run the `executing-plans` skill for one explicitly authorized `dispatch:claude`
@@ -11,6 +17,8 @@ effort, account, checkout and approval configuration.
 /loop --status   Show current ownership and delivery state; read-only
 /loop --list     List eligible queue candidates and blockers; read-only
 ```
+
+`/loop help` prints this Usage block and stops without running anything.
 
 ## Contract
 

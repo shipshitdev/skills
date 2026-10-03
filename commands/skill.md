@@ -1,3 +1,9 @@
+---
+description: "Author, capture, compliance-test, or scout agent skills."
+argument-hint: "[create|capture|comply|scout]"
+disable-model-invocation: true
+---
+
 # Skill - One Front Door for Authoring and Maintaining Agent Skills
 
 Author new skills, capture reusable workflows from conversations, test whether
@@ -13,6 +19,8 @@ building from scratch — all from one command.
 /skill comply            # measure whether agents follow a given skill or rule
 /skill scout             # search for existing skills before building a new one
 ```
+
+`/skill help` prints this Usage block and stops without running anything.
 
 ## Steps
 

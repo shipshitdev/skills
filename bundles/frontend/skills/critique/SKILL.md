@@ -1,6 +1,6 @@
 ---
 name: critique
-description: Evaluate design from a UX perspective, assessing visual hierarchy, information architecture, emotional resonance, cognitive load, and overall quality with quantitative scoring, persona-based testing, automated anti-pattern detection, and actionable feedback. Use when the user asks to review, critique, evaluate, or give feedback on a design or component.
+description: "Critiques design from a UX view: hierarchy, IA, cognitive load, with scoring, persona testing, and actionable feedback. Use when asked to review or critique a design."
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
@@ -11,6 +11,7 @@ metadata:
   upstream_latest: skill-v3.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
+when_to_use: "give feedback on a component"
 ---
 
 ## STEPS

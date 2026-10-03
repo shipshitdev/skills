@@ -1,3 +1,9 @@
+---
+description: "Product planning chain: document the ICP, rank the backlog by revenue, and schedule dated milestones."
+argument-hint: "[icp|analyze|milestones|burndown]"
+disable-model-invocation: true
+---
+
 # Roadmap - ICP → revenue-ranked backlog → dated milestones
 
 One entry point for the product-planning chain that turns "who pays us" into a
@@ -13,6 +19,8 @@ into GitHub milestones with due dates.
 /roadmap burndown     # progress per open milestone (closed/total, overdue, empty)
 /roadmap              # show where you are in the chain and the next step
 ```
+
+`/roadmap help` prints this Usage block and stops without running anything.
 
 ## The chain
 

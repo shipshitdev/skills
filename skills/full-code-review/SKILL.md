@@ -1,14 +1,6 @@
 ---
 name: full-code-review
-description: >-
-  Fan-out PR review across three parallel dimension agents (structural, security,
-  devex/flag-hygiene), adversarially verify every finding, and synthesize a
-  single prioritized verdict via a strongest-tier judge. Use when asked for a full,
-  comprehensive, or end-to-end review of a branch or PR — after /code-review
-  passes correctness, this skill covers the orthogonal dimensions it does not:
-  security depth, structural health, devex regressions, and feature-flag hygiene.
-  In retro mode (a commit log is passed in) it adds a cross-commit lens and emits a
-  prioritized backlog instead of a merge verdict.
+description: Reviews PR structure, security depth, and devex/flag hygiene with parallel agents after code-review passes correctness. Use for a full or comprehensive PR review.
 compatibility: Requires gh CLI and git for PR diff fetching.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -17,7 +9,7 @@ metadata:
   tags: "code-review, security, structural, devex, orchestration, pr-gate"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)
-when_to_use: "full code review, comprehensive review, end-to-end review, orchestrated review, production readiness review, deep PR review, multi-dimension review"
+when_to_use: "end-to-end PR review, deep branch review"
 ---
 
 # Full Code Review
@@ -200,7 +192,10 @@ Adversarial pass: <N raw> → <M surviving>
 
 ## Thermo Nuclear Code Quality Review procedure
 
-Read [thermo-nuclear-code-quality-review procedure](references/thermo-nuclear-code-quality-review-procedure.md) when the request calls for the exhaustive review workflow.
+The exhaustive code-quality workflow (file-size limits, spaghetti, canonical
+layers, atomic mutations, "code judo", the approval bar) is the `structural-review`
+skill's rubric — run that skill when the request calls for it. It is the single
+copy of this rubric in the catalog; the structural lens above uses its axes.
 Apply the authorized scope and mode of this entry point to every step.
 Resolve other skills through this distribution’s active catalog; resolve
 resources relative to the installed skill directory.
