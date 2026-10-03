@@ -37,7 +37,7 @@ FAILURES = (Refused, OSError, ValueError, KeyError, TypeError)
 class Repository:
     def __init__(self, root: Path):
         self.root = root.resolve()
-        self._trunk_entries: tuple[str, dict] | None = None
+        self._trunk_entries: tuple[str, dict, set | None] | None = None
 
     def run(self, *args: str, input_text: str | None = None,
             accepted: tuple[int, ...] = (0,), extra_env: dict | None = None) -> subprocess.CompletedProcess:
@@ -163,16 +163,25 @@ class Repository:
             if base == oid:
                 scope = "candidate-snapshot"
         if self._trunk_entries is None or self._trunk_entries[0] != trunk:
-            self._trunk_entries = (trunk, self.tree_entries(trunk))
+            self._trunk_entries = (trunk, self.tree_entries(trunk), None)
         trunk_entries = self._trunk_entries[1]
         candidate_entries = trunk_entries if oid == trunk else self.tree_entries(oid)
         base_entries = {} if scope == "candidate-snapshot" else self.tree_entries(base)
         paths = sorted(path for path in base_entries.keys() | candidate_entries.keys()
                        if base_entries.get(path) != candidate_entries.get(path))
+        if self._trunk_entries[2] is None:
+            self._trunk_entries = (*self._trunk_entries[:2], {
+                parent for path in trunk_entries
+                for parent in (path.rsplit("/", i)[0] for i in range(1, path.count("/") + 1))})
+        trunk_dirs = self._trunk_entries[2]
         evidence = []
         for path in paths:
             before, candidate, current = (entries.get(path) for entries in
                                           (base_entries, candidate_entries, trunk_entries))
+            # Trunk may replace a deleted file or symlink with a directory; the
+            # blob-only listing omits it, so absence must not be inferred there.
+            if current is None and path in trunk_dirs:
+                current = {"mode": "040000", "type": "tree", "oid": None}
             state = "exact-entry" if candidate == current else (
                 "unchanged-on-trunk" if current == before else "both-changed")
             item = {"path": path, "base": before, "candidate": candidate,
@@ -200,6 +209,7 @@ class Repository:
                         eligible.append(item)
             if eligible:
                 patch = self.run("git", "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
+                    "--src-prefix=a/", "--dst-prefix=b/",
                     "--binary", base, oid, "--", *[":(literal)" + item["path"] for item in eligible]).stdout
                 with tempfile.TemporaryDirectory(prefix="git-cleanup-index-") as directory:
                     env = {"GIT_INDEX_FILE": str(Path(directory) / "index")}
@@ -466,10 +476,10 @@ class Repository:
                 reviews = plan.get("intent_reviews", {})
                 if not isinstance(reviews, dict):
                     raise Refused("invalid intent review records; preserve candidate")
-                review = reviews.get(action["oid"], {})
+                audit = action["proof"]["content_audit"]
+                review = reviews.get(f"{action['oid']}:{audit['base_oid']}", {})
                 if not isinstance(review, dict):
                     raise Refused("invalid intent review record; preserve candidate")
-                audit = action["proof"]["content_audit"]
                 if (review.get("status") != "verified"
                         or review.get("candidate_oid") != action["oid"]
                         or review.get("trunk_oid") != plan["context"]["trunk_oid"]

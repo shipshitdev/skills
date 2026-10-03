@@ -84,7 +84,7 @@ class GitFixtureTests(unittest.TestCase):
         # plans start empty and require an actual code/intent review.
         for action in plan["actions"]:
             audit = action["proof"]["content_audit"]
-            plan["intent_reviews"][action["oid"]] = {
+            plan["intent_reviews"][f"{action['oid']}:{audit['base_oid']}"] = {
                 "status": "verified", "candidate_oid": action["oid"],
                 "trunk_oid": audit["trunk_oid"], "base_oid": audit["base_oid"],
                 "summary": "Fixture candidate behavior is preserved",
@@ -744,10 +744,65 @@ class GitFixtureTests(unittest.TestCase):
                              ("evidence", []), ("summary", "")):
             with self.subTest(field=field):
                 changed = copy.deepcopy(plan)
-                changed["intent_reviews"][head][field] = value
+                key = f"{head}:{plan['actions'][0]['proof']['content_audit']['base_oid']}"
+                changed["intent_reviews"][key][field] = value
                 result = self.repo.apply(changed, "local-branches")
                 self.assertEqual(result["actions"][0]["result"], "skipped")
                 self.assertEqual(self.git("rev-parse", "feature"), head)
+
+    def test_noprefix_diff_config_cannot_verify_a_different_path(self):
+        self.git("config", "diff.noprefix", "true")
+        (self.root / "src").mkdir()
+        (self.root / "file.py").write_text("x\n")
+        (self.root / "src/file.py").write_text("x\n")
+        self.git("add", "file.py", "src/file.py")
+        self.git("commit", "-m", "two files")
+        self.git("switch", "-c", "feature")
+        self.commit("candidate edit", "y\n", "src/file.py")
+        self.git("switch", "main")
+        self.commit("trunk edits another path", "y\n", "file.py")
+        self.git("push", "origin", "main")
+        plan = self.plan("local-branches")
+        self.assertEqual(plan["actions"], [])
+        self.assertEqual(plan["skipped"][0]["content_audit"]["paths"][0]["state"],
+                         "unchanged-on-trunk")
+
+    def test_deleted_path_replaced_by_trunk_directory_is_preserved(self):
+        self.commit("add config", "setting\n", "config")
+        self.git("push", "origin", "main")
+        self.git("switch", "-c", "feature")
+        self.git("rm", "config")
+        self.git("commit", "-m", "candidate removes config")
+        self.git("switch", "main")
+        self.git("rm", "config")
+        (self.root / "config").mkdir()
+        (self.root / "config/settings").write_text("nested\n")
+        self.git("add", "config/settings")
+        self.git("commit", "-m", "trunk replaces config with a directory")
+        self.git("push", "origin", "main")
+        plan = self.plan("local-branches")
+        self.assertEqual(plan["actions"], [])
+        item = plan["skipped"][0]["content_audit"]["paths"][0]
+        self.assertEqual(item["trunk"]["type"], "tree")
+        self.assertEqual(item["state"], "both-changed")
+
+    def test_same_sha_aliases_with_different_audit_bases_keep_separate_reviews(self):
+        self.git("switch", "-c", "feature")
+        head = self.commit("feature work", "feature\n", "feature.txt")
+        self.git("switch", "main")
+        self.git("merge", "--no-ff", "feature", "-m", "merge feature")
+        merge = self.git("rev-parse", "HEAD")
+        self.git("push", "origin", "main")
+        self.git("branch", "alias", head)
+        self.prs = [{"number": 1, "state": "closed", "merged_at": "2026-01-01",
+                     "merge_commit_sha": merge,
+                     "head": {"ref": "feature", "sha": head, "repo": {"full_name": "owner/repo"}},
+                     "base": {"repo": {"full_name": "owner/repo"}}}]
+        plan = self.plan("local-branches")
+        self.assertEqual(sorted(self.action_names(plan)), ["refs/heads/alias", "refs/heads/feature"])
+        self.assertEqual(len({a["proof"]["content_audit"]["base_oid"] for a in plan["actions"]}), 2)
+        result = self.repo.apply(plan, "local-branches")
+        self.assertEqual([a["result"] for a in result["actions"]], ["removed", "removed"])
 
     def test_v1_historical_plan_is_refused(self):
         self.git("branch", "feature")

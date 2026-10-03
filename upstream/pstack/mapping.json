@@ -1517,7 +1517,7 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "21e2b97787afa2bbd8919c5ac816814ee673f0f65692b912c17624fadf535fc5"
+          "sha256": "1580cc901eecb9ccb7c2ac12e78a5f990ad421f16c5c5b492fd590238889208d"
         }
       ],
       "disposition": "superseded",
@@ -4187,7 +4187,7 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "21e2b97787afa2bbd8919c5ac816814ee673f0f65692b912c17624fadf535fc5"
+          "sha256": "1580cc901eecb9ccb7c2ac12e78a5f990ad421f16c5c5b492fd590238889208d"
         }
       ],
       "disposition": "superseded",

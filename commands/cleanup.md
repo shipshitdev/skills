@@ -38,7 +38,7 @@ is present on current master.
 1. Fetch origin trunk and fast-forward local trunk when it is behind. Never
    classify worktrees against a stale local master.
 2. Inspect per-path current-content evidence and the intended behavior. Record
-   verified `intent_reviews` bound to candidate/base/trunk IDs with supporting
+   verified `intent_reviews` keyed by candidate and base IDs and bound to trunk with supporting
    evidence. Keep uncertain, partial or reverted work; report why it remains.
 3. Print the prune plan — local branches, remote branches, worktrees — plus a
    skipped list with reasons. Dry-run is the default; nothing is deleted.
