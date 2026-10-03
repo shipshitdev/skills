@@ -179,6 +179,16 @@ class Repository:
                 parent for path in trunk_entries
                 for parent in (path.rsplit("/", i)[0] for i in range(1, path.count("/") + 1))})
         trunk_dirs = self._trunk_entries[2]
+        if scope == "candidate-snapshot":
+            # Without a boundary, a trunk-only path is either a later trunk
+            # addition or a candidate deletion that trunk restored. Audit every
+            # trunk path the candidate's history deleted so a restore cannot
+            # pass as present.
+            trunk_only = trunk_entries.keys() - candidate_entries.keys()
+            if trunk_only:
+                deleted = set(self.git("log", "--no-renames", "--diff-filter=D", "--name-only",
+                                       "-z", "--format=", oid).split("\0"))
+                paths = sorted(set(paths) | (deleted & trunk_only))
         evidence = []
         for path in paths:
             before, candidate, current = (entries.get(path) for entries in
@@ -188,6 +198,7 @@ class Repository:
             if current is None and path in trunk_dirs:
                 current = {"mode": "040000", "type": "tree", "oid": None}
             state = "exact-entry" if candidate == current else (
+                "restored-on-trunk" if candidate is None and scope == "candidate-snapshot" else
                 "unchanged-on-trunk" if current == before else "both-changed")
             item = {"path": path, "base": before, "candidate": candidate,
                     "trunk": current, "state": state}

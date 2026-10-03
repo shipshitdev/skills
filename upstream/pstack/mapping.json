@@ -1517,12 +1517,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "a8939ac63e1c0fa74b687ee7c31f021cc75638b44d1127ffa81df2bd825bc9a9"
+          "sha256": "57a96bb188c364a8ea35198e553c612c067a2d147e45c07eca196093d22e3da4"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "Cleanup current-content safety adaptation: per-path exact/reverse patch evidence, enforced SHA-bound code/intent review, recovery refs and ignored-file preservation. Regression verification and independent delivery gates tracked in issue #162.",
+      "review_note": "git-cleanup: skip the deletion history scan when trunk has no extra paths",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4187,12 +4187,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "a8939ac63e1c0fa74b687ee7c31f021cc75638b44d1127ffa81df2bd825bc9a9"
+          "sha256": "57a96bb188c364a8ea35198e553c612c067a2d147e45c07eca196093d22e3da4"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "Cleanup current-content safety adaptation: per-path exact/reverse patch evidence, enforced SHA-bound code/intent review, recovery refs and ignored-file preservation. Regression verification and independent delivery gates tracked in issue #162.",
+      "review_note": "git-cleanup: skip the deletion history scan when trunk has no extra paths",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
