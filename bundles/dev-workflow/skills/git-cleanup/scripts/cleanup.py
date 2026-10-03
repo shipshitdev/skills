@@ -184,9 +184,11 @@ class Repository:
             # addition or a candidate deletion that trunk restored. Audit every
             # trunk path the candidate's history deleted so a restore cannot
             # pass as present.
-            deleted = set(self.git("log", "--no-renames", "--diff-filter=D", "--name-only",
-                                   "-z", "--format=", oid).split("\0"))
-            paths = sorted(set(paths) | (deleted & (trunk_entries.keys() - candidate_entries.keys())))
+            trunk_only = trunk_entries.keys() - candidate_entries.keys()
+            if trunk_only:
+                deleted = set(self.git("log", "--no-renames", "--diff-filter=D", "--name-only",
+                                       "-z", "--format=", oid).split("\0"))
+                paths = sorted(set(paths) | (deleted & trunk_only))
         evidence = []
         for path in paths:
             before, candidate, current = (entries.get(path) for entries in
