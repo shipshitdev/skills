@@ -234,7 +234,7 @@ or another Agent Skills-compatible harness.
 | roadmap | Turn ICP into a revenue-ranked backlog and dated milestones |
 | scan | Run a security audit — full app/API audit or dependency supply chain |
 | skill | Author, capture, test, and scout agent skills |
-| standup | Summarize what you shipped over a time window |
+| standup | Personal recap, all-author merged recap, or opt-in integrated-history audit |
 | suggest | Post inline suggested changes on a PR |
 | test | One testing front door — run, qa, tdd, e2e, coverage, init, regression |
 | wait-what | Re-pitch the last message in plain English |
@@ -254,6 +254,13 @@ or another Agent Skills-compatible harness.
   `/test run <scope>`.
 
 ### Weekly engineering review
+
+Run `/standup 24` for a personal recap, `/standup all 24` for everyone's merged
+changes, or `/standup all 24 audit` to double-check individual and combined
+changes with frozen commits, PR/review links, deployment evidence, and safe
+checkpoints. Bare numbers mean hours; `7d`, `since <SHA>`, and dated timezone
+windows also work. See [standup modes and routing](docs/skills/standup.md) and the
+[Anthropic engineering coverage comparison](docs/skills/engineering-comparison.md).
 
 Run `/weekly-review 7d` with a repository and board URL for an evidence-backed
 report on issue accuracy, recent changes, operational gaps, and deslop findings.
