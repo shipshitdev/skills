@@ -621,6 +621,41 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(audit["scope"], "candidate-snapshot")
         self.assertFalse(audit["current_content_present"])
 
+    def test_ancestor_deletion_restored_on_trunk_is_preserved(self):
+        self.commit("add config", "setting\n", "config")
+        self.git("push", "origin", "main")
+        self.git("switch", "-c", "feature")
+        self.git("rm", "config")
+        self.git("commit", "-m", "candidate removes config")
+        head = self.git("rev-parse", "HEAD")
+        self.git("switch", "main")
+        self.git("merge", "--ff-only", "feature")
+        self.git("checkout", "HEAD~1", "--", "config")
+        self.git("commit", "-m", "trunk restores config")
+        self.git("push", "origin", "main")
+        self.assertTrue(self.repo.ancestor(head, self.git("rev-parse", "main")))
+        plan = self.plan("local-branches")
+        self.assertEqual(plan["actions"], [])
+        audit = next(item["content_audit"] for item in plan["skipped"] if item["ref"] == "refs/heads/feature")
+        self.assertEqual(audit["scope"], "candidate-snapshot")
+        self.assertFalse(audit["current_content_present"])
+        restored = next(item for item in audit["paths"] if item["path"] == "config")
+        self.assertEqual(restored["state"], "restored-on-trunk")
+        self.assertIsNone(restored["candidate"])
+
+    def test_ancestor_with_later_trunk_addition_stays_removable(self):
+        self.git("switch", "-c", "feature")
+        self.commit("feature", "feature\n")
+        self.git("switch", "main")
+        self.git("merge", "--ff-only", "feature")
+        self.commit("later trunk work", "later\n", "later.txt")
+        self.git("push", "origin", "main")
+        plan = self.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        audit = plan["actions"][0]["proof"]["content_audit"]
+        self.assertEqual(audit["scope"], "candidate-snapshot")
+        self.assertNotIn("later.txt", [item["path"] for item in audit["paths"]])
+
     def test_current_patch_with_independent_trunk_edits_uses_isolated_index(self):
         original = "".join(f"line {index}\n" for index in range(20))
         self.commit("context", original)
