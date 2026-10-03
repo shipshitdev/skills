@@ -10,7 +10,7 @@ description: >-
   "cut", or "notes". Branch/worktree pruning is not a release step — that is
   git-cleanup, behind /cleanup.
 metadata:
-  version: "2.0.2"
+  version: "2.2.2"
   tags: "release, dispatcher, ci-cd, semver, github, orchestration"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)

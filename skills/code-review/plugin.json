@@ -1,6 +1,6 @@
 {
   "name": "code-review",
-  "version": "1.2.0",
+  "version": "2.2.2",
   "description": "Correctness, security, and spec-fidelity gate for a single diff or PR.",
   "author": {
     "name": "Ship Shit Dev",

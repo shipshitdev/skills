@@ -12,7 +12,7 @@ metadata:
   category: framework
   risk: critical
   date_added: '2026-02-27'
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "typescript, javascript, tooling"
 ---
 

@@ -12,7 +12,7 @@ description: >-
   up testing, check coverage, or start TDD, and the action must be picked from an
   argument like "run", "qa", "tdd", "e2e", "coverage", "init", or "regression".
 metadata:
-  version: "2.0.1"
+  version: "2.2.2"
   tags: "testing, dispatcher, tdd, e2e, coverage, ci, orchestration"
   author: Ship Shit Dev
 when_to_use: "/test, run tests, qa review, tdd, e2e tests, coverage enforcement, testing setup, ai regression tests, check your work, fix failing tests"

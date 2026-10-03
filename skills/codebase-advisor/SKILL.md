@@ -7,7 +7,7 @@ user-invocable: true
 allowed-tools: Read, Grep, Glob, Write(plans/**), Edit(plans/**), Write(.agents/memory/**), Edit(.agents/memory/**), Task, Bash(git log:*), Bash(git diff:*), Bash(git status:*), Bash(git show:*), Bash(git rev-parse:*), Bash(git merge-base:*), Bash(git branch --list:*), Bash(git branch --show-current), Bash(find:*), Bash(grep:*), Bash(rg:*), Bash(tree:*), Bash(npm audit), Bash(pnpm audit), Bash(pip-audit), Bash(cargo audit), Bash(tsc --noEmit:*), Bash(command -v gh), Bash(gh auth status:*), Bash(gh repo view --json visibility:*), Bash(gh issue create:*)
 when_to_use: audit this codebase, code audit, analyze codebase, codebase analysis, architecture review, project health check, onboarding doc for this repo, find improvements, what should I build next, roadmap, product direction, generate a handoff plan, plan for another agent, security/perf/test-coverage/tech-debt review, review a plan, execute a plan, reconcile plans
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "audit, analysis, architecture, onboarding, planning, codebase-review, handoff-plans, orchestration, read-only"
   author: Ship Shit Dev
   adapted_from: "shadcn/improve (MIT) — https://github.com/shadcn/improve"

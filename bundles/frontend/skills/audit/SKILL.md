@@ -4,7 +4,7 @@ description: Sweeps implemented frontend code across five dimensions at once —
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
-  version: "2.1.2"
+  version: "2.2.2"
   tags: "audit, quality, accessibility"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/audit.md
   upstream_version: skill-v2.1.1

@@ -1,6 +1,6 @@
 {
   "name": "workspace-performance-audit",
-  "version": "1.1.0",
+  "version": "2.2.2",
   "description": "Orchestrates comprehensive performance audits across full-stack monorepos. Coordinates performance-e",
   "author": {
     "name": "Ship Shit Dev",

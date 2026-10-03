@@ -3,7 +3,7 @@ name: release-pr-gates
 description: Holds a release at the gate — opens or reuses a release PR into the trunk, runs local format, lint, and type-check, watches required GitHub checks through to green, and summarizes the failing run's root cause when they are not. Tags only after the gate passes. Reach for it during the pre-merge wait; for version derivation and plain-English patch notes, use `release`.
 compatibility: Requires git and GitHub CLI gh access to the target repository.
 metadata:
-  version: "1.3.0"
+  version: "2.2.2"
   tags: "release, github, pull-request, ci-cd, quality-gates"
 when_to_use: "open a release PR, wait for the checks to go green, are the release checks passing, is the trunk ready to release, gate this release on CI, which required check is failing"
 allowed-tools: Bash(git *) Bash(gh *)

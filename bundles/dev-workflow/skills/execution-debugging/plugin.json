@@ -1,6 +1,6 @@
 {
   "name": "execution-debugging",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "Scoped root-cause debugging methodology for failing tests/builds during stabilization",
   "author": {
     "name": "Ship Shit Dev",

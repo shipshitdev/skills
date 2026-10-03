@@ -12,7 +12,7 @@ description: >-
   when asked to review, audit, polish, plan, or refine UI, and the action must
   be picked from an argument like "audit", "critique", "polish", or "shape".
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "design, ux, ui, dispatcher, frontend, orchestration"
   author: Ship Shit Dev
 when_to_use: "/design, design audit, critique the UI, improve layout, polish the UI, quiet down the design, shape the UX, clarify copy, check design consistency"

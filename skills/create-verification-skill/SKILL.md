@@ -5,7 +5,7 @@ license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "verification, harness, feature-map, project-local"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/create-verification-skill/SKILL.md

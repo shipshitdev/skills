@@ -4,7 +4,7 @@ description: Tones down visually aggressive or overstimulating designs, reducing
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.1"
+  version: "2.2.2"
   tags: "visual-design, refinement, ui"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/quieter.md
   upstream_version: skill-v2.1.1

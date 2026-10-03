@@ -10,7 +10,7 @@ description: >-
   audit before flipping a repo public, or needs to know what is still private in
   code that is about to ship publicly.
 metadata:
-  version: "1.1.1"
+  version: "2.2.2"
   tags: "open-source, publishing, license, audit"
 when_to_use: "open source this repo, make this repository public, is this safe to publish, pre-release audit, what is private in this codebase, check licensing before publishing, going public with this code"
 ---

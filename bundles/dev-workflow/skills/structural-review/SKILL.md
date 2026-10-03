@@ -11,7 +11,7 @@ description: >-
   bugs and repo rule compliance) — run after correctness passes or in parallel
   when a thorough PR review is requested.
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "code-quality, maintainability, architecture, refactoring, structural"
   author: Ship Shit Dev
 when_to_use: "structural review, maintainability review, code quality review, architecture review, thermo-nuclear review, code judo, simplify this PR, is this code clean, before merge review"

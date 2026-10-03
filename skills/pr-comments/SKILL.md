@@ -5,7 +5,7 @@ compatibility: Requires git and GitHub CLI gh access to the target repository.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "github, pull-requests, code-review, comments, triage, digest"
 when_to_use: "what are the comments on my PR, summarize the review feedback, what's blocking this PR, what do I still need to address, triage the review comments, /pr comments"
 allowed-tools: Bash(gh *) Bash(git *)

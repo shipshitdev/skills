@@ -2,7 +2,7 @@
 name: agent-config-audit
 description: Audit AI agent instruction files (AGENTS.override.md, AGENTS.md, configured fallbacks, CLAUDE.md, hooks, and settings) across workspaces in read-only report mode. Use when agent configs drift, rules duplicate, files go stale, or after workspace restructuring; apply fixes only when explicitly requested.
 metadata:
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "audit, claude-md, agents-md, config, documentation, maintenance"
 when_to_use: "audit AGENTS.md, audit CLAUDE.md, agent config audit, sync agent configs, check AGENTS.md, docs out of date, rules duplicated, config drift, stale cursorrules, agent config maintenance"
 ---

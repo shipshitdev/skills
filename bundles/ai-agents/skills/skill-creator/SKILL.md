@@ -3,7 +3,7 @@ name: skill-creator
 description: Guide for creating effective skills. Use when creating a new skill or updating an existing one to extend agent capabilities with specialized knowledge, workflows, or tool integrations.
 license: Complete terms in LICENSE.txt
 metadata:
-  version: "1.1.1"
+  version: "2.2.2"
   source: https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md
   upstream_repo: anthropics/skills
   upstream_ref: main

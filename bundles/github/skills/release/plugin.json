@@ -1,6 +1,6 @@
 {
   "name": "release",
-  "version": "2.1.2",
+  "version": "2.2.2",
   "description": "Cut a trunk release with semantic versioning, patch notes, tags, and GitHub release.",
   "author": {
     "name": "Ship Shit Dev",

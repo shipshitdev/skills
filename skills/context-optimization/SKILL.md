@@ -8,7 +8,7 @@ description: >-
   outputs are verbose, cache hit rate is low, or context must be partitioned
   across agents.
 metadata:
-  version: "2.1.0"
+  version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

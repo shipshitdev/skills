@@ -6,7 +6,7 @@ description: >-
   and adds the cn() utility. Use when starting a new Next.js or React project
   that needs a shadcn component library, or migrating from shadcn + Tailwind v3.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "shadcn, ui, components, tailwind, react, nextjs"
 ---
 

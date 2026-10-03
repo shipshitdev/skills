@@ -9,7 +9,7 @@ description: >-
   command. Use when asked to review changes, a PR, all PRs, recent commits, or
   merged history, or to get a second opinion from another CLI.
 metadata:
-  version: "1.5.0"
+  version: "2.2.2"
   tags: "code-review, dispatcher, pull-requests, commits, retro, orchestration, second-opinion"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)

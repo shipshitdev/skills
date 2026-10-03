@@ -7,7 +7,7 @@ description: >-
   classes, responsive design, dark mode, container queries, or CSS generation
   optimization.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   source: https://github.com/pproenca/dot-skills/blob/master/skills/.curated/tailwind/SKILL.md
   upstream_repo: pproenca/dot-skills
   upstream_ref: master

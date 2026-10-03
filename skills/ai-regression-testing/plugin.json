@@ -1,6 +1,6 @@
 {
   "name": "ai-regression-testing",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Create regression tests for AI-introduced blind spots and path drift.",
   "author": {
     "name": "Ship Shit Dev",

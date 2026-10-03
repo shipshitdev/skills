@@ -2,7 +2,7 @@
 name: memory-systems
 description: Design and implement memory architectures for agent systems that persist state across sessions, maintain entity consistency, and reason over structured knowledge. Use when building agents that persist knowledge across sessions, choosing between memory frameworks, maintaining entity consistency, or designing memory architectures for production.
 metadata:
-  version: "4.1.0"
+  version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/memory-systems/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

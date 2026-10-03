@@ -2,7 +2,7 @@
 name: package-architect
 description: Design and maintain TypeScript packages in a monorepo, including exports and build configuration. Use when creating or restructuring monorepo packages, defining package.json exports, or setting up tsconfig references.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "packages, monorepo, typescript"
 ---
 

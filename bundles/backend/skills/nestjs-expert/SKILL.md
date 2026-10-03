@@ -4,7 +4,7 @@ description: NestJS architecture, modules, DI, guards, interceptors, pipes, Mong
 when_to_use: "nestjs, nest module, nest controller, nest service, nest guard, nest interceptor, nest pipe, dependency injection, NestJS auth, NestJS MongoDB, NestJS error handling, NestJS performance"
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "nestjs, typescript, backend, api, mongodb, rest"
 ---
 

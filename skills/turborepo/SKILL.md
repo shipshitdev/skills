@@ -9,7 +9,7 @@ description: |
   monorepo, shares code between apps, runs changed packages, debugs cache behavior,
   or works in an `apps/` plus `packages/` workspace.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "turborepo, monorepo, build, caching, ci"
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "stripe-implementer",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "This skill should be used when users need to implement Stripe payment processing, subscription manag",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "nextjs-validator",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Validate Next.js 16 configuration and detect/prevent deprecated patterns",
   "author": {
     "name": "Ship Shit Dev",

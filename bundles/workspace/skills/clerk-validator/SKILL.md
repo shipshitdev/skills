@@ -2,7 +2,7 @@
 name: clerk-validator
 description: Validate Clerk authentication configuration and detect deprecated patterns. Ensures proper proxy.ts usage (Next.js 16), ClerkProvider setup, and modern auth patterns. Use before any Clerk work or when auditing existing auth implementations.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "clerk, authentication, validation, nextjs, nestjs"
 ---
 

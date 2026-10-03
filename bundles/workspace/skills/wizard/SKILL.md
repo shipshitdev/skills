@@ -3,7 +3,7 @@ name: wizard
 description: Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "wizard, setup, secrets, human-in-the-loop, bash"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/wizard/SKILL.md

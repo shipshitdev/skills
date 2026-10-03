@@ -7,7 +7,7 @@ description: >-
   refactoring React codebases, reviewing PRs for architectural issues,
   decomposing oversized components, or improving module boundaries.
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "react, refactoring, architecture"
 ---
 

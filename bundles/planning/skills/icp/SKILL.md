@@ -4,7 +4,7 @@ description: Discover and document a product's Ideal Customer Profile as a durab
 user-invocable: true
 argument-hint: "[product or repo]"
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "icp, customer, product, revenue, discovery, positioning"
   author: Ship Shit Dev
 when_to_use: "define our ICP, ideal customer profile, who is our customer, who are we selling to, document the ICP, customer segments, who should we build for, before roadmap prioritization"

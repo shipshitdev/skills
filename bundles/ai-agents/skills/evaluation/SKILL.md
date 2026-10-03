@@ -2,7 +2,7 @@
 name: evaluation
 description: Build evaluation frameworks for agent systems. Use when testing agent performance, validating context engineering choices, or measuring improvements over time.
 metadata:
-  version: "1.2.0"
+  version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/evaluation/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

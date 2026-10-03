@@ -14,8 +14,7 @@ const CATEGORIES = JSON.parse(readFileSync(join(__dirname, 'plugin-categories.js
 const CATALOG = JSON.parse(readFileSync(join(ROOT, 'catalog.json'), 'utf-8'));
 const PACKAGE_VERSION = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf-8')).version;
 
-// Per-skill version comes from plugin.json, which the validator forces to mirror
-// SKILL.md metadata.version.
+// Skill/plugin metadata shares package.json version; version:sync and version:check enforce it.
 function getSkillVersion(skillName) {
   const pluginPath = join(SKILLS_DIR, skillName, 'plugin.json');
   if (!existsSync(pluginPath)) return null;

@@ -1,6 +1,6 @@
 {
   "name": "roadmap-to-milestones",
-  "version": "1.0.2",
+  "version": "2.2.2",
   "description": "Turn a revenue-ranked roadmap into GitHub milestones with due dates and burndown.",
   "author": {
     "name": "Ship Shit Dev",

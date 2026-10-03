@@ -4,7 +4,7 @@ description: Improve unclear UX copy, error messages, microcopy, labels, and ins
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.1"
+  version: "2.2.2"
   tags: "ux-writing, copy, clarity"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/clarify.md
   upstream_version: skill-v2.1.1

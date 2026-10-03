@@ -1,6 +1,6 @@
 {
   "name": "grok-review",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Second-opinion code review through the Grok CLI with in-session verification of every finding.",
   "author": {
     "name": "Ship Shit Dev",

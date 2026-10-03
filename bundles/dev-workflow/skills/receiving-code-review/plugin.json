@@ -1,6 +1,6 @@
 {
   "name": "receiving-code-review",
-  "version": "1.0.1",
+  "version": "2.2.2",
   "description": "Evaluate incoming code-review feedback and act only after technical verification.",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: devcontainer-setup
 description: Scaffolds a complete VS Code Dev Container configuration with Docker, docker-compose, and optional Claude Code CLI support. Activates when asked to "set up devcontainer", "add docker development environment", "configure dev container", or containerize a development workflow.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "devcontainer, docker, setup"
 ---
 

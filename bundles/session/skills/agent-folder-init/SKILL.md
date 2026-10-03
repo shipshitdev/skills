@@ -2,7 +2,7 @@
 name: agent-folder-init
 description: Add or repair .agents/ project context for an existing repo. Use for AI agent documentation, session tracking, task management, and coding standards; do not use as the primary new-product scaffold.
 metadata:
-  version: "2.1.0"
+  version: "2.2.2"
   tags: "agents, setup, documentation"
 ---
 

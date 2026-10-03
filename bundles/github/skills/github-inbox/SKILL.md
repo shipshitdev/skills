@@ -4,7 +4,7 @@ description: "Collect and triage a GitHub work inbox from assigned issues, revie
 compatibility: Requires GitHub CLI gh access. The bundled inbox report script runs with Node.js or Bun.
 allowed-tools: Bash(gh *) Bash(node *) Bash(bun *)
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "github, inbox, triage, issues, pull-requests"
 ---
 

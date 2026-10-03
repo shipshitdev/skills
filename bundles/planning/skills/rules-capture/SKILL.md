@@ -8,7 +8,7 @@ description: >-
   rule is", "stop doing X", "I prefer", frustration indicators, or any
   correction to AI behavior.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "preferences, rules, documentation, automation"
 ---
 

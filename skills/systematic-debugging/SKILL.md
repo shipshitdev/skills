@@ -10,7 +10,7 @@ description: >-
   time pressure makes guessing tempting. `debug` is the front door that hands
   cases here.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   source: https://github.com/obra/superpowers/blob/main/skills/systematic-debugging/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main

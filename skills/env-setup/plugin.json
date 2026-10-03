@@ -1,6 +1,6 @@
 {
   "name": "env-setup",
-  "version": "1.0.0",
+  "version": "2.2.2",
   "description": "Discover env vars the code reads, scaffold .env.example, validate .env, keep secrets out of git.",
   "author": {
     "name": "Ship Shit Dev",

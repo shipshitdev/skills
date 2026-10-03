@@ -2,7 +2,7 @@
 name: workspace-performance-audit
 description: Orchestrates comprehensive performance audits across full-stack monorepos. Coordinates performance-expert, design-consistency-auditor, accessibility, security-expert, and qa-reviewer skills to audit frontend, backend, database, browser extensions, and shared packages. Use when asked for a full workspace performance review, monorepo audit, or to identify bottlenecks across frontend, backend, and extensions.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "performance, audit, monorepo"
 ---
 

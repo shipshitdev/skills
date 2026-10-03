@@ -4,7 +4,7 @@ description: Reworks the structure underneath a UI — spacing scale, visual hie
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.1.2"
+  version: "2.2.2"
   tags: "layout, ux, frontend"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/layout.md
   upstream_version: skill-v2.1.1

@@ -10,7 +10,7 @@ description: >-
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
-  version: "2.1.0"
+  version: "2.2.2"
   tags: "github, ci, actions"
 ---
 

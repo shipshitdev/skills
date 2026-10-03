@@ -11,7 +11,7 @@ description: >-
   `systematic-debugging` when a fix attempt has already failed or the cause
   survives the loop.
 metadata:
-  version: "2.0.2"
+  version: "2.2.2"
   tags: "debugging, triage, reproduction, instrumentation, front-door"
 when_to_use: "new bug report, just hit an error, crash, wrong output, performance regression, how do I reproduce this, build a repro case, where should I add logging, which instrumentation, read this stack trace, bug pattern lookup, off-by-one, race condition, memory leak, triage incoming bugs, prioritize bug reports"
 ---

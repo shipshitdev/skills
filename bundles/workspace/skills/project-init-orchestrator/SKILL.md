@@ -2,7 +2,7 @@
 name: project-init-orchestrator
 description: Selects the correct project initialization route and orchestrates setup. Triggers on "initialize project", "set up new project", "bootstrap project", or when scaffolding a new Shipshit.dev product repo. Use v0 for new Shipshit.dev product repos; use lower-level setup skills only for existing repo repair, customization, or small additions.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "project-init, scaffolding, orchestration, setup, monorepo"
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "stack-modernization",
-  "version": "1.1.0",
+  "version": "2.2.2",
   "description": "Modernize the stack: outdated deps, dead packages, and framework-pattern drift.",
   "author": {
     "name": "Ship Shit Dev",

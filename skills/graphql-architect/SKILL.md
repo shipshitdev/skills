@@ -2,7 +2,7 @@
 name: graphql-architect
 description: Design and review GraphQL schemas, resolvers, mutations, pagination, and data-loading patterns. Use when building or refactoring GraphQL APIs, adding fields, fixing resolver design, or improving GraphQL performance and safety.
 metadata:
-  version: "1.0.0"
+  version: "2.2.2"
   tags: "graphql, api-design, schema, resolvers"
 ---
 

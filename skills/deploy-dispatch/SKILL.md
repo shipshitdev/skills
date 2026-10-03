@@ -11,7 +11,7 @@ description: >-
   infra, configure monitoring, or provision a dev container, and the action must be
   picked from an argument like "app", "compose", "ec2", "monitor", or "devcontainer".
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "deployment, dispatcher, infra, ec2, docker, devops, orchestration"
   author: Ship Shit Dev
 when_to_use: "/deploy, deploy the app, deploy to staging, deploy to production, set up EC2 deployment, configure monitoring, set up devcontainer, compose deployment workflow"

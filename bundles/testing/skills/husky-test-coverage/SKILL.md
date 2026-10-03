@@ -2,7 +2,7 @@
 name: husky-test-coverage
 description: Sets up or verifies Husky git hooks to enforce test coverage above 80% (configurable) for Node.js/TypeScript projects. Activates when enforcing coverage through pre-commit hooks, verifying existing Husky/test setup, or configuring coverage thresholds for Jest, Vitest, or Mocha test runners.
 metadata:
-  version: "1.0.2"
+  version: "2.2.2"
   tags: "husky, testing, coverage"
 ---
 

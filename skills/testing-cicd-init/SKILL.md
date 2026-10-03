@@ -7,7 +7,7 @@ description: >-
   project, migrating from Jest to Vitest, or setting up GitHub Actions CI/CD
   for the first time.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "testing, ci, vitest"
 ---
 

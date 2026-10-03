@@ -5,7 +5,7 @@ argument-hint: "[deps | dead | patterns | all]"
 compatibility: Requires bun and git. Uses WebSearch to confirm current package versions.
 allowed-tools: Bash(git *) Bash(bun *)
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "modernization, dependencies, upgrades, framework-migration, maintenance"
   author: Ship Shit Dev
 when_to_use: "update dependencies, modernize the stack, upgrade packages, remove dead packages, migrate framework patterns, dependency upgrades, /refactor stack"

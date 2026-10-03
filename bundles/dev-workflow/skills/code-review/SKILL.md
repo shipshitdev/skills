@@ -9,7 +9,7 @@ description: >-
   Multi-PR report-only review routes through review-dispatch; non-serial queue
   draining is exposed only through exact /merge force.
 metadata:
-  version: "1.2.0"
+  version: "2.2.2"
   tags: "code-review, correctness, security, testing, devex, feature-flags, spec"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)

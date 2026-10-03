@@ -2,7 +2,7 @@
 name: redis-caching
 description: "Redis caching, rate limiting, session storage, pub/sub, and production integration patterns for TypeScript, Next.js, NestJS, and Prisma applications. Use when adding cache-aside or write-through caching, rate limiting, session or lock storage, pub/sub fanout, or reviewing Redis key design and TTLs."
 metadata:
-  version: "1.0.1"
+  version: "2.2.2"
   tags: "redis, caching, rate-limiting, sessions, prisma, nestjs, nextjs"
 ---
 

@@ -6,7 +6,7 @@ description: >-
   anything is posted. Starts from feedback that is already understood; producing
   the read-only digest is `pr-comments`.
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "github, pull-requests, review-comments"
 when_to_use: "address the PR comments, fix the review feedback, implement the review suggestions, resolve these review threads, reply to the reviewer"
 ---

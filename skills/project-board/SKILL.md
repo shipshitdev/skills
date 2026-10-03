@@ -3,7 +3,7 @@ name: project-board
 description: "Audits project board configuration and prepares explicitly requested setup, copy, or normalization changes while preserving the existing workflow and provider boundaries. Use when inspecting a board's fields, columns, scope, or configuration."
 compatibility: Requires access to the selected board provider. GitHub includes a Node.js or Bun normalizer; Jira uses an existing authenticated provider connection or browser.
 metadata:
-  version: "2.0.0"
+  version: "2.2.2"
   tags: "boards, configuration, workflow, github, jira"
 ---
 

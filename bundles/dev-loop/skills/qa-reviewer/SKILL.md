@@ -7,7 +7,7 @@ description: >-
   multi-step implementations, before committing major refactors, or proactively
   after any task longer than five steps.
 metadata:
-  version: "1.1.0"
+  version: "2.2.2"
   tags: "quality-assurance, verification, code-review, accuracy, completeness"
 ---
 
