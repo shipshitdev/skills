@@ -1,21 +1,12 @@
 ---
 name: agent-dispatch
-description: >-
-  Single front door for agent/subagent architecture, config, and setup. Parses a
-  subcommand — audit, config, init, or route — and routes to the right engine:
-  agent-architecture-audit (diagnose LLM wrapper and agent failures),
-  agent-config-audit (audit and sync AI agent config files across workspaces),
-  agent-folder-init (add or repair .agents/ project context for a repo), or
-  setup-agent-routing (write a machine-readable routing block in CLAUDE.md/AGENTS.md).
-  Backs the /agent command. Use when asked to audit an agent system, check config
-  drift, initialize agent docs, or wire up routing, and the action must be picked
-  from an argument like "audit", "config", "init", or "route".
+description: Router behind /agent. Parses audit, config, init, or route and delegates to the matching agent-setup engine without adding logic of its own.
 metadata:
   version: "2.2.2"
   tags: "agents, dispatcher, architecture, config, setup, routing, orchestration"
   author: Ship Shit Dev
-when_to_use: "/agent, agent audit, config audit, init agent folder, setup agent routing, audit LLM wrappers, check agent config drift, add .agents/ folder, wire up dev-loop routing"
-disable-model-invocation: true
+when_to_use: "/agent, agent audit, agent config drift, init the .agents/ folder, set up agent routing"
+user-invocable: false
 ---
 
 # Agent Dispatch

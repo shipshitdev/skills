@@ -5,8 +5,8 @@ metadata:
   version: "2.2.2"
   tags: "testing, dispatcher, tdd, e2e, coverage, ci, orchestration"
   author: Ship Shit Dev
-when_to_use: "/test, run tests, qa review, tdd, e2e tests, coverage enforcement, testing setup, ai regression tests, check your work, fix failing tests"
-disable-model-invocation: true
+when_to_use: "/test, run tests, qa review, tdd, e2e setup, coverage gate, testing setup, ai regression tests"
+user-invocable: false
 ---
 
 # Test Dispatch

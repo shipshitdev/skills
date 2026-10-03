@@ -45,7 +45,7 @@ Delegates To:
 
 - `project-init-orchestrator` / `npx @shipshitdev/v0` for full Shipshit.dev product repos
 - `frontend-design` for custom visual design
-- `deployment-composer` or `deploy` for deployment
+- `deployment-composer` or `deploy-app` for deployment
 
 - **Structure:** Semantic HTML5 + Modern CSS + Vanilla JS
 - **Form:** Working email capture (Formspree or custom endpoint)

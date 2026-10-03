@@ -7,7 +7,7 @@
 <!-- catalog-summary:start -->
 183 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
 
-Catalog: **183 skills · 30 commands · 13 bundles · 196 plugins**.
+Catalog: **183 skills · 24 commands · 13 bundles · 196 plugins**.
 <!-- catalog-summary:end -->
 
 Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
@@ -26,7 +26,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 | `.tmp/` | Tracked repository content | Tracked |
 | `assets/` | Static repository assets | Tracked |
 | `bundles/` | Generated marketplace bundle snapshots | 13 generated bundles |
-| `commands/` | Claude Code/plugin command adapters | 30 command adapters |
+| `commands/` | Claude Code/plugin command adapters | 24 command adapters |
 | `docs/` | Human-facing orientation pages for flagship skills | Tracked |
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
@@ -213,12 +213,10 @@ or another Agent Skills-compatible harness.
 | agent | Audit, configure, scaffold, and route agents and subagents |
 | ask | Name the Dev Loop skill that fits the current situation |
 | board | Set up, sync, schedule, and review a GitHub Projects v2 board |
-| bug | File a GitHub bug issue |
 | cleanup | Prune merged branches, stale worktrees, and finished work |
 | codex-loop | Claim and work one dispatch:codex issue locally via codex exec |
 | deploy | Deploy the app and provision infrastructure |
 | design | Review and refine UI — audit, critique, polish, layout |
-| deslop | Remove AI slop and tells from code — shortcut for `/refactor deslop` |
 | env | Discover, scaffold, and validate environment variables via `env-setup` |
 | feature | Capture requirements into PRD epics and GitHub issues |
 | fix-ci | Diagnose and fix failing CI checks on a PR |
@@ -229,21 +227,20 @@ or another Agent Skills-compatible harness.
 | prompt | Optimize a prompt via `prompt-engineering`'s 4-D workflow |
 | qa | Run a structured verification pass before commit — shortcut for `/test qa` |
 | refactor | Improve existing code — deslop, refactor, debt, perf, structure, stack |
-| release | Cut a trunk release with patch notes |
 | review | Review changes, a PR, all open PRs, or recent commits — natively or via the Grok CLI |
 | roadmap | Turn ICP into a revenue-ranked backlog and dated milestones |
 | scan | Run a security audit — full app/API audit or dependency supply chain |
 | skill | Author, capture, test, and scout agent skills |
-| standup | Personal recap, all-author merged recap, or opt-in integrated-history audit |
 | suggest | Post inline suggested changes on a PR |
 | test | One testing front door — run, qa, tdd, e2e, coverage, init, regression |
-| wait-what | Re-pitch the last message in plain English |
-| weekly-review | Audit board accuracy, recent changes, operations, and scoped cleanup |
 
 ### Intentional shortcuts, not duplicates
 
 - `/qa` = `/test qa` and `/deslop` = `/refactor deslop` — the two most-used
   modes keep their own top-level spelling on purpose.
+- `/bug`, `/deslop`, `/release`, `/standup`, `/wait-what`, and `/weekly-review`
+  are skills, not command files: a skill with the same name owns the slash name,
+  so a command file would be shadowed.
 - `/address`, `/suggest`, and `/fix-ci` are three distinct jobs in the same PR
   flow, not overlapping reviews: `/review` finds issues *for you*, `/suggest`
   posts suggestions *onto someone else's PR*, `/address` resolves comments
@@ -284,7 +281,7 @@ plugin skill, not an alias.
 
 ### Dev Workflow (38)
 
-`agent-architecture-audit`, `agent-config-audit`, `ai-agent-cost-optimizer`, `codebase-advisor`, `codebase-design`, `code-review`, `structural-review`, `full-code-review`, `grok-review`, `review-dispatch`, `commit-summary`, `changelog-generator`, `standup`, `deslop`, `refactor-dispatch`, `tech-debt`, `stack-modernization`, `debug`, `deploy`, `deployment-composer`, `docs`, `llm-structured-output`, `merge-open-prs`, `production-audit`, `refactor-code`, `release`, `git-cleanup`, `scaffold`, `shape`, `skill-capture`, `skill-comply`, `skill-scout`, `receiving-code-review`, `verification-before-completion`, `wizard`, `worktree`, `skill-dispatch`, `deploy-dispatch`
+`agent-architecture-audit`, `agent-config-audit`, `ai-agent-cost-optimizer`, `codebase-advisor`, `codebase-design`, `code-review`, `structural-review`, `full-code-review`, `grok-review`, `review-dispatch`, `commit-summary`, `changelog-generator`, `standup`, `deslop`, `refactor-dispatch`, `tech-debt`, `stack-modernization`, `debug`, `deploy-app`, `deployment-composer`, `docs`, `llm-structured-output`, `merge-open-prs`, `production-audit`, `refactor-code`, `release`, `git-cleanup`, `scaffold`, `shape`, `skill-capture`, `skill-comply`, `skill-scout`, `receiving-code-review`, `verification-before-completion`, `wizard`, `worktree`, `skill-dispatch`, `deploy-dispatch`
 
 ### GitHub (18)
 

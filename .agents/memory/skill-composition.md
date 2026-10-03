@@ -5,7 +5,8 @@ last_verified: 2026-10-02
 Skill discovery and action authorization are separate. Explicit execution routers
 may invoke reusable engines only within the selected task, carrying target,
 existing authorization, report-only mode, and host/provider/cost limits.
-`disable-model-invocation` remains for explicit entry points and advisory workflows;
+`disable-model-invocation` remains for explicit entry points and advisory workflows
+that are not routed by a command (command routers use `user-invocable: false`);
 it is not a substitute for a writing engine's in-body action gates.
 
 `ask-dev-loop`, `interview`, and `shape` retain their advisory output boundaries.

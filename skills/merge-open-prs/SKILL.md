@@ -19,7 +19,7 @@ unrelated CI is pending.
 
 This skill is standalone and manually triggerable (exposed as `/merge`). It does
 not cut a release (use the `release` skill to tag from trunk) and does not deploy
-(use `deploy`). It lands the open feature/fix PRs onto the trunk. Cleanup is a separately selected workflow.
+(use `deploy-app`). It lands the open feature/fix PRs onto the trunk. Cleanup is a separately selected workflow.
 
 `/merge force` is the sole non-serial queue-drain surface.
 

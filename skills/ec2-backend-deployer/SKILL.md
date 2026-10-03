@@ -45,7 +45,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `deploy` for the repository's release and deployment gates
+- `deploy-app` for the repository's release and deployment gates
 
 ## When to Use
 

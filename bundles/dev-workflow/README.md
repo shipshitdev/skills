@@ -21,7 +21,7 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `commit-summary`
 - `deslop`
 - `debug`
-- `deploy`
+- `deploy-app`
 - `deploy-dispatch`
 - `deployment-composer`
 - `docs`

@@ -1,21 +1,12 @@
 ---
 name: skill-dispatch
-description: >-
-  Single front door for authoring and maintaining agent skills. Parses a
-  subcommand — create, capture, comply, or scout — and routes to the right
-  engine: skill-creator (guide for creating or updating a skill), skill-capture
-  (extract a workflow from conversation into a SKILL.md), skill-comply (measure
-  whether agents follow a skill or rule), or skill-scout (search for existing
-  skills before building new ones). Backs the /skill command. Use when asked to
-  create a skill, capture a pattern, test compliance of a skill, or scout for an
-  existing skill, and the action must be picked from an argument like "create",
-  "capture", "comply", or "scout".
+description: Router behind /skill. Parses create, capture, comply, or scout and delegates to the matching skill-authoring engine without adding logic of its own.
 metadata:
   version: "2.2.2"
   tags: "skills, dispatcher, authoring, compliance, orchestration"
   author: Ship Shit Dev
-when_to_use: "/skill, create a skill, capture this as a skill, test skill compliance, scout for an existing skill, make a workflow reusable, check if a rule is followed"
-disable-model-invocation: true
+when_to_use: "/skill, create a skill, capture this as a skill, test skill compliance, scout for an existing skill"
+user-invocable: false
 ---
 
 # Skill Dispatch

@@ -58,7 +58,7 @@ Delegates To:
 
 - Run the `github-fix-ci` skill when the user asks to fix failing required checks
 - Run the `changelog-generator` skill when a house-styled changelog is requested
-- Recommend `deploy` when the repo has no CI-driven deploy for the release
+- Recommend `deploy-app` when the repo has no CI-driven deploy for the release
 - Recommend `git-cleanup` (`/cleanup`) after the release lands
 
 ## Modes
@@ -220,7 +220,7 @@ gh api "repos/{owner}/{repo}/deployments/<id>/statuses" --jq '.[0].state'
 ```
 
 Watch the release or deploy runs to completion (`gh run watch <id> --exit-status`).
-If nothing deploys automatically, say so and recommend `deploy`.
+If nothing deploys automatically, say so and recommend `deploy-app`.
 
 ## Final Status
 

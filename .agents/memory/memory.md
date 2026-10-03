@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **183 skills · 30 commands · 13 bundles · 196 plugins**.
+Generated catalog: **183 skills · 24 commands · 13 bundles · 196 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -27,7 +27,7 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 | Asset | Count | Canonical source |
 |---|---:|---|
 | Skills | 183 | `skills/*/SKILL.md` |
-| Commands | 30 | `commands/*.md` |
+| Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
 | Plugins | 196 | skills + bundles |
 <!-- catalog-counts:end -->
@@ -83,7 +83,7 @@ gates such as Genfeed's `release.yml`. `release` now proves checks for the exact
 trunk SHA (runs on the SHA plus the producing PR's required checks, because
 required checks usually run only on PRs), detects release-please, guarded
 `workflow_dispatch`, or tag mode, reads the workflow's declared inputs, and
-reports deploy evidence. `deploy` no longer triggers on "release". Supersedes the
+reports deploy evidence. `deploy-app` no longer triggers on "release". Supersedes the
 earlier backlog row that kept the release skills separate (#166).
 
 ### External Skills Imported (2026-04-21)

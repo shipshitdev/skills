@@ -55,7 +55,7 @@ Confirmation Required:
 Delegates To:
 
 - `release`
-- `deploy`
+- `deploy-app`
 - `github-fix-ci`
 - `ec2-backend-deployer`
 - `testing-cicd-init`
@@ -66,7 +66,7 @@ Delegates To:
 | Stage | Use |
 |-------|-----|
 | `release` | Gate the exact trunk SHA, then cut via release-please, a guarded release workflow, or a tag |
-| `deploy` | General staging/production deploy checklist, local quality gates, post-deploy monitoring |
+| `deploy-app` | General staging/production deploy checklist, local quality gates, post-deploy monitoring |
 | `github-fix-ci` | Failed GitHub Actions checks on release or deploy PRs |
 | `ec2-backend-deployer` | Docker + GitHub Actions + EC2 backend deployment setup |
 | `testing-cicd-init` | Missing or weak GitHub Actions/test infrastructure |
@@ -115,7 +115,7 @@ If the user wants to cut a release:
 
 If the user wants to deploy the current branch/app to an environment:
 
-1. Use `deploy` for local pre-deploy checks and post-deploy verification.
+1. Use `deploy-app` for local pre-deploy checks and post-deploy verification.
 2. Route provider setup or execution:
    - Vercel project: use Vercel-specific guidance or CLI.
    - EC2/Docker backend: use `ec2-backend-deployer`.
@@ -128,7 +128,7 @@ If the user wants to deploy the current branch/app to an environment:
 If the repo has no CI or weak gates:
 
 1. Use `testing-cicd-init` to add baseline checks.
-2. Use `deploy` after CI exists.
+2. Use `deploy-app` after CI exists.
 3. For failing existing checks, use `github-fix-ci`.
 
 ### Release Notes

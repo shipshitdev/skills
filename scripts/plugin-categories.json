@@ -194,7 +194,7 @@
         "commit-summary",
         "deslop",
         "debug",
-        "deploy",
+        "deploy-app",
         "deploy-dispatch",
         "deployment-composer",
         "docs",

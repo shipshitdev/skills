@@ -1,22 +1,12 @@
 ---
 name: design-dispatch
-description: >-
-  Single front door for UI/design review and refinement. Parses a subcommand —
-  audit, clarify, critique, layout, polish, quieter, shape, or consistency —
-  and routes to the right design engine: audit (technical quality checks with
-  scored report), clarify (UX copy and microcopy improvement), critique (UX
-  evaluation with quantitative scoring), layout (layout and spacing improvement),
-  polish (final pre-ship quality pass), quieter (tone down visually aggressive
-  designs), shape (UX/UI planning and design brief), or design-consistency-auditor
-  (cross-app design system consistency audit). Backs the /design command. Use
-  when asked to review, audit, polish, plan, or refine UI, and the action must
-  be picked from an argument like "audit", "critique", "polish", or "shape".
+description: Router behind /design. Parses audit, clarify, critique, layout, polish, quieter, shape, or consistency and delegates to the matching design engine.
 metadata:
   version: "2.2.2"
   tags: "design, ux, ui, dispatcher, frontend, orchestration"
   author: Ship Shit Dev
-when_to_use: "/design, design audit, critique the UI, improve layout, polish the UI, quiet down the design, shape the UX, clarify copy, check design consistency"
-disable-model-invocation: true
+when_to_use: "/design, design audit, critique the UI, polish the UI, check design consistency"
+user-invocable: false
 ---
 
 # Design Dispatch

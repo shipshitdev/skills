@@ -929,13 +929,34 @@ validate_adapter_examples() {
 
 # Commands are user front doors: the picker needs a description, the model must not
 # auto-run them, and `/<name> help` must print Usage instead of starting the workflow.
+# A command must also be reachable: a skill with the same name takes over the slash
+# name, and the model cannot load a user-only skill the command routes to.
 check_command_surfaces() {
     local issues=0
-    local file name frontmatter
+    local file name frontmatter target target_header
+    # Known user-only writing workflows still routed by their commands; tracked for
+    # a decision on whether the model may start them.
+    local user_only_route_exceptions=" merge-open-prs git-cleanup "
 
     for file in "$REPO_ROOT"/commands/*.md; do
         [[ -f "$file" ]] || continue
         name=$(basename "$file" .md)
+
+        if [[ -d "$SKILLS_DIR/$name" ]]; then
+            echo -e "${RED}✗${NC} commands/$name.md: shares its name with skills/$name, which takes over /$name"
+            ((++issues))
+        fi
+
+        # shellcheck disable=SC2016  # backticks are literal Markdown, not expansions
+        while IFS= read -r target; do
+            [[ -n "$target" && -f "$SKILLS_DIR/$target/SKILL.md" ]] || continue
+            [[ "$user_only_route_exceptions" == *" $target "* ]] && continue
+            target_header=$(awk 'NR == 1 { next } /^---$/ { exit } { print }' "$SKILLS_DIR/$target/SKILL.md")
+            if grep -q '^disable-model-invocation:[[:space:]]*true[[:space:]]*$' <<< "$target_header"; then
+                echo -e "${RED}✗${NC} commands/$name.md: routes to user-only skill $target, which the model cannot load"
+                ((++issues))
+            fi
+        done < <(grep -oE '(Use|Apply|Resolve|Run) (the )?`[a-z0-9-]+`' "$file" | grep -oE '`[a-z0-9-]+`' | tr -d '`' | sort -u)
 
         if [[ "$(head -n 1 "$file")" != "---" ]]; then
             echo -e "${RED}✗${NC} commands/$name.md: missing frontmatter"
