@@ -4868,12 +4868,12 @@
         {
           "executable": false,
           "path": "skills/structural-review/SKILL.md",
-          "sha256": "33a1ba8a8a3c25c025e786b9a261144241ddd1b0e4fe0f0d14cb95c8439b1690"
+          "sha256": "73d52c918e3513ac3adb195bfe96191868aec33f72bcf8ef3a7fc9c314b76d37"
         }
       ],
       "disposition": "superseded",
       "reason": "structural-review is the catalog's single code-quality rubric (#168); full-code-review points to it instead of carrying a duplicate procedure.",
-      "review_note": "Issue #168: tdd and fix-merge-conflicts retarget merged skills (testing-expert AI regression mode, debug scoped mode); the thermo-nuclear procedure is superseded by structural-review, the single code-quality rubric.",
+      "review_note": "Issue #168: structural-review absorbed the canonical-helper and parallelization checks from the superseded thermo-nuclear procedure; full-code-review's embedded structural prompt mirrors them. tdd and fix-merge-conflicts retarget merged skills.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

@@ -46,7 +46,8 @@ External Side Effects:
 
 Confirmation Required:
 
-- None.
+- After three failed fixes, stop and discuss the architecture with the user
+  before attempting another (four-phase loop, Phase 4).
 
 Delegates To:
 
@@ -86,6 +87,11 @@ further fix until the cause is proven.
 | Step 4 leaves two or more hypotheses standing | Evidence must be gathered at every component boundary |
 | Each fix exposes a new problem elsewhere | Three failures make it an architecture question |
 | The failure crosses components (API → service → database, CI → build → signing) | The four-phase loop instruments each boundary in one pass |
+
+Enter the four-phase loop directly, skipping the front door, under time pressure
+(an emergency or production incident), when "just one quick fix" seems obvious
+before the issue is understood, or when the user asks to prove the cause before
+anything changes. Complete the whole loop even when the bug looks simple.
 
 Otherwise finish here: the front door owns simple, first-contact bugs end to end.
 

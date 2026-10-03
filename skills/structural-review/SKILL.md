@@ -103,6 +103,8 @@ In this stack, logic belongs in a specific layer. Violating the layer model is a
 - A mutation is wired directly to a DOM event handler when a server action exists in the project.
 - A computation that could be a hook is inlined in JSX and repeated in 2+ components.
 - A raw HTML element appears in a file that already imports from `packages/ui` or shadcn.
+- A bespoke helper duplicates a canonical utility the codebase already has —
+  reuse the existing helper instead of adding a near-duplicate.
 
 **Phrase:** "`<button onClick={...}>` in a component that already imports `Button` from `packages/ui` — swap it; raw HTML is a regression in this codebase."
 
@@ -147,6 +149,8 @@ Functions that orchestrate 5+ sequential steps with no intermediate abstraction 
 
 - A new function has 5+ sequential `await` calls with no intermediate named steps or helper functions.
 - A route handler or server action reads, transforms, validates, writes, and notifies — all inline.
+- Independent work (two unrelated reads or fetches) is awaited serially for no
+  reason — run it in parallel when that also simplifies the flow.
 
 **Preferred remedy:** Extract named phases. Each phase is testable in isolation. The orchestrator becomes a readable list of intents.
 

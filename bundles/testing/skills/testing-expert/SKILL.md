@@ -61,8 +61,12 @@ Delegates To:
 
 ## Step 1 — Route Before Answering
 
-Read the question for framework signal first. Delegate on a hit; the specialist
-has depth this skill deliberately does not carry.
+If the request is AI regression work (`/test regression`, sandbox/production
+parity, response-shape drift, guarding an AI-written change or bug fix), select
+AI regression mode first and read `references/ai-regression.md`; then delegate
+framework mechanics below, forwarding its parity checklist and no-production
+rule. Otherwise read the question for framework signal first. Delegate on a hit;
+the specialist has depth this skill deliberately does not carry.
 
 | Signal in the request | Route to |
 |---|---|

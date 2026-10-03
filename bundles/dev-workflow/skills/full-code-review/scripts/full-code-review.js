@@ -86,13 +86,15 @@ the devex reviewer):
    branches exist for the same decision.
 4. Layer violations — mutations in React components instead of server actions;
    derived client state not in a hook; raw \`<button>\`/\`<input>\` when shadcn
-   Button/Input is already imported in the same file.
+   Button/Input is already imported in the same file; a bespoke helper that
+   duplicates an existing canonical utility.
 5. Type structural discipline — bare \`unknown\` without an adjacent type guard
    (deferred \`any\`); interfaces defined inline in a component/service file
    instead of a colocated \`*.types.ts\`. (Leave \`as X\`-without-comment to the
    devex reviewer.)
 7. Sequential orchestration smell — a new function with 5+ sequential \`await\`
    calls and no extracted named phases; extract phases so each is testable.
+   Also independent reads/fetches awaited serially for no reason.
 9. Design purity — the same behavior expressed with materially less structure:
    a state machine/branch tree a derived value would replace, or a special case
    that collapses into a default. Reframe and delete beats polish ("code-judo").
