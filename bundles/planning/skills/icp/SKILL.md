@@ -1,13 +1,13 @@
 ---
 name: icp
-description: Discover and document a product's Ideal Customer Profile as a durable .agents/memory/icp.md — segments ranked by revenue potential, each with acute pain, willingness-to-pay, buying trigger, and churn reasons. Use when a user says "define our ICP", "who is our customer", "who are we selling to", "document our ideal customer", or before roadmap-analyzer / roadmap-to-milestones need a customer to prioritize against.
+description: Documents a product's Ideal Customer Profile as .agents/memory/icp.md, with segments ranked by revenue potential. Use for define our ICP or before roadmap prioritization.
 user-invocable: true
 argument-hint: "[product or repo]"
 metadata:
   version: "2.2.2"
   tags: "icp, customer, product, revenue, discovery, positioning"
   author: Ship Shit Dev
-when_to_use: "define our ICP, ideal customer profile, who is our customer, who are we selling to, document the ICP, customer segments, who should we build for, before roadmap prioritization"
+when_to_use: "who is our customer, who are we selling to"
 ---
 
 # ICP

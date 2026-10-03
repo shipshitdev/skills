@@ -1,6 +1,6 @@
 ---
 name: fix-merge-conflicts
-description: "Resolve git merge conflicts correctness-first, then prove the tree still builds. Use when a merge, rebase, cherry-pick, or stash pop leaves conflict markers, when git status shows unmerged paths, or when the user asks to fix conflicts, resolve a merge, or rebase onto the trunk and clear the conflicts."
+description: Resolves git merge conflicts correctness-first, then proves the tree still builds. Use when a merge, rebase, cherry-pick, or stash pop leaves conflict markers or unmerged paths.
 compatibility: Requires git; uses the repo's package manager and test runner to verify after resolving.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -8,6 +8,7 @@ metadata:
   version: "2.2.2"
   tags: "git, merge, rebase, conflicts, resolution, lockfiles"
 allowed-tools: Bash(git *) Bash(bun *) Bash(bunx *)
+when_to_use: "resolve a merge, clear the conflicts"
 ---
 
 # Fix Merge Conflicts

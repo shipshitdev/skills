@@ -1,6 +1,6 @@
 ---
 name: context-degradation
-description: Recognize, diagnose, and mitigate patterns of context degradation in agent systems. Use when context grows large, agent performance degrades unexpectedly, or debugging agent failures.
+description: "Diagnoses and mitigates context degradation in agents: lost-in-middle, poisoning, distraction, confusion, clash. Use when context grows large or agent quality drops unexpectedly."
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-degradation/SKILL.md
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-13"
   license: MIT
   tags: "context, agents, reliability"
+when_to_use: "long-context failures"
 ---
 # Context Degradation Patterns
 

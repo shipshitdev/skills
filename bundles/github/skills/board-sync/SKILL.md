@@ -1,10 +1,11 @@
 ---
 name: board-sync
-description: "Reconciles a project board with current work and delivery evidence, reports incomplete coverage and metadata gaps, and applies only approved provider-supported field changes. Use when auditing board drift, reviewing blocked work, or assessing upcoming delivery."
+description: Reconciles a project board with current work and delivery evidence, reporting gaps; applies only approved field changes. Use for board drift or blocked-work review.
 compatibility: Requires access to the selected board provider. GitHub has a bundled Node.js or Bun report; Jira uses an existing authenticated provider connection or browser.
 metadata:
   version: "2.2.2"
   tags: "boards, workflow, reconciliation, github, jira, audit"
+when_to_use: "upcoming delivery, stale cards"
 ---
 
 # Board Sync

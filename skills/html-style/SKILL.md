@@ -1,9 +1,10 @@
 ---
 name: html-style
-description: 'Apply opinionated styling to barebones HTML. Use when user has plain/unstyled HTML and wants to apply consistent visual styling. Triggers: style this HTML, apply styling, make this look good, /html-style, or when user shares HTML that needs CSS. Transforms tables, lists, status indicators, buttons, and layouts into a cohesive design system.'
+description: Applies opinionated styling to barebones HTML, turning tables, lists, status text, buttons, and layouts into a cohesive design. Use when the user has plain unstyled HTML.
 metadata:
   version: "2.2.2"
   tags: "html, styling, frontend"
+when_to_use: "/html-style, make this look good"
 ---
 
 # html-style

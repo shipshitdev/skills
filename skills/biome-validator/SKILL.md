@@ -1,9 +1,10 @@
 ---
 name: biome-validator
-description: Validate Biome 2.3+ configuration and detect outdated patterns. Ensures proper schema version, domains, assists, and recommended rules. Use before any linting work or when auditing existing projects.
+description: Validates Biome 2.3+ config and flags outdated patterns such as schema version, domains, and recommended rules. Use before linting work or when auditing biome.json.
 metadata:
   version: "2.2.2"
   tags: "biome, linter, formatter, validation, code-quality"
+when_to_use: "after AI generates biome.json"
 ---
 
 # Biome Validator

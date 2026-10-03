@@ -1,13 +1,13 @@
 ---
 name: feature-intake
-description: "Coordinates a rough request into one complete, execution-ready issue by composing the shared requirements, planning, readiness, and issue-publishing engines. Use for /prd prepare or feature intake."
+description: Turns a rough request into one execution-ready issue via the shared requirements, planning, and issue-publishing engines. Use for /prd prepare or feature intake.
 compatibility: Requires GitHub CLI gh for GitHub issue and project-board operations.
 allowed-tools: Bash(gh *) Bash(git *)
 metadata:
   version: "2.2.2"
   tags: "feature-intake, prd, github, kanban, requirements, ears"
   author: Ship Shit Dev
-when_to_use: "feature intake, client requirement, stakeholder requirement, write this as a PRD, create kanban tickets, push to GitHub board, turn this idea into issues, /feature"
+when_to_use: "write this as a PRD, push to GitHub board, /feature"
 ---
 
 # Feature Intake

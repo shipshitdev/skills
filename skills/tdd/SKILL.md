@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-driven development workflow for feature work and bug fixes. Use when the user asks for TDD, red-green-refactor, test-first implementation, regression-first bug fixes, or vertical-slice delivery. For bugs, require a cheap local test path; skip a new test when the path is unclear, expensive, or integration-heavy.
+description: Drives feature work and bug fixes test-first with red-green-refactor and vertical slices. Use for TDD, test-first implementation, or regression-first fixes.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -14,6 +14,7 @@ metadata:
   upstream_commit: 8b78b531ab96
   last_synced: "2026-09-05"
   license: MIT
+when_to_use: "failing test first"
 ---
 
 # Test-Driven Development

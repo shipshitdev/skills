@@ -1,9 +1,10 @@
 ---
 name: project-init-orchestrator
-description: Selects the correct project initialization route and orchestrates setup. Triggers on "initialize project", "set up new project", "bootstrap project", or when scaffolding a new Shipshit.dev product repo. Use v0 for new Shipshit.dev product repos; use lower-level setup skills only for existing repo repair, customization, or small additions.
+description: Picks the project initialization route and orchestrates setup, preferring npx @shipshitdev/v0 for new Shipshit.dev repos. Use when bootstrapping or initializing a project.
 metadata:
   version: "2.2.2"
   tags: "project-init, scaffolding, orchestration, setup, monorepo"
+when_to_use: "initialize project, set up new project, bootstrap project"
 ---
 
 # Project Init Orchestrator
@@ -14,11 +15,10 @@ repairs, or project types not covered by v0.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

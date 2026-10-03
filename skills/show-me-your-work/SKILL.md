@@ -1,6 +1,6 @@
 ---
 name: show-me-your-work
-description: Keep a reviewable decision trail for long-running or unattended work. A TSV log with one row per decision (what, why, evidence, result). Local by default. Commit it when a reviewer needs the trail to trust the result. Use for show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.
+description: Keeps a TSV decision log (what, why, evidence, result) for long or unattended work. Use for autonomous or multi-phase runs a human reviews afterward.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -14,7 +14,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
-when_to_use: "show me your work, decision trail, audit log, unattended run record"
+when_to_use: "show me your work, audit log"
 ---
 
 # Show me your work
@@ -24,11 +24,10 @@ what was decided, why, and on what evidence.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

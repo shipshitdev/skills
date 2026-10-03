@@ -1,6 +1,6 @@
 ---
 name: changelog-generator
-description: Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation. Use when preparing release notes, summarizing product updates, or turning git commits into customer-facing changelog entries.
+description: Turns git commit history into categorized, customer-friendly changelogs and release notes. Use when preparing release notes or summarizing product updates.
 metadata:
   version: "2.2.2"
   source: https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md
@@ -10,6 +10,7 @@ metadata:
   last_synced: "2026-06-12"
   license: Unspecified (no upstream LICENSE)
   tags: "changelog, release-notes, git"
+when_to_use: "app store notes, what changed"
 ---
 # Changelog Generator
 

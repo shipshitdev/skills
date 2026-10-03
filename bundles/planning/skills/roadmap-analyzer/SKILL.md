@@ -1,13 +1,13 @@
 ---
 name: roadmap-analyzer
-description: Turn a product's ICP into a revenue-ranked roadmap. Reads .agents/memory/icp.md (from the icp skill), inventories what already ships, finds the gaps that block landing/retaining/expanding the primary segment, and outputs a prioritized backlog plus strategic themes. Use when asked what to build next, how to prioritize the roadmap, what's blocking revenue, or to plan toward MRR. Hands off to roadmap-to-milestones.
+description: Turns the ICP in .agents/memory/icp.md into a revenue-ranked roadmap, finding gaps that block landing, retaining, or expanding customers. Use to decide what to build next.
 user-invocable: true
 argument-hint: "[product or focus area]"
 metadata:
   version: "2.2.2"
   tags: "roadmap, product, revenue, mrr, prioritization, icp"
   author: Ship Shit Dev
-when_to_use: "what should we build next, prioritize the roadmap, roadmap analysis, what's blocking revenue, plan toward MRR, gap analysis, product gaps, what to focus on to grow revenue"
+when_to_use: "what to build next, blocking revenue, plan toward MRR"
 ---
 
 # Roadmap Analyzer

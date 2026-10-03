@@ -1,9 +1,10 @@
 ---
 name: context-engineering
-description: Supplementary context protocol for agents executing in a repo that has a CLAUDE.md / AGENTS.md (or equivalent config). Use to make an execution agent read project conventions first, treat inputs by trust level, surface plan-vs-convention conflicts instead of silently picking a side, and reuse existing patterns before writing new code.
+description: Makes execution agents read CLAUDE.md/AGENTS.md first, flag plan-vs-convention conflicts, and reuse existing patterns. Use when executing a plan in a repo with agent config.
 metadata:
   version: "2.2.2"
   tags: "context, conventions, execution, agents, codebase-patterns, trust-levels"
+when_to_use: "project conventions protocol"
 ---
 
 <context_protocol>

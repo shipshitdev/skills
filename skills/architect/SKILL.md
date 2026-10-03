@@ -1,6 +1,6 @@
 ---
 name: architect
-description: Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for architect this, design this, or non-trivial work where jumping to code would lock in the wrong shape.
+description: Sketches types, signatures, and module structure before code, then guides implementation. Use for architect this, or non-trivial work where coding first locks in the wrong shape.
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
@@ -14,7 +14,7 @@ metadata:
   upstream_commit: bdf7aa355337
   last_synced: "2026-09-05"
   license: MIT
-when_to_use: "architect this, design this first, sketch the types, module shape before code"
+when_to_use: "design this first, module shape"
 ---
 
 # Architect
@@ -28,11 +28,10 @@ skill owns the pre-implementation sketch loop.
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

@@ -1,20 +1,20 @@
 ---
 name: workspace-performance-audit
-description: Orchestrates comprehensive performance audits across full-stack monorepos. Coordinates performance-expert, design-consistency-auditor, accessibility, security-expert, and qa-reviewer skills to audit frontend, backend, database, browser extensions, and shared packages. Use when asked for a full workspace performance review, monorepo audit, or to identify bottlenecks across frontend, backend, and extensions.
+description: Orchestrates a full-stack monorepo performance audit across frontend, backend, database, extensions and shared packages. Use for workspace-wide bottleneck reviews.
 metadata:
   version: "2.2.2"
   tags: "performance, audit, monorepo"
+when_to_use: "monorepo audit, slow workspace"
 ---
 
 # Workspace Performance Audit
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

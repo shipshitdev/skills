@@ -184,6 +184,14 @@ elif len(description) > 1024:
 combined_len = len(description) + len(when_to_use)
 if combined_len > 1536:
     print(f"description + when_to_use is {combined_len} chars (>1536)")
+
+# Model-invoked skills load description + when_to_use into every session's
+# listing; keep them inside the catalog budget (skill-standards.md).
+model_invoked = not re.search(r"^disable-model-invocation:\s*true\s*$", frontmatter, re.M)
+if model_invoked and len(description) > 200:
+    print(f"description is {len(description)} chars (>200 listing budget)")
+if model_invoked and len(when_to_use) > 120:
+    print(f"when_to_use is {len(when_to_use)} chars (>120 listing budget)")
 PY
 )
 

@@ -1,13 +1,12 @@
 ---
 name: codex-image-gen
-description: >-
-  Generate raster images (icons, illustrations, textures, app icons) from a text prompt by driving the Codex CLI's image tool, then extracting the finished PNG from the Codex session rollout. Use when an agent needs a real generated image and has no native image-generation tool. Requires the `codex` CLI, logged in.
+description: Generates raster images (icons, illustrations, textures) via the logged-in Codex CLI image tool. Use when an agent needs a real image but has no native image generation.
 license: MIT
 compatibility: Requires the `codex` CLI (logged in) plus `python3` and `base64`; `sips` is optional for post-processing on macOS.
 metadata:
   version: "2.2.2"
   tags: "codex, image-generation, gpt-image, cli, assets, app-icon"
-when_to_use: "generate an image, make an icon, create an app icon, render an illustration or texture, agent needs an image but has no image tool, codex image generation"
+when_to_use: "app icon, codex image generation"
 ---
 
 # Codex Image Gen

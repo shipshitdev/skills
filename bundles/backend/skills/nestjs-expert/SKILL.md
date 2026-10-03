@@ -1,11 +1,11 @@
 ---
 name: nestjs-expert
-description: NestJS architecture, modules, DI, guards, interceptors, pipes, MongoDB/Mongoose integration, auth, and production patterns. Use when building NestJS APIs, designing module structure, implementing auth, handling errors, writing DTOs, or debugging NestJS-specific issues.
-when_to_use: "nestjs, nest module, nest controller, nest service, nest guard, nest interceptor, nest pipe, dependency injection, NestJS auth, NestJS MongoDB, NestJS error handling, NestJS performance"
+description: Guides NestJS APIs with MongoDB/Mongoose — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues.
 license: MIT
 metadata:
   version: "2.2.2"
   tags: "nestjs, typescript, backend, api, mongodb, rest"
+when_to_use: "nest controller, nest service, dependency injection"
 ---
 
 # NestJS Expert

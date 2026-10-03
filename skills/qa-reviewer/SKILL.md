@@ -1,14 +1,10 @@
 ---
 name: qa-reviewer
-description: >-
-  Runs a structured multi-phase verification pass on completed AI agent work —
-  catching bugs, missed requirements, and incorrect assumptions before changes
-  are committed. Triggers on: "check your work", "review this", after complex
-  multi-step implementations, before committing major refactors, or proactively
-  after any task longer than five steps.
+description: Runs a multi-phase verification pass on finished AI agent work to catch bugs, missed requirements, and bad assumptions. Use after long multi-step tasks or on check your work.
 metadata:
   version: "2.2.2"
   tags: "quality-assurance, verification, code-review, accuracy, completeness"
+when_to_use: "check your work, verify before commit"
 ---
 
 # QA Reviewer: Systematic Work Verification

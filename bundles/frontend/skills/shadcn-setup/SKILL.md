@@ -1,13 +1,10 @@
 ---
 name: shadcn-setup
-description: >-
-  Sets up shadcn/ui with Tailwind CSS v4 CSS-first configuration — installs
-  packages, generates globals.css with @theme tokens, creates components.json,
-  and adds the cn() utility. Use when starting a new Next.js or React project
-  that needs a shadcn component library, or migrating from shadcn + Tailwind v3.
+description: "Sets up shadcn/ui with Tailwind v4 CSS-first config: packages, @theme globals.css, components.json, cn(). Use for new Next.js/React projects or migrating from Tailwind v3."
 metadata:
   version: "2.2.2"
   tags: "shadcn, ui, components, tailwind, react, nextjs"
+when_to_use: "init shadcn"
 ---
 
 # shadcn/ui Setup
@@ -16,11 +13,10 @@ Sets up shadcn/ui with the modern CSS-first Tailwind v4 setup, not the deprecate
 
 ## Authorized Scope
 
-Apply this engine only within the user's requested task and existing explicit
-authorization. Loading or delegating to it grants no additional authority.
-Preserve report-only restrictions and the caller's target, host, provider, and
-cost limits. Existing approval satisfies a gate only for the same actions and
-scope; obtain approval before expanding them. Forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill
+grants no new authority. Keep report-only requests report-only, honor the
+caller's target, host, provider, and cost limits, ask before expanding scope,
+and forward these limits to delegates.
 
 ## Contract
 

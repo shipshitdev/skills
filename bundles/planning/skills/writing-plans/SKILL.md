@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "Resolves implementation decisions from researched requirements into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions."
+description: Resolves implementation decisions into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions.
 metadata:
   version: "2.2.2"
   source: https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md
@@ -10,7 +10,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "planning, implementation-plan, tasks, tdd, dry, yagni, decomposition"
-when_to_use: "write a plan, create implementation plan, plan this feature, break this into tasks, plan before coding, spec to tasks"
+when_to_use: "write a plan, break into tasks, spec to tasks"
 ---
 
 # Writing Plans

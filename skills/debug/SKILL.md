@@ -1,14 +1,10 @@
 ---
 name: debug
-description: >-
-  Debugs failures end to end: builds a deterministic repro loop, ranks
-  falsifiable hypotheses, instruments the narrowest point, and fixes the root
-  cause with a regression test. Escalates to a four-phase root-cause loop after
-  a failed fix, and has a scoped mode for a test or build breaking mid-task.
+description: "Debugs failures end to end: builds a repro loop, ranks hypotheses, instruments, and fixes the root cause with a regression test. Use for bugs, crashes, or a fix that failed."
 metadata:
   version: "2.2.2"
   tags: "debugging, triage, reproduction, instrumentation, root-cause, regression"
-when_to_use: "new bug report, error, crash, wrong output, performance regression, reproduce this, where to add logging, read this stack trace, bug pattern lookup, race condition, memory leak, triage bugs, the fix did not work, the bug came back, each fix breaks something else, prove the root cause, stop guessing, test or build failing during implementation"
+when_to_use: "stack trace, race condition, memory leak, regression"
 ---
 # Debug
 
