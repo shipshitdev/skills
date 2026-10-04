@@ -415,7 +415,11 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(self.git("rev-parse", "feature"), self.git("rev-parse", "main"))
 
     def test_git_error_is_never_an_empty_success(self):
-        self.git("branch", "feature")
+        self.git("switch", "-c", "feature")
+        self.commit("feature", "feature\n")
+        self.git("switch", "main")
+        self.git("merge", "--ff-only", "feature")
+        self.git("push", "origin", "main")
         original = self.repo.git
         def git(*args):
             if args[0] == "rev-list":
@@ -586,7 +590,7 @@ class GitFixtureTests(unittest.TestCase):
         plan = self.plan("local-branches")
         self.assertEqual(self.git("rev-parse", "main"), newer)
         self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
-        self.assertEqual(plan["actions"][0]["proof"]["kind"], "ancestor")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "no-own-commits")
 
     def test_current_content_receipt_works_under_another_pr_and_commit(self):
         head, landed = self.squash()

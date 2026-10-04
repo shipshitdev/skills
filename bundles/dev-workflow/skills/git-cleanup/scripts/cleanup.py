@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import filecmp
 import hashlib
 import json
 import os
@@ -32,6 +33,12 @@ class Refused(RuntimeError):
 
 
 FAILURES = (Refused, OSError, ValueError, KeyError, TypeError)
+
+# Ignored directory names that tooling rebuilds from tracked sources or lockfiles.
+REGENERABLE = {"node_modules", ".next", ".turbo", ".cache", ".parcel-cache", "dist", "build",
+               "coverage", "generated", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+# Reflog messages that move a ref without creating work on it.
+CREATED = ("branch: Created from ", "Branch: renamed ")
 
 
 class Repository:
@@ -104,11 +111,72 @@ class Repository:
                           "--untracked-files=all", "--ignore-submodules=none").stdout
         if status or "locked" in record or "prunable" in record:
             raise Refused("dirty, untracked files, locked, or stale worktree")
-        ignored = self.run("git", "-C", str(path), "ls-files", "--others", "--ignored",
-                           "--exclude-standard", "-z").stdout
-        if ignored:
-            raise Refused("ignored files present; preserve or relocate them before cleanup")
-        return {"path": str(path.resolve()), "oid": head, "ref": branch}
+        state = {"path": str(path.resolve()), "oid": head, "ref": branch}
+        ignored = self.ignored_disposition(path, Path(self.worktrees()[0]["worktree"]))
+        if ignored["regenerable"] or ignored["duplicated"]:
+            state["ignored"] = ignored
+        return state
+
+    def ignored_disposition(self, path: Path, main: Path) -> dict:
+        """Classify ignored files; refuse any that exist only in this worktree."""
+        listing = self.run("git", "-C", str(path), "ls-files", "--others", "--ignored",
+                           "--exclude-standard", "--directory", "-z").stdout
+        regenerable, duplicated, unique = [], [], []
+        for entry in sorted(item for item in listing.split("\0") if item):
+            relative = entry.rstrip("/")
+            if self.regenerable(relative):
+                regenerable.append(entry)
+                continue
+            target = path / relative
+            if target.is_dir() and not target.is_symlink():
+                files = []
+                for directory, names, filenames in os.walk(target):
+                    links = [name for name in names if (Path(directory) / name).is_symlink()]
+                    rebuilt = [name for name in names if name in REGENERABLE and name not in links]
+                    regenerable.extend((Path(directory) / name).relative_to(path).as_posix() + "/"
+                                       for name in sorted(rebuilt))
+                    names[:] = sorted(name for name in names if name not in links + rebuilt)
+                    files.extend(Path(directory) / name for name in sorted(filenames + links))
+            else:
+                files = [target]
+            for file in files:
+                name = file.relative_to(path).as_posix()
+                if self.regenerable(name):
+                    regenerable.append(name)
+                elif self.duplicate(file, main / name):
+                    duplicated.append(name)
+                else:
+                    unique.append(name)
+        if unique:
+            raise Refused("ignored files present only in this worktree; preserve or relocate them "
+                          "before cleanup: " + ", ".join(unique[:5]))
+        return {"regenerable": sorted(set(regenerable)), "duplicated": sorted(set(duplicated))}
+
+    @staticmethod
+    def regenerable(relative: str) -> bool:
+        parts = relative.split("/")
+        return any(part in REGENERABLE for part in parts) or parts[-1].endswith(".tsbuildinfo")
+
+    @staticmethod
+    def duplicate(file: Path, original: Path) -> bool:
+        # A byte-identical copy in the main checkout survives the removal.
+        if file.is_symlink():
+            return original.is_symlink() and os.readlink(file) == os.readlink(original)
+        return (file.is_file() and original.is_file() and not original.is_symlink()
+                and filecmp.cmp(file, original, shallow=False))
+
+    def unmoved_since_creation(self, ref: str, oid: str, worktree: str | None = None) -> bool:
+        """The ref's reflog proves it never held a commit of its own."""
+        prefix = ("-C", worktree) if worktree else ()
+        log = self.run("git", *prefix, "reflog", "show", "--format=%H%x00%gs", ref, "--",
+                       accepted=(0, 128)).stdout
+        entries = [line.split("\0", 1) for line in log.splitlines() if line]
+        if not entries or any(len(entry) != 2 or entry[0] != oid for entry in entries):
+            return False
+        if ref == "HEAD":
+            # `worktree add --detach` logs an empty message, then a reset to itself.
+            return all(message in ("", "reset: moving to HEAD") for _, message in entries)
+        return all(message.startswith(CREATED) for _, message in entries)
 
     def remote_heads(self) -> dict[str, str]:
         return {ref: oid for oid, ref in (line.split("\t") for line in
@@ -332,9 +400,16 @@ class Repository:
                         records.append(pr)
         return records
 
-    def proof(self, oid: str, trunk: str, prs: list[dict]) -> dict:
+    def proof(self, oid: str, trunk: str, prs: list[dict], *, unmoved: bool = False) -> dict:
         if any(pr.get("state") == "open" for pr in prs):
             raise Refused("in-flight open PR")
+        if unmoved and self.ancestor(oid, trunk):
+            # The ref only ever pointed at a trunk commit, so it never held work
+            # that trunk could have reverted; there is no delta to audit.
+            return {"kind": "no-own-commits", "ahead": [], "content_audit": {
+                "base_oid": oid, "candidate_oid": oid, "trunk_oid": trunk,
+                "scope": "no-own-commits", "candidate_in_trunk_history": True,
+                "current_content_present": True, "paths": []}}
         ahead = self.git("rev-list", trunk + ".." + oid).splitlines()
         audit = self.current_content_audit(oid, trunk, prs)
         if not audit["current_content_present"]:
@@ -364,7 +439,7 @@ class Repository:
 
     def evaluate(self, candidate: dict, context: dict, scope: str, *,
                  worktrees: list[dict] | None = None, heads: dict | None = None,
-                 pr_cache: dict | None = None) -> dict:
+                 pr_cache: dict | None = None, released: set[str] = frozenset()) -> dict:
         kind, ref, oid = candidate["kind"], candidate["ref"], candidate["oid"]
         if kind not in SCOPES[scope]:
             raise Refused("candidate outside authorized resource scope")
@@ -377,6 +452,7 @@ class Repository:
             raise Refused("protected branch")
         worktrees = self.worktrees() if worktrees is None else worktrees
         result = {"kind": kind, "ref": ref, "oid": oid}
+        unmoved = False
         if kind == "worktree":
             records = [wt for wt in worktrees if wt["worktree"] == candidate["path"]]
             if (len(records) != 1 or records[0] == worktrees[0]
@@ -385,12 +461,19 @@ class Repository:
             result.update(self.worktree_state(records[0]))
             if any(result[key] != candidate[key] for key in ("path", "oid", "ref")):
                 raise Refused("worktree changed since discovery")
+            unmoved = (self.unmoved_since_creation(ref, oid) if ref else
+                       self.unmoved_since_creation("HEAD", oid, records[0]["worktree"]))
         elif kind == "local":
             self.git("check-ref-format", ref)
             if self.oid(ref) != oid:
                 raise Refused("local ref changed since discovery")
-            if any(wt.get("branch") == ref for wt in worktrees):
+            checkouts = sorted(wt["worktree"] for wt in worktrees if wt.get("branch") == ref)
+            if any(path not in released for path in checkouts):
                 raise Refused("branch checked out; remove worktree, then replan")
+            if checkouts:
+                # Deleted in the same run, only after its worktree removal succeeds.
+                result["after_worktrees"] = checkouts
+            unmoved = self.unmoved_since_creation(ref, oid)
         elif kind == "remote":
             self.git("check-ref-format", ref)
             heads = self.remote_heads() if heads is None else heads
@@ -407,7 +490,7 @@ class Repository:
                 prs = self.pull_requests(context["repository"], branch)
         else:
             prs = []
-        result["proof"] = self.proof(oid, context["trunk_oid"], prs)
+        result["proof"] = self.proof(oid, context["trunk_oid"], prs, unmoved=unmoved)
         result["recovery_ref"] = "refs/cleanup/recovery/" + oid
         return result
 
@@ -431,12 +514,17 @@ class Repository:
             for ref, oid in remote_heads.items():
                 candidates.append({"kind": "remote", "ref": ref, "oid": oid})
         operations = self.active_operations(worktrees)
-        actions, skipped, pr_cache = [], [], {}
+        actions, skipped, pr_cache, released = [], [], {}, set()
+        # Worktree candidates come first, so a branch checked out only in
+        # removable worktrees is planned in the same pass.
         for candidate in candidates:
             try:
                 self.assert_not_pinned(candidate, operations)
                 actions.append(self.evaluate(candidate, context, scope, worktrees=worktrees,
-                                             heads=remote_heads, pr_cache=pr_cache))
+                                             heads=remote_heads, pr_cache=pr_cache,
+                                             released=released))
+                if candidate["kind"] == "worktree":
+                    released.add(candidate["path"])
             except FAILURES as error:
                 item = {**candidate, "reason": str(error)}
                 if isinstance(error, Refused) and error.audit is not None:
@@ -486,7 +574,7 @@ class Repository:
             raise Refused("plan format or authorized scope differs")
         if self.context(plan["context"]["trunk"]) != plan["context"]:
             raise Refused("repository, trunk, or current checkout changed; replan")
-        results = []
+        results, removed = [], {}
         for action in plan["actions"]:
             try:
                 reviews = plan.get("intent_reviews", {})
@@ -496,7 +584,10 @@ class Repository:
                 review = reviews.get(f"{action['oid']}:{audit['base_oid']}", {})
                 if not isinstance(review, dict):
                     raise Refused("invalid intent review record; preserve candidate")
-                if (review.get("status") != "verified"
+                # A ref that never held its own commits has no intent to review;
+                # the fresh evaluation below rejects a forged proof kind.
+                if action["proof"].get("kind") != "no-own-commits" and (
+                        review.get("status") != "verified"
                         or review.get("candidate_oid") != action["oid"]
                         or review.get("trunk_oid") != plan["context"]["trunk_oid"]
                         or review.get("base_oid") != audit["base_oid"]
@@ -506,9 +597,11 @@ class Repository:
                     raise Refused("verified code/intent review missing or stale; preserve candidate")
                 if action["kind"] == "worktree" and not exclusive_worktrees:
                     raise Refused("exclusive worktree access not established")
+                if any(removed.get(path) != "removed" for path in action.get("after_worktrees", [])):
+                    raise Refused("worktree holding this branch was not removed")
                 # Recompute proof and state immediately before each mutation.
                 fresh = self.evaluate(action, plan["context"], scope)
-                if fresh != action:
+                if fresh != {key: value for key, value in action.items() if key != "after_worktrees"}:
                     raise Refused("candidate evidence differs from the reviewed plan")
                 self.preserve_history(action)
                 self.revalidate(plan["context"], action)
@@ -525,6 +618,8 @@ class Repository:
                 results.append({**action, "result": "removed"})
             except FAILURES as error:
                 results.append({**action, "result": "skipped", "reason": str(error)})
+            if action.get("kind") == "worktree":
+                removed[action.get("path")] = results[-1]["result"]
         return {**plan, "actions": results}
 
 

@@ -125,6 +125,15 @@ The intent review must confirm the boundary covers the requested work, including
 previously shared changes. Keep ambiguous or already-reverted intent.
 An empty ahead delta does not prove an unmerged empty commit.
 
+A pointer branch never held work: its reflog shows only creation or rename
+entries at the current object ID, and that object is in captured trunk history.
+Typical sources are `git worktree add -b` or a branch created and then
+abandoned for another name. It gets a `no-own-commits` proof with no paths and
+needs no intent review, because trunk cannot have reverted work it never held.
+A detached worktree qualifies the same way through its HEAD reflog. A branch
+whose reflog shows a commit, reset, rebase or pull, or that has no reflog,
+takes the normal audit.
+
 After this gate, ancestry and exact-head squash evidence can explain delivery,
 but cannot bypass current-content inspection. Exact-head squash evidence binds
 matching repositories, the entire candidate tip, a locally available merge commit
@@ -158,7 +167,8 @@ python3 <skill-directory>/scripts/cleanup.py dry-run --root <repository> --scope
 For a reusable plan, explicitly save the same output under the repository's
 `.tmp/` after creating that directory. Review its `context`, `actions`, and
 `skipped` fields, including every `content_audit`. Complete the code/intent
-receipt, populate `intent_reviews` as documented in the reference, and remove
+receipt, populate `intent_reviews` as documented in the reference (not needed
+for `no-own-commits` actions), and remove
 uncertain actions from the selected plan before pruning. Missing, unresolved or
 stale reviews make the helper skip deletion; `--confirmed` cannot bypass this. Saving this report is a caller-requested file write; the helper
 itself writes nothing during discovery.
@@ -173,9 +183,14 @@ Protected names use exact string comparisons: `main`, `master`, `HEAD`, the
 selected trunk, and the caller's current branch. Names containing punctuation
 are never regular expressions. Preserve the main checkout and the caller's
 worktree. Preserve missing, locked, dirty, or symlink worktrees, including
-untracked files and dirty submodules. Ignored files also block removal. Do not assume a local env file, ignored source,
-build output, or dependency directory is reproducible. Preserve or explicitly
-relocate these files first; this skill never clears them to make cleanup pass.
+untracked files and dirty submodules. An ignored file blocks removal unless it
+is a byte-identical copy of the same path in the main checkout (such as a synced
+env file) or sits under a regenerable directory: `node_modules`, `.next`,
+`.turbo`, `.cache`, `.parcel-cache`, `dist`, `build`, `coverage`, `generated`,
+Python caches, or a `*.tsbuildinfo` file. The plan lists both kinds under the
+worktree's `ignored` field. Any other ignored file is unique to the worktree;
+the helper names it and preserves the worktree. Relocate those files first;
+this skill never clears them to make cleanup pass.
 
 An active rebase, merge, cherry-pick, revert, sequencer, or bisect operation pins
 only the worktree it runs in and the branch it operates on: the checked-out branch
@@ -185,9 +200,11 @@ rebase temporarily detaches its HEAD. A worktree whose Git directory cannot be r
 is pinned the same way; report it for explicit repair without broad automatic
 registration pruning.
 
-A local branch checked out in any worktree stays out of the branch deletion plan.
-After removing a worktree, replan to consider its branch separately. Worktree-only
-scope preserves the branch and all remote and remote-tracking references.
+A local branch checked out only in worktrees that the same plan removes is
+planned in the same pass with `after_worktrees`. Prune deletes it only after
+each of those removals succeeds; otherwise it is skipped. A branch checked out
+in any retained worktree stays out of the plan. Worktree-only scope preserves
+the branch and all remote and remote-tracking references.
 
 ## Prune
 
@@ -205,8 +222,8 @@ python3 <skill-directory>/scripts/cleanup.py prune --root <repository> \
 
 The helper rejects changes to repository identity, remote URL, trunk ID, current
 HEAD, or scope. Immediately before each action it refreshes PR protection,
-requires a recorded verified intent review bound to candidate/base/trunk IDs,
-recomputes that candidate's proof, and checks
+requires a recorded verified intent review bound to candidate/base/trunk IDs
+(except for a `no-own-commits` proof), recomputes that candidate's proof, and checks
 that the exact candidate, ref, object ID, and clean worktree state still match.
 Create and verify the deterministic recovery ref before deletion; a preservation
 failure skips the action. This ref retains the entire tracked candidate history,
@@ -224,7 +241,8 @@ Changed or unproven candidates are skipped with reasons.
 
 Compare-and-swap protects branch tips, while the exclusive-access precondition
 protects worktree registration and filesystem races. Do not claim filesystem
-removal is atomic. Ignored files preserve the worktree, including files introduced after planning.
+removal is atomic. Ignored files unique to the worktree preserve it, including
+files introduced after planning; a changed ignored listing skips the action.
 Recovery refs do not protect uncommitted or ignored data; preserve that data
 before cleanup. The helper never bypasses these checks with a force flag.
 

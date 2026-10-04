@@ -150,7 +150,7 @@ class Repository:
         if unique:
             raise Refused("ignored files present only in this worktree; preserve or relocate them "
                           "before cleanup: " + ", ".join(unique[:5]))
-        return {"regenerable": regenerable, "duplicated": duplicated}
+        return {"regenerable": sorted(set(regenerable)), "duplicated": sorted(set(duplicated))}
 
     @staticmethod
     def regenerable(relative: str) -> bool:
