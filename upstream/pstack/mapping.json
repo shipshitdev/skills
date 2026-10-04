@@ -1517,12 +1517,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "73bc2cf89f725a2f42af24378fb1473a4d55b801ae39a79c5fc1aa853005625d"
+          "sha256": "ca2ebd8f3e6a1e47653df5becd22c3d22ac7ab2240cb87891bf0f84bf91805f1"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: prove pointer branches by reflog, allow copied or regenerable ignored files, remove a worktree and its branch in one pass",
+      "review_note": "git-cleanup: require reflog creation evidence, resolve main-checkout copies, limit regenerable names to directories",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4187,12 +4187,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "73bc2cf89f725a2f42af24378fb1473a4d55b801ae39a79c5fc1aa853005625d"
+          "sha256": "ca2ebd8f3e6a1e47653df5becd22c3d22ac7ab2240cb87891bf0f84bf91805f1"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: prove pointer branches by reflog, allow copied or regenerable ignored files, remove a worktree and its branch in one pass",
+      "review_note": "git-cleanup: require reflog creation evidence, resolve main-checkout copies, limit regenerable names to directories",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"

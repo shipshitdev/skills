@@ -124,7 +124,8 @@ class Repository:
         regenerable, duplicated, unique = [], [], []
         for entry in sorted(item for item in listing.split("\0") if item):
             relative = entry.rstrip("/")
-            if self.regenerable(relative):
+            if self.regenerable(relative, (path / relative).is_dir()
+                                and not (path / relative).is_symlink()):
                 regenerable.append(entry)
                 continue
             target = path / relative
@@ -141,9 +142,9 @@ class Repository:
                 files = [target]
             for file in files:
                 name = file.relative_to(path).as_posix()
-                if self.regenerable(name):
+                if self.regenerable(name, False):
                     regenerable.append(name)
-                elif self.duplicate(file, main / name):
+                elif self.duplicate(file, main / name, path):
                     duplicated.append(name)
                 else:
                     unique.append(name)
@@ -153,13 +154,19 @@ class Repository:
         return {"regenerable": sorted(set(regenerable)), "duplicated": sorted(set(duplicated))}
 
     @staticmethod
-    def regenerable(relative: str) -> bool:
-        parts = relative.split("/")
-        return any(part in REGENERABLE for part in parts) or parts[-1].endswith(".tsbuildinfo")
+    def regenerable(relative: str, is_directory: bool) -> bool:
+        # The names cover directories only; a file called `build` is not output.
+        *parents, last = relative.split("/")
+        return (any(part in REGENERABLE for part in parents)
+                or (is_directory and last in REGENERABLE) or last.endswith(".tsbuildinfo"))
 
     @staticmethod
-    def duplicate(file: Path, original: Path) -> bool:
-        # A byte-identical copy in the main checkout survives the removal.
+    def duplicate(file: Path, original: Path, worktree: Path) -> bool:
+        # A byte-identical copy in the main checkout survives the removal, unless
+        # the main checkout reaches it through a link into this worktree.
+        original = Path(os.path.realpath(original.parent)) / original.name
+        if original.parent == worktree.resolve() or worktree.resolve() in original.parent.parents:
+            return False
         if file.is_symlink():
             return original.is_symlink() and os.readlink(file) == os.readlink(original)
         return (file.is_file() and original.is_file() and not original.is_symlink()
@@ -173,10 +180,14 @@ class Repository:
         entries = [line.split("\0", 1) for line in log.splitlines() if line]
         if not entries or any(len(entry) != 2 or entry[0] != oid for entry in entries):
             return False
+        # The oldest entry must record creation: an expired log restarted by a
+        # rename or reset says nothing about commits the ref held before.
         if ref == "HEAD":
-            # `worktree add --detach` logs an empty message, then a reset to itself.
-            return all(message in ("", "reset: moving to HEAD") for _, message in entries)
-        return all(message.startswith(CREATED) for _, message in entries)
+            # `worktree add --detach` logs an empty message, then resets to itself.
+            return entries[-1][1] == "" and all(
+                message in ("", "reset: moving to HEAD") for _, message in entries)
+        return (entries[-1][1].startswith(CREATED[0])
+                and all(message.startswith(CREATED) for _, message in entries))
 
     def remote_heads(self) -> dict[str, str]:
         return {ref: oid for oid, ref in (line.split("\t") for line in

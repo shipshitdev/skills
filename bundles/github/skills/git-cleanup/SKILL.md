@@ -125,8 +125,10 @@ The intent review must confirm the boundary covers the requested work, including
 previously shared changes. Keep ambiguous or already-reverted intent.
 An empty ahead delta does not prove an unmerged empty commit.
 
-A pointer branch never held work: its reflog shows only creation or rename
-entries at the current object ID, and that object is in captured trunk history.
+A pointer branch never held work: its reflog starts with a creation entry and
+shows only creation or rename entries at the current object ID, and that object
+is in captured trunk history. An expired log restarted by a rename or reset is
+not creation evidence.
 Typical sources are `git worktree add -b` or a branch created and then
 abandoned for another name. It gets a `no-own-commits` proof with no paths and
 needs no intent review, because trunk cannot have reverted work it never held.
@@ -184,10 +186,11 @@ selected trunk, and the caller's current branch. Names containing punctuation
 are never regular expressions. Preserve the main checkout and the caller's
 worktree. Preserve missing, locked, dirty, or symlink worktrees, including
 untracked files and dirty submodules. An ignored file blocks removal unless it
-is a byte-identical copy of the same path in the main checkout (such as a synced
+is a byte-identical copy of the same path in the main checkout, not reached through
+a link into the worktree (such as a synced
 env file) or sits under a regenerable directory: `node_modules`, `.next`,
 `.turbo`, `.cache`, `.parcel-cache`, `dist`, `build`, `coverage`, `generated`,
-Python caches, or a `*.tsbuildinfo` file. The plan lists both kinds under the
+Python caches (directories only), or a `*.tsbuildinfo` file. The plan lists both kinds under the
 worktree's `ignored` field. Any other ignored file is unique to the worktree;
 the helper names it and preserves the worktree. Relocate those files first;
 this skill never clears them to make cleanup pass.

@@ -967,6 +967,43 @@ class GitFixtureTests(unittest.TestCase):
         self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
         self.assertEqual((worktree / ".env").read_text(), "SECRET=worktree-only\n")
 
+    def test_main_checkout_link_into_worktree_is_not_a_copy(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text("local\nlocal/\n")
+        (worktree / "local").mkdir()
+        (worktree / "local/settings.json").write_text("only copy\n")
+        (self.root / "local").symlink_to(worktree / "local")
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertIn("local/settings.json", plan["skipped"][0]["reason"])
+
+    def test_regenerable_names_cover_directories_not_files(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text("generated\n")
+        (worktree / "generated").write_text("hand-written notes\n")
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertIn("generated", plan["skipped"][0]["reason"])
+
+    def test_rename_after_expired_reflog_is_not_creation_evidence(self):
+        self.git("switch", "-c", "feature")
+        self.commit("feature", "feature\n")
+        self.git("switch", "main")
+        self.git("merge", "--ff-only", "feature")
+        self.git("revert", "--no-edit", "HEAD")
+        self.git("push", "origin", "main")
+        self.git("reflog", "expire", "--expire=all", "refs/heads/feature")
+        self.git("branch", "-m", "feature", "renamed")
+        self.assertEqual(self.repo.plan("local-branches")["actions"], [])
+
+    def test_detached_head_log_without_creation_is_audited(self):
+        worktree = self.root / ".worktrees/detached"
+        self.git("worktree", "add", "--detach", str(worktree), "main")
+        self.command("git", "-C", str(worktree), "reflog", "expire", "--expire=all", "HEAD")
+        self.command("git", "-C", str(worktree), "reset", "--hard", "HEAD")
+        self.advance_trunk(("file.txt", "rewritten\n"))
+        self.assertEqual(self.repo.plan("worktrees")["actions"], [])
+
     def test_worktree_and_its_branch_are_removed_in_one_pass(self):
         worktree = self.make_worktree()
         self.command("git", "-C", str(worktree), "commit", "--allow-empty", "-m", "own work")
