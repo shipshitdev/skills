@@ -999,11 +999,10 @@ class GitFixtureTests(unittest.TestCase):
     def test_detached_head_log_without_creation_is_audited(self):
         worktree = self.root / ".worktrees/detached"
         self.git("worktree", "add", "--detach", str(worktree), "main")
-        # Keep only the trailing reset entry, as a truncated log would.
+        # A truncated log keeps only a reset entry, without the creation record.
         log = Path(self.command("git", "-C", str(worktree), "rev-parse", "--absolute-git-dir")) / "logs/HEAD"
-        lines = log.read_text().splitlines(keepends=True)
-        self.assertIn("reset: moving to HEAD", lines[-1])
-        log.write_text(lines[-1])
+        _old, new, identity = log.read_text().splitlines()[-1].split("\t")[0].split(" ", 2)
+        log.write_text(f"{new} {new} {identity}\treset: moving to HEAD\n")
         self.advance_trunk(("file.txt", "rewritten\n"))
         self.assertEqual(self.repo.plan("worktrees")["actions"], [])
 
