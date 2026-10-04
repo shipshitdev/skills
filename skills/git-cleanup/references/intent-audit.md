@@ -47,7 +47,7 @@ report. Never report a semantic audit as an automated equivalence guarantee.
 ## Record the review in the selected JSON plan
 
 The helper emits an empty `intent_reviews` object. After actual inspection, add
-one entry for each verified action, keyed `<candidate-oid>:<audit-base-oid>`.
+one entry for each verified action except `no-own-commits` proofs, keyed `<candidate-oid>:<audit-base-oid>`.
 Branches that share a tip can have different audit bases, so each action needs
 its own receipt. Copy the immutable IDs from that action's `content_audit`:
 

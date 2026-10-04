@@ -1517,12 +1517,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "57a96bb188c364a8ea35198e553c612c067a2d147e45c07eca196093d22e3da4"
+          "sha256": "ca2ebd8f3e6a1e47653df5becd22c3d22ac7ab2240cb87891bf0f84bf91805f1"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: skip the deletion history scan when trunk has no extra paths",
+      "review_note": "git-cleanup: require reflog creation evidence, resolve main-checkout copies, limit regenerable names to directories",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4187,12 +4187,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "57a96bb188c364a8ea35198e553c612c067a2d147e45c07eca196093d22e3da4"
+          "sha256": "ca2ebd8f3e6a1e47653df5becd22c3d22ac7ab2240cb87891bf0f84bf91805f1"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: skip the deletion history scan when trunk has no extra paths",
+      "review_note": "git-cleanup: require reflog creation evidence, resolve main-checkout copies, limit regenerable names to directories",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
