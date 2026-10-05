@@ -60,7 +60,8 @@ deprecated-pattern tables, migration steps, and full guide. Open only that file.
 | `--json` | One stack: that stack's report object. Several: an object keyed by stack |
 
 Without `--ci` or `--strict` the script reports and exits 0. The Clerk env check reads
-variable names from `.env*` files only; values are never read into the report.
+variable names from env templates only (`.env.example`, `.env.local.example`,
+`.env.sample`, `.env.template`); real env files are never opened.
 
 ## CI/CD Integration
 

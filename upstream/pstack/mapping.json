@@ -5226,12 +5226,12 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/SKILL.md",
-          "sha256": "1e0ad0515038cebc7a562e89c699fc206ca23337bb080d31d48bb7517e582384"
+          "sha256": "e0dbb5295f7e92b573a7a4a11bff1cc6c503a0e90cb004d39783d1468cac3645"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Catalog simplification (#190): pr-comments gains address mode (absorbs github-address-comments); typescript-expert gains the typescript-refactor rule library; descriptions updated. No upstream behavior change. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #195: typescript-expert carries the refactoring-rule index inline so each rule is one reference hop from SKILL.md.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

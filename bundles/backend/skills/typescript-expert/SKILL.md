@@ -64,7 +64,7 @@ when_to_use: "type performance, monorepo config, satisfies, branded types, remov
 
 ### Refactoring Rules
 
-Refactoring or modernizing TypeScript for type safety (replacing `as` casts with narrowing, discriminated unions over enums, typed error handling, TS 4.x-5.x features, compile speed) draws on a 43-rule library in `references/rules/`. Read `references/rules/index.md` for the prioritized index, then open only the rules that apply, one file per rule.
+Refactoring or modernizing TypeScript for type safety (replacing `as` casts with narrowing, discriminated unions over enums, typed error handling, TS 4.x-5.x features, compile speed) draws on a 43-rule library in `references/rules/`. Open only the rules that apply, one file per rule. `references/rules/_sections.md` defines the categories and `_template.md` the shape of a new rule.
 
 | Priority | Category | Prefix |
 |----------|----------|--------|
@@ -76,6 +76,73 @@ Refactoring or modernizing TypeScript for type safety (replacing `as` casts with
 | 6 | Error Safety (MEDIUM) | `error-` |
 | 7 | Runtime Patterns (MEDIUM) | `perf-` |
 | 8 | Quirks & Pitfalls (LOW-MEDIUM) | `quirk-` |
+
+#### 1. Type Architecture (CRITICAL)
+
+- [`arch-discriminated-unions`](references/rules/arch-discriminated-unions.md) — Use discriminated unions over string enums for exhaustive pattern matching
+- [`arch-branded-types`](references/rules/arch-branded-types.md) — Use branded types for domain identifiers to prevent value mix-ups
+- [`arch-satisfies-over-annotation`](references/rules/arch-satisfies-over-annotation.md) — Use `satisfies` for config objects to preserve literal types
+- [`arch-interfaces-over-intersections`](references/rules/arch-interfaces-over-intersections.md) — Extend interfaces instead of intersecting types for better error messages
+- [`arch-const-assertion`](references/rules/arch-const-assertion.md) — Use `as const` for immutable literal inference
+- [`arch-readonly-by-default`](references/rules/arch-readonly-by-default.md) — Default to readonly types for function parameters and return values
+- [`arch-avoid-partial-abuse`](references/rules/arch-avoid-partial-abuse.md) — Avoid `Partial<T>` abuse for builder patterns
+
+#### 2. Type Narrowing & Guards (CRITICAL)
+
+- [`narrow-custom-type-guards`](references/rules/narrow-custom-type-guards.md) — Write custom type guards instead of type assertions
+- [`narrow-assertion-functions`](references/rules/narrow-assertion-functions.md) — Use assertion functions for precondition checks
+- [`narrow-exhaustive-switch`](references/rules/narrow-exhaustive-switch.md) — Enforce exhaustive switch with `never`
+- [`narrow-in-operator`](references/rules/narrow-in-operator.md) — Narrow with the `in` operator for interface unions
+- [`narrow-eliminate-as-casts`](references/rules/narrow-eliminate-as-casts.md) — Eliminate `as` casts with proper narrowing chains
+- [`narrow-typeof-chains`](references/rules/narrow-typeof-chains.md) — Use `typeof` narrowing before property access
+
+#### 3. Modern TypeScript (HIGH)
+
+- [`modern-using-keyword`](references/rules/modern-using-keyword.md) — Use the `using` keyword for resource cleanup
+- [`modern-const-type-parameters`](references/rules/modern-const-type-parameters.md) — Use const type parameters for literal inference
+- [`modern-template-literal-types`](references/rules/modern-template-literal-types.md) — Use template literal types for string patterns
+- [`modern-noinfer-utility`](references/rules/modern-noinfer-utility.md) — Use `NoInfer` to control type parameter inference
+- [`modern-accessor-keyword`](references/rules/modern-accessor-keyword.md) — Use `accessor` for auto-generated getters and setters
+- [`modern-verbatim-module-syntax`](references/rules/modern-verbatim-module-syntax.md) — Enable `verbatimModuleSyntax` for explicit import types
+
+#### 4. Generic Patterns (HIGH)
+
+- [`generic-infer-over-annotate`](references/rules/generic-infer-over-annotate.md) — Let TypeScript infer instead of explicit annotation
+- [`generic-constrain-dont-overconstrain`](references/rules/generic-constrain-dont-overconstrain.md) — Constrain generics minimally
+- [`generic-avoid-distributive-surprises`](references/rules/generic-avoid-distributive-surprises.md) — Control distributive conditional types
+- [`generic-mapped-type-utilities`](references/rules/generic-mapped-type-utilities.md) — Build custom mapped types for repeated transformations
+- [`generic-return-type-inference`](references/rules/generic-return-type-inference.md) — Preserve return type inference in generic functions
+
+#### 5. Compiler Performance (MEDIUM-HIGH)
+
+- [`compile-explicit-return-types`](references/rules/compile-explicit-return-types.md) — Add explicit return types to exported functions
+- [`compile-avoid-deep-recursion`](references/rules/compile-avoid-deep-recursion.md) — Avoid deeply recursive type definitions
+- [`compile-project-references`](references/rules/compile-project-references.md) — Use project references for monorepo builds
+- [`compile-base-types-over-unions`](references/rules/compile-base-types-over-unions.md) — Use base types instead of large union types
+
+#### 6. Error Safety (MEDIUM)
+
+- [`error-result-type`](references/rules/error-result-type.md) — Use Result types instead of thrown exceptions
+- [`error-exhaustive-error-handling`](references/rules/error-exhaustive-error-handling.md) — Use exhaustive checks for typed error variants
+- [`error-typed-catch`](references/rules/error-typed-catch.md) — Type catch clause variables as `unknown`
+- [`error-never-for-unreachable`](references/rules/error-never-for-unreachable.md) — Use `never` to mark unreachable code paths
+- [`error-discriminated-error-unions`](references/rules/error-discriminated-error-unions.md) — Model domain errors as discriminated unions
+
+#### 7. Runtime Patterns (MEDIUM)
+
+- [`perf-union-literals-over-enums`](references/rules/perf-union-literals-over-enums.md) — Use union literals instead of enums
+- [`perf-avoid-delete-operator`](references/rules/perf-avoid-delete-operator.md) — Avoid the `delete` operator on objects
+- [`perf-object-freeze-const`](references/rules/perf-object-freeze-const.md) — Use `Object.freeze` with `as const` for true immutability
+- [`perf-object-keys-narrowing`](references/rules/perf-object-keys-narrowing.md) — Avoid `Object.keys` type widening
+- [`perf-map-set-over-object`](references/rules/perf-map-set-over-object.md) — Use `Map` and `Set` over plain objects for dynamic collections
+
+#### 8. Quirks & Pitfalls (LOW-MEDIUM)
+
+- [`quirk-excess-property-checks`](references/rules/quirk-excess-property-checks.md) — Understand excess property checks on object literals
+- [`quirk-empty-object-type`](references/rules/quirk-empty-object-type.md) — Avoid the `{}` type — it means non-nullish
+- [`quirk-type-widening-let`](references/rules/quirk-type-widening-let.md) — Prevent type widening with `let` declarations
+- [`quirk-variance-annotations`](references/rules/quirk-variance-annotations.md) — Use variance annotations for generic interfaces
+- [`quirk-structural-typing-escapes`](references/rules/quirk-structural-typing-escapes.md) — Guard against structural typing escape hatches
 
 Behavior-preserving restructuring stays with the `refactor-code` skill; it loads these rules for type-architecture work.
 
