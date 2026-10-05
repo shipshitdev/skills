@@ -25,6 +25,7 @@ works as a map if setup has not run; it will send you there first.
 - Main flow: idea → `/interview` → PRD / intake → plan → `/loop`
 - On-ramps: bugs (`debug`), incoming requests (`feature-intake`), foggy large
   work (`roadmap-analyzer`)
+- Phase boundaries: continue, `/clear`, `handoff`, subagent, `/compact`, in that order
 - Upkeep: `codebase-advisor`, `tech-debt`, `codebase-design`
 - Review: `/review`
 - Standalone: `/wait-what`, `wizard`, `prototype`

@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **184 skills · 24 commands · 13 bundles · 197 plugins**.
+Generated catalog: **185 skills · 24 commands · 13 bundles · 198 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 184 | `skills/*/SKILL.md` |
+| Skills | 185 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 197 | skills + bundles |
+| Plugins | 198 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -171,6 +171,19 @@ economy, information access) or routes it to `skill-capture` / `rules-capture`.
 The Pstack `reflect` procedure moved out of `skill-capture` into
 `retro --deep`; its mapping destinations moved with it. `skill-capture` is
 capture-only again. `/review retro` stays the commit-window code backlog.
+
+### Pocock gaps (2026-10-05, #189)
+
+Vincent approved rewriting the remaining mattpocock/skills gaps (audit at
+upstream `4588b32ecab9`). Landed in order: `writing-for-agents` became
+`skill-creator/references/writing-for-agents.md` (only levers skill-standards
+lacked); `handoff` is a small user-invoked skill with a phase-boundaries tree in
+`ask-dev-loop`; `improve-codebase-architecture` became the `deepen` variant of
+`codebase-advisor`; `github-pr-publish` has one PR body template (Summary with a
+visual, Evidence, Merge danger, Review guide, Follow-ups) credited to Pocock and
+Dex Horthy's `show-me` (humanlayer/skills, MIT). Installed upstream duplicates in
+`~/.agents/skills` (handoff, improve-codebase-architecture, writing-for-agents)
+are removed by hand after the catalog copies ship.
 
 ### Weekly review composition (2026-09-05)
 
