@@ -3091,12 +3091,12 @@
         {
           "executable": false,
           "path": "skills/pr-comments/SKILL.md",
-          "sha256": "2a60ac49e29779ffd6d67b48d8a123191607216ac2e67373ecfd8882fd3391ba"
+          "sha256": "18276c7ad817a4516cccc1676dcd844ccab35b2fc65dd693762b230ae6bb41c1"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Catalog simplification (#190): pr-comments gains address mode (absorbs github-address-comments); typescript-expert gains the typescript-refactor rule library; descriptions updated. No upstream behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4910,12 +4910,12 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/SKILL.md",
-          "sha256": "23038f38f4ef6b10907fcebde2ccb9faba33a6551ecfb88e762e50fcb922a15f"
+          "sha256": "5f36b3d8a0fabe79f5d7f9218ba1803714c52705b9fdddce8a798b8a697528ad"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Catalog simplification (#190): pr-comments gains address mode (absorbs github-address-comments); typescript-expert gains the typescript-refactor rule library; descriptions updated. No upstream behavior change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

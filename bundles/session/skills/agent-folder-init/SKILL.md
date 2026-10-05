@@ -51,7 +51,7 @@ Confirmation Required:
 Delegates To:
 
 - `project-init-orchestrator` when starting a new product repo
-- `fullstack-workspace-init` / `npx @shipshitdev/v0` when a new Shipshit.dev product should be scaffolded
+- `project-init-orchestrator` (v0 route) / `npx @shipshitdev/v0` when a new Shipshit.dev product should be scaffolded
 - `agent-config-audit` after generation to detect drift or stale config
 
 ## Purpose
@@ -178,6 +178,6 @@ This skill integrates with:
 | Skill | How It Works Together |
 |-------|----------------------|
 | `project-init-orchestrator` | Routes new product requests to v0 before lower-level setup |
-| `fullstack-workspace-init` | Uses v0 for new Shipshit.dev product workspaces |
+| `project-init-orchestrator` | Uses v0 for new Shipshit.dev product workspaces |
 | `linter-formatter-init` | Sets up quality tooling in the scaffolded project |
 | `husky-test-coverage` | Enforces test coverage in pre-commit hooks |

@@ -12,7 +12,6 @@ GitHub workflow and automation skills
 ## Included Skills
 
 - `bug`
-- `github-address-comments`
 - `board-sync`
 - `github-fix-ci`
 - `github-inbox`

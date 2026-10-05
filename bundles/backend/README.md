@@ -19,4 +19,3 @@ Backend development and API skills
 - `incremental-fetch`
 - `turborepo`
 - `typescript-expert`
-- `typescript-refactor`

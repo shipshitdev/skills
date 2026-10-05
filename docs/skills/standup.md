@@ -37,7 +37,7 @@ whole-repository coverage. Reports/checkpoints stay in the response.
 | What did I work on? | `standup` personal mode |
 | What merged from everyone? | `standup all <window>` |
 | Double-check everything merged | `standup all <window> audit` |
-| Customer-facing release notes | `changelog-generator` |
+| Customer-facing release notes | `release` (`notes` mode) |
 | Write a commit message / prepare local commits | `commit-summary` |
 | Review one diff/PR or a local-HEAD retrospective | `review-dispatch` |
 | Board, issues, code, operations, and cleanup maintenance | `weekly-review` |

@@ -1,6 +1,6 @@
 ---
 name: typescript-expert
-description: "Solves TypeScript/JS problems: type-level programming, deep-instantiation errors, strict tsconfig, module resolution, JS-to-TS migration, Biome/ESLint/Nx tooling choices."
+description: "Solves TypeScript/JS problems and refactors TS for type safety: narrowing, branded types, deep-instantiation errors, strict tsconfig, module resolution, JS-to-TS migration."
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
@@ -9,7 +9,7 @@ metadata:
   date_added: '2026-02-27'
   version: "2.2.2"
   tags: "typescript, javascript, tooling"
-when_to_use: "type performance, monorepo config"
+when_to_use: "type performance, monorepo config, satisfies, branded types, remove as casts"
 ---
 
 # TypeScript Expert
@@ -56,11 +56,28 @@ when_to_use: "type performance, monorepo config"
 
 ### Type-Level Programming Patterns
 
-**Branded Types for Domain Modeling** — nominal types (`type UserId = Brand<string, 'UserId'>`) prevent accidentally mixing domain primitives that share a base type. Use for critical domain primitives, API boundaries, currency/units. See `references/typescript-cheatsheet.md` (§ Branded Types) for the full pattern. Resource: https://egghead.io/blog/using-branded-types-in-typescript
+**Branded Types for Domain Modeling** — nominal types (`type UserId = Brand<string, 'UserId'>`) prevent accidentally mixing domain primitives that share a base type. Use for critical domain primitives, API boundaries, currency/units. Rule: `references/rules/arch-branded-types.md`; cheatsheet: `references/typescript-cheatsheet.md` (§ Branded Types). Resource: https://egghead.io/blog/using-branded-types-in-typescript
 
-**Advanced Conditional Types** — recursive type manipulation (e.g. `DeepReadonly<T>`) and template-literal event-source APIs. Use for library APIs, type-safe event systems, compile-time validation. Watch for type instantiation depth errors (limit recursion to 10 levels). See `references/typescript-cheatsheet.md` (§ Conditional Types, § Mapped Types, § Template Literal Types).
+**Advanced Conditional Types** — recursive type manipulation (e.g. `DeepReadonly<T>`) and template-literal event-source APIs. Use for library APIs, type-safe event systems, compile-time validation. Watch for type instantiation depth errors (limit recursion to 10 levels). See `references/typescript-cheatsheet.md` (§ Conditional Types, § Mapped Types, § Template Literal Types) and `references/rules/compile-avoid-deep-recursion.md`.
 
-**Type Inference Techniques** — use `satisfies` (TS 5.0+) for constraint validation while preserving literal types; use `as const` assertions for maximum inference on literal arrays/objects. See `references/typescript-cheatsheet.md` (§ Best Practices).
+**Type Inference Techniques** — use `satisfies` (TS 5.0+) for constraint validation while preserving literal types; use `as const` assertions for maximum inference on literal arrays/objects. Rules: `references/rules/arch-satisfies-over-annotation.md`, `references/rules/arch-const-assertion.md`.
+
+### Refactoring Rules
+
+Refactoring or modernizing TypeScript for type safety (replacing `as` casts with narrowing, discriminated unions over enums, typed error handling, TS 4.x-5.x features, compile speed) draws on a 43-rule library in `references/rules/`. Read `references/rules/index.md` for the prioritized index, then open only the rules that apply, one file per rule.
+
+| Priority | Category | Prefix |
+|----------|----------|--------|
+| 1 | Type Architecture (CRITICAL) | `arch-` |
+| 2 | Type Narrowing & Guards (CRITICAL) | `narrow-` |
+| 3 | Modern TypeScript (HIGH) | `modern-` |
+| 4 | Generic Patterns (HIGH) | `generic-` |
+| 5 | Compiler Performance (MEDIUM-HIGH) | `compile-` |
+| 6 | Error Safety (MEDIUM) | `error-` |
+| 7 | Runtime Patterns (MEDIUM) | `perf-` |
+| 8 | Quirks & Pitfalls (LOW-MEDIUM) | `quirk-` |
+
+Behavior-preserving restructuring stays with the `refactor-code` skill; it loads these rules for type-architecture work.
 
 ### Performance Optimization Strategies
 
@@ -70,14 +87,14 @@ when_to_use: "type performance, monorepo config"
 bunx tsc --extendedDiagnostics --incremental false | grep -E "Check time|Files:|Lines:|Nodes:"
 ```
 
-Common fixes for "Type instantiation is excessively deep": replace type intersections with interfaces, split large union types (>100 members), avoid circular generic constraints, use type aliases to break recursion.
+Common fixes for "Type instantiation is excessively deep": replace type intersections with interfaces (`references/rules/arch-interfaces-over-intersections.md`), split large union types (>100 members; `references/rules/compile-base-types-over-unions.md`), avoid circular generic constraints, use type aliases to break recursion. Add explicit return types to exported functions (`references/rules/compile-explicit-return-types.md`).
 
 **Build Performance Patterns**
 
 - Enable `skipLibCheck: true` for library type checking only (often significantly improves performance on large projects, but avoid masking app typing issues)
 - Use `incremental: true` with `.tsbuildinfo` cache
 - Configure `include`/`exclude` precisely
-- For monorepos: Use project references with `composite: true`
+- For monorepos: Use project references with `composite: true` (`references/rules/compile-project-references.md`)
 
 ## Real-World Problem Resolution
 
@@ -218,7 +235,7 @@ Use `strict: true` plus `noUncheckedIndexedAccess`, `noImplicitOverride`, `exact
 
 ### Error Handling Patterns
 
-- [ ] Result types or discriminated unions for errors
+- [ ] Result types or discriminated unions for errors (`references/rules/error-*.md`)
 - [ ] Custom error classes with proper inheritance, type-safe error boundaries
 - [ ] Exhaustive switch cases with `never` type
 
