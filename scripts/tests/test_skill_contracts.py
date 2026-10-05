@@ -1,11 +1,18 @@
 from __future__ import annotations
 
+import importlib.util
 import re
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
+SPEC = importlib.util.spec_from_file_location(
+    "skill_composition", ROOT / "scripts/check-skill-composition.py"
+)
+assert SPEC and SPEC.loader
+composition = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(composition)
 
 
 def skill(name: str) -> str:
@@ -38,6 +45,28 @@ class SkillContractTests(unittest.TestCase):
         for name in ("test-runner", "test-dispatch"):
             with self.subTest(skill=name):
                 self.assertIn("`--no-fix` or report-only mode prohibits source and test edits", skill(name))
+
+    def test_inlined_routers_are_explicit_entry_points_and_commands_name_engines(self) -> None:
+        """Commands carry the routing table; their portable routers cost no listing space."""
+        for name in ("agent", "deploy", "design", "prd", "skill", "test"):
+            with self.subTest(command=name):
+                router = f"{name}-dispatch"
+                skill_text = (ROOT / "skills" / router / "SKILL.md").read_text()
+                header = composition.frontmatter(skill_text)
+                self.assertIsNotNone(header)
+                self.assertIn("disable-model-invocation: true", header)
+                self.assertNotIn("user-invocable: false", header)
+                command = (ROOT / "commands" / f"{name}.md").read_text()
+                self.assertNotIn(f"`{router}`", command)
+                lines = list(composition.instruction_lines(skill_text))
+                delegates = {target for _, target in composition.declared_delegates(lines)}
+                self.assertTrue(delegates)
+                for target in delegates:
+                    self.assertIn(f"`{target}`", command)
+                    target_header = composition.frontmatter(
+                        (ROOT / "skills" / target / "SKILL.md").read_text()
+                    )
+                    self.assertNotIn("disable-model-invocation: true", target_header)
 
     def test_standup_has_no_session_write_exception(self) -> None:
         body = skill("standup")

@@ -103,6 +103,20 @@ Removed names no longer install through `npx skills add --skill <name>`; see the
 Retired skills table in `docs/skills/catalog-naming.md`. Rejected: keeping thin alias
 skills, because they cost a plugin, a directory and a trigger collision each.
 
+### Catalog simplification, routers (2026-10-05)
+
+Part 2 of #190. `commands/agent|deploy|design|prd|skill|test.md` now carry the
+full mode-to-engine table (with the aliases the routers held, such as `/test` bare
+scope tokens and `/design review`) and name the engines directly, so no command
+depends on a model-loadable router (#177 still holds). The six `*-dispatch` routers
+became `disable-model-invocation: true` explicit entry points for harnesses without
+commands, which removes about 1,440 characters from the model-invoked listing.
+`review-dispatch` (13 KB of target resolution, pinned by the validator) and
+`ask-dev-loop` stay model-loadable. Rejected: deleting the routers, because that
+removes the only portable front door outside Claude Code and breaks
+`npx skills add --skill <name>`; a later pass can delete them if that front door is
+not wanted. `/prd` gained the `spec` workflow inline (it also lives in `prd-dispatch`).
+
 ### External Skills Imported (2026-04-21)
 
 All referenced external repos now internal — no external dependencies:

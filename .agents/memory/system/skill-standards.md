@@ -178,7 +178,8 @@ to edit files, send messages, publish, deploy, or spend beyond the user's reques
 |------|-------------|-------------|
 | **Explicit entry point** | `disable-model-invocation: true` | The human selects the workflow. Keep advisory maps and open-ended session starters here. |
 | **Reusable engine** | omit `disable-model-invocation` | A user or another workflow may invoke it within the authorized task. Its body owns action gates. |
-| **Command router** | `user-invocable: false`, omit `disable-model-invocation` | Behind a `commands/*.md` front door (`*-dispatch`, `ask-dev-loop`). The command is the user entry and is itself user-only; the model must be able to load the router the command names. |
+| **Command router** | `user-invocable: false`, omit `disable-model-invocation` | Behind a `commands/*.md` front door that names it (`review-dispatch`, `ask-dev-loop`). The command is the user entry and is itself user-only; the model must be able to load the router the command names. |
+| **Portable router** | `disable-model-invocation: true` | A `*-dispatch` skill whose command already carries the mode table and names the engines directly (`agent-`, `deploy-`, `design-`, `prd-`, `skill-`, `test-dispatch`). It stays as an explicit entry point for harnesses without commands and costs no listing space. |
 
 **Execution routers** such as `/test run` select a declared engine and pass the
 requested mode, target, authorized actions, and restrictions. Existing explicit
@@ -191,6 +192,8 @@ production permissions. A test-run request does not authorize repairs.
 `shape` stop at their promised brief. Their stopping point follows their output
 contract, not a catalog-wide prohibition on composition. Recommend an explicit
 entry point instead of pretending to invoke one the harness hides from the model.
+
+Prefer inlining a small mode table into the command over a model-loadable router: every model-loadable skill pays its description and `when_to_use` in every session's listing.
 
 Pick engine discoverability whenever another skill must run the workflow.
 Keep safety gates in the body, including a clear authorized mutation scope for

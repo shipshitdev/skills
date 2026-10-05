@@ -6,10 +6,12 @@ metadata:
   tags: "testing, dispatcher, tdd, e2e, coverage, ci, orchestration"
   author: Ship Shit Dev
 when_to_use: "/test, run tests, qa review, tdd, e2e setup, coverage gate, testing setup, ai regression tests"
-user-invocable: false
+disable-model-invocation: true
 ---
 
 # Test Dispatch
+
+**Explicit entry point.** Invoke this by name in a harness without Claude Code commands. `/test` carries the same routing and names the engines directly, so it does not depend on this skill and the model never loads it on its own.
 
 Turn a `/test` subcommand into the right testing engine and delegate. Testing
 logic lives in the engines.

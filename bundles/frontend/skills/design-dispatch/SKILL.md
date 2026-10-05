@@ -6,10 +6,12 @@ metadata:
   tags: "design, ux, ui, dispatcher, frontend, orchestration"
   author: Ship Shit Dev
 when_to_use: "/design, design audit, critique the UI, polish the UI, check design consistency"
-user-invocable: false
+disable-model-invocation: true
 ---
 
 # Design Dispatch
+
+**Explicit entry point.** Invoke this by name in a harness without Claude Code commands. `/design` carries the same routing and names the engines directly, so it does not depend on this skill and the model never loads it on its own.
 
 Router behind `/design`. One job: turn a subcommand into the right design action and delegate. Contains no design or UX logic of its own — technical quality checks live in `audit`, UX evaluation in `critique`, copy improvement in `clarify`, spatial composition in `layout`, final finishing in `polish`, visual de-intensification in `quieter`, upfront UX planning in `shape`, and cross-app consistency auditing in `design-consistency-auditor`.
 

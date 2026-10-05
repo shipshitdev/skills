@@ -6,10 +6,12 @@ metadata:
   tags: "prd, planning, dispatcher, requirements, spec, specification, ears, orchestration"
   author: Ship Shit Dev
 when_to_use: "/prd, prepare a feature issue, write a PRD, plan a feature, validate a PRD, discovery interview"
-user-invocable: false
+disable-model-invocation: true
 ---
 
 # PRD Dispatch
+
+**Explicit entry point.** Invoke this by name in a harness without Claude Code commands. `/prd` carries the same routing and names the engines directly, so it does not depend on this skill and the model never loads it on its own.
 
 Route the requested mode to a shared engine. Keep requirements templates,
 implementation contracts and readiness logic in their owning engines.
