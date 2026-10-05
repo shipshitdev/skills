@@ -18,15 +18,15 @@ Run it again whenever your habits drift:
 
 Update mode mines only the history since the skill last changed. It keeps rules you haven't contradicted, revises the ones with new evidence, and adds sections only for genuinely new patterns.
 
-## Capture a session's lessons with `/skill-capture`
+## Capture a session's lessons with `/retro --deep`
 
 Right after a task that taught you something, run:
 
 ```text
-/skill-capture that took way too long. capture what we learned so the next run doesn't repeat it.
+/retro --deep that took way too long. capture what we learned so the next run doesn't repeat it.
 ```
 
-`/skill-capture` (resolve the `skill-capture` skill through the active catalog) sends the transcript to three parallel reviewers, then a synthesizer sorts the proposals into `Accepted`, `Rejected`, and `Backlog` and applies only changes covered by your requested capture task, presenting any additional consequential choice before expanding scope. Keep a proposal only if it would change a future decision. One weird session is an anecdote, not a rule.
+`/retro --deep` (resolve the `retro` skill through the active catalog) sends the transcript to three parallel reviewers, then a synthesizer sorts the proposals into `Accepted`, `Rejected`, and `Backlog`. Retro presents them as ranked candidates and applies only the ones you pick. Keep a proposal only if it would change a future decision. One weird session is an anecdote, not a rule.
 
 ## Author a focused skill
 

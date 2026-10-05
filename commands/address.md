@@ -22,7 +22,7 @@ only after you confirm.
 
 ## Workflow
 
-Use the `github-address-comments` skill.
+Use the `pr-comments` skill in `address` mode.
 
 1. Resolve the target PR — current branch's PR, or the number/URL given.
 2. Fetch open review threads and issue comments with read-only `gh`.

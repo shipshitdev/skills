@@ -53,7 +53,7 @@ Confirmation Required:
 Delegates To:
 
 - `code-review` for local bug-focused review
-- `github-address-comments` when addressing existing review feedback
+- `pr-comments` (`address` mode) when addressing existing review feedback
 - `github-fix-ci` when failing checks explain the review finding
 
 ## Workflow

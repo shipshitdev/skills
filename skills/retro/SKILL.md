@@ -189,7 +189,11 @@ or reported as blocked with its reason.
 
 Use `--deep` for a long session with many moments, or when one pass feels thin.
 Read [deep mode](references/deep-mode.md): three read-only reviewer lenses run in
-parallel over the same record, then one synthesizer merges them. Their output
+parallel over the same record, then one synthesizer merges them. Its prompt
+templates are [judgment](references/judgment-reviewer.md),
+[tooling](references/tooling-reviewer.md),
+[divergent](references/divergent-reviewer.md) and
+[synthesizer](references/synthesizer.md). Their output
 feeds step 4; steps 5 to 7 run unchanged.
 
 ## Writing rules for proposed steering

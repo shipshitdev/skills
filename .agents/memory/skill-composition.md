@@ -25,7 +25,7 @@ Name reusable workflows for their job. Use one provider spelling for provider
 engines: `github-*`, with no competing `gh-*` skill identities. Keep the real
 GitHub CLI named `gh`. Board configuration and reconciliation use `project-board`
 and `board-sync`, resolving the provider from the target. Existing workflows and
-all 29 command names remain; the house board layout is an optional preset.
+their command names remain (24 commands today); the house board layout is an optional preset.
 The complete historical map is `docs/skills/catalog-naming.md`.
 
 ## Standup integrated history (2026-10-02)

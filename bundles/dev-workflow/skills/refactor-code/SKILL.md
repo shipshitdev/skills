@@ -12,7 +12,7 @@ when_to_use: "long function, duplicate code, mixed responsibilities"
 Improve readability, cohesion, and maintainability without changing behavior.
 
 The `code` engine of the refactoring vertical (`/refactor code`). Draws on
-`typescript-refactor` for type-architecture work and `react-refactor` for component
+`typescript-expert` (its `references/rules/` library) for type-architecture work and `react-refactor` for component
 architecture. For mechanical AI-slop removal use `deslop`; for a read-only structural
 review use `structural-review`.
 

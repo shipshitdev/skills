@@ -15,7 +15,7 @@ disable-model-invocation: true
 Turn git diffs into an honest engineer update. Default to a personal recap.
 Use `all` for everyone's changes integrated into the selected default branch;
 add `audit` to double-check individual changes and the combined result. Keep
-customer release notes in `changelog-generator` and board/whole-repository
+customer release notes in `release` (`notes` mode) and board/whole-repository
 maintenance in `weekly-review`.
 
 Keep every mode report-only. Return the report and any proposed checkpoint in
@@ -73,7 +73,7 @@ Delegates To:
 - File pointer: resolve the installed `weekly-review` skill and read its
   `references/merged-history.md` for all-author scope, recap, and audit steps;
   do not run its board/cleanup workflow
-- Recommend `changelog-generator` for customer-facing release notes instead
+- Recommend `release` (`notes` mode) for customer-facing release notes instead
 
 ## When to Use
 

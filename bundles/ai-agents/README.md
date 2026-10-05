@@ -23,7 +23,6 @@ AI agent development and prompt engineering
 - `evaluation`
 - `advanced-evaluation`
 - `comment-mode`
-- `spec-first`
 - `agent-browser`
 - `codex-image-gen`
 - `agent-dispatch`

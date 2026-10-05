@@ -31,7 +31,7 @@ frontend and backend.
   half-wired flows), and prose tells. Edits code. Default scope is the current
   package; `--changed` keeps it to the branch diff.
 - **`code`** → the `refactor-code` skill — behavior-preserving refactor with tests
-  locked first, drawing on `typescript-refactor` / `react-refactor` for language
+  locked first, drawing on `typescript-expert` / `react-refactor` for language
   specifics.
 - **`debt`** → the `tech-debt` skill — quantifies and ranks debt into a register, and
   files it as issues on request.

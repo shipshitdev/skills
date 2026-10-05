@@ -218,7 +218,7 @@ The skill automatically detects and uses:
 
 | Skill | How It Works Together |
 |-------|----------------------|
-| **fullstack-workspace-init** | Auto-invoked after scaffolding; sets Vitest + 80% threshold + CI/CD. Run this skill separately only when adding to an existing project. |
+| **project-init-orchestrator** | Auto-invoked after scaffolding; sets Vitest + 80% threshold + CI/CD. Run this skill separately only when adding to an existing project. |
 | **linter-formatter-init** | Both configure Husky; this skill covers test coverage, linter-formatter-init covers linting/formatting |
 | **testing-expert** | Uses testing patterns and coverage targets from testing-expert skill |
 

@@ -57,8 +57,6 @@ codebase-advisor
 deploy-app
 deployment-composer
 feature-intake
-fullstack-workspace-init
-github-address-comments
 github-fix-ci
 git-safety
 landing-page-vercel

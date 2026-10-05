@@ -11,7 +11,7 @@ metadata:
   license: MIT
   tags: "code-review, feedback, review-response, pushback, verification"
 allowed-tools: Bash(git *) Bash(gh *)
-when_to_use: "addressing PR comments, respond to reviewer, push back"
+when_to_use: "got a review, respond to reviewer, push back, is this feedback right"
 ---
 # Receiving Code Review
 
@@ -48,7 +48,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `github-address-comments` for posting the responses back to a PR.
+- `pr-comments` (`address` mode) for posting the responses back to a PR.
 - `code-review` for a fresh review pass once changes land.
 
 ## Response Pattern

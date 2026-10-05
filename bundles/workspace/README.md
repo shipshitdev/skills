@@ -11,7 +11,6 @@ Project setup and workspace initialization
 
 ## Included Skills
 
-- `fullstack-workspace-init`
 - `project-init-orchestrator`
 - `env-setup`
 - `linter-formatter-init`
