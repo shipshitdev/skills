@@ -744,7 +744,8 @@
       },
       "id": "open-pstack",
       "ignored_paths": [
-        ".agents/skills/verify-open-pstack"
+        ".agents/skills/verify-open-pstack",
+        ".claude/skills/verify-open-pstack/"
       ],
       "paths": [
         "."
