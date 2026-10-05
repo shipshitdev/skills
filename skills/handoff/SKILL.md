@@ -36,8 +36,8 @@ Outputs:
 
 Creates/Modifies:
 
-- `~/.codex/artifacts/handoffs/<date>-<slug>.md`, or a path the user names. Never
-  the repository and never the machine temp directory
+- `${CODEX_HOME:-$HOME/.codex}/artifacts/handoffs/<date>-<slug>.md`, or a path
+  the user names. Never the repository and never the machine temp directory
 
 External Side Effects:
 
