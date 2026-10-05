@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "184 AI agent skills for development workflows",
+  "description": "185 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -532,6 +532,12 @@
       "source": "./skills/grok-review",
       "version": "2.2.2",
       "description": "Runs an independent second-opinion review of a diff through the Grok CLI and verifies every finding against the code. Use when asked to review with Grok or cross-check a branch."
+    },
+    {
+      "name": "handoff",
+      "source": "./skills/handoff",
+      "version": "2.2.2",
+      "description": "Writes a handoff document so a fresh agent session can continue the current work. User-invoked."
     },
     {
       "name": "how",

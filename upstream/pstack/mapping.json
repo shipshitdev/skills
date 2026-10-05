@@ -922,7 +922,7 @@
         {
           "executable": false,
           "path": "skills/ask-dev-loop/SKILL.md",
-          "sha256": "91b75ea8220e8b8ac35f6b7683e68c9b467764b39e0f5363164a406cbb3d78a7"
+          "sha256": "98845711a33d6c864a79817a730e0c61c00ca4e7ce4e657f70f3c07291847be1"
         },
         {
           "executable": false,
@@ -932,7 +932,7 @@
       ],
       "disposition": "superseded",
       "reason": "Cursor-specific skill (Custom Modes, /add-plugin, cursor.com links). Routing is covered by ask-dev-loop and the pstack router, so no catalog skill was added.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188: merged origin/master and re-recorded destination hashes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -962,12 +962,12 @@
         {
           "executable": false,
           "path": "skills/ask-dev-loop/SKILL.md",
-          "sha256": "91b75ea8220e8b8ac35f6b7683e68c9b467764b39e0f5363164a406cbb3d78a7"
+          "sha256": "98845711a33d6c864a79817a730e0c61c00ca4e7ce4e657f70f3c07291847be1"
         }
       ],
       "disposition": "superseded",
       "reason": "Cursor-specific recipes (Custom Modes, ~/.cursor/rules). Routing is covered by ask-dev-loop and the pstack router.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188: merged origin/master and re-recorded destination hashes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3520,12 +3520,12 @@
         {
           "executable": false,
           "path": "skills/github-pr-publish/SKILL.md",
-          "sha256": "a83ce067601bb8cd618c7ae66410f8190550cb89370d94f4a780cc8555756ccb"
+          "sha256": "59ea7f10e064115f13fd6b2688ee2b1b6bb7d3236f3f309d1c27d8ecb960edec"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
+      "review_note": "Adopt Pocock PR body template (#189): one body template with visual Summary, Evidence, Merge danger and Review guide replaces the step 5 and tidy lists; provenance metadata added; no authorization change. #188: pin bump re-recorded after merging master.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
