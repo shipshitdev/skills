@@ -6,10 +6,12 @@ metadata:
   tags: "agents, dispatcher, architecture, config, setup, routing, orchestration"
   author: Ship Shit Dev
 when_to_use: "/agent, agent audit, agent config drift, init the .agents/ folder, set up agent routing"
-user-invocable: false
+disable-model-invocation: true
 ---
 
 # Agent Dispatch
+
+**Explicit entry point.** Invoke this by name in a harness without Claude Code commands. `/agent` carries the same routing and names the engines directly, so it does not depend on this skill and the model never loads it on its own.
 
 The router behind `/agent`. Turns a subcommand into the right action and delegates. Contains no logic of its own — delegates to `agent-architecture-audit`, `agent-config-audit`, `agent-folder-init`, and `setup-agent-routing`.
 
