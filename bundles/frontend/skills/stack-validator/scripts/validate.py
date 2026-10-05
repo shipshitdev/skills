@@ -486,7 +486,12 @@ def check_bun_single_lockfile(root: Path, result: ValidationResult) -> None:
                          fix='bun install')
         return
 
-    result.add_passed('Single lockfile at root')
+    if len(root_lockfiles) > 1:
+        result.add_issue('error', 'bun.lockb',
+                         'Both bun.lock and bun.lockb at root - keep only bun.lock',
+                         fix='rm bun.lockb && bun install')
+    else:
+        result.add_passed('Single lockfile at root')
 
     for name in BUN_LOCKFILES:
         for lockfile in root.rglob(name):
@@ -512,7 +517,8 @@ def validate_bun(root: Path, result: ValidationResult) -> None:
 # --------------------------------------------------------------------------- #
 
 CLERK_SOURCE_DIRS = ['app', 'src', 'pages', 'components', 'lib', 'server']
-CLERK_ENV_FILES = ['.env.example', '.env.local', '.env', '.env.development', '.env.production']
+# Templates only: real env files hold secret values and are never read.
+CLERK_ENV_FILES = ['.env.example', '.env.local.example', '.env.sample', '.env.template']
 CLERK_REQUIRED_ENV = ['NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', 'CLERK_SECRET_KEY']
 
 
@@ -655,7 +661,7 @@ def check_clerk_deprecated_patterns(root: Path, result: ValidationResult) -> Non
 
 
 def env_variable_names(root: Path) -> set[str]:
-    """Names (never values) defined in the project's env files."""
+    """Names declared in the project's env template files."""
     names: set[str] = set()
     for file_name in CLERK_ENV_FILES:
         path = root / file_name
@@ -673,11 +679,11 @@ def check_clerk_env(root: Path, result: ValidationResult) -> None:
     defined = env_variable_names(root)
     for name in CLERK_REQUIRED_ENV:
         if name in defined:
-            result.add_passed(f'{name} is defined in an env file')
+            result.add_passed(f'{name} is declared in an env template')
         else:
-            result.add_issue('warning', '.env',
-                             f'{name} not found in .env files (fine if the platform injects it)',
-                             fix=f'Add {name}=... to .env.local and .env.example')
+            result.add_issue('warning', '.env.example',
+                             f'{name} not declared in an env template (fine if the platform injects it)',
+                             fix=f'Add {name}= to .env.example')
 
 
 def validate_clerk(root: Path, result: ValidationResult) -> None:
