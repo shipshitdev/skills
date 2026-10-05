@@ -79,7 +79,8 @@ public evidence.
 A `cancelled` receipt can come from a launcher signal or from a well-formed Grok
 terminal cancellation. Provider cancellations exit 130. Other valid Grok terminal
 failures exit 70 as `child-failed`. Invalid or incomplete terminal data stays
-`malformed-output` (65). Provider failures keep the exact reason in
+`malformed-output` (65) when the child exits 0; a nonzero child exit takes
+precedence and classifies as `child-failed` (70). Provider failures keep the exact reason in
 `error.message`, put it first in bounded evidence, and retain the reported
 model, session, usage, cost and actual child exit code. Launcher cancellation and
 timeout take precedence. The `signal` field is non-null only when the runner
