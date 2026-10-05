@@ -38,7 +38,7 @@ posts opens with:
    | Needs info | Comment with what is established and the specific questions for the reporter |
    | Already implemented | Comment pointing to where it lives, then close. No KB entry |
    | Rejected bug | Comment with the reason, then close |
-   | Rejected enhancement | Write or extend the `.out-of-scope/` entry ([out-of-scope.md](out-of-scope.md)), comment linking it, then close |
+   | Rejected enhancement | Write or extend the `.out-of-scope/` entry (format in the knowledge-base reference `SKILL.md` links), comment linking it, then close |
    | Defer | Leave open with a dated comment stating what would change the decision |
 
 6. **Apply** only the approved action, using the repo's own label vocabulary

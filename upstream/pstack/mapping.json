@@ -922,12 +922,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "superseded",
       "reason": "Cursor-specific skill (Custom Modes, /add-plugin, cursor.com links). Routing is covered by ask-dev-loop and the pstack router, so no catalog skill was added.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -942,12 +942,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Prompt-wording guidance kept as a pstack reference, with slash commands rewritten as skill names and the repeat mechanism left to the harness.",
-      "review_note": "Adopted prompting.md only, linked from the pstack skill and ask-dev-loop.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -957,12 +957,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "superseded",
       "reason": "Cursor-specific recipes (Custom Modes, ~/.cursor/rules). Routing is covered by ask-dev-loop and the pstack router.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1634,12 +1634,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "superseded",
       "reason": "Open Pstack's corrected principle text, scoped to imbalance problems, replaces this original.",
-      "review_note": "Adopted open-pstack's corrected principle (census scoped to imbalance problems) as a pstack reference with index lines.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1723,17 +1723,17 @@
         {
           "executable": false,
           "path": "skills/pstack/references/principle-explain-the-number.md",
-          "sha256": "cdf15c29ecd5c444f6d970f41c30492a783257a74741cbeafb4d77a7a849195d"
+          "sha256": "8ee23be34bd12a0fd9866a1809b9b5f0769c6f7a8851eec72cb8d4c117dcc1dd"
         },
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Adopted as a pstack principle reference and index line; links the benchmark checklist reference.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1972,12 +1972,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "superseded",
       "reason": "Open Pstack 1.4.0 corrected assertions that wrongly claimed toBeDefined, toBeInstanceOf and toBeGreaterThan(0) pass on undefined, and keeps negative-path tests. The corrected text replaces this original.",
-      "review_note": "Adopted open-pstack 1.4.0 corrected text (assertions that return undefined do not fail negative-path tests). Added to the principle index.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3122,12 +3122,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Creates or updates a personal mode from working conventions; canonical skill-creator and harness-selected roots; does not schedule automation.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3142,12 +3142,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "One canonical monitoring playbook owns all modes; removes shadow standalone entrypoint, implicit scheduling and topology rewrite permissions.",
-      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3182,12 +3182,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Plain-language restatement of the preceding response, routed conditionally from canonical pstack; not a session-resume workflow.",
-      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3555,12 +3555,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Adopted the fresh-subagents default, the evidence-or-label reply rule, the benchmark trigger and the new principle index lines. Model and routing defaults, effort defaults and reply-word wording not adopted.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3944,12 +3944,12 @@
         {
           "executable": false,
           "path": "skills/pstack/references/provider-dispatch.md",
-          "sha256": "393f796413c94dd3335697a17cfd46bbad60dd40589db73dbe8ae86ad08b5cd0"
+          "sha256": "849e1225630871759b1e4cc0679f19bba1336ac02faf069df6a8255ebab21a71"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "#188 runner bundle: adopted the factual runner-behavior paragraphs (stream sidecars, distinct-path reservation, Grok preflight retry and auto permission mode, cancelled and provider-failure classification, host and parent prerequisites). Model matrix rows, Sol and Opus defaults and the previous-default compatibility rule not adopted (user-owned routing).",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4497,12 +4497,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Adopted open-pstack's corrected principle (census scoped to imbalance problems) as a pstack reference with index lines.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4517,12 +4517,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4537,12 +4537,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4557,12 +4557,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4577,12 +4577,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4597,12 +4597,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4617,12 +4617,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4637,12 +4637,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4657,12 +4657,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4677,12 +4677,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4697,12 +4697,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4717,12 +4717,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4737,12 +4737,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4757,12 +4757,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4777,12 +4777,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4797,12 +4797,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4817,12 +4817,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4837,12 +4837,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4857,12 +4857,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4877,12 +4877,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4897,12 +4897,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4917,12 +4917,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery. Open Pstack's corrected text replaces the original.",
-      "review_note": "Adopted open-pstack 1.4.0 corrected text (assertions that return undefined do not fail negative-path tests). Added to the principle index.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4937,12 +4937,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

@@ -108,6 +108,9 @@ Open a todo list whose first item is reading
 matched playbook's steps in verbatim, before any task-specific todos. A step
 you skip stays listed with `skip: <reason>`.
 
+When a task reports a performance number, also read
+[references/benchmark-checklist.md](references/benchmark-checklist.md).
+
 ## Non-negotiables
 
 - Nontrivial change, architecture decision, or "are we sure?" → the `how` skill.

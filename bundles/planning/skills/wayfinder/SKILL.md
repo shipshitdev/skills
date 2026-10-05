@@ -53,7 +53,8 @@ Confirmation Required:
 - Before publishing the map and its tickets: show destination, tickets and fog
   first, and confirm when the repo is public
 - Invoking work mode on a map authorizes the claim, resolution comment, close and
-  map update for one ticket
+  map update for one ticket; creating, updating or deleting any other
+  ticket needs separate approval
 
 Delegates To:
 
@@ -160,11 +161,14 @@ Done when the map and its first tickets exist and nothing was resolved by hand.
    map's Notes name.
 4. Post the answer as a resolution comment, close the ticket, and append one line
    to **Decisions so far**.
-5. Graduate cleared fog into tickets (create, then wire); rule anything past the
-   destination out of scope; update or delete tickets the answer invalidates.
+5. List the follow-on changes the answer implies: fog that graduates into new
+   tickets, anything past the destination ruled out of scope, and tickets the
+   answer invalidates. Show the list and apply only what the user approves;
+   closing or deleting another ticket always needs that approval.
 
-Resolve at most one ticket per session; research tickets are the exception. Other
-sessions edit the tracker concurrently, so re-read before each write.
+Resolve at most one ticket per session. A batch of research tickets counts as one
+when the user approves the batch up front. Other sessions edit the tracker
+concurrently, so re-read before each write.
 
 Done when the ticket is closed, the map shows its gist, and the next frontier is
 named. When no tickets and no fog remain, the way is clear: recommend

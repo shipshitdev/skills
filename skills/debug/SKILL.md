@@ -116,7 +116,7 @@ further fix until the cause is proven.
 |--------|--------------------------|
 | A fix attempt has already failed | The next attempt needs enforced re-investigation, not another guess |
 | The same defect returned after a previous fix | The earlier cause was a symptom |
-| Step 4 leaves two or more hypotheses standing | Evidence must be gathered at every component boundary |
+| Step 5's evidence leaves two or more hypotheses standing | Evidence must be gathered at every component boundary |
 | Each fix exposes a new problem elsewhere | Three failures make it an architecture question |
 | The failure crosses components (API → service → database, CI → build → signing) | The four-phase loop instruments each boundary in one pass |
 
