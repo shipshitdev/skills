@@ -237,6 +237,8 @@ This catalog's bar lives in `.agents/memory/system/skill-standards.md`. Apply it
 - **Contract.** Action, orchestrator, and side-effect skills include a `## Contract` block (inputs, outputs, creates/modifies, side effects, confirmation, delegates).
 - **Provenance.** Skills derived from an upstream declare `source` / `upstream_repo` / `last_synced` and a README `## Upstream` section.
 
+Read [references/writing-for-agents.md](references/writing-for-agents.md) when a skill or steering file runs long, restates the environment, or must decide where material lives: two loads, co-location, sprawl, split-by-sequence, environment-as-cache, sediment.
+
 ### Step 5: Packaging a Skill
 
 Once the skill is ready, it should be packaged into a distributable zip file that gets shared with the user. The packaging process automatically validates the skill first to ensure it meets all requirements:

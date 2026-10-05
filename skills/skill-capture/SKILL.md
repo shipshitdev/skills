@@ -2,8 +2,6 @@
 name: skill-capture
 description: Turns workflows and hard-won knowledge from a conversation into reusable SKILL.md files. Use when asked to save something as a skill, or after a complex procedure succeeds.
 metadata:
-  portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
   version: "2.2.2"
   tags: "skills, capture, automation, knowledge-management"
 when_to_use: "make this reusable, save this pattern"
@@ -293,9 +291,7 @@ The skill activates on these patterns:
 (wish I knew|should have known|next time|for future)
 ```
 
-## Reflect procedure
+## Session retrospectives
 
-Read [reflect procedure](references/reflect-procedure.md) when reviewing a completed session for reusable lessons.
-Apply the authorized scope and mode of this entry point to every step.
-Resolve other skills through this distribution’s active catalog; resolve
-resources relative to the installed skill directory.
+Recommend `/retro` to review a finished session for friction. Retro routes its
+skill candidates back here.

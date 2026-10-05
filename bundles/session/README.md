@@ -16,3 +16,4 @@ Session management and documentation
 - `setup-agent-routing`
 - `wait-what`
 - `workspace-performance-audit`
+- `handoff`

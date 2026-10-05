@@ -40,9 +40,9 @@ Route by subcommand:
 3. **`/pr comments`** — use the `pr-comments` skill to fetch and prioritize review
    feedback as a read-only action list. To then act on it, run `/pr address`.
 4. **`/pr tidy`** — use the `github-pr-publish` skill's reviewability pass to rewrite an
-   existing PR's description for reviewers (TL;DR, generated-vs-core separation,
-   risk callouts, migration/rollout order). It rewrites the description only — it
-   does not reorder commits or force-push.
+   existing PR's description into the standard body template (Summary with a
+   visual, Evidence, Merge danger, and a Review guide for large diffs). It rewrites
+   the description only — it does not reorder commits or force-push.
 5. **`/pr address`** — use the `pr-comments` skill in `address` mode to fetch review
    threads, map them to code, propose fixes, and draft replies for approval.
 6. **`/pr fix-ci`** — use the `github-fix-ci` skill to diagnose failing GitHub Actions

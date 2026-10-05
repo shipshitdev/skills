@@ -200,6 +200,7 @@
         "receiving-code-review",
         "refactor-code",
         "release",
+        "retro",
         "git-cleanup",
         "review-dispatch",
         "scaffold",
@@ -225,7 +226,8 @@
         "executing-plans",
         "setup-agent-routing",
         "wait-what",
-        "workspace-performance-audit"
+        "workspace-performance-audit",
+        "handoff"
       ]
     },
     "dev-loop": {
@@ -245,7 +247,8 @@
         "setup-agent-routing",
         "project-board",
         "board-sync",
-        "qa-reviewer"
+        "qa-reviewer",
+        "handoff"
       ]
     }
   }

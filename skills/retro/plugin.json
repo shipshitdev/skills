@@ -1,0 +1,12 @@
+{
+  "name": "retro",
+  "version": "2.2.2",
+  "description": "Review a finished agent session and propose environment fixes, most severe first.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://shipshit.dev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

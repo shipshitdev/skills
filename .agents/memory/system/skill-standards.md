@@ -210,7 +210,7 @@ explanation and fenced examples are not execution dependencies.
 
 ## Writing craft
 
-Skills are documents an agent runs, not essays. These levers keep a run predictable — the same *process* every time, not the same output. Apply them to new and edited skills. Catalog-wide passes are fine when Vincent approves one (the 2026-10-03 listing-budget pass). Keep Contract blocks.
+Skills are documents an agent runs, not essays. These levers keep a run predictable — the same *process* every time, not the same output. Apply them to new and edited skills. Catalog-wide passes are fine when Vincent approves one (the 2026-10-03 listing-budget pass). Keep Contract blocks. Longer-form levers (two loads, co-location, sprawl, split-by-sequence, environment-as-cache, sediment) live in `skills/skill-creator/references/writing-for-agents.md`.
 
 **Leading words.** Collapse a restated idea into one pretrained token the agent already thinks with (`frontier`, `seam`, `tight`, `red`). Repeat the token; do not re-explain the sentence. A coined word recruits no priors — prefer a word the model already knows.
 

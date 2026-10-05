@@ -32,6 +32,7 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `receiving-code-review`
 - `refactor-code`
 - `release`
+- `retro`
 - `git-cleanup`
 - `review-dispatch`
 - `scaffold`
