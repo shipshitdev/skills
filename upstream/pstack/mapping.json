@@ -921,11 +921,6 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/ask-dev-loop/SKILL.md",
-          "sha256": "98845711a33d6c864a79817a730e0c61c00ca4e7ce4e657f70f3c07291847be1"
-        },
-        {
-          "executable": false,
           "path": "skills/pstack/SKILL.md",
           "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
@@ -961,8 +956,8 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/ask-dev-loop/SKILL.md",
-          "sha256": "98845711a33d6c864a79817a730e0c61c00ca4e7ce4e657f70f3c07291847be1"
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "superseded",
