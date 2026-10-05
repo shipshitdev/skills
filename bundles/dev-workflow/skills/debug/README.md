@@ -29,6 +29,8 @@ debugging/
 ├── AGENTS.md             # Compiled comprehensive guide
 ├── metadata.json         # Version, references, metadata
 ├── README.md             # This file
+├── scripts/
+│   └── hitl-loop.template.sh  # Human-in-the-loop repro template
 ├── references/
 │   ├── _sections.md      # Category definitions
 │   ├── prob-*.md         # Problem definition rules (6)
@@ -171,7 +173,34 @@ Examples:
 5. **One Change at a Time** - Isolate variables to avoid confounding
 6. **Question Assumptions** - Many bugs hide behind unquestioned beliefs
 
-## Upstream: systematic-debugging reference
+## Upstream
+
+### Matt Pocock skills
+
+The front-door loop (tight red-capable loop, minimise, redaction, ranked
+hypotheses shown to the user, seam-as-finding, hypothesis in the commit message)
+and `scripts/hitl-loop.template.sh` are adapted from **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT).
+
+| Field | Value |
+|-------|-------|
+| Source | [`skills/engineering/diagnosing-bugs/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md) |
+| Upstream ref | `main` |
+| Synced at commit | `4588b32ecab9` |
+| Last synced | 2026-10-05 |
+| License | MIT |
+
+**Local modifications:** Adapted to house style and merged with the rule library,
+scoped mode and the escalation lane. The HITL script adds a `report` helper that
+prints every captured variable. Attribution only; not a sync target. The skill was
+earlier credited to the older `diagnose` name.
+
+**Checking for upstream changes:** when upstream has moved ahead of the synced
+marker above, diff
+[`skills/engineering/diagnosing-bugs/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md)
+on `main` since commit `4588b32ecab9`, port anything worth bringing home, then bump
+`metadata.upstream_commit` and `metadata.last_synced` in `SKILL.md` and this table.
+
+### systematic-debugging reference
 
 Derived from **[obra/superpowers](https://github.com/obra/superpowers)** (MIT).
 

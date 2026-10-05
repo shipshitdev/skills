@@ -67,9 +67,14 @@ The route most work travels.
      or `writing-plans` on the issue, then `/loop` / `executing-plans` per ticket.
    - **No** → `writing-plans` in this session, then `executing-plans` (or just
      implement with `/tdd`).
+4. **When a PR is written** → `github-pr-publish` (its body template: Summary
+   with a visual, Evidence, Merge danger), so the reviewer sees the point fast.
+5. **When the run ends** → `/retro` if it was harder than it should have been, so
+   the friction becomes a check, a pointer or a skill edit.
 
-Keep grilling, spec, and tickets in **one context window**. Each `/loop` /
-`executing-plans` run starts fresh from the ticket.
+Keep grilling, spec, and tickets in **one unbroken context window**: the answers
+to the grilling are the spec's raw material. Each `/loop` / `executing-plans` run
+starts fresh from the ticket. Phase boundaries below decide the rest.
 
 ## Phase boundaries
 
@@ -94,10 +99,13 @@ yes wins:
   `github-inbox`. Tickets that `prd-task-creator` already wrote are agent-ready; do not
   re-intake them.
 - **Something's broken** → `/debug` (it escalates on its own when previous fixes
-  failed). Tight red loop first; no theory without a loop.
-- **A huge, foggy effort** → `roadmap-analyzer` / `roadmap-to-milestones` to chart
-  the destination, then merge onto the main flow at `/interview` or `/prd write`.
-  Do not skip the collapse into a buildable PRD.
+  failed). Tight red loop first; no theory without a loop. Afterwards `/retro`
+  asks what would have prevented it.
+- **A huge, foggy effort** (too big for one session, decisions still unmade) →
+  `/interview` to sharpen the destination, then `figure-it-out` to design the
+  playbook for the run, then merge onto the main flow at `/prd write`. Do not
+  skip the collapse into a buildable PRD. (`roadmap-analyzer` and
+  `roadmap-to-milestones` rank ICP and revenue; they do not map decisions.)
 
 ## Codebase health
 
@@ -115,10 +123,14 @@ Not feature work — upkeep.
 - **`code-review`** — correctness and security gate, plus spec fidelity against
   the originating issue.
 - **`/retro`** — a session was harder than it should have been; turn its
-  friction into checks, pointers and skill edits.
+  friction into checks, pointers and skill edits. Also the follow-up to `/debug`
+  and the end of the main flow.
 
 ## Standalone
 
+- **`/handoff`** — a phase must continue in a new harness, directory, repo or
+  colleague's hands; writes one file a fresh agent can pick up. Narrow branch of
+  Phase boundaries, not a default.
 - **`/wait-what`** — the last message did not land; re-pitch it.
 - **`grilling`** — the interview primitive with no wrapper. Reach for it only when
   the interview itself is the whole ask.
