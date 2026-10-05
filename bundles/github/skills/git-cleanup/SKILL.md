@@ -88,14 +88,18 @@ Separate these conclusions:
 
 - **Currently present:** current trunk contains the candidate's complete audited
   delta, with the per-path proof described below; report intent separately.
-- **Historical only:** ancestry, a merged PR, or a blob found in history shows
-  prior delivery, but current code does not prove the work remains present.
+- **Delivered:** the candidate tip is the exact head of a merged PR on trunk;
+  trunk may have changed that code since. Eligible through `merged-pr-head`.
+- **Historical only:** ancestry, a PR merged at another commit, or a blob found in
+  history shows prior delivery, but current code does not prove the work remains present.
 - **Unproven:** partial landing, rewritten behavior, conflicting edits, missing
   evidence, or an ambiguous boundary prevents proof. Preserve it and explain
   exactly what must be inspected next.
 
-A merged PR plus later trunk changes or a deleted remote branch is triage context,
-not proof of current code or intent. Never call it safely superseded by inference.
+A deleted remote branch or a merged PR at some other commit is triage context,
+not proof. A candidate whose tip is the exact head of a merged PR is different:
+see the `merged-pr-head` rule below. Remove it with the plan; never leave it for
+manual deletion.
 
 ## Proof Rules
 
@@ -103,7 +107,8 @@ Use immutable object IDs for both candidate and trunk. A branch name, matching
 commit subject, old merged PR, missing upstream, or empty command output is not
 merge evidence. Git/API errors produce a skipped candidate or stop discovery.
 
-Every accepted action must first pass the current-content gate:
+Every accepted action must pass the current-content gate, unless it holds a
+`no-own-commits` or `merged-pr-head` proof:
 
 1. **Exact entries:** every audited path's candidate and current trunk entries
    match, including object ID, type and mode. Candidate deletions require absence
@@ -135,6 +140,16 @@ needs no intent review, because trunk cannot have reverted work it never held.
 A detached worktree qualifies the same way through its HEAD reflog. A branch
 whose reflog shows a commit, reset, rebase or pull, or that has no reflog,
 takes the normal audit.
+
+A merged exact PR head is delivered work. When the gate fails only because
+trunk later edited, replaced or reverted that code, the helper records a
+`merged-pr-head` proof: a same-repository PR (fork heads never qualify) that
+GitHub reports merged at exactly the candidate tip, with its merge commit
+present locally and in captured trunk history. The full `content_audit` stays
+in the plan to show what trunk changed afterwards. The proof needs no intent
+review, because trunk's later edits are its own decisions and GitHub retains
+the PR head. A tip that moved after the merge holds unlanded commits and takes
+the normal audit.
 
 After this gate, ancestry and exact-head squash evidence can explain delivery,
 but cannot bypass current-content inspection. Exact-head squash evidence binds
@@ -170,7 +185,7 @@ For a reusable plan, explicitly save the same output under the repository's
 `.tmp/` after creating that directory. Review its `context`, `actions`, and
 `skipped` fields, including every `content_audit`. Complete the code/intent
 receipt, populate `intent_reviews` as documented in the reference (not needed
-for `no-own-commits` actions), and remove
+for `no-own-commits` or `merged-pr-head` actions), and remove
 uncertain actions from the selected plan before pruning. Missing, unresolved or
 stale reviews make the helper skip deletion; `--confirmed` cannot bypass this. Saving this report is a caller-requested file write; the helper
 itself writes nothing during discovery.
@@ -226,7 +241,7 @@ python3 <skill-directory>/scripts/cleanup.py prune --root <repository> \
 The helper rejects changes to repository identity, remote URL, trunk ID, current
 HEAD, or scope. Immediately before each action it refreshes PR protection,
 requires a recorded verified intent review bound to candidate/base/trunk IDs
-(except for a `no-own-commits` proof), recomputes that candidate's proof, and checks
+(except for a `no-own-commits` or `merged-pr-head` proof), recomputes that candidate's proof, and checks
 that the exact candidate, ref, object ID, and clean worktree state still match.
 Create and verify the deterministic recovery ref before deletion; a preservation
 failure skips the action. This ref retains the entire tracked candidate history,

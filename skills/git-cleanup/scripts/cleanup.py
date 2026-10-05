@@ -39,6 +39,8 @@ REGENERABLE = {"node_modules", ".next", ".turbo", ".cache", ".parcel-cache", "di
                "coverage", "generated", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
 # Reflog messages that move a ref without creating work on it.
 CREATED = ("branch: Created from ", "Branch: renamed ")
+# Proof kinds whose evidence is mechanical, so pruning needs no intent review.
+REVIEW_FREE = ("no-own-commits", "merged-pr-head")
 
 
 class Repository:
@@ -411,6 +413,15 @@ class Repository:
                         records.append(pr)
         return records
 
+    def merged_pr_head(self, oid: str, trunk: str, prs: list[dict]) -> dict | None:
+        """A same-repository PR merged at exactly this tip, with its merge commit on trunk."""
+        for pr in prs:
+            merge = pr.get("merge_commit_sha")
+            if (pr.get("merged_at") and (pr.get("head") or {}).get("sha") == oid and merge
+                    and self.has_commit(merge) and self.ancestor(merge, trunk)):
+                return pr
+        return None
+
     def proof(self, oid: str, trunk: str, prs: list[dict], *, unmoved: bool = False) -> dict:
         if any(pr.get("state") == "open" for pr in prs):
             raise Refused("in-flight open PR")
@@ -424,6 +435,13 @@ class Repository:
         ahead = self.git("rev-list", trunk + ".." + oid).splitlines()
         audit = self.current_content_audit(oid, trunk, prs)
         if not audit["current_content_present"]:
+            # Trunk may edit or revert code after it lands. When GitHub records
+            # this exact tip as a merged PR whose merge commit is on trunk, the
+            # work was delivered; later trunk changes are trunk's own decisions.
+            pr = self.merged_pr_head(oid, trunk, prs)
+            if pr:
+                return {"kind": "merged-pr-head", "pr": pr["number"], "head": oid,
+                        "merge": pr["merge_commit_sha"], "ahead": ahead, "content_audit": audit}
             raise Refused("current trunk content not proven; inspect code and intent, preserve candidate", audit)
         if self.ancestor(oid, trunk):
             return {"kind": "ancestor", "ahead": ahead, "content_audit": audit}
@@ -595,9 +613,10 @@ class Repository:
                 review = reviews.get(f"{action['oid']}:{audit['base_oid']}", {})
                 if not isinstance(review, dict):
                     raise Refused("invalid intent review record; preserve candidate")
-                # A ref that never held its own commits has no intent to review;
+                # A ref that never held its own commits has no intent to review,
+                # and a merged exact PR head already carries GitHub's merge record;
                 # the fresh evaluation below rejects a forged proof kind.
-                if action["proof"].get("kind") != "no-own-commits" and (
+                if action["proof"].get("kind") not in REVIEW_FREE and (
                         review.get("status") != "verified"
                         or review.get("candidate_oid") != action["oid"]
                         or review.get("trunk_oid") != plan["context"]["trunk_oid"]

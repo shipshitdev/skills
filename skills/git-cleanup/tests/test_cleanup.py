@@ -579,6 +579,44 @@ class GitFixtureTests(unittest.TestCase):
         plan = self.plan("local-branches")
         self.assertEqual(plan["actions"], [])
 
+    def test_merged_pr_head_later_edited_on_trunk_is_removed_without_intent_review(self):
+        head, _merge = self.squash()
+        self.commit("later trunk edit", "third\n")
+        self.git("push", "origin", "main")
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "merged-pr-head")
+        self.assertEqual(plan["intent_reviews"], {})
+        self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "removed")
+        self.assertNotIn("feature", self.git("branch", "--format=%(refname:short)").splitlines())
+        self.assertEqual(self.git("rev-parse", f"refs/cleanup/recovery/{head}"), head)
+
+    def test_merged_pr_head_needs_same_repository_and_merge_on_trunk(self):
+        for change in ({"head_repo": "fork/repo"}, {"merge_commit_sha": "0" * 40},
+                       {"merged_at": None}, {"head_sha": "1" * 40}):
+            with self.subTest(change=change):
+                self.setUp()
+                self.squash(head_repo=change.get("head_repo", "owner/repo"))
+                self.prs[0].update({key: value for key, value in change.items()
+                                    if key in ("merge_commit_sha", "merged_at")})
+                if "head_sha" in change:
+                    self.prs[0]["head"]["sha"] = change["head_sha"]
+                self.commit("later trunk edit", "third\n")
+                self.git("push", "origin", "main")
+                plan = self.repo.plan("local-branches")
+                self.assertEqual(plan["actions"], [])
+                self.assertEqual(plan["skipped"][0]["ref"], "refs/heads/feature")
+
+    def test_forged_merged_pr_head_kind_cannot_skip_intent_review(self):
+        self.squash()
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "exact-pr-head-squash")
+        plan["actions"][0]["proof"]["kind"] = "merged-pr-head"
+        result = self.repo.apply(plan, "local-branches")
+        self.assertEqual(result["actions"][0]["result"], "skipped")
+        self.assertIn("differs from the reviewed plan", result["actions"][0]["reason"])
+        self.assertEqual(self.git("for-each-ref", "refs/cleanup/recovery/"), "")
+
     def test_stale_local_trunk_is_fetched_and_fast_forwarded(self):
         base = self.git("rev-parse", "HEAD")
         self.git("branch", "feature")
@@ -605,11 +643,16 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(entry["state"], "exact-entry")
         self.assertEqual(entry["candidate"], entry["trunk"])
 
-    def test_exact_merged_pr_cannot_bypass_reverted_current_content(self):
-        self.squash()
+    def test_reverted_merged_pr_head_is_removed_with_recovery_ref(self):
+        head, merge = self.squash()
         self.git("revert", "--no-edit", "HEAD")
         self.git("push", "origin", "main")
-        self.assertEqual(self.plan("local-branches")["actions"], [])
+        plan = self.repo.plan("local-branches")
+        proof = plan["actions"][0]["proof"]
+        self.assertEqual((proof["kind"], proof["pr"], proof["merge"]), ("merged-pr-head", 1, merge))
+        self.assertFalse(proof["content_audit"]["current_content_present"])
+        self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "removed")
+        self.assertEqual(self.git("rev-parse", f"refs/cleanup/recovery/{head}"), head)
 
     def test_ancestor_history_cannot_bypass_reverted_current_content(self):
         self.git("switch", "-c", "feature")
