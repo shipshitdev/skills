@@ -88,7 +88,17 @@ def git(checkout: Path, *arguments: str) -> bytes:
     return subprocess.check_output(["git", "-C", str(checkout), *arguments])
 
 
-def snapshot(checkout: Path, commit: str, paths: list[str]) -> dict:
+def ignored_paths(source: dict) -> list[str]:
+    """Exact upstream paths a source declares as repo-only and never shipped."""
+    value = source.get("ignored_paths", [])
+    if not isinstance(value, list) or len(set(value)) != len(value):
+        raise ValueError("ignored_paths must be a list of unique exact paths")
+    return [safe_path(path) for path in value]
+
+
+def snapshot(checkout: Path, commit: str, paths: list[str], ignored: list[str] | None = None,
+             skipped: list[str] | None = None) -> dict:
+    ignored = ignored or []
     if not COMMIT.fullmatch(commit):
         raise ValueError("Use a full 40-character commit SHA, not a moving ref")
     resolved = git(checkout, "rev-parse", "--verify", commit + "^{commit}").decode().strip()
@@ -104,6 +114,10 @@ def snapshot(checkout: Path, commit: str, paths: list[str]) -> dict:
         header, raw_name = item.split(b"\t", 1)
         mode, kind, oid = header.decode().split()
         name = safe_path(raw_name.decode())
+        if name in ignored:
+            if skipped is not None:
+                skipped.append(name)
+            continue
         if kind != "blob" or mode not in ("100644", "100755"):
             raise ValueError(f"Unsupported upstream object: {name} ({mode})")
         files[name] = (git(checkout, "cat-file", "blob", oid), int(mode[-3:], 8))
@@ -141,6 +155,12 @@ def verify(root: Path) -> list[str]:
         contents = read_archive(raw)
         if inventory(contents) != source["files"]:
             errors.append(f"{source['id']}: archive inventory differs from lock")
+        try:
+            for path in ignored_paths(source):
+                if path in contents:
+                    errors.append(f"{source['id']}: ignored path is also archived: {path}")
+        except ValueError as error:
+            errors.append(f"{source['id']}: {error}")
         expected.update({source["id"] + ":" + name: value for name, value in contents.items()})
     entries = mapping["files"]
     for missing in sorted(expected.keys() - entries.keys()):
@@ -211,7 +231,12 @@ def candidate(root: Path, source_id: str, checkout: Path, commit: str, output: P
         raise ValueError("Checkout origin does not match the pinned upstream repository")
     if output.resolve().is_relative_to(root.resolve()):
         raise ValueError("Stage candidates outside the maintained repository")
-    newer = snapshot(checkout, commit, source["paths"])
+    ignored = ignored_paths(source)
+    mapped = [path for path in ignored if source_id + ":" + path in mapping["files"]]
+    if mapped:
+        raise ValueError(f"Ignored paths cannot be mapped shipped files: {mapped}")
+    skipped: list[str] = []
+    newer = snapshot(checkout, commit, source["paths"], ignored, skipped)
     accepted = local_file(root, source["archive"]).read_bytes()
     if digest(accepted) != source["sha256"]:
         raise ValueError("Pinned archive checksum differs from lock")
@@ -219,7 +244,8 @@ def candidate(root: Path, source_id: str, checkout: Path, commit: str, output: P
     if inventory(older) != source["files"]:
         raise ValueError("Pinned archive inventory differs from lock")
     report = {"source": source_id, "from": source["commit"], "to": commit,
-              **changes(older, newer), "adaptations_requiring_review": []}
+              **changes(older, newer), "ignored_paths": sorted(skipped),
+              "adaptations_requiring_review": []}
     new_entries = dict(mapping["files"])
     patches = []
     touched = sorted(set(report["added"] + report["removed"] + report["changed"]))
