@@ -102,10 +102,15 @@ yes wins:
   failed). Tight red loop first; no theory without a loop. Afterwards `/retro`
   asks what would have prevented it.
 - **A huge, foggy effort** (too big for one session, decisions still unmade) →
-  `/interview` to sharpen the destination, then `figure-it-out` to design the
-  playbook for the run, then merge onto the main flow at `/prd write`. Do not
-  skip the collapse into a buildable PRD. (`roadmap-analyzer` and
-  `roadmap-to-milestones` rank ICP and revenue; they do not map decisions.)
+  `/wayfinder`: a map of decision tickets resolved one per session, then merge
+  onto the main flow at `/prd prepare`. Do not skip the collapse into a buildable
+  PRD. (`roadmap-analyzer` and `roadmap-to-milestones` rank ICP and revenue; they do
+  not map decisions. For one large run whose decisions are already made, use
+  `figure-it-out`.)
+- **A decision only someone else can answer** → `/interview send`: a questionnaire
+  for that person.
+- **An outside issue or PR to evaluate** → `github-inbox` with `triage <ref>`.
+- **A fact to look up from primary sources** → `research` (a cited note).
 
 ## Codebase health
 
