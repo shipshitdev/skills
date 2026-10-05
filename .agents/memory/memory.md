@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **183 skills · 24 commands · 13 bundles · 196 plugins**.
+Generated catalog: **184 skills · 24 commands · 13 bundles · 197 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 183 | `skills/*/SKILL.md` |
+| Skills | 184 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 196 | skills + bundles |
+| Plugins | 197 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -161,6 +161,16 @@ Adapted selected patterns from [mattpocock/skills](https://github.com/mattpocock
 - New adapted primitives: `grilling`, `domain-modeling`, `wait-what`, `wizard`, `prototype`, `codebase-design`.
 - New user-invoked router: `ask-dev-loop`. `interview` / `shape` invoke `grilling`; they hint at other user-invoked skills rather than firing them.
 - `tdd` provenance completed; `code-review` gained a Spec axis; flagship human docs live in `docs/skills/`.
+
+### One session retrospective (2026-10-05)
+
+`retro` (adapted from mattpocock/skills `retro`) is the single session
+retrospective. It classifies each friction moment into an environment fix
+(navigation pointer, guardrail, reviewer standard, steering cut, no-op, tool
+economy, information access) or routes it to `skill-capture` / `rules-capture`.
+The Pstack `reflect` procedure moved out of `skill-capture` into
+`retro --deep`; its mapping destinations moved with it. `skill-capture` is
+capture-only again. `/review retro` stays the commit-window code backlog.
 
 ### Weekly review composition (2026-09-05)
 

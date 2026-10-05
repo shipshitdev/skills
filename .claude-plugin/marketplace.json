@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "183 AI agent skills for development workflows",
+  "description": "184 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -886,6 +886,12 @@
       "source": "./skills/release",
       "version": "2.2.2",
       "description": "Cuts a release from a green trunk: proves checks on the trunk SHA, derives semver and notes, publishes via release-please, workflow, or tag. Backs /release."
+    },
+    {
+      "name": "retro",
+      "source": "./skills/retro",
+      "version": "2.2.2",
+      "description": "Reviews a finished agent session for friction and proposes environment fixes (checks, pointers, reviewer rules, steering cuts, skill edits), most severe first. Proposes only."
     },
     {
       "name": "review-dispatch",
