@@ -15,7 +15,6 @@ Strategy, planning, and analysis skills
 - `feature-intake`
 - `icp`
 - `interview`
-- `grill-me`
 - `grilling`
 - `domain-modeling`
 - `prototype`

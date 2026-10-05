@@ -5,9 +5,9 @@
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
 <!-- catalog-summary:start -->
-187 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
+180 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
 
-Catalog: **187 skills · 24 commands · 13 bundles · 200 plugins**.
+Catalog: **180 skills · 24 commands · 13 bundles · 193 plugins**.
 <!-- catalog-summary:end -->
 
 Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
@@ -19,7 +19,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 |---|---|---|
 | `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
 | `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 200 generated plugins |
+| `.claude-plugin/` | Generated Claude marketplace catalog | 193 generated plugins |
 | `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
 | `.github/` | Issue templates and GitHub Actions workflows | Tracked |
 | `.husky/` | Git hook configuration | Tracked |
@@ -31,7 +31,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
 | `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 187 canonical skills |
+| `skills/` | Canonical public Agent Skills sources | 180 canonical skills |
 | `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
 <!-- catalog-layout:end -->
 
@@ -272,20 +272,20 @@ Plain `deslop` is the Shipshit adaptation. `pstack:deslop` is a separate upstrea
 plugin skill, not an alias.
 
 <!-- catalog-skills-heading:start -->
-## Skills (187)
+## Skills (180)
 <!-- catalog-skills-heading:end -->
 
-### Dev Loop (16)
+### Dev Loop (15)
 
-`interview`, `grilling`, `grill-me`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
+`interview`, `grilling`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
 
-### Dev Workflow (38)
+### Dev Workflow (36)
 
-`agent-architecture-audit`, `agent-config-audit`, `ai-agent-cost-optimizer`, `codebase-advisor`, `codebase-design`, `code-review`, `structural-review`, `full-code-review`, `grok-review`, `review-dispatch`, `commit-summary`, `changelog-generator`, `standup`, `deslop`, `refactor-dispatch`, `tech-debt`, `stack-modernization`, `debug`, `deploy-app`, `deployment-composer`, `docs`, `llm-structured-output`, `merge-open-prs`, `production-audit`, `refactor-code`, `release`, `git-cleanup`, `scaffold`, `shape`, `skill-capture`, `skill-comply`, `skill-scout`, `receiving-code-review`, `verification-before-completion`, `wizard`, `worktree`, `skill-dispatch`, `deploy-dispatch`
+`agent-architecture-audit`, `agent-config-audit`, `ai-agent-cost-optimizer`, `codebase-advisor`, `codebase-design`, `code-review`, `structural-review`, `full-code-review`, `grok-review`, `review-dispatch`, `commit-summary`, `standup`, `deslop`, `tech-debt`, `stack-modernization`, `debug`, `deploy-app`, `deployment-composer`, `docs`, `llm-structured-output`, `merge-open-prs`, `production-audit`, `refactor-code`, `release`, `git-cleanup`, `scaffold`, `shape`, `skill-capture`, `skill-comply`, `skill-scout`, `receiving-code-review`, `verification-before-completion`, `wizard`, `worktree`, `skill-dispatch`, `deploy-dispatch`
 
-### GitHub (18)
+### GitHub (17)
 
-`bug`, `github-address-comments`, `board-sync`, `github-fix-ci`, `github-inbox`, `github-pr-publish`, `project-board`, `github-review-suggestions`, `github-actions-author`, `git-safety`, `feature-intake`, `merge-open-prs`, `release`, `git-cleanup`, `worktree`, `finishing-a-development-branch`, `pr-comments`, `fix-merge-conflicts`
+`bug`, `board-sync`, `github-fix-ci`, `github-inbox`, `github-pr-publish`, `project-board`, `github-review-suggestions`, `github-actions-author`, `git-safety`, `feature-intake`, `merge-open-prs`, `release`, `git-cleanup`, `worktree`, `finishing-a-development-branch`, `pr-comments`, `fix-merge-conflicts`
 
 ### Testing (9)
 
@@ -295,9 +295,9 @@ plugin skill, not an alias.
 
 `frontend-design`, `component-library`, `accessibility`, `audit`, `clarify`, `critique`, `design-consistency-auditor`, `html-style`, `layout`, `polish`, `quieter`, `react-component-performance`, `react-hook-form`, `theme-factory`, `prototype`, `react-patterns`, `react-refactor`, `react-testing-library`, `react-native-components`, `expo-architect`, `landing-page-vercel`, `micro-landing-builder`, `ai-loading-ux`, `table-filters`, `quick-view`, `nextjs-validator`, `nextra-writer`, `shadcn`, `shadcn-setup`, `tailwind`, `tailwind-validator`, `design-dispatch`
 
-### Backend & Data (9)
+### Backend & Data (8)
 
-`api-design-expert`, `error-handling-expert`, `graphql-architect`, `nestjs-expert`, `nestjs-testing-expert`, `incremental-fetch`, `turborepo`, `typescript-expert`, `typescript-refactor`
+`api-design-expert`, `error-handling-expert`, `graphql-architect`, `nestjs-expert`, `nestjs-testing-expert`, `incremental-fetch`, `turborepo`, `typescript-expert`
 
 ### Infrastructure (12)
 
@@ -307,13 +307,13 @@ plugin skill, not an alias.
 
 `security-audit`, `security-expert`, `git-safety`, `dependency-audit`, `open-source-checker`
 
-### AI Agents (16)
+### AI Agents (15)
 
-`prompt-engineering`, `mcp-builder`, `skill-creator`, `context-optimization`, `context-degradation`, `context-engineering`, `memory-systems`, `multi-agent-patterns`, `tool-design`, `evaluation`, `advanced-evaluation`, `comment-mode`, `spec-first`, `agent-browser`, `agent-dispatch`, `codex-image-gen`
+`prompt-engineering`, `mcp-builder`, `skill-creator`, `context-optimization`, `context-degradation`, `context-engineering`, `memory-systems`, `multi-agent-patterns`, `tool-design`, `evaluation`, `advanced-evaluation`, `comment-mode`, `agent-browser`, `agent-dispatch`, `codex-image-gen`
 
-### Workspace Setup (13)
+### Workspace Setup (12)
 
-`fullstack-workspace-init`, `project-init-orchestrator`, `env-setup`, `linter-formatter-init`, `clerk-validator`, `content-script-developer`, `package-architect`, `artifacts-builder`, `wizard`, `open-source-checker`, `devcontainer-setup`, `biome-validator`, `bun-validator`
+`project-init-orchestrator`, `env-setup`, `linter-formatter-init`, `clerk-validator`, `content-script-developer`, `package-architect`, `artifacts-builder`, `wizard`, `open-source-checker`, `devcontainer-setup`, `biome-validator`, `bun-validator`
 
 ### Planning & PRDs (15)
 

@@ -117,15 +117,9 @@ Eight skills derive from this repo, all verified by fetching the live upstream f
 | shadcn | `skills/.curated/shadcn/SKILL.md` | `b94ecb3dae52` |
 | tailwind | `skills/.curated/tailwind/SKILL.md` (formerly `tailwindcss-v4-style`) | `91a64a6e7d49` |
 
-### ⚠️ License flags
+### License flags (resolved 2026-10-05)
 
-One external upstream ships **no LICENSE file** — content is all-rights-reserved by default and redistribution permission is unconfirmed. Verified by hand (GitHub license API returns 404, repo root has no LICENSE/COPYING):
-
-| Skill | Upstream | Status |
-|-------|----------|--------|
-| changelog-generator | ComposioHQ/awesome-claude-skills | no LICENSE — **license requested 2026-06-13** ([issue #1069](https://github.com/ComposioHQ/awesome-claude-skills/issues/1069), awaiting maintainer) |
-
-This is tracked for *provenance*, not cleared for *redistribution*. A license-request issue is open on the upstream (above); until a maintainer adds an explicit OSS license, decide whether to keep, relicense-on-request, or replace.
+`changelog-generator` (ComposioHQ/awesome-claude-skills, no upstream LICENSE) was removed in #190. Its customer-facing release-notes guidance now lives in `release/references/notes.md`, written from scratch with none of the upstream text, so no vendored all-rights-reserved content remains in this repo. No external upstream currently ships without a license.
 
 ---
 

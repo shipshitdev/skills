@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "187 AI agent skills for development workflows",
+  "description": "180 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -208,12 +208,6 @@
       "source": "./skills/bun-validator",
       "version": "2.2.2",
       "description": "Validates Bun workspace config and monorepo setup: catalogs, isolated installs, Bun 1.3+ practices. Use when setting up or auditing a Bun monorepo or adding workspace dependencies."
-    },
-    {
-      "name": "changelog-generator",
-      "source": "./skills/changelog-generator",
-      "version": "2.2.2",
-      "description": "Turns git commit history into categorized, customer-friendly changelogs and release notes. Use when preparing release notes or summarizing product updates."
     },
     {
       "name": "clarify",
@@ -456,12 +450,6 @@
       "description": "Reviews PR structure, security depth, and devex/flag hygiene with parallel agents after code-review passes correctness. Use for a full or comprehensive PR review."
     },
     {
-      "name": "fullstack-workspace-init",
-      "source": "./skills/fullstack-workspace-init",
-      "version": "2.2.2",
-      "description": "Scaffolds a Shipshit.dev full-stack product workspace via npx @shipshitdev/v0, then customizes and verifies it. Use for new product repos or post-v0 setup."
-    },
-    {
       "name": "git-cleanup",
       "source": "./skills/git-cleanup",
       "version": "2.2.2",
@@ -478,12 +466,6 @@
       "source": "./skills/github-actions-author",
       "version": "2.2.2",
       "description": "Author, review, and harden GitHub Actions workflows using current official documentation, secure trigger patterns, least-privilege permissions, current action versions, and CI/CD validation. Use when creating, editing, debugging, or security-reviewing workflow YAML."
-    },
-    {
-      "name": "github-address-comments",
-      "source": "./skills/github-address-comments",
-      "version": "2.2.2",
-      "description": "Implements the fixes a PR review asked for and drafts a reply per thread for approval before posting. Starts from understood feedback; the read-only digest is pr-comments."
     },
     {
       "name": "github-fix-ci",
@@ -514,12 +496,6 @@
       "source": "./skills/graphql-architect",
       "version": "2.2.2",
       "description": "Designs and reviews GraphQL schemas, resolvers, mutations, pagination, and data loading. Use when building or refactoring GraphQL APIs or fixing N+1 and resolver design."
-    },
-    {
-      "name": "grill-me",
-      "source": "./skills/grill-me",
-      "version": "2.2.2",
-      "description": "Relentless interview to sharpen a plan or design. Shortcut for the grilling skill."
     },
     {
       "name": "grilling",
@@ -735,7 +711,7 @@
       "name": "pr-comments",
       "source": "./skills/pr-comments",
       "version": "2.2.2",
-      "description": "Reads a PR's review threads and returns a read-only digest grouped by thread, severity-tagged, with open questions. Use to triage feedback; fixing it is github-address-comments."
+      "description": "Triages a PR's review threads into a severity-tagged digest, or in address mode implements the fixes and drafts per-thread replies for approval. Use for PR review feedback."
     },
     {
       "name": "prd-dispatch",
@@ -882,12 +858,6 @@
       "description": "Refactors code safely behind tests without changing behavior. Use when asked to refactor, clean up, simplify, reduce complexity, or pay down technical debt in specific code."
     },
     {
-      "name": "refactor-dispatch",
-      "source": "./skills/refactor-dispatch",
-      "version": "2.2.2",
-      "description": "Single front door for improving existing code — routes to the right engine by mode: deslop (strip AI slop, code + product), code (safe behavior-preserving refactor), debt (tech-debt register), perf (frontend + backend optimization), structure (read-only structural review), or stack (dependency + framework-pattern modernization). Backs the /refactor command. Use when asked to refactor, clean up, deslop, pay down tech debt, optimize, or modernize, and the mode must be picked from an argument like \"deslop\", \"debt\", \"perf\", or \"stack\"."
-    },
-    {
       "name": "release",
       "source": "./skills/release",
       "version": "2.2.2",
@@ -1014,12 +984,6 @@
       "description": "Searches local, marketplace, GitHub, package and web sources for existing skills or implementations. Use before creating or importing a skill, or writing code that likely exists."
     },
     {
-      "name": "spec-first",
-      "source": "./skills/spec-first",
-      "version": "2.2.2",
-      "description": "Coordinates preparation, implementation, independent review and verification on one shared issue contract. Use for nontrivial work needing decisions settled before coding."
-    },
-    {
       "name": "stack-modernization",
       "source": "./skills/stack-modernization",
       "version": "2.2.2",
@@ -1137,13 +1101,7 @@
       "name": "typescript-expert",
       "source": "./skills/typescript-expert",
       "version": "2.2.2",
-      "description": "Solves TypeScript/JS problems: type-level programming, deep-instantiation errors, strict tsconfig, module resolution, JS-to-TS migration, Biome/ESLint/Nx tooling choices."
-    },
-    {
-      "name": "typescript-refactor",
-      "source": "./skills/typescript-refactor",
-      "version": "2.2.2",
-      "description": "Refactors and modernizes TypeScript for type safety: discriminated unions, narrowing, generics, error handling, modern 4.x-5.x features, compiler speed. Use when reviewing TS."
+      "description": "Solves TypeScript/JS problems and refactors TS for type safety: narrowing, branded types, deep-instantiation errors, strict tsconfig, module resolution, JS-to-TS migration."
     },
     {
       "name": "vercel-deploy",

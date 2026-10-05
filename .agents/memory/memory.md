@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **187 skills · 24 commands · 13 bundles · 200 plugins**.
+Generated catalog: **180 skills · 24 commands · 13 bundles · 193 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 187 | `skills/*/SKILL.md` |
+| Skills | 180 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 200 | skills + bundles |
+| Plugins | 193 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -86,6 +86,23 @@ required checks usually run only on PRs), detects release-please, guarded
 reports deploy evidence. `deploy-app` no longer triggers on "release". Supersedes the
 earlier backlog row that kept the release skills separate (#166).
 
+### Catalog simplification, pair merges (2026-10-05)
+
+Vincent approved the #190 catalog simplification after a read-only overlap audit.
+Part 1 (low risk): deleted `grill-me` (alias of `grilling`) and `refactor-dispatch`
+(orphan; `/refactor` carries its own mode table). Merged `changelog-generator` into
+`release` (`references/notes.md`, written fresh: the Composio upstream had no
+LICENSE, so no upstream text remains), `github-address-comments` into `pr-comments`
+(`address` mode; `receiving-code-review` no longer claims "addressing PR comments"),
+`typescript-refactor` into `typescript-expert` (43 rules under `references/rules/`),
+`spec-first` into `prd-dispatch` (`spec` mode), and `fullstack-workspace-init` into
+`project-init-orchestrator` (v0 route plus the legacy manual route under
+`references/` and `scripts/`). `pr-comments` and `typescript-expert` are pinned
+Pstack destinations, so their hashes were re-recorded in `upstream/pstack/mapping.json`.
+Removed names no longer install through `npx skills add --skill <name>`; see the
+Retired skills table in `docs/skills/catalog-naming.md`. Rejected: keeping thin alias
+skills, because they cost a plugin, a directory and a trigger collision each.
+
 ### External Skills Imported (2026-04-21)
 
 All referenced external repos now internal — no external dependencies:
@@ -119,7 +136,7 @@ SYSTEM)\b.*\bSHALL\b`); draft lint may warn; execution readiness is blocking (se
 verifiable-outcomes section is `Acceptance Criteria` (the former
 `Success Criteria` in `prd-writer`/`feature-intake` was renamed/merged — they
 are now one EARS section; testing bars live in `Verification Plan`). Applies to
-`prd-writer`, `prd-quality-gate`, `feature-intake`, `spec-first`,
+`prd-writer`, `prd-quality-gate`, `feature-intake`, `prd-dispatch` (`spec` mode),
 `prd-task-creator`. Rationale: skills are read by AI coding agents, where vague
 prose criteria cause drift; EARS is the de-facto agent-spec grammar (Kiro-origin,
 not a ratified standard — the gate regex is the single point to adjust if it shifts).

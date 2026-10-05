@@ -14,7 +14,7 @@ metadata:
   upstream_commit: 4588b32ecab9
   last_synced: "2026-10-05"
   license: MIT
-when_to_use: "interview me, send a questionnaire, grill me, grill-me, grill me with docs, discovery interview, requirements interview, before PRD, clarify requirements, /interview"
+when_to_use: "interview me, send a questionnaire, grill me, grill me with docs, discovery interview, requirements interview, before PRD, clarify requirements, /interview"
 ---
 
 # Interview
@@ -41,7 +41,7 @@ Outputs:
 - Concise context scan summary.
 - Settled decisions from `grilling`.
 - Final interview brief ready for `prd-writer`, `feature-intake`, `shape`,
-  `spec-first`, or direct implementation.
+  `/prd spec`, or direct implementation.
 - Send mode: a Markdown questionnaire for one recipient and its absolute path.
 
 Creates/Modifies:
@@ -68,7 +68,7 @@ Delegates To:
 - `domain-modeling` when a term crystallizes or conflicts with `CONTEXT.md`.
 
 Recommend next (do not invoke): `prd-writer`, `feature-intake`, `shape`,
-`spec-first`, `prd-quality-gate`.
+`/prd spec`, `prd-quality-gate`.
 
 ## Send mode
 
@@ -176,7 +176,7 @@ End with this structure:
 - <unresolved item, or "None">
 
 ### Recommended Next Step
-<prd-writer | feature-intake | shape | spec-first | direct implementation>
+<prd-writer | feature-intake | shape | /prd spec | direct implementation>
 ```
 
 Keep the brief concise enough to paste into a tracker issue or hand to a PRD

@@ -62,7 +62,7 @@ Confirmation Required:
 Delegates To:
 
 - `github-fix-ci` for failing PR checks
-- `github-address-comments` for existing review comments
+- `pr-comments` (`address` mode) for existing review comments
 - `github-review-suggestions` when a PR needs inline review feedback
 - `project-board` when the board configuration needs inspection
 - `board-sync` when existing item values or delivery evidence need reconciliation

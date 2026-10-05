@@ -38,7 +38,7 @@ const KNOWN = `Known upstream families in this marketplace (for reference — do
 - obra/superpowers (MIT): agent workflow skills (writing-plans, systematic-debugging, etc.).
 - anthropics/skills (Apache-2.0): artifacts, mcp-builder, skill-creator, theme-factory.
 - Dimillian/Skills (MIT): react-component-performance, plus swift/ios skills.
-- snarktank/ai-dev-tasks: the classic create-prd / generate-tasks / process-task-list pattern — CHECK if 'prd-task-creator' or 'spec-first' derive from it.
+- snarktank/ai-dev-tasks: the classic create-prd / generate-tasks / process-task-list pattern — CHECK if 'prd-task-creator' derives from it.
 - Internal ports require evidence supplied by the owner; do not infer a private source from similar names.`
 
 phase('Classify')

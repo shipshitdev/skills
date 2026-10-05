@@ -14,7 +14,6 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `agent-architecture-audit`
 - `agent-config-audit`
 - `ai-agent-cost-optimizer`
-- `changelog-generator`
 - `code-review`
 - `codebase-advisor`
 - `codebase-design`
@@ -32,7 +31,6 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `production-audit`
 - `receiving-code-review`
 - `refactor-code`
-- `refactor-dispatch`
 - `release`
 - `retro`
 - `git-cleanup`
