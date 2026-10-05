@@ -5,9 +5,9 @@
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
 <!-- catalog-summary:start -->
-180 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
+176 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
 
-Catalog: **180 skills · 24 commands · 13 bundles · 193 plugins**.
+Catalog: **176 skills · 24 commands · 13 bundles · 189 plugins**.
 <!-- catalog-summary:end -->
 
 Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
@@ -19,7 +19,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 |---|---|---|
 | `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
 | `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 193 generated plugins |
+| `.claude-plugin/` | Generated Claude marketplace catalog | 189 generated plugins |
 | `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
 | `.github/` | Issue templates and GitHub Actions workflows | Tracked |
 | `.husky/` | Git hook configuration | Tracked |
@@ -31,7 +31,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
 | `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 180 canonical skills |
+| `skills/` | Canonical public Agent Skills sources | 176 canonical skills |
 | `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
 <!-- catalog-layout:end -->
 
@@ -272,7 +272,7 @@ Plain `deslop` is the Shipshit adaptation. `pstack:deslop` is a separate upstrea
 plugin skill, not an alias.
 
 <!-- catalog-skills-heading:start -->
-## Skills (180)
+## Skills (176)
 <!-- catalog-skills-heading:end -->
 
 ### Dev Loop (15)
@@ -291,9 +291,9 @@ plugin skill, not an alias.
 
 `playwright-e2e-init`, `tdd`, `testing-expert`, `testing-cicd-init`, `qa-reviewer`, `qa-loop`, `husky-test-coverage`, `test-runner`, `test-dispatch`
 
-### Frontend & React (32)
+### Frontend & React (31)
 
-`frontend-design`, `component-library`, `accessibility`, `audit`, `clarify`, `critique`, `design-consistency-auditor`, `html-style`, `layout`, `polish`, `quieter`, `react-component-performance`, `react-hook-form`, `theme-factory`, `prototype`, `react-patterns`, `react-refactor`, `react-testing-library`, `react-native-components`, `expo-architect`, `landing-page-vercel`, `micro-landing-builder`, `ai-loading-ux`, `table-filters`, `quick-view`, `nextjs-validator`, `nextra-writer`, `shadcn`, `shadcn-setup`, `tailwind`, `tailwind-validator`, `design-dispatch`
+`frontend-design`, `component-library`, `accessibility`, `audit`, `clarify`, `critique`, `design-consistency-auditor`, `html-style`, `layout`, `polish`, `quieter`, `react-component-performance`, `react-hook-form`, `theme-factory`, `prototype`, `react-patterns`, `react-refactor`, `react-testing-library`, `react-native-components`, `expo-architect`, `landing-page-vercel`, `micro-landing-builder`, `ai-loading-ux`, `table-filters`, `quick-view`, `nextra-writer`, `shadcn`, `shadcn-setup`, `tailwind`, `stack-validator`, `design-dispatch`
 
 ### Backend & Data (8)
 
@@ -311,9 +311,9 @@ plugin skill, not an alias.
 
 `prompt-engineering`, `mcp-builder`, `skill-creator`, `context-optimization`, `context-degradation`, `context-engineering`, `memory-systems`, `multi-agent-patterns`, `tool-design`, `evaluation`, `advanced-evaluation`, `comment-mode`, `agent-browser`, `agent-dispatch`, `codex-image-gen`
 
-### Workspace Setup (12)
+### Workspace Setup (10)
 
-`project-init-orchestrator`, `env-setup`, `linter-formatter-init`, `clerk-validator`, `content-script-developer`, `package-architect`, `artifacts-builder`, `wizard`, `open-source-checker`, `devcontainer-setup`, `biome-validator`, `bun-validator`
+`project-init-orchestrator`, `env-setup`, `linter-formatter-init`, `content-script-developer`, `package-architect`, `artifacts-builder`, `wizard`, `open-source-checker`, `devcontainer-setup`, `stack-validator`
 
 ### Planning & PRDs (15)
 

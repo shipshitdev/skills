@@ -65,12 +65,11 @@
         "ai-loading-ux",
         "table-filters",
         "quick-view",
-        "nextjs-validator",
+        "stack-validator",
         "nextra-writer",
         "shadcn",
         "shadcn-setup",
         "tailwind",
-        "tailwind-validator",
         "design-dispatch"
       ]
     },
@@ -113,15 +112,13 @@
         "project-init-orchestrator",
         "env-setup",
         "linter-formatter-init",
-        "clerk-validator",
+        "stack-validator",
         "content-script-developer",
         "package-architect",
         "artifacts-builder",
         "wizard",
         "open-source-checker",
-        "devcontainer-setup",
-        "biome-validator",
-        "bun-validator"
+        "devcontainer-setup"
       ]
     },
     "planning": {

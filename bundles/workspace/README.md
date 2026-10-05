@@ -14,12 +14,10 @@ Project setup and workspace initialization
 - `project-init-orchestrator`
 - `env-setup`
 - `linter-formatter-init`
-- `clerk-validator`
+- `stack-validator`
 - `content-script-developer`
 - `package-architect`
 - `artifacts-builder`
 - `wizard`
 - `open-source-checker`
 - `devcontainer-setup`
-- `biome-validator`
-- `bun-validator`

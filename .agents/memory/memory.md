@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **180 skills · 24 commands · 13 bundles · 193 plugins**.
+Generated catalog: **176 skills · 24 commands · 13 bundles · 189 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 180 | `skills/*/SKILL.md` |
+| Skills | 176 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 193 | skills + bundles |
+| Plugins | 189 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -116,6 +116,21 @@ commands, which removes about 1,440 characters from the model-invoked listing.
 removes the only portable front door outside Claude Code and breaks
 `npx skills add --skill <name>`; a later pass can delete them if that front door is
 not wanted. `/prd` gained the `spec` workflow inline (it also lives in `prd-dispatch`).
+
+### Catalog simplification, stack validator (2026-10-05)
+
+Part 3 of #190. `biome-`, `bun-`, `clerk-`, `nextjs-` and `tailwind-validator` merged
+into one `stack-validator`: a single `scripts/validate.py` with per-stack check
+functions (`--stack biome|bun|clerk|nextjs|tailwind|all`, auto-detected when
+omitted), shared `Issue`/`ValidationResult` scaffolding and report, and
+`references/<stack>.md` holding each old SKILL body plus its full guide. Existing
+checks are unchanged except three deliberate fixes: the Bun check now accepts the
+default `bun.lock` (it only knew `bun.lockb`), the Biome config loader no longer
+mangles the `$schema` URL while stripping `//` comments (every `biome.json` with a
+schema failed as invalid JSON), and Clerk gained the script its old SKILL.md
+advertised but never shipped. New fixture tests live in
+`skills/stack-validator/tests/`. Rejected: keeping five thin skills with a shared
+library, because skills install individually and cannot share a script.
 
 ### External Skills Imported (2026-04-21)
 

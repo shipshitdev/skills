@@ -4,7 +4,7 @@ Migration from the catalog after board correctness and composition repairs,
 2026-09-05, kept current through the 2026-10-05 catalog simplification (#190). This is
 a migration inventory, not a runtime registry.
 
-178 skills and 24 commands. Eight rows record a rename from an earlier name (one of
+176 skills and 24 commands. Eight rows record a rename from an earlier name (one of
 them, `gh-address-comments`, was later merged into `pr-comments`). Skills folded into
 another since the migration are listed under Retired skills. Owning surfaces describe
 contracts; they are not mandatory naming prefixes.
@@ -29,12 +29,9 @@ contracts; they are not mandatory naming prefixes.
 | `ask-dev-loop` | `ask-dev-loop` | retain | workflow-navigation |
 | `audit` | `audit` | retain | design |
 | `aws-infrastructure` | `aws-infrastructure` | retain | aws-infrastructure |
-| `biome-validator` | `biome-validator` | retain | code-quality-tooling |
 | `blast-radius` | `blast-radius` | retain | change-analysis |
 | `bug` | `bug` | retain | issue-intake |
-| `bun-validator` | `bun-validator` | retain | bun-workspace |
 | `clarify` | `clarify` | retain | design |
-| `clerk-validator` | `clerk-validator` | retain | clerk-authentication |
 | `code-review` | `code-review` | retain | code-review |
 | `codebase-advisor` | `codebase-advisor` | retain | change-analysis |
 | `codebase-design` | `codebase-design` | retain | architecture |
@@ -110,7 +107,6 @@ contracts; they are not mandatory naming prefixes.
 | `nestjs-expert` | `nestjs-expert` | retain | nestjs |
 | `nestjs-queue-architect` | `nestjs-queue-architect` | retain | nestjs |
 | `nestjs-testing-expert` | `nestjs-testing-expert` | retain | nestjs |
-| `nextjs-validator` | `nextjs-validator` | retain | nextjs |
 | `nextra-writer` | `nextra-writer` | retain | documentation |
 | `no-comments` | `no-comments` | retain | code-cleanup |
 | `open-source-checker` | `open-source-checker` | retain | open-source-release |
@@ -144,6 +140,7 @@ contracts; they are not mandatory naming prefixes.
 | `redis-caching` | `redis-caching` | retain | redis |
 | `refactor-code` | `refactor-code` | retain | refactoring |
 | `release` | `release` | retain | release |
+| `research` | `research` | retain | product-research |
 | `retro` | `retro` | retain | agent-memory |
 | `review-dispatch` | `review-dispatch` | retain | code-review |
 | `roadmap-analyzer` | `roadmap-analyzer` | retain | product-strategy |
@@ -164,13 +161,13 @@ contracts; they are not mandatory naming prefixes.
 | `skill-dispatch` | `skill-dispatch` | retain | skill-maintenance |
 | `skill-scout` | `skill-scout` | retain | skill-maintenance |
 | `stack-modernization` | `stack-modernization` | retain | stack-modernization |
+| `stack-validator` | `stack-validator` | retain | stack-configuration |
 | `standup` | `standup` | retain | work-summary |
 | `stripe-implementer` | `stripe-implementer` | retain | stripe |
 | `structural-review` | `structural-review` | retain | code-review |
 | `swarm` | `swarm` | retain | agent-orchestration |
 | `table-filters` | `table-filters` | retain | design |
 | `tailwind` | `tailwind` | retain | tailwind |
-| `tailwind-validator` | `tailwind-validator` | retain | tailwind |
 | `tdd` | `tdd` | retain | testing |
 | `teach` | `teach` | retain | code-explanation |
 | `tech-debt` | `tech-debt` | retain | refactoring |
@@ -186,6 +183,7 @@ contracts; they are not mandatory naming prefixes.
 | `vercel-deploy` | `vercel-deploy` | retain | vercel |
 | `verification-before-completion` | `verification-before-completion` | retain | work-evidence |
 | `wait-what` | `wait-what` | retain | code-explanation |
+| `wayfinder` | `wayfinder` | retain | product-specification |
 | `weekly-review` | `weekly-review` | retain | engineering-maintenance |
 | `why` | `why` | retain | code-explanation |
 | `wizard` | `wizard` | retain | human-setup |
@@ -211,6 +209,11 @@ names no longer install through `npx skills add --skill <name>`.
 | `spec-first` | `prd-dispatch` (`spec` mode) | #190 |
 | `fullstack-workspace-init` | `project-init-orchestrator` | #190 |
 | `grill-me` | `grilling` | #190 |
+| `biome-validator` | `stack-validator` (`--stack biome`, `references/biome.md`) | #190 |
+| `bun-validator` | `stack-validator` (`--stack bun`, `references/bun.md`) | #190 |
+| `clerk-validator` | `stack-validator` (`--stack clerk`, `references/clerk.md`) | #190 |
+| `nextjs-validator` | `stack-validator` (`--stack nextjs`, `references/nextjs.md`) | #190 |
+| `tailwind-validator` | `stack-validator` (`--stack tailwind`, `references/tailwind.md`) | #190 |
 | `refactor-dispatch` | deleted; `/refactor` routes to its engines directly | #190 |
 
 ## Commands
