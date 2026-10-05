@@ -108,7 +108,10 @@ class GitFixtureTests(unittest.TestCase):
         self.git("switch", "feature")
         self.commit("same subject", "unmerged\n")
         self.git("switch", "main")
-        self.assertEqual(self.plan("local-branches")["actions"], [])
+        plan = self.plan("local-branches")
+        self.assertEqual(plan["actions"], [])
+        self.assertTrue(plan["skipped"][0]["reason"].startswith(
+            "not on trunk: commits beyond merged PR #1;"))
 
     def test_fork_pr_metadata_cannot_prove_squash(self):
         self.squash(head_repo="fork/repo")
@@ -445,8 +448,7 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(result["actions"][0]["result"], "removed")
         self.assertFalse(worktree.exists())
         after = set(self.git("show-ref").splitlines())
-        self.assertEqual(after - set(before.splitlines()), {
-            result["actions"][0]["oid"] + " " + result["actions"][0]["recovery_ref"]})
+        self.assertEqual(after - set(before.splitlines()), set())
         self.assertTrue(set(before.splitlines()).issubset(after))
         commands = [call.args for call in self.repo.run.call_args_list]
         self.assertFalse(any(len(cmd) >= 3 and cmd[1:3] in (("worktree", "prune"), ("remote", "prune"))
@@ -589,7 +591,7 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(plan["intent_reviews"], {})
         self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "removed")
         self.assertNotIn("feature", self.git("branch", "--format=%(refname:short)").splitlines())
-        self.assertEqual(self.git("rev-parse", f"refs/cleanup/recovery/{head}"), head)
+        self.assertEqual(self.git("for-each-ref", "refs/cleanup/"), "")
 
     def test_merged_pr_head_needs_same_repository_and_merge_on_trunk(self):
         for change in ({"head_repo": "fork/repo"}, {"merge_commit_sha": "0" * 40},
@@ -617,6 +619,146 @@ class GitFixtureTests(unittest.TestCase):
         self.assertIn("differs from the reviewed plan", result["actions"][0]["reason"])
         self.assertEqual(self.git("for-each-ref", "refs/cleanup/recovery/"), "")
 
+    def behind_merged_head(self):
+        """Feature tip lags the PR head: a commit was pushed to the PR from elsewhere."""
+        self.git("switch", "-c", "feature")
+        tip = self.commit("feature", "feature\n")
+        self.git("switch", "-c", "pushed-elsewhere")
+        head = self.commit("ci fix", "ci\n", "ci.txt")
+        self.git("switch", "main")
+        self.git("merge", "--squash", "pushed-elsewhere")
+        self.git("commit", "-m", "feature (#1)")
+        merge = self.git("rev-parse", "HEAD")
+        self.git("branch", "-D", "pushed-elsewhere")
+        self.commit("later trunk edit", "rewritten\n")
+        self.git("push", "origin", "main")
+        self.prs = [{"number": 1, "state": "closed", "merged_at": "2026-01-01",
+                     "merge_commit_sha": merge,
+                     "head": {"ref": "feature", "sha": head, "repo": {"full_name": "owner/repo"}},
+                     "base": {"repo": {"full_name": "owner/repo"}}}]
+        return tip, head
+
+    def test_tip_behind_merged_pr_head_is_removed(self):
+        _tip, head = self.behind_merged_head()
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.assertEqual((plan["actions"][0]["proof"]["kind"], plan["actions"][0]["proof"]["head"]),
+                         ("merged-pr-head", head))
+        self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "removed")
+
+    def test_missing_merged_pr_head_is_fetched_from_the_pull_ref(self):
+        _tip, head = self.behind_merged_head()
+        self.git("push", "origin", f"{head}:refs/pull/1/head")
+        self.git("reflog", "expire", "--expire=now", "--all")
+        self.git("gc", "--prune=now", "--quiet")
+        self.assertFalse(self.repo.has_commit(head))
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "merged-pr-head")
+        self.assertEqual(self.git("for-each-ref", "refs/pull/"), "")
+
+    def test_ambiguous_merge_base_with_merged_pr_head_is_removed(self):
+        base = self.git("rev-parse", "HEAD")
+        self.git("switch", "-c", "feature")
+        side = self.commit("feature", "feature\n", "feature.txt")
+        self.git("switch", "main")
+        trunk_side = self.commit("trunk", "trunk\n", "trunk.txt")
+        self.git("merge", "--no-edit", side)
+        self.git("switch", "feature")
+        self.git("merge", "--no-edit", trunk_side)
+        head = self.git("rev-parse", "HEAD")
+        self.git("switch", "main")
+        self.git("merge", "--squash", "feature")
+        self.git("commit", "--allow-empty", "-m", "feature (#1)")
+        merge = self.git("rev-parse", "HEAD")
+        self.git("push", "origin", "main")
+        self.assertEqual(len(self.git("merge-base", "--all", head, merge).split()), 2, base)
+        self.prs = [{"number": 1, "state": "closed", "merged_at": "2026-01-01",
+                     "merge_commit_sha": merge,
+                     "head": {"ref": "feature", "sha": head, "repo": {"full_name": "owner/repo"}},
+                     "base": {"repo": {"full_name": "owner/repo"}}}]
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "merged-pr-head")
+        self.assertEqual(plan["actions"][0]["proof"]["content_audit"]["scope"], "unavailable")
+
+    def test_detached_worktree_at_merged_pr_head_is_found_by_commit(self):
+        head, _merge = self.squash()
+        self.commit("later trunk edit", "third\n")
+        self.git("push", "origin", "main")
+        self.git("branch", "-D", "feature")
+        worktree = self.root / ".worktrees/detached"
+        self.git("worktree", "add", "--detach", str(worktree), head)
+        plan = self.repo.plan("worktrees")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "merged-pr-head")
+        calls = [call.args for call in self.repo.run.call_args_list if call.args[:2] == ("gh", "api")]
+        self.assertTrue(any(f"repos/owner/repo/commits/{head}/pulls" in call for call in calls))
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "removed")
+
+    def test_unproven_reasons_and_summary_name_pr_history(self):
+        self.git("switch", "-c", "no-pr")
+        self.commit("unshipped", "unshipped\n", "a.txt")
+        self.git("switch", "-c", "closed-pr", "main")
+        self.commit("rejected", "rejected\n", "b.txt")
+        self.git("switch", "main")
+        prs = {"no-pr": [], "closed-pr": [{"number": 7, "state": "closed", "merged_at": None,
+                                           "head": {"sha": "x"}}]}
+        with patch.object(self.repo, "pull_requests", side_effect=lambda _repo, branch: prs[branch]):
+            plan = self.repo.plan("local-branches")
+        reasons = {item["ref"]: item["reason"].split(";")[0] for item in plan["skipped"]}
+        self.assertEqual(reasons["refs/heads/no-pr"], "not on trunk: no PR")
+        self.assertEqual(reasons["refs/heads/closed-pr"], "not on trunk: PR #7 closed without merging")
+        self.assertEqual(plan["summary"], {"removable": 0, "kept": {
+            "not on trunk: PR #N closed without merging": 1, "not on trunk: no PR": 1,
+            "protected branch": 1}})
+
+    def test_remote_branch_objects_are_fetched_before_proof(self):
+        clone = self.directory / "clone"
+        self.command("git", "clone", "-q", str(self.remote), str(clone))
+        for args in (("config", "user.name", "x"), ("config", "user.email", "x@example.invalid"),
+                     ("switch", "-c", "remote-only")):
+            self.command("git", "-C", str(clone), *args)
+        (clone / "remote.txt").write_text("remote\n")
+        self.command("git", "-C", str(clone), "add", "remote.txt")
+        self.command("git", "-C", str(clone), "commit", "-m", "remote work")
+        self.command("git", "-C", str(clone), "push", "-q", "origin", "remote-only")
+        plan = self.repo.plan("remote-branches")
+        skipped = next(item for item in plan["skipped"] if item["ref"] == "refs/heads/remote-only")
+        self.assertTrue(skipped["reason"].startswith("not on trunk: no PR"), skipped["reason"])
+        self.assertNotIn("remote-only", self.git("for-each-ref", "--format=%(refname)"))
+
+    def test_trunk_advancing_after_plan_does_not_abort_prune(self):
+        self.squash()
+        plan = self.plan("local-branches")
+        self.advance_trunk(("unrelated.txt", "unrelated\n"))
+        result = self.repo.apply(plan, "local-branches")
+        self.assertEqual(result["actions"][0]["result"], "removed")
+
+    def test_forged_kind_after_trunk_advanced_is_still_rejected(self):
+        head, _merge = self.squash()
+        plan = self.repo.plan("local-branches")
+        plan["actions"][0]["proof"]["kind"] = "merged-pr-head"
+        self.advance_trunk(("unrelated.txt", "unrelated\n"))
+        result = self.repo.apply(plan, "local-branches")
+        self.assertEqual(result["actions"][0]["result"], "skipped")
+        self.assertEqual(self.git("rev-parse", "feature"), head)
+
+    def test_scratch_generated_files_and_linked_modules_do_not_block_removal(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text(".tmp/\nnext-env.d.ts\nnode_modules\n")
+        (self.root / "node_modules/dep").mkdir(parents=True)
+        (worktree / ".tmp").mkdir()
+        (worktree / ".tmp/pr-body.md").write_text("scratch\n")
+        (worktree / "next-env.d.ts").write_text("/// generated\n")
+        (worktree / "node_modules").symlink_to(self.root / "node_modules")
+        plan = self.plan("worktrees")
+        ignored = plan["actions"][0]["ignored"]
+        self.assertEqual(ignored["scratch"], [".tmp/"])
+        self.assertEqual(ignored["regenerable"], ["next-env.d.ts", "node_modules"])
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "removed")
+        self.assertFalse(worktree.exists())
+        self.assertTrue((self.root / "node_modules/dep").is_dir())
+
     def test_stale_local_trunk_is_fetched_and_fast_forwarded(self):
         base = self.git("rev-parse", "HEAD")
         self.git("branch", "feature")
@@ -643,7 +785,7 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(entry["state"], "exact-entry")
         self.assertEqual(entry["candidate"], entry["trunk"])
 
-    def test_reverted_merged_pr_head_is_removed_with_recovery_ref(self):
+    def test_reverted_merged_pr_head_is_removed(self):
         head, merge = self.squash()
         self.git("revert", "--no-edit", "HEAD")
         self.git("push", "origin", "main")
@@ -652,7 +794,7 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual((proof["kind"], proof["pr"], proof["merge"]), ("merged-pr-head", 1, merge))
         self.assertFalse(proof["content_audit"]["current_content_present"])
         self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "removed")
-        self.assertEqual(self.git("rev-parse", f"refs/cleanup/recovery/{head}"), head)
+        self.assertEqual(self.git("for-each-ref", "refs/cleanup/"), "")
 
     def test_ancestor_history_cannot_bypass_reverted_current_content(self):
         self.git("switch", "-c", "feature")
@@ -767,47 +909,6 @@ class GitFixtureTests(unittest.TestCase):
         self.git("commit", "-m", "replace binary")
         self.git("push", "origin", "main")
         self.assertEqual(self.plan("local-branches")["actions"], [])
-
-    def test_recovery_ref_retains_entire_squashed_history_after_deletion_and_gc(self):
-        head, _merge = self.squash()
-        parent = self.git("rev-parse", head + "^")
-        plan = self.plan("local-branches")
-        recovery = plan["actions"][0]["recovery_ref"]
-        result = self.repo.apply(plan, "local-branches")
-        self.assertEqual(result["actions"][0]["result"], "removed")
-        self.assertEqual(self.git("rev-parse", recovery), head)
-        self.git("reflog", "expire", "--expire=now", "--all")
-        self.git("gc", "--prune=now")
-        self.assertEqual(self.git("show", parent + ":file.txt"), "first")
-        self.assertEqual(self.git("show", recovery + ":file.txt"), "second")
-
-    def test_recovery_failure_prevents_candidate_deletion(self):
-        self.squash()
-        plan = self.plan("local-branches")
-        with patch.object(self.repo, "preserve_history", side_effect=Refused("backup failed")):
-            result = self.repo.apply(plan, "local-branches")
-        self.assertEqual(result["actions"][0]["result"], "skipped")
-        self.assertIn("feature", self.git("branch", "--format=%(refname:short)").splitlines())
-
-    def test_symbolic_recovery_ref_cannot_disappear_with_candidate(self):
-        self.squash()
-        plan = self.plan("local-branches")
-        recovery = plan["actions"][0]["recovery_ref"]
-        self.git("symbolic-ref", recovery, "refs/heads/feature")
-        result = self.repo.apply(plan, "local-branches")
-        self.assertEqual(result["actions"][0]["result"], "skipped")
-        self.assertIn("symbolic recovery", result["actions"][0]["reason"])
-        self.assertEqual(self.git("rev-parse", recovery), self.git("rev-parse", "feature"))
-
-    def test_conflicting_recovery_ref_preserves_both_histories(self):
-        head, landed = self.squash()
-        plan = self.plan("local-branches")
-        recovery = plan["actions"][0]["recovery_ref"]
-        self.git("update-ref", recovery, landed)
-        result = self.repo.apply(plan, "local-branches")
-        self.assertEqual(result["actions"][0]["result"], "skipped")
-        self.assertEqual(self.git("rev-parse", recovery), landed)
-        self.assertEqual(self.git("rev-parse", "feature"), head)
 
     def test_missing_intent_review_blocks_deletion_and_creates_no_recovery_ref(self):
         head, _merge = self.squash()
@@ -943,7 +1044,7 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(plan["intent_reviews"], {})
         self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "removed")
         self.assertNotIn("renamed", self.git("branch", "--format=%(refname:short)").splitlines())
-        self.assertTrue(self.git("for-each-ref", "refs/cleanup/recovery/"))
+        self.assertEqual(self.git("for-each-ref", "refs/cleanup/"), "")
 
     def test_branch_that_held_a_commit_is_not_a_pointer(self):
         self.git("switch", "-c", "feature")
@@ -1020,6 +1121,32 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(plan["actions"], [])
         self.assertIn("local/settings.json", plan["skipped"][0]["reason"])
 
+    def test_copy_of_a_main_checkout_link_target_is_a_duplicate(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text("*.env.local\n")
+        (self.root / "api").mkdir()
+        (self.root / "api/.env.local").write_text("SECRET=shared\n")
+        (self.root / "workers").mkdir()
+        (self.root / "workers/.env.local").symlink_to("../api/.env.local")
+        (worktree / "workers").mkdir()
+        (worktree / "workers/.env.local").write_text("SECRET=shared\n")
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"][0]["ignored"]["duplicated"], ["workers/.env.local"])
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "removed")
+        self.assertEqual((self.root / "workers/.env.local").read_text(), "SECRET=shared\n")
+
+    def test_main_checkout_file_link_into_worktree_is_not_a_copy(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text("*.env.local\n")
+        (worktree / "workers").mkdir()
+        (worktree / "workers/.env.local").write_text("SECRET=only\n")
+        (self.root / "workers").mkdir()
+        (self.root / "workers/.env.local").symlink_to(worktree / "workers/.env.local")
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertIn("workers/.env.local", plan["skipped"][0]["reason"])
+
     def test_regenerable_names_cover_directories_not_files(self):
         worktree = self.make_worktree()
         (self.root / ".git/info/exclude").write_text("generated\n")
@@ -1062,7 +1189,7 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual([action["result"] for action in result["actions"]], ["removed", "removed"])
         self.assertFalse(worktree.exists())
         self.assertNotIn("feature", self.git("branch", "--format=%(refname:short)").splitlines())
-        self.assertEqual(self.git("rev-parse", "refs/cleanup/recovery/" + head), head)
+        self.assertEqual(self.git("for-each-ref", "refs/cleanup/"), "")
 
     def test_branch_waits_for_its_worktree_removal(self):
         worktree = self.make_worktree()

@@ -38,7 +38,7 @@ For each candidate, report:
 - Current implementation locations and verification evidence supporting intent.
 - Code status: currently present, historical only, or unproven. Intent status:
   verified or unresolved, with a concrete reason.
-- Decision: eligible or retained. After deletion, the verified recovery ref.
+- Decision: eligible or retained.
 
 Keep the helper's full JSON together with this receipt if the caller asks to save
 it under repository `.tmp/`. Keep unresolved candidates visible in the final
@@ -74,18 +74,4 @@ This is a fragment to add to the complete helper plan, not a replacement plan.
 Keep the helper's context and mechanical proofs intact. The helper verifies the
 review's binding and required evidence fields, not the truth of its prose.
 Never fill a verified review merely to unblock deletion. Missing, unresolved or
-stale review entries skip deletion without creating a recovery ref.
-
-## Recover tracked candidate history
-
-Read the verified ref in the prune report. Create a new branch from that ref in
-the same repository to restore the candidate tip and its original parents:
-
-```bash
-git show refs/cleanup/recovery/<candidate-oid>
-git branch recovered-work refs/cleanup/recovery/<candidate-oid>
-```
-
-The recovery ref survives ordinary garbage collection while it remains present.
-It does not back up filesystem data, cover deletion of the repository itself, or
-provide a remote copy. Routine cleanup must not delete these refs.
+stale review entries skip deletion.

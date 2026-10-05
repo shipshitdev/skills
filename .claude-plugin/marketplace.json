@@ -465,7 +465,7 @@
       "name": "git-cleanup",
       "source": "./skills/git-cleanup",
       "version": "2.2.2",
-      "description": "Audits candidate code and intent against current trunk, preserves recovery history, then plans or removes only proven-safe branches and worktrees. Defaults to a read-only cleanup plan."
+      "description": "Audits candidate code and intent against current trunk, then plans or removes only proven-safe or merged branches and worktrees. Defaults to a read-only cleanup plan."
     },
     {
       "name": "git-safety",

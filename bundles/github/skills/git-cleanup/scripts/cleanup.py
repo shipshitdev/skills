@@ -8,6 +8,7 @@ import filecmp
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -37,6 +38,10 @@ FAILURES = (Refused, OSError, ValueError, KeyError, TypeError)
 # Ignored directory names that tooling rebuilds from tracked sources or lockfiles.
 REGENERABLE = {"node_modules", ".next", ".turbo", ".cache", ".parcel-cache", "dist", "build",
                "coverage", "generated", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+# Ignored files that tooling writes on every run.
+REGENERABLE_FILES = {"next-env.d.ts"}
+# Top-level ignored directory that holds disposable agent scratch.
+SCRATCH = ".tmp"
 # Reflog messages that move a ref without creating work on it.
 CREATED = ("branch: Created from ", "Branch: renamed ")
 # Proof kinds whose evidence is mechanical, so pruning needs no intent review.
@@ -115,7 +120,7 @@ class Repository:
             raise Refused("dirty, untracked files, locked, or stale worktree")
         state = {"path": str(path.resolve()), "oid": head, "ref": branch}
         ignored = self.ignored_disposition(path, Path(self.worktrees()[0]["worktree"]))
-        if ignored["regenerable"] or ignored["duplicated"]:
+        if any(ignored.values()):
             state["ignored"] = ignored
         return state
 
@@ -123,14 +128,18 @@ class Repository:
         """Classify ignored files; refuse any that exist only in this worktree."""
         listing = self.run("git", "-C", str(path), "ls-files", "--others", "--ignored",
                            "--exclude-standard", "--directory", "-z").stdout
-        regenerable, duplicated, unique = [], [], []
+        regenerable, duplicated, scratch, unique = [], [], [], []
         for entry in sorted(item for item in listing.split("\0") if item):
             relative = entry.rstrip("/")
-            if self.regenerable(relative, (path / relative).is_dir()
-                                and not (path / relative).is_symlink()):
+            target = path / relative
+            if relative == SCRATCH or relative.startswith(SCRATCH + "/"):
+                scratch.append(entry)
+                continue
+            # Removal unlinks a symlink without following it, so a linked
+            # node_modules counts as regenerable like a real directory.
+            if self.regenerable(relative, target.is_dir() or target.is_symlink()):
                 regenerable.append(entry)
                 continue
-            target = path / relative
             if target.is_dir() and not target.is_symlink():
                 files = []
                 for directory, names, filenames in os.walk(target):
@@ -153,14 +162,16 @@ class Repository:
         if unique:
             raise Refused("ignored files present only in this worktree; preserve or relocate them "
                           "before cleanup: " + ", ".join(unique[:5]))
-        return {"regenerable": sorted(set(regenerable)), "duplicated": sorted(set(duplicated))}
+        return {"regenerable": sorted(set(regenerable)), "duplicated": sorted(set(duplicated)),
+                "scratch": sorted(scratch)}
 
     @staticmethod
     def regenerable(relative: str, is_directory: bool) -> bool:
         # The names cover directories only; a file called `build` is not output.
         *parents, last = relative.split("/")
         return (any(part in REGENERABLE for part in parents)
-                or (is_directory and last in REGENERABLE) or last.endswith(".tsbuildinfo"))
+                or (is_directory and last in REGENERABLE) or last.endswith(".tsbuildinfo")
+                or last in REGENERABLE_FILES)
 
     @staticmethod
     def duplicate(file: Path, original: Path, worktree: Path) -> bool:
@@ -171,8 +182,13 @@ class Repository:
             return False
         if file.is_symlink():
             return original.is_symlink() and os.readlink(file) == os.readlink(original)
-        return (file.is_file() and original.is_file() and not original.is_symlink()
-                and filecmp.cmp(file, original, shallow=False))
+        # A main-checkout link (apps/workers/.env.local -> ../api/.env.local)
+        # keeps its target, so a copy of that target survives unless the link
+        # resolves into this worktree.
+        target = Path(os.path.realpath(original))
+        if target == worktree.resolve() or worktree.resolve() in target.parents:
+            return False
+        return file.is_file() and target.is_file() and filecmp.cmp(file, target, shallow=False)
 
     def unmoved_since_creation(self, ref: str, oid: str, worktree: str | None = None) -> bool:
         """The ref's reflog proves it never held a commit of its own."""
@@ -194,6 +210,15 @@ class Repository:
     def remote_heads(self) -> dict[str, str]:
         return {ref: oid for oid, ref in (line.split("\t") for line in
                 self.git("ls-remote", "--heads", "origin").splitlines())}
+
+    def fetch_objects(self, *refs: str) -> None:
+        """Fetch objects for refs without creating or moving any local ref."""
+        # An empty refmap stops the opportunistic remote-tracking update.
+        fetch = ("git", "fetch", "--no-write-fetch-head", "--no-prune", "--refmap=", "origin")
+        if refs and self.run(*fetch, *refs, accepted=(0, 1, 128)).returncode != 0:
+            # One vanished ref fails the batch; retry the rest one at a time.
+            for ref in refs if len(refs) > 1 else ():
+                self.run(*fetch, ref, accepted=(0, 1, 128))
 
     def refresh_trunk(self, trunk: str) -> str:
         """Fetch origin trunk and fast-forward the local trunk ref when it is behind."""
@@ -414,13 +439,49 @@ class Repository:
         return records
 
     def merged_pr_head(self, oid: str, trunk: str, prs: list[dict]) -> dict | None:
-        """A same-repository PR merged at exactly this tip, with its merge commit on trunk."""
+        """A same-repository PR merged into trunk whose head is or contains this tip."""
         for pr in prs:
-            merge = pr.get("merge_commit_sha")
-            if (pr.get("merged_at") and (pr.get("head") or {}).get("sha") == oid and merge
+            head, merge = (pr.get("head") or {}).get("sha"), pr.get("merge_commit_sha")
+            if not (pr.get("merged_at") and head and merge
                     and self.has_commit(merge) and self.ancestor(merge, trunk)):
+                continue
+            if head == oid:
+                return pr
+            # Commits pushed to the PR from elsewhere leave this tip behind the
+            # merged head; everything it holds was still delivered.
+            if not self.has_commit(head):
+                self.fetch_objects(f"refs/pull/{pr['number']}/head")
+            if self.has_commit(head) and self.ancestor(oid, head):
                 return pr
         return None
+
+    def commit_pull_requests(self, repository: str, oid: str) -> list[dict]:
+        """PRs containing a commit; a detached worktree has no branch to look up."""
+        result = self.run("gh", "api", "--method", "GET", "--paginate", "--slurp",
+                          f"repos/{repository}/commits/{oid}/pulls", "-f", "per_page=100",
+                          accepted=(0, 1))
+        if result.returncode != 0:
+            # An unpushed commit has no PR on GitHub.
+            return []
+        records = []
+        for page in json.loads(result.stdout):
+            for pr in page:
+                repos = [((pr.get(side) or {}).get("repo") or {}).get("full_name", "").lower()
+                         for side in ("head", "base")]
+                if repos == [repository.lower()] * 2:
+                    records.append(pr)
+        return records
+
+    @staticmethod
+    def unproven(prs: list[dict]) -> str:
+        """Why a candidate's work is not on trunk, in terms of its PR history."""
+        merged = [pr["number"] for pr in prs if pr.get("merged_at")]
+        closed = [pr["number"] for pr in prs if pr.get("state") == "closed" and not pr.get("merged_at")]
+        if merged:
+            return f"not on trunk: commits beyond merged PR #{merged[0]}"
+        if closed:
+            return f"not on trunk: PR #{closed[0]} closed without merging"
+        return "not on trunk: no PR"
 
     def proof(self, oid: str, trunk: str, prs: list[dict], *, unmoved: bool = False) -> dict:
         if any(pr.get("state") == "open" for pr in prs):
@@ -433,16 +494,27 @@ class Repository:
                 "scope": "no-own-commits", "candidate_in_trunk_history": True,
                 "current_content_present": True, "paths": []}}
         ahead = self.git("rev-list", trunk + ".." + oid).splitlines()
-        audit = self.current_content_audit(oid, trunk, prs)
+        try:
+            audit = self.current_content_audit(oid, trunk, prs)
+        except Refused as error:
+            # Criss-cross merges leave no single audit base; a merged PR head
+            # still proves delivery without one.
+            pr = self.merged_pr_head(oid, trunk, prs)
+            if not pr:
+                raise
+            audit = {"base_oid": oid, "candidate_oid": oid, "trunk_oid": trunk,
+                     "scope": "unavailable", "error": str(error),
+                     "candidate_in_trunk_history": False, "current_content_present": False,
+                     "paths": []}
         if not audit["current_content_present"]:
             # Trunk may edit or revert code after it lands. When GitHub records
             # this exact tip as a merged PR whose merge commit is on trunk, the
             # work was delivered; later trunk changes are trunk's own decisions.
             pr = self.merged_pr_head(oid, trunk, prs)
             if pr:
-                return {"kind": "merged-pr-head", "pr": pr["number"], "head": oid,
+                return {"kind": "merged-pr-head", "pr": pr["number"], "head": pr["head"]["sha"],
                         "merge": pr["merge_commit_sha"], "ahead": ahead, "content_audit": audit}
-            raise Refused("current trunk content not proven; inspect code and intent, preserve candidate", audit)
+            raise Refused(self.unproven(prs) + "; inspect code and intent, preserve candidate", audit)
         if self.ancestor(oid, trunk):
             return {"kind": "ancestor", "ahead": ahead, "content_audit": audit}
         # Squash proof binds the entire candidate history to the exact merged
@@ -517,10 +589,13 @@ class Repository:
                 prs = pr_cache[branch]
             else:
                 prs = self.pull_requests(context["repository"], branch)
+        elif pr_cache is not None:
+            if "@" + oid not in pr_cache:
+                pr_cache["@" + oid] = self.commit_pull_requests(context["repository"], oid)
+            prs = pr_cache["@" + oid]
         else:
-            prs = []
+            prs = self.commit_pull_requests(context["repository"], oid)
         result["proof"] = self.proof(oid, context["trunk_oid"], prs, unmoved=unmoved)
-        result["recovery_ref"] = "refs/cleanup/recovery/" + oid
         return result
 
     def plan(self, scope: str, trunk: str | None = None) -> dict:
@@ -540,6 +615,9 @@ class Repository:
                 ref, oid = line.split(" ")
                 candidates.append({"kind": "local", "ref": ref, "oid": oid})
         if "remote" in SCOPES[scope]:
+            # Only trunk is fetched; prove other remote branches from their own objects.
+            self.fetch_objects(*sorted(ref for ref, oid in remote_heads.items()
+                                       if not self.has_commit(oid)))
             for ref, oid in remote_heads.items():
                 candidates.append({"kind": "remote", "ref": ref, "oid": oid})
         operations = self.active_operations(worktrees)
@@ -559,11 +637,47 @@ class Repository:
                 if isinstance(error, Refused) and error.audit is not None:
                     item["content_audit"] = error.audit
                 skipped.append(item)
-        return {"version": 2, "scope": scope, "context": context, "actions": actions,
-                "skipped": skipped, "intent_reviews": {}}
+        kept: dict[str, int] = {}
+        for item in skipped:
+            reason = re.sub(r"#\d+", "#N", item["reason"].split(";")[0])
+            kept[reason] = kept.get(reason, 0) + 1
+        return {"version": 2, "scope": scope, "context": context,
+                "summary": {"removable": len(actions), "kept": dict(sorted(kept.items()))},
+                "actions": actions, "skipped": skipped, "intent_reviews": {}}
+
+    def same_repository(self, planned: dict, current: dict) -> bool:
+        """Only trunk may have moved forward, and HEAD with it when HEAD is the trunk checkout."""
+        if planned.keys() != current.keys() or any(
+                planned[key] != current[key] for key in planned if key not in ("trunk_oid", "head")):
+            return False
+        if not self.ancestor(planned["trunk_oid"], current["trunk_oid"]):
+            return False
+        # Fetching fast-forwards a trunk checkout; a local commit there still stops.
+        return planned["head"] == current["head"] or (
+            current["current"] == f"refs/heads/{current['trunk']}"
+            and current["head"] == current["trunk_oid"]
+            and self.ancestor(planned["head"], current["head"]))
+
+    @staticmethod
+    def unchanged(action: dict, fresh: dict) -> bool:
+        """Fresh evidence still matches the reviewed action.
+
+        Against the planned trunk every field must match. After trunk advanced,
+        the candidate and proof kind must match, plus whatever the intent review
+        is bound to; the fresh evaluation already re-proved it on the new trunk.
+        """
+        planned = {key: value for key, value in action.items() if key != "after_worktrees"}
+        if fresh == planned:
+            return True
+        old, new = planned.get("proof", {}), fresh.get("proof", {})
+        if old.get("content_audit", {}).get("trunk_oid") == new.get("content_audit", {}).get("trunk_oid"):
+            return False
+        return ({k: v for k, v in fresh.items() if k != "proof"} == {k: v for k, v in planned.items() if k != "proof"}
+                and old.get("kind") == new.get("kind") and old.get("pr") == new.get("pr")
+                and old["content_audit"]["base_oid"] == new["content_audit"]["base_oid"])
 
     def revalidate(self, context: dict, action: dict) -> None:
-        if self.context(context["trunk"]) != context:
+        if not self.same_repository(context, self.context(context["trunk"])):
             raise Refused("repository changed immediately before deletion")
         worktrees = self.worktrees()
         self.assert_not_pinned(action, self.active_operations(worktrees))
@@ -583,25 +697,13 @@ class Repository:
             if any(state[key] != action[key] for key in ("path", "oid", "ref")):
                 raise Refused("worktree HEAD changed immediately before deletion")
 
-    def preserve_history(self, action: dict) -> None:
-        ref, oid = action["recovery_ref"], action["oid"]
-        if self.run("git", "symbolic-ref", "-q", ref, accepted=(0, 1)).returncode == 0:
-            raise Refused("symbolic recovery ref is not durable; preserve candidate")
-        existing = self.run("git", "rev-parse", "--verify", "--quiet", ref, accepted=(0, 1)).stdout.strip()
-        if existing:
-            if existing != oid:
-                raise Refused("recovery ref differs; preserve candidate")
-        else:
-            self.git("update-ref", "--no-deref", ref, oid, "0" * len(oid))
-        if self.oid(ref) != oid:
-            raise Refused("candidate history recovery could not be verified")
-
     def apply(self, plan: dict, scope: str, *, exclusive_worktrees: bool = False) -> dict:
         if (not isinstance(plan, dict) or plan.get("version") != 2 or plan.get("scope") != scope
                 or not isinstance(plan.get("actions"), list) or not isinstance(plan.get("skipped"), list)
                 or not all(isinstance(item, dict) for item in plan["actions"] + plan["skipped"])):
             raise Refused("plan format or authorized scope differs")
-        if self.context(plan["context"]["trunk"]) != plan["context"]:
+        context = self.context(plan["context"]["trunk"])
+        if not self.same_repository(plan["context"], context):
             raise Refused("repository, trunk, or current checkout changed; replan")
         results, removed = [], {}
         for action in plan["actions"]:
@@ -614,7 +716,7 @@ class Repository:
                 if not isinstance(review, dict):
                     raise Refused("invalid intent review record; preserve candidate")
                 # A ref that never held its own commits has no intent to review,
-                # and a merged exact PR head already carries GitHub's merge record;
+                # and a merged PR head already carries GitHub's merge record;
                 # the fresh evaluation below rejects a forged proof kind.
                 if action["proof"].get("kind") not in REVIEW_FREE and (
                         review.get("status") != "verified"
@@ -629,11 +731,10 @@ class Repository:
                     raise Refused("exclusive worktree access not established")
                 if any(removed.get(path) != "removed" for path in action.get("after_worktrees", [])):
                     raise Refused("worktree holding this branch was not removed")
-                # Recompute proof and state immediately before each mutation.
-                fresh = self.evaluate(action, plan["context"], scope)
-                if fresh != {key: value for key, value in action.items() if key != "after_worktrees"}:
+                # Recompute proof and state immediately before each mutation, against
+                # the trunk fetched for this run; revalidation accepts later advances.
+                if not self.unchanged(action, self.evaluate(action, context, scope)):
                     raise Refused("candidate evidence differs from the reviewed plan")
-                self.preserve_history(action)
                 self.revalidate(plan["context"], action)
                 if action["kind"] == "local":
                     # CAS prevents deleting newer commits; never branch -D.
