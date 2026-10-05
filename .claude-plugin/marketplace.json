@@ -1155,7 +1155,7 @@
       "name": "wait-what",
       "source": "./skills/wait-what",
       "version": "2.2.2",
-      "description": "Re-pitch the last message in plain English using the project's CONTEXT.md vocabulary."
+      "description": "Re-pitch the last message in plain English using the project's glossary vocabulary."
     },
     {
       "name": "weekly-review",

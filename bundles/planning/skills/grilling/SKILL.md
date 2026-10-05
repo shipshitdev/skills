@@ -9,8 +9,8 @@ metadata:
   source: https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md
   upstream_repo: mattpocock/skills
   upstream_ref: main
-  upstream_commit: 8b78b531ab96
-  last_synced: "2026-08-14"
+  upstream_commit: 4588b32ecab9
+  last_synced: "2026-10-05"
   license: MIT
 when_to_use: "grill me, interview me"
 ---
@@ -63,7 +63,15 @@ Number each frontier question. Recommend an answer so the user can accept it in 
 **Q1 — <question title>**: <question body, including choices when they exist>
 
 Recommended: <recommended answer>
+
+---
+
+**Q2 — <question title>**: <question body>
+
+Recommended: <recommended answer>
 ```
+
+Separate the questions of one round with a `---` rule so each reads on its own.
 
 A question whose answer depends on another question still open in this round belongs to a later round, not this one.
 

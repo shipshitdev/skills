@@ -4,6 +4,12 @@ description: "Debugs failures end to end: builds a repro loop, ranks hypotheses,
 metadata:
   version: "2.2.2"
   tags: "debugging, triage, reproduction, instrumentation, root-cause, regression"
+  source: https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md
+  upstream_repo: mattpocock/skills
+  upstream_ref: main
+  upstream_commit: 4588b32ecab9
+  last_synced: "2026-10-05"
+  license: MIT
 when_to_use: "stack trace, race condition, memory leak, regression"
 ---
 # Debug
@@ -49,26 +55,56 @@ Delegates To:
 
 - Recommend `bug` to file the report when the case ends in a ticket rather than a fix.
 
+## Redact
+
+Commands, outputs and captured artifacts get shown, so redact every secret first:
+write `<REDACTED>` in its place. Build loops against environment variables so a
+credential stays in the environment, not in what you show. Quote only the lines of
+a captured artifact (auth headers, cookies, tokens) that carry the signal. When
+the redacted output cannot diagnose the bug, say so and ask the user.
+
 ## Front-Door Loop
 
 Run this before reaching for the detailed rules. Each step ends on a checkable
 bound.
 
-1. Build a fast, deterministic feedback loop that can fail on the reported bug.
-   Bound: the loop fails on the reported symptom.
+1. Build a **tight** feedback loop that can go **red** on the reported bug.
+   Bound: one named command, already run once with its output shown (redacted),
+   that is red-capable (asserts the user's exact symptom, so it can go green when
+   fixed), deterministic, seconds-fast, and runnable by you unattended.
 2. Reproduce the user's symptom with that loop. Bound: the failure repeats on
-   demand.
-3. Write 3-5 ranked, falsifiable hypotheses. Bound: each one names an observation
+   demand and matches what the user described, not a nearby failure.
+3. Minimise. Cut inputs, callers, config, data and steps one at a time,
+   re-running the loop after each cut. Bound: removing any remaining element
+   turns the loop green. The result becomes the regression test.
+4. Write 3-5 ranked, falsifiable hypotheses and show the ranking to the user
+   before testing; their domain knowledge re-ranks it cheaply. Proceed on your
+   own ranking when the user is away. Bound: each hypothesis names an observation
    that would rule it out.
-4. Instrument the narrowest point that distinguishes those hypotheses. Bound: the
+5. Instrument the narrowest point that distinguishes those hypotheses. Bound: the
    evidence leaves exactly one hypothesis standing.
-5. Fix that cause, add or preserve a regression test at the highest useful test
+6. Fix that cause, add or preserve a regression test at the highest useful test
    boundary, re-run the original loop, and remove every temporary tag. Bound: the
-   loop passes and no tagged instrumentation remains.
+   loop passes and no tagged instrumentation remains. State the confirmed
+   hypothesis in the commit or PR message so the next debugger learns it.
+
+No red-capable command, no theory: reading code to build a hypothesis before step
+1 is done is the failure this loop prevents.
 
 If no reliable loop can be built, stop and name exactly what evidence is missing:
 logs, trace payloads, a failing fixture, a screen recording, environment access, or
-a reproduction script. Gather evidence rather than guessing without a loop.
+a reproduction script. List what you tried and gather evidence rather than guessing
+without a loop.
+
+**Flaky bugs.** The goal is a higher reproduction rate, not a clean repro. Loop the
+trigger 100 times, add stress, narrow the timing window, then keep raising the rate
+until the loop is debuggable. A 50% flake is workable; 1% is not.
+
+**No correct seam.** A regression test earns its place only at a seam that
+reproduces the real bug pattern at the call site. When no such seam exists, that
+absence is itself a finding: record it and recommend `codebase-design` (or the
+`deepen` variant of `codebase-advisor`), because the architecture is blocking the
+bug from being locked down.
 
 ## Escalation — Four-Phase Root-Cause Loop
 
@@ -115,6 +151,10 @@ Try these in order, choosing the cheapest loop that reproduces the real symptom:
 6. Throwaway harness around the smallest runnable subsystem.
 7. Property, fuzz, stress, or repeated-run loop for nondeterministic failures.
 8. Bisection or differential loop across commits, versions, configs, or datasets.
+9. Human-in-the-loop script, last resort, when only a person can click or observe:
+   copy `scripts/hitl-loop.template.sh`, edit its steps, and run it so the loop
+   stays structured. It prompts the person step by step and prints their answers
+   as `KEY=VALUE` lines for you to read.
 
 Improve the loop itself when it is slow, flaky, or vague. A sharp 2-second loop
 is more valuable than a broad 2-minute suite when debugging.
@@ -176,5 +216,7 @@ For the complete guide with all rules expanded: [AGENTS.md](AGENTS.md)
 
 ## Attribution
 
-The front-door loop incorporates debugging workflow ideas adapted from
-Matt Pocock's MIT-licensed `diagnose` skill.
+The front-door loop, minimise step, redaction rule and human-in-the-loop template
+are adapted from `diagnosing-bugs` in
+[mattpocock/skills](https://github.com/mattpocock/skills) (MIT, commit
+`4588b32ecab9`; earlier named `diagnose`). Owned here; not a sync target.
