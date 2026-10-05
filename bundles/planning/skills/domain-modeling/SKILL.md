@@ -9,8 +9,8 @@ metadata:
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/domain-modeling/SKILL.md
   upstream_repo: mattpocock/skills
   upstream_ref: main
-  upstream_commit: 8b78b531ab96
-  last_synced: "2026-08-14"
+  upstream_commit: 4588b32ecab9
+  last_synced: "2026-10-05"
   license: MIT
 when_to_use: "glossary, ubiquitous language"
 ---
@@ -21,25 +21,30 @@ Actively build and sharpen the project's domain model while designing. Challenge
 terms, invent edge-case scenarios, and write the glossary and decisions down the
 moment they crystallise.
 
-Reading `CONTEXT.md` for vocabulary is not this skill — that is a one-line habit
+Reading the glossary for vocabulary is not this skill — that is a one-line habit
 any skill can do. This skill is for changing the model, not just consuming it.
+
+**Glossary file name.** This skill writes `CONTEXT.md` (and `CONTEXT-MAP.md` for
+multiple contexts). A repo that already uses `GLOSSARY.md` / `GLOSSARY-MAP.md`
+keeps that name: read and update whichever the repo has, and never create the
+second one beside it. A repo with neither gets `CONTEXT.md`.
 
 ## Contract
 
 Inputs:
 
 - A term, relationship, or decision under discussion
-- Existing `CONTEXT.md` / `CONTEXT-MAP.md` and `docs/adr/` when present
+- Existing glossary (`CONTEXT.md` / `CONTEXT-MAP.md`, or `GLOSSARY.md` / `GLOSSARY-MAP.md`) and `docs/adr/` when present
 - `docs/agents/domain.md` when `setup-agent-routing` has already configured layout
 
 Outputs:
 
-- Updated glossary entries in `CONTEXT.md`
+- Updated glossary entries in the repo's glossary file
 - Optional ADR when the three-gate filter passes
 
 Creates/Modifies:
 
-- `CONTEXT.md` (or a per-context `CONTEXT.md` listed in `CONTEXT-MAP.md`)
+- The glossary file (or a per-context one listed in the map file)
 - `docs/adr/NNNN-slug.md` when an ADR is warranted
 - Directories created lazily — only when there is something to write
 
@@ -49,7 +54,7 @@ External Side Effects:
 
 Confirmation Required:
 
-- Before creating the first `CONTEXT.md` in a repo that had none
+- Before creating the first glossary file in a repo that had none
 - Before writing an ADR
 
 Delegates To:

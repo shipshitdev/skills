@@ -24,11 +24,11 @@ works as a map if setup has not run; it will send you there first.
 
 - Main flow: idea → `/interview` → PRD / intake → plan → `/loop`
 - On-ramps: bugs (`debug`), incoming requests (`feature-intake`), foggy large
-  work (`roadmap-analyzer`)
+  work (`interview` then `figure-it-out`)
 - Phase boundaries: continue, `/clear`, `handoff`, subagent, `/compact`, in that order
 - Upkeep: `codebase-advisor`, `tech-debt`, `codebase-design`
-- Review: `/review`
-- Standalone: `/wait-what`, `wizard`, `prototype`
+- Review: `/review`, and `/retro` after a hard session or a `debug`
+- Standalone: `/wait-what`, `/handoff`, `wizard`, `prototype`
 
 Keep `ask-dev-loop`'s `SKILL.md` in sync when a user-reachable Dev Loop skill is
 added, renamed, or rerouted.

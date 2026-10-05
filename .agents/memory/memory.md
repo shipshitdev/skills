@@ -207,6 +207,13 @@ Dex Horthy's `show-me` (humanlayer/skills, MIT). Installed upstream duplicates i
 `~/.agents/skills` (handoff, improve-codebase-architecture, writing-for-agents)
 are removed by hand after the catalog copies ship.
 
+Second pass: `debug` gained minimise, a tight red-capable loop criterion,
+redaction, a human-in-the-loop template, ranked hypotheses shown to the user,
+seam-as-finding and the confirmed hypothesis in the commit; `ask-dev-loop`
+routes foggy efforts to `interview` + `figure-it-out` (not the ICP roadmap
+tools) and adds `retro`, `handoff` and the PR-body route; `domain-modeling` and
+`wait-what` accept `GLOSSARY.md` (`CONTEXT.md` stays the default for new repos).
+
 ### Weekly review composition (2026-09-05)
 
 `weekly-review` coordinates board evidence, issue-to-code checks, a frozen
