@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "185 AI agent skills for development workflows",
+  "description": "187 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -894,6 +894,12 @@
       "description": "Cuts a release from a green trunk: proves checks on the trunk SHA, derives semver and notes, publishes via release-please, workflow, or tag. Backs /release."
     },
     {
+      "name": "research",
+      "source": "./skills/research",
+      "version": "2.2.2",
+      "description": "Investigates a question against primary sources and writes one Markdown note citing each claim. Use for docs, API, version or limit facts, or reading legwork to delegate."
+    },
+    {
       "name": "retro",
       "source": "./skills/retro",
       "version": "2.2.2",
@@ -1156,6 +1162,12 @@
       "source": "./skills/wait-what",
       "version": "2.2.2",
       "description": "Re-pitch the last message in plain English using the project's glossary vocabulary."
+    },
+    {
+      "name": "wayfinder",
+      "source": "./skills/wayfinder",
+      "version": "2.2.2",
+      "description": "Charts a foggy effort too big for one session as a map issue of decision tickets, then resolves one ticket per session until the way is clear. Plans only."
     },
     {
       "name": "weekly-review",

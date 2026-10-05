@@ -6,9 +6,15 @@ disable-model-invocation: true
 argument-hint: "[topic, feature, issue, or decision]"
 metadata:
   version: "2.2.2"
-  tags: "interview, discovery, requirements, planning"
+  tags: "interview, discovery, requirements, planning, questionnaire"
   author: Ship Shit Dev
-when_to_use: "interview me, grill me, grill-me, grill me with docs, discovery interview, requirements interview, before PRD, clarify requirements, /interview"
+  source: https://github.com/mattpocock/skills/blob/main/skills/productivity/to-questionnaire/SKILL.md
+  upstream_repo: mattpocock/skills
+  upstream_ref: main
+  upstream_commit: 4588b32ecab9
+  last_synced: "2026-10-05"
+  license: MIT
+when_to_use: "interview me, send a questionnaire, grill me, grill-me, grill me with docs, discovery interview, requirements interview, before PRD, clarify requirements, /interview"
 ---
 
 # Interview
@@ -28,6 +34,7 @@ Inputs:
 - Rough feature idea, issue number, product decision, bug class, or architecture
   question.
 - Optional docs, links, transcripts, screenshots, or existing tracker context.
+- `send` as the first argument for send mode (see below).
 
 Outputs:
 
@@ -35,10 +42,12 @@ Outputs:
 - Settled decisions from `grilling`.
 - Final interview brief ready for `prd-writer`, `feature-intake`, `shape`,
   `spec-first`, or direct implementation.
+- Send mode: a Markdown questionnaire for one recipient and its absolute path.
 
 Creates/Modifies:
 
-- None by default.
+- None by default. Send mode writes one questionnaire file under the durable
+  artifacts directory (or a path the user names).
 - May write tracker comments, PRD bodies, or memory files only when explicitly
   requested after the interview.
 
@@ -60,6 +69,14 @@ Delegates To:
 
 Recommend next (do not invoke): `prd-writer`, `feature-intake`, `shape`,
 `spec-first`, `prd-quality-gate`.
+
+## Send mode
+
+`/interview send` serves a decision the user cannot make alone: someone else holds
+the missing knowledge. Skip the repo scan and the brief. Read
+[references/questionnaire.md](references/questionnaire.md): grill the user about the
+send (who receives it, what must come back), then write a questionnaire aimed at
+that gap. Sending it stays with the user.
 
 ## When To Use
 
@@ -170,7 +187,7 @@ Tell the user to run the recommended next skill. Do not fire it.
 
 ## Anti-Patterns
 
-- Dump a long questionnaire before reading repo context.
+- Dump a long questionnaire before reading repo context. (Send mode is the one case where a questionnaire is the deliverable.)
 - Turn the interview into a PRD unless the user asks.
 - Ask questions whose answers are already in `.agents/memory/`, root
   agent files, docs, code, or tracker context.

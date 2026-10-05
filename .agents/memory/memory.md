@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **185 skills · 24 commands · 13 bundles · 198 plugins**.
+Generated catalog: **187 skills · 24 commands · 13 bundles · 200 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 185 | `skills/*/SKILL.md` |
+| Skills | 187 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 198 | skills + bundles |
+| Plugins | 200 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -191,6 +191,14 @@ seam-as-finding and the confirmed hypothesis in the commit; `ask-dev-loop`
 routes foggy efforts to `interview` + `figure-it-out` (not the ICP roadmap
 tools) and adds `retro`, `handoff` and the PR-body route; `domain-modeling` and
 `wait-what` accept `GLOSSARY.md` (`CONTEXT.md` stays the default for new repos).
+
+Third pass (new flows): `wayfinder` (user-invoked; a map issue of decision tickets
+resolved one per session, hands off to `/prd prepare`, never builds); `github-inbox`
+`triage <ref>` mode with an `.out-of-scope/` knowledge base for rejected
+enhancements (no label state machine, no durable-brief rule; accepted items go to
+`feature-intake`); `interview send` mode (questionnaire for someone else to answer);
+a small model-invoked `research` skill. `ask-dev-loop` routes the foggy-effort
+case to `wayfinder`.
 
 ### Weekly review composition (2026-09-05)
 

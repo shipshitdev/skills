@@ -1,0 +1,12 @@
+{
+  "name": "research",
+  "version": "2.2.2",
+  "description": "Answer a question from primary sources and write one cited Markdown note.",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://shipshit.dev"
+  },
+  "license": "MIT",
+  "skills": "."
+}

@@ -6,7 +6,13 @@ allowed-tools: Bash(gh *) Bash(node *) Bash(bun *)
 metadata:
   version: "2.2.2"
   tags: "github, inbox, triage, issues, pull-requests"
-when_to_use: "what needs my attention on GitHub"
+  source: https://github.com/mattpocock/skills/blob/main/skills/engineering/triage/SKILL.md
+  upstream_repo: mattpocock/skills
+  upstream_ref: main
+  upstream_commit: 4588b32ecab9
+  last_synced: "2026-10-05"
+  license: MIT
+when_to_use: "what needs my attention on GitHub, triage this issue or PR"
 ---
 
 # GitHub Inbox
@@ -26,17 +32,20 @@ Inputs:
 
 - Optional repository, owner, or project filter
 - Optional limit and priority rules
+- `triage <issue-or-PR ref>` to evaluate one inbound item instead of listing the inbox
 
 Outputs:
 
 - Prioritized GitHub inbox summary
 - Recommended next actions
 - Commands for follow-up inspection
+- `triage` mode: a verified recommendation (confirmed, failed or insufficient detail; redundancy and prior-rejection checks) for the maintainer to approve
 
 Creates/Modifies:
 
 - None in report mode
 - May label, comment, assign, close, or move items only after approval
+- `triage` mode may also write `.out-of-scope/<concept>.md` after approval
 
 External Side Effects:
 
@@ -48,6 +57,7 @@ Confirmation Required:
 - Before editing labels, assignees, comments, project fields, or issue state
 - Before rerunning workflows
 - Before merging or closing anything
+- In `triage` mode, before every comment, label, close and `.out-of-scope/` write
 
 Delegates To:
 
@@ -56,6 +66,7 @@ Delegates To:
 - `github-review-suggestions` when a PR needs inline review feedback
 - `project-board` when the board configuration needs inspection
 - `board-sync` when existing item values or delivery evidence need reconciliation
+- Recommend `feature-intake` or `bug` to turn an accepted triage item into an execution-ready issue
 
 ## Workflow
 
@@ -116,3 +127,12 @@ provider-specific environment variable.
 - Treat failing checks as actionable only after reading the failure.
 - Do not close or defer user-facing issues without leaving a reason.
 - If GitHub search results are noisy, narrow by `--repo`, `--owner`, or `--project` before making recommendations.
+
+## Triage mode
+
+`triage <issue-or-PR ref>` evaluates one inbound report or external PR on a repo
+the user maintains. Read [references/triage.md](references/triage.md) for the
+steps: gather, redundancy check, prior-rejection check, verify the claim, then
+recommend one disposition and wait. Rejected enhancements land in the
+`.out-of-scope/` knowledge base ([references/out-of-scope.md](references/out-of-scope.md)).
+Every comment it posts starts with the AI disclaimer defined in the triage reference.

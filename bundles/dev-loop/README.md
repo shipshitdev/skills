@@ -28,3 +28,5 @@ Autonomous GitHub issue-to-PR loop with PRDs, plans, board dispatch, QA, and rev
 - `board-sync`
 - `qa-reviewer`
 - `handoff`
+- `wayfinder`
+- `research`

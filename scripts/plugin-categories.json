@@ -145,7 +145,9 @@
         "roadmap-analyzer",
         "roadmap-to-milestones",
         "rules-capture",
-        "writing-plans"
+        "writing-plans",
+        "wayfinder",
+        "research"
       ]
     },
     "github": {
@@ -256,7 +258,9 @@
         "project-board",
         "board-sync",
         "qa-reviewer",
-        "handoff"
+        "handoff",
+        "wayfinder",
+        "research"
       ]
     }
   }
