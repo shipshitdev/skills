@@ -23,7 +23,7 @@ Use when you're:
 ## Quick Setup
 
 ```bash
-npm install stripe @stripe/stripe-js
+bun add stripe @stripe/stripe-js
 ```
 
 ```env

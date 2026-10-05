@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "176 AI agent skills for development workflows",
+  "description": "175 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -256,12 +256,6 @@
       "source": "./skills/context-degradation",
       "version": "2.2.2",
       "description": "Diagnoses and mitigates context degradation in agents: lost-in-middle, poisoning, distraction, confusion, clash. Use when context grows large or agent quality drops unexpectedly."
-    },
-    {
-      "name": "context-engineering",
-      "source": "./skills/context-engineering",
-      "version": "2.2.2",
-      "description": "Makes execution agents read CLAUDE.md/AGENTS.md first, flag plan-vs-convention conflicts, and reuse existing patterns. Use when executing a plan in a repo with agent config."
     },
     {
       "name": "context-optimization",

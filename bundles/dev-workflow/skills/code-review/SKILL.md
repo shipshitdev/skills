@@ -243,8 +243,8 @@ This skill = **correctness + security gate**.
 
 Use it for an individual diff or PR. Route a report-only multi-PR request such as
 "review all PRs" through `review-dispatch`, which applies this gate per PR. The
-only non-serial queue-drain mode is exact `/merge force`, owned by
-`merge-open-prs`; never infer that mutating mode from a review request.
+only non-serial queue-drain mode is exact `/merge force`, owned by the
+repo's merge-queue skill (`merge-open-prs` in this catalog); never infer that mutating mode from a review request.
 
 Structural and maintainability concerns — module cohesion, abstraction altitude,
 circular dependencies, dead-code introduction, API surface sprawl, whether the

@@ -271,7 +271,8 @@ milestones the repo does not already use.
 - **Treating `/review prs` as merge authorization.** It is always a report-only
   per-PR review sweep; use exact `/merge force` for queue mutation.
 - **Mutating anything directly in this dispatcher** outside the one gated `retro`
-  issue-filing path. Queue mutations belong to `merge-open-prs`; this skill only
+  issue-filing path. Queue mutations belong to the repo's merge-queue skill
+  (`merge-open-prs` in this catalog); this skill only
   delegates to review engines.
 - **Treating a `retro` backlog as a merge gate.** It reviews merged history to plan
   follow-up work; it never blocks a PR and emits no approve/block verdict.
