@@ -20,11 +20,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -48,11 +49,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -90,11 +92,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2286,11 +2289,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2315,11 +2319,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2329,11 +2334,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2343,11 +2349,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2413,11 +2420,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2427,11 +2435,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2441,11 +2450,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2455,11 +2465,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2469,11 +2480,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2483,11 +2495,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2695,11 +2708,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "8e799220a7b5a8dd8f5c337d4df502f982ea6bbb7dc741a3ecbb5288439ff51c"
+          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

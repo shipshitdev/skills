@@ -149,6 +149,11 @@ upstream candidates. Never advance accepted source commits or overwrite local
 adaptations automatically. Review after major model/harness releases while
 preserving user-owned provider routing. See upstream/pstack/README.md.
 
+A lock source may list `ignored_paths`: exact upstream paths that are repo-only and
+never shipped (open-pstack's `.agents/skills/verify-open-pstack` symlink). Candidates
+skip and report them; verify rejects any that are also archived or mapped. Every
+other symlink or non-blob upstream object is still rejected.
+
 Duplicate installed providers may be disabled only after replacement verification.
 Preserve generated user role sheets and their actual source of truth. Source
 coverage and runtime unit tests do not prove a live harness cutover.
