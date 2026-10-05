@@ -1,6 +1,6 @@
 # Pstack import verification
 
-The source ledger covers 184 Open Pstack files and 158 files from the original
+The source ledger covers 193 Open Pstack files and 164 files from the original
 Cursor Pstack subtree. Each file has a canonical disposition. Archived source
 coverage is not a claim that every harness supports every workflow.
 
@@ -24,6 +24,22 @@ they do not select runtime defaults.
 Run the repository suite and the packaged runtime on the approved verification
 host. CI repeats both, checks strict runtime types, validates skill composition
 and versions, and verifies generated bundle content.
+
+## 2026-10-05 sync (issue #188)
+
+Open Pstack advanced to 1b03678 and Cursor Pstack to 807c031. The tooling gained
+`ignored_paths` for repo-only upstream trees (open-pstack's verify harness), so the
+archive no longer carries that harness. Adopted: the attack-the-premise, test-behavior
+and explain-the-number principles, a benchmark checklist reference wired into the
+perf-issue and hillclimb playbooks, the agent-proof architect lens and red flags,
+`correct` folded into rules-capture, fresh-subagent and evidence-or-label rules, the
+poteto-agent skill preload, show-me-your-work run markers and a non-truncating
+`log.sh`, the Zod example, PR description headings, unslop rules 32 and 33, swarm
+brief details and the prompting reference. Retired: how critique mode and the
+duplicate commit-summary activity procedure (standup personal mode covers it).
+Not adopted: model, routing and effort defaults, `/loop` and `/goal` autopilot
+cadence, Cursor-only UI and open-pstack repository infrastructure. Runner
+reliability changes land in the follow-up pull request.
 
 ## Deliberate adaptations
 

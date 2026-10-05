@@ -4,7 +4,7 @@ description: Resolves git merge conflicts correctness-first, then proves the tre
 compatibility: Requires git; uses the repo's package manager and test runner to verify after resolving.
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
+  portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
   version: "2.2.2"
   tags: "git, merge, rebase, conflicts, resolution, lockfiles"
 allowed-tools: Bash(git *) Bash(bun *) Bash(bunx *)

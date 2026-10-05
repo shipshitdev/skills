@@ -4,7 +4,7 @@ Migration from the catalog after board correctness and composition repairs,
 2026-09-05, kept current through the 2026-10-05 catalog simplification (#190). This is
 a migration inventory, not a runtime registry.
 
-174 skills and 24 commands. Eight rows record a rename from an earlier name (one of
+176 skills and 24 commands. Eight rows record a rename from an earlier name (one of
 them, `gh-address-comments`, was later merged into `pr-comments`). Skills folded into
 another since the migration are listed under Retired skills. Owning surfaces describe
 contracts; they are not mandatory naming prefixes.
@@ -140,6 +140,7 @@ contracts; they are not mandatory naming prefixes.
 | `redis-caching` | `redis-caching` | retain | redis |
 | `refactor-code` | `refactor-code` | retain | refactoring |
 | `release` | `release` | retain | release |
+| `research` | `research` | retain | product-research |
 | `retro` | `retro` | retain | agent-memory |
 | `review-dispatch` | `review-dispatch` | retain | code-review |
 | `roadmap-analyzer` | `roadmap-analyzer` | retain | product-strategy |
@@ -182,6 +183,7 @@ contracts; they are not mandatory naming prefixes.
 | `vercel-deploy` | `vercel-deploy` | retain | vercel |
 | `verification-before-completion` | `verification-before-completion` | retain | work-evidence |
 | `wait-what` | `wait-what` | retain | code-explanation |
+| `wayfinder` | `wayfinder` | retain | product-specification |
 | `weekly-review` | `weekly-review` | retain | engineering-maintenance |
 | `why` | `why` | retain | code-explanation |
 | `wizard` | `wizard` | retain | human-setup |

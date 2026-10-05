@@ -272,6 +272,7 @@ This skill owns outcome measurement and quality gates. Adjacent skills own speci
 - `multi-agent-patterns`: evaluating coordination quality and parallelization trade-offs.
 - `tool-design`: evaluating tool selection and recovery effectiveness.
 - `memory-systems`: evaluating memory retrieval and retention quality.
+- `pstack`: its benchmark checklist reference vets a measured speedup or regression (limiter, tuning, errors, repeatability) before the number is reported.
 
 ## References
 

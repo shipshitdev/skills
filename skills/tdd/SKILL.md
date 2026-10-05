@@ -4,7 +4,7 @@ description: Drives feature work and bug fixes test-first with red-green-refacto
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
+  portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
   version: "2.2.2"
   tags: "testing, tdd, red-green-refactor, quality, verification"
   author: Ship Shit Dev

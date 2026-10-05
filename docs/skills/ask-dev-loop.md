@@ -24,7 +24,8 @@ works as a map if setup has not run; it will send you there first.
 
 - Main flow: idea → `/interview` → PRD / intake → plan → `/loop`
 - On-ramps: bugs (`debug`), incoming requests (`feature-intake`), foggy large
-  work (`interview` then `figure-it-out`)
+  work (`wayfinder`), a decision for someone else (`interview send`), outside
+  issues (`github-inbox` triage), facts (`research`)
 - Phase boundaries: continue, `/clear`, `handoff`, subagent, `/compact`, in that order
 - Upkeep: `codebase-advisor`, `tech-debt`, `codebase-design`
 - Review: `/review`, and `/retro` after a hard session or a `debug`

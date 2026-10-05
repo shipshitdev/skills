@@ -4,7 +4,7 @@ description: "Strips AI slop from code, product, and prose: console logs, any ty
 argument-hint: "[ui | prose | --changed | all | dry-run | --product]"
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
+  portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
   version: "2.2.2"
   tags: "code-quality, cleanup, ai-artifacts, product-polish, prose, maintenance"
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/unslop/SKILL.md
@@ -95,7 +95,7 @@ When the first argument is `prose`, or when the target is a reply, README,
 RFC, PR description, commit message, or other writing surface, apply
 [references/prose-slop.md](references/prose-slop.md).
 
-1. Scan for the 31 patterns.
+1. Scan for the 33 patterns.
 2. Rewrite. Preserve meaning. Match intended tone.
 3. Add soul: opinions, varied rhythm, specific facts.
 4. Self-audit: "What makes this obviously AI generated?" Fix remaining tells.

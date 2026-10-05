@@ -1,6 +1,6 @@
 # Steer with principle names
 
-pstack ships 21 principles as individual skills. `/pstack` reads their index at the start of every multi-step task, applies the ones the task triggers, and names each applied principle in its reply along with the decision it changed.
+pstack ships 24 principles as individual skills. `/pstack` reads their index at the start of every multi-step task, applies the ones the task triggers, and names each applied principle in its reply along with the decision it changed.
 
 You don't invoke principles. You use their names to steer. Each name points at a complete rule the agent has already read, so one phrase redirects the work more precisely than a paragraph of instructions.
 
@@ -26,13 +26,14 @@ separate before serializing shared state. give each attempt its own worktree, no
 
 Each phrase lands because the rule behind it is specific. The agent still has to say, in its reply, which decision the rule changed. A principle citation with no decision behind it is the tell that it name-dropped instead of applying.
 
-## The 21, briefly
+## The 24, briefly
 
 The core principles decide how much to build and when to rethink the design:
 
 - [Laziness Protocol](../../../../references/principle-laziness-protocol.md) prefers deletion and the smallest change that solves the problem.
 - [Foundational Thinking](../../../../references/principle-foundational-thinking.md) chooses the core data structures before writing logic.
 - [Redesign from First Principles](../../../../references/principle-redesign-from-first-principles.md) integrates a new requirement as if it had been there from day one.
+- [Attack the Premise](../../../../references/principle-attack-the-premise.md) questions the premise that two or more failed fixes share, before the next fix.
 - [Subtract Before You Add](../../../../references/principle-subtract-before-you-add.md) removes dead weight before building on top of it.
 - [Minimize Reader Load](../../../../references/principle-minimize-reader-load.md) collapses layers and hidden state a reader must hold in their head.
 - [Outcome-Oriented Execution](../../../../references/principle-outcome-oriented-execution.md) converges rewrites on the target design instead of preserving throwaway compatibility states.
@@ -54,6 +55,8 @@ The verification principles define what counts as proof:
 - [Prove It Works](../../../../references/principle-prove-it-works.md) verifies the real artifact, not a proxy.
 - [Fix Root Causes](../../../../references/principle-fix-root-causes.md) reproduces and traces to the cause before changing code.
 - [Sequence Work into Verifiable Units](../../../../references/principle-sequence-verifiable-units.md) ends each small unit in a check before starting the next.
+- [Test Behavior, Not Implementation](../../../../references/principle-test-behavior-not-implementation.md) asserts the result users observe and checks that a relevant defect fails the test.
+- [Explain the Number](../../../../references/principle-explain-the-number.md) names what limits a measured number and rules out that it measured something else, before anyone trusts or reports it.
 
 The delegation principles keep parallel work sane:
 

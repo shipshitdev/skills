@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **174 skills · 24 commands · 13 bundles · 187 plugins**.
+Generated catalog: **176 skills · 24 commands · 13 bundles · 189 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 174 | `skills/*/SKILL.md` |
+| Skills | 176 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 187 | skills + bundles |
+| Plugins | 189 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -102,6 +102,20 @@ Pstack destinations, so their hashes were re-recorded in `upstream/pstack/mappin
 Removed names no longer install through `npx skills add --skill <name>`; see the
 Retired skills table in `docs/skills/catalog-naming.md`. Rejected: keeping thin alias
 skills, because they cost a plugin, a directory and a trigger collision each.
+
+### Catalog simplification, routers (2026-10-05)
+
+Part 2 of #190. `commands/agent|deploy|design|prd|skill|test.md` now carry the
+full mode-to-engine table (with the aliases the routers held, such as `/test` bare
+scope tokens and `/design review`) and name the engines directly, so no command
+depends on a model-loadable router (#177 still holds). The six `*-dispatch` routers
+became `disable-model-invocation: true` explicit entry points for harnesses without
+commands, which removes about 1,440 characters from the model-invoked listing.
+`review-dispatch` (13 KB of target resolution, pinned by the validator) and
+`ask-dev-loop` stay model-loadable. Rejected: deleting the routers, because that
+removes the only portable front door outside Claude Code and breaks
+`npx skills add --skill <name>`; a later pass can delete them if that front door is
+not wanted. `/prd` gained the `spec` workflow inline (it also lives in `prd-dispatch`).
 
 ### Catalog simplification, stack validator (2026-10-05)
 
@@ -181,10 +195,18 @@ upstream candidates. Never advance accepted source commits or overwrite local
 adaptations automatically. Review after major model/harness releases while
 preserving user-owned provider routing. See upstream/pstack/README.md.
 
-A lock source may list `ignored_paths`: exact upstream paths that are repo-only and
-never shipped (open-pstack's `.agents/skills/verify-open-pstack` symlink). Candidates
-skip and report them; verify rejects any that are also archived or mapped. Every
-other symlink or non-blob upstream object is still rejected.
+A lock source may list `ignored_paths`: exact upstream paths or directory prefixes
+ending in `/` that are repo-only and never shipped (open-pstack's verify harness and
+its symlink). Candidates skip and report them; verify rejects any that are also
+archived or mapped. Every other symlink or non-blob upstream object is still rejected.
+
+Sync of 2026-10-05 (issue #188): Pstack advanced to open-pstack 1b03678 and
+cursor-pstack 807c031. Take Cursor changes through open-pstack's port up to its
+sync marker, and hand-port only later Cursor deltas. Model, routing and effort
+defaults, `/loop` and `/goal` autopilot cadence, Cursor-only UI and upstream repo
+infrastructure are never adopted. How critique mode is retired. The `correct`
+procedure lives in rules-capture, benchmark checklist and prompting in pstack
+references, and commit-summary no longer duplicates standup.
 
 Duplicate installed providers may be disabled only after replacement verification.
 Preserve generated user role sheets and their actual source of truth. Source
@@ -228,6 +250,14 @@ seam-as-finding and the confirmed hypothesis in the commit; `ask-dev-loop`
 routes foggy efforts to `interview` + `figure-it-out` (not the ICP roadmap
 tools) and adds `retro`, `handoff` and the PR-body route; `domain-modeling` and
 `wait-what` accept `GLOSSARY.md` (`CONTEXT.md` stays the default for new repos).
+
+Third pass (new flows): `wayfinder` (user-invoked; a map issue of decision tickets
+resolved one per session, hands off to `/prd prepare`, never builds); `github-inbox`
+`triage <ref>` mode with an `.out-of-scope/` knowledge base for rejected
+enhancements (no label state machine, no durable-brief rule; accepted items go to
+`feature-intake`); `interview send` mode (questionnaire for someone else to answer);
+a small model-invoked `research` skill. `ask-dev-loop` routes the foggy-effort
+case to `wayfinder`.
 
 ### Weekly review composition (2026-09-05)
 

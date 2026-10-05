@@ -6,10 +6,12 @@ metadata:
   tags: "deployment, dispatcher, infra, ec2, docker, devops, orchestration"
   author: Ship Shit Dev
 when_to_use: "/deploy, deploy the app, compose a deploy workflow, EC2 deploy setup, monitoring setup, devcontainer"
-user-invocable: false
+disable-model-invocation: true
 ---
 
 # Deploy Dispatch
+
+**Explicit entry point.** Invoke this by name in a harness without Claude Code commands. `/deploy` carries the same routing and names the engines directly, so it does not depend on this skill and the model never loads it on its own.
 
 Router behind `/deploy`. One job: turn a subcommand into the right deployment or infra action and delegate. Contains no deployment logic of its own — app deployments live in `deploy-app` and `deployment-composer`, EC2 pipeline wiring in `ec2-backend-deployer`, observability in `monitoring-setup`, and container dev environments in `devcontainer-setup`.
 

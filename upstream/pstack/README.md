@@ -40,8 +40,8 @@ python3 scripts/pstack-sync.py candidate \
 Repeat for `cursor-pstack` using the Cursor plugins checkout. Compare Open Pstack's
 `UPSTREAM.md` marker before importing original changes already included in the port.
 
-A lock source may declare `ignored_paths`, exact upstream paths that are repo-only
-and never shipped. Candidates skip and report them. Any other symlink or non-file
+A lock source may declare `ignored_paths`, exact upstream paths or directory
+prefixes ending in `/` that are repo-only and never shipped. Candidates skip and report them. Any other symlink or non-file
 upstream object still fails staging, and an ignored path may not be archived or mapped.
 
 The candidate includes an archive, proposed lock and mapping, an upstream diff,

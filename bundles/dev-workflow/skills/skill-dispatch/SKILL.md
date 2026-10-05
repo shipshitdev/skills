@@ -6,10 +6,12 @@ metadata:
   tags: "skills, dispatcher, authoring, compliance, orchestration"
   author: Ship Shit Dev
 when_to_use: "/skill, create a skill, capture this as a skill, test skill compliance, scout for an existing skill"
-user-invocable: false
+disable-model-invocation: true
 ---
 
 # Skill Dispatch
+
+**Explicit entry point.** Invoke this by name in a harness without Claude Code commands. `/skill` carries the same routing and names the engines directly, so it does not depend on this skill and the model never loads it on its own.
 
 The router behind `/skill`. It owns one job: turn a subcommand into the right
 skill-authoring action and delegate. It does **not** contain skill-authoring

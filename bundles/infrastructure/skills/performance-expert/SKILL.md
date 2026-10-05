@@ -128,6 +128,8 @@ Delegates To:
 - [ ] Images optimized and lazy loaded
 - [ ] Compression and cache headers configured
 
+Before reporting a measured speedup or regression, vet the number with the `pstack` skill's benchmark checklist reference: name the limiter, confirm every side was tuned, count errors, and repeat the run.
+
 ---
 
 **For database query optimization code, caching strategy implementation, N+1 query solutions, background-job patterns, infrastructure tuning, performance testing commands, and detailed checklists, see:** `references/full-guide.md`
