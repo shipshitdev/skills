@@ -131,7 +131,6 @@ Ported from Vincent's own private spec-pipeline repo. No public upstream → not
 |-------|--------|
 | prd-writer | private `vitae` spec-pipeline |
 | prd-quality-gate | private `vitae` spec-pipeline |
-| context-engineering | private `vitae` spec-pipeline |
 
 If `vitae` ever goes public, promote these to Bucket 1 with a real `source` + commit.
 

@@ -16,7 +16,6 @@ AI agent development and prompt engineering
 - `skill-creator`
 - `context-optimization`
 - `context-degradation`
-- `context-engineering`
 - `memory-systems`
 - `multi-agent-patterns`
 - `tool-design`

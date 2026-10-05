@@ -329,7 +329,7 @@ Make it executable and prove it bites:
 chmod +x .git/hooks/pre-commit
 
 # Verification: this must be rejected
-printf 'API_KEY=abcd1234efgh5678\n' > .env.hooktest
+printf 'API_KEY=abcd1234efgh5678\n' > .env.hooktest  # gitleaks:allow (synthetic fixture)
 git add -f .env.hooktest && git commit -m "hook test"   # expect: BLOCKED
 git reset && rm .env.hooktest
 ```

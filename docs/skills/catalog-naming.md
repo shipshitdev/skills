@@ -41,7 +41,6 @@ contracts; they are not mandatory naming prefixes.
 | `component-library` | `component-library` | retain | react-components |
 | `content-script-developer` | `content-script-developer` | retain | browser-extensions |
 | `context-degradation` | `context-degradation` | retain | agent-context |
-| `context-engineering` | `context-engineering` | retain | agent-context |
 | `context-optimization` | `context-optimization` | retain | agent-context |
 | `create-verification-skill` | `create-verification-skill` | retain | skill-maintenance |
 | `critique` | `critique` | retain | design |
@@ -215,6 +214,7 @@ names no longer install through `npx skills add --skill <name>`.
 | `nextjs-validator` | `stack-validator` (`--stack nextjs`, `references/nextjs.md`) | #190 |
 | `tailwind-validator` | `stack-validator` (`--stack tailwind`, `references/tailwind.md`) | #190 |
 | `refactor-dispatch` | deleted; `/refactor` routes to its engines directly | #190 |
+| `context-engineering` | removed: no consumers; Vitae keeps its own copy, and execution skills read repo instructions themselves | #190 |
 
 ## Commands
 
