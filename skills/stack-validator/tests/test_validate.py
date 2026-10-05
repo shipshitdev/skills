@@ -117,6 +117,13 @@ class BunTests(FixtureCase):
         self.assertTrue(any("Lockfile found in workspace" in m for m in errors))
         self.assertTrue(any("Extra lockfile" in m for m in errors))
 
+    def test_both_root_lockfiles_are_an_error(self) -> None:
+        self.build_workspace("bun.lock", "workspace:*")
+        write(self.root, "bun.lockb", "")
+        result = self.run_structure()
+        self.assertTrue(any("Both bun.lock and bun.lockb" in m for m in self.messages(result, "error")))
+        self.assertNotIn("Single lockfile at root", result.passed)
+
     def test_root_dependencies_and_missing_catalog_warn(self) -> None:
         write(self.root, "package.json", package(workspaces=["apps/*"], dependencies={"react": "^19.0.0"}))
         result = validate.ValidationResult()
@@ -154,13 +161,22 @@ class ClerkTests(FixtureCase):
         write(self.root, "package.json", package(dependencies={"react": "^19.0.0"}))
         self.assertTrue(any("No @clerk/*" in m for m in self.messages(self.run_stack(validate.validate_clerk), "error")))
 
-    def test_env_check_reports_names_only(self) -> None:
-        write(self.root, ".env.local", "CLERK_SECRET_KEY=FIXTURE_VALUE_NOT_PRINTED\n")
-        self.assertEqual(validate.env_variable_names(self.root), {"CLERK_SECRET_KEY"})
-        write(self.root, "package.json", package(dependencies={"@clerk/nextjs": "^6.0.0"}))
-        result = self.run_stack(validate.validate_clerk)
-        rendered = json.dumps(validate.result_to_dict(validate.STACKS["clerk"], result))
-        self.assertNotIn("FIXTURE_VALUE_NOT_PRINTED", rendered)
+    def test_env_check_reads_only_template_files(self) -> None:
+        write(self.root, ".env.local", "CLERK_SECRET_KEY=FIXTURE_VALUE_NOT_READ\n")
+        write(self.root, ".env", "CLERK_SECRET_KEY=FIXTURE_VALUE_NOT_READ\n")
+        write(self.root, ".env.example", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=\n")
+        opened: list[str] = []
+        original = validate.read_text
+
+        def recording_read_text(path, *args, **kwargs):
+            opened.append(Path(path).name)
+            return original(path, *args, **kwargs)
+
+        validate.read_text = recording_read_text
+        self.addCleanup(setattr, validate, "read_text", original)
+        self.assertEqual(validate.env_variable_names(self.root), {"NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"})
+        self.assertNotIn(".env.local", opened)
+        self.assertNotIn(".env", opened)
 
 
 class NextjsTests(FixtureCase):
