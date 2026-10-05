@@ -156,6 +156,12 @@ Should I add this to the permanent rules? [Yes/No/Modify]
 
 ---
 
+## Escalate Before Documenting
+
+A rule that repeats, or that an agent keeps breaking, belongs in structure, not prose. Before recording it as permanent text, check whether architecture, types, a lint that names the fix, or a behavior test can make the mistake impossible. Read [correct procedure](references/correct-procedure.md) for the ladder, the proof that each check fails on a real past mistake, and the rule-to-enforcer table. Record the rule as text only for judgment calls nothing can enforce.
+
+---
+
 ## Rule Categories
 
 ### Coding Rules

@@ -180,10 +180,18 @@ upstream candidates. Never advance accepted source commits or overwrite local
 adaptations automatically. Review after major model/harness releases while
 preserving user-owned provider routing. See upstream/pstack/README.md.
 
-A lock source may list `ignored_paths`: exact upstream paths that are repo-only and
-never shipped (open-pstack's `.agents/skills/verify-open-pstack` symlink). Candidates
-skip and report them; verify rejects any that are also archived or mapped. Every
-other symlink or non-blob upstream object is still rejected.
+A lock source may list `ignored_paths`: exact upstream paths or directory prefixes
+ending in `/` that are repo-only and never shipped (open-pstack's verify harness and
+its symlink). Candidates skip and report them; verify rejects any that are also
+archived or mapped. Every other symlink or non-blob upstream object is still rejected.
+
+Sync of 2026-10-05 (issue #188): Pstack advanced to open-pstack 1b03678 and
+cursor-pstack 807c031. Take Cursor changes through open-pstack's port up to its
+sync marker, and hand-port only later Cursor deltas. Model, routing and effort
+defaults, `/loop` and `/goal` autopilot cadence, Cursor-only UI and upstream repo
+infrastructure are never adopted. How critique mode is retired. The `correct`
+procedure lives in rules-capture, benchmark checklist and prompting in pstack
+references, and commit-summary no longer duplicates standup.
 
 Duplicate installed providers may be disabled only after replacement verification.
 Preserve generated user role sheets and their actual source of truth. Source

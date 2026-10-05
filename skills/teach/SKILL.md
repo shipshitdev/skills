@@ -4,7 +4,7 @@ description: Explains a change, subsystem or concept in one plain, diagram-built
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
+  portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
   version: "2.2.2"
   tags: "teaching, explanation, onboarding"
   author: Ship Shit Dev

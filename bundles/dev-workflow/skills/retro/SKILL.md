@@ -14,7 +14,7 @@ metadata:
   last_synced: "2026-10-05"
   license: MIT
   portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
+  portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
 when_to_use: "/retro, reflect, retrospective, post-mortem this session, what slowed us down"
 argument-hint: "[session id or log path] [--deep]"
 ---

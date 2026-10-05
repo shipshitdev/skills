@@ -1,7 +1,7 @@
 {
   "name": "how",
   "version": "2.2.2",
-  "description": "Walk through how a subsystem works, with optional critique.",
+  "description": "Walk through how a subsystem works.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

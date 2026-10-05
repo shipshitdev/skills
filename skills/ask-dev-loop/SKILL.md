@@ -144,6 +144,12 @@ Not feature work — upkeep.
 - **`/wizard`** — steps only a human can perform (dashboards, secrets, cutovers).
 - **`fix-merge-conflicts`** — already mid-merge or rebase.
 
+## Prompt wording
+
+- **`pstack`** — when the question is how to word the request itself, name the
+  `pstack` skill's prompting reference: goal, a done check that can fail, the
+  proof to show, and what to leave out.
+
 ## How to answer
 
 Match the user's situation to one row above. Reply with:

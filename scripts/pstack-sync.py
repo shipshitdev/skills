@@ -89,11 +89,18 @@ def git(checkout: Path, *arguments: str) -> bytes:
 
 
 def ignored_paths(source: dict) -> list[str]:
-    """Exact upstream paths a source declares as repo-only and never shipped."""
+    """Upstream paths a source declares as repo-only and never shipped.
+
+    An entry is an exact file path, or a directory prefix ending in "/".
+    """
     value = source.get("ignored_paths", [])
     if not isinstance(value, list) or len(set(value)) != len(value):
-        raise ValueError("ignored_paths must be a list of unique exact paths")
-    return [safe_path(path) for path in value]
+        raise ValueError("ignored_paths must be a list of unique paths")
+    return [safe_path(path.removesuffix("/")) + ("/" if path.endswith("/") else "") for path in value]
+
+
+def is_ignored(name: str, ignored: list[str]) -> bool:
+    return any(name == path or (path.endswith("/") and name.startswith(path)) for path in ignored)
 
 
 def snapshot(checkout: Path, commit: str, paths: list[str], ignored: list[str] | None = None,
@@ -114,7 +121,7 @@ def snapshot(checkout: Path, commit: str, paths: list[str], ignored: list[str] |
         header, raw_name = item.split(b"\t", 1)
         mode, kind, oid = header.decode().split()
         name = safe_path(raw_name.decode())
-        if name in ignored:
+        if is_ignored(name, ignored):
             if skipped is not None:
                 skipped.append(name)
             continue
@@ -156,9 +163,10 @@ def verify(root: Path) -> list[str]:
         if inventory(contents) != source["files"]:
             errors.append(f"{source['id']}: archive inventory differs from lock")
         try:
-            for path in ignored_paths(source):
-                if path in contents:
-                    errors.append(f"{source['id']}: ignored path is also archived: {path}")
+            ignored = ignored_paths(source)
+            for name in contents:
+                if is_ignored(name, ignored):
+                    errors.append(f"{source['id']}: ignored path is also archived: {name}")
         except ValueError as error:
             errors.append(f"{source['id']}: {error}")
         expected.update({source["id"] + ":" + name: value for name, value in contents.items()})
@@ -232,7 +240,8 @@ def candidate(root: Path, source_id: str, checkout: Path, commit: str, output: P
     if output.resolve().is_relative_to(root.resolve()):
         raise ValueError("Stage candidates outside the maintained repository")
     ignored = ignored_paths(source)
-    mapped = [path for path in ignored if source_id + ":" + path in mapping["files"]]
+    mapped = [key for key in mapping["files"]
+              if key.startswith(source_id + ":") and is_ignored(key.split(":", 1)[1], ignored)]
     if mapped:
         raise ValueError(f"Ignored paths cannot be mapped shipped files: {mapped}")
     skipped: list[str] = []

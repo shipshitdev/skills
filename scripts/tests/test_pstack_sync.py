@@ -280,6 +280,28 @@ class PstackSyncTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             sync.candidate(self.root, "fixture", checkout, commit, self.base / "dup")
 
+    def test_ignored_directory_prefix_skips_nested_files_only(self) -> None:
+        checkout, _, _ = self.repository()
+        (checkout / "infra").mkdir()
+        (checkout / "infra/run.sh").write_text("echo infra\n")
+        (checkout / "infra-extra.txt").write_text("shipped\n")
+        self.git(checkout, "add", ".")
+        self.git(checkout, "commit", "-qm", "infra")
+        commit = self.git(checkout, "rev-parse", "HEAD")
+        skipped: list[str] = []
+        files = sync.snapshot(checkout, commit, ["."], ["infra/"], skipped)
+        self.assertEqual(skipped, ["infra/run.sh"])
+        self.assertIn("infra-extra.txt", files)
+        self.source["ignored_paths"] = ["infra/"]
+        self.save()
+        report = sync.candidate(self.root, "fixture", checkout, commit, self.base / "prefix")
+        self.assertEqual(report["ignored_paths"], ["infra/run.sh"])
+        self.assertNotIn("infra/run.sh", report["added"])
+        self.mapping["files"]["fixture:infra/run.sh"] = self.entry
+        self.save()
+        with self.assertRaises(ValueError):
+            sync.candidate(self.root, "fixture", checkout, commit, self.base / "mapped")
+
 
 if __name__ == "__main__":
     unittest.main()

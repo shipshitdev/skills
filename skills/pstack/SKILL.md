@@ -5,7 +5,7 @@ disable-model-invocation: true
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
+  portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
   version: "2.2.2"
   tags: "orchestrator, playbooks, verification, architecture, review"
   author: Ship Shit Dev
@@ -209,6 +209,14 @@ resources relative to the installed skill directory.
 
 Read [babysit procedure](references/babysit-procedure.md) when selecting a PR monitoring workflow; the canonical Babysit playbook owns monitoring modes.
 Apply the authorized scope and mode of this entry point to every step.
+Resolve other skills through this distribution’s active catalog; resolve
+resources relative to the installed skill directory.
+
+## Prompting
+
+Read [prompting](references/prompting.md) when the user asks how to word a
+request for an agent, or when a vague prompt needs a goal, a done check and
+proof before work starts.
 Resolve other skills through this distribution’s active catalog; resolve
 resources relative to the installed skill directory.
 
