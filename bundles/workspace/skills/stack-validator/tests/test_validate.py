@@ -62,6 +62,13 @@ class BiomeTests(FixtureCase):
         self.assertEqual(result.issues, [])
         self.assertEqual(result.meta["schema_version"], "2.3.12")
 
+    def test_jsonc_comments_are_stripped_but_urls_survive(self) -> None:
+        write(self.root, "package.json", package(devDependencies={"@biomejs/biome": "^2.3.0"}))
+        write(self.root, "biome.jsonc", '{\n  // comment\n  "$schema": "https://biomejs.dev/schemas/2.3.12/schema.json", /* block */\n  "formatter": {"enabled": true}\n}\n')
+        result = self.run_stack(validate.validate_biome)
+        self.assertEqual(result.meta["schema_version"], "2.3.12")
+        self.assertFalse(any("Invalid JSON" in m for m in self.messages(result, "error")))
+
     def test_legacy_config_is_flagged(self) -> None:
         write(self.root, "package.json", package(devDependencies={"@biomejs/biome": "^1.9.0"}))
         write(self.root, "biome.json", json.dumps({

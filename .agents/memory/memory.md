@@ -110,9 +110,11 @@ into one `stack-validator`: a single `scripts/validate.py` with per-stack check
 functions (`--stack biome|bun|clerk|nextjs|tailwind|all`, auto-detected when
 omitted), shared `Issue`/`ValidationResult` scaffolding and report, and
 `references/<stack>.md` holding each old SKILL body plus its full guide. Existing
-checks are unchanged except two deliberate fixes: the Bun check now accepts the
-default `bun.lock` (it only knew `bun.lockb`), and Clerk gained the script its old
-SKILL.md advertised but never shipped. New fixture tests live in
+checks are unchanged except three deliberate fixes: the Bun check now accepts the
+default `bun.lock` (it only knew `bun.lockb`), the Biome config loader no longer
+mangles the `$schema` URL while stripping `//` comments (every `biome.json` with a
+schema failed as invalid JSON), and Clerk gained the script its old SKILL.md
+advertised but never shipped. New fixture tests live in
 `skills/stack-validator/tests/`. Rejected: keeping five thin skills with a shared
 library, because skills install individually and cannot share a script.
 

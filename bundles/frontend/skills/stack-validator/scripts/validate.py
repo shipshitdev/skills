@@ -160,6 +160,14 @@ def check_biome_package_version(root: Path, result: ValidationResult) -> bool:
     return True
 
 
+JSON_TOKEN = re.compile(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/', re.DOTALL)
+
+
+def strip_json_comments(content: str) -> str:
+    """Remove // and /* */ comments without touching strings (such as https:// URLs)."""
+    return JSON_TOKEN.sub(lambda m: m.group(0) if m.group(0).startswith('"') else '', content)
+
+
 def load_biome_config(root: Path, result: ValidationResult) -> dict | None:
     """Load biome.json (or biome.jsonc, with comments removed)."""
     config_path = root / 'biome.json'
@@ -173,9 +181,7 @@ def load_biome_config(root: Path, result: ValidationResult) -> dict | None:
     try:
         with open(config_path) as f:
             content = f.read()
-        content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
-        content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
-        return json.loads(content)
+        return json.loads(strip_json_comments(content))
     except json.JSONDecodeError as e:
         result.add_issue('error', config_path.name, f'Invalid JSON: {e}')
         return None
