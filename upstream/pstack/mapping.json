@@ -1613,12 +1613,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "3b6b543f28f131777ca802a46afd48e5e3032bcafd2ce30ec34af8fe776a2f04"
+          "sha256": "1be705ffa526b8ca91ae5faca22985e61217cfc2d2c10982650b90bc96990cdb"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: remove merged exact PR heads that trunk later edited or reverted",
+      "review_note": "git-cleanup: merged PR heads behind or detached, fetched remote objects, scratch and linked copies, no recovery refs, trunk advance during prune",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4476,12 +4476,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "3b6b543f28f131777ca802a46afd48e5e3032bcafd2ce30ec34af8fe776a2f04"
+          "sha256": "1be705ffa526b8ca91ae5faca22985e61217cfc2d2c10982650b90bc96990cdb"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: remove merged exact PR heads that trunk later edited or reverted",
+      "review_note": "git-cleanup: merged PR heads behind or detached, fetched remote objects, scratch and linked copies, no recovery refs, trunk advance during prune",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"

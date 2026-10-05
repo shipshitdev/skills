@@ -1,6 +1,6 @@
 ---
 name: git-cleanup
-description: Audits candidate code and intent against current trunk, preserves recovery history, then plans or removes only proven-safe branches and worktrees. Defaults to a read-only cleanup plan.
+description: Audits candidate code and intent against current trunk, then plans or removes only proven-safe or merged branches and worktrees. Defaults to a read-only cleanup plan.
 compatibility: Requires Python 3.9+, git with patch-id --verbatim, authenticated GitHub CLI gh.
 metadata:
   version: "2.2.2"
@@ -33,16 +33,17 @@ Outputs:
 - Exact candidate refs, object IDs, worktree paths, and current-code evidence
 - Initially empty `intent_reviews`, completed by actual code/intent inspection
 - Per-path base/candidate/trunk entries, patch evidence, and unresolved intent
-- Verified recovery refs for removed candidates
-- Planned actions and skipped candidates with reasons
+- Planned actions and skipped candidates with reasons, plus a `summary` that counts
+  removable actions and kept candidates by reason (what is not on trunk, and why)
 - Removed and skipped actions after revalidation
 
 Creates/Modifies:
 
 - `verify` and `dry-run` fetch origin trunk, fast-forward the local trunk ref
   when it is a strict ancestor of origin, then print JSON to stdout
-- `prune` preserves each candidate under `refs/cleanup/recovery/<candidate-oid>`
-  in the local repository before deleting resources listed in the authorized plan
+- Planning fetches objects for remote branches and merged PR heads
+  (`refs/pull/<n>/head`) that are missing locally, without creating or moving refs
+- `prune` deletes only resources listed in the authorized plan and creates no refs
 - A caller may explicitly save the plan under the repository's `.tmp/` directory
 - Fetch never uses `--prune`. Broad `git worktree prune` and `git remote prune`
   still do not run in any mode
@@ -88,8 +89,8 @@ Separate these conclusions:
 
 - **Currently present:** current trunk contains the candidate's complete audited
   delta, with the per-path proof described below; report intent separately.
-- **Delivered:** the candidate tip is the exact head of a merged PR on trunk;
-  trunk may have changed that code since. Eligible through `merged-pr-head`.
+- **Delivered:** the candidate tip is, or is behind, the head of a merged PR on
+  trunk; trunk may have changed that code since. Eligible through `merged-pr-head`.
 - **Historical only:** ancestry, a PR merged at another commit, or a blob found in
   history shows prior delivery, but current code does not prove the work remains present.
 - **Unproven:** partial landing, rewritten behavior, conflicting edits, missing
@@ -97,7 +98,7 @@ Separate these conclusions:
   exactly what must be inspected next.
 
 A deleted remote branch or a merged PR at some other commit is triage context,
-not proof. A candidate whose tip is the exact head of a merged PR is different:
+not proof. A candidate whose tip is or precedes a merged PR head is different:
 see the `merged-pr-head` rule below. Remove it with the plan; never leave it for
 manual deletion.
 
@@ -141,15 +142,18 @@ A detached worktree qualifies the same way through its HEAD reflog. A branch
 whose reflog shows a commit, reset, rebase or pull, or that has no reflog,
 takes the normal audit.
 
-A merged exact PR head is delivered work. When the gate fails only because
-trunk later edited, replaced or reverted that code, the helper records a
-`merged-pr-head` proof: a same-repository PR (fork heads never qualify) that
-GitHub reports merged at exactly the candidate tip, with its merge commit
-present locally and in captured trunk history. The full `content_audit` stays
-in the plan to show what trunk changed afterwards. The proof needs no intent
-review, because trunk's later edits are its own decisions and GitHub retains
-the PR head. A tip that moved after the merge holds unlanded commits and takes
-the normal audit.
+A merged PR head is delivered work. When the gate fails because trunk later
+edited, replaced or reverted that code, or because criss-cross merges leave no
+single audit base, the helper records a `merged-pr-head` proof: a
+same-repository PR (fork heads never qualify) that GitHub reports merged, with
+its merge commit present locally and in captured trunk history, whose head is
+the candidate tip or descends from it. A tip behind the head is common when
+commits were pushed to the PR from another checkout; the helper fetches the
+missing head from `refs/pull/<n>/head`. A detached worktree finds its PR by
+commit. The `content_audit` stays in the plan to show what trunk changed
+afterwards. The proof needs no intent review, because trunk's later edits are
+its own decisions and GitHub retains the PR head. A tip with commits beyond the
+merged head holds unlanded work and takes the normal audit.
 
 After this gate, ancestry and exact-head squash evidence can explain delivery,
 but cannot bypass current-content inspection. Exact-head squash evidence binds
@@ -185,7 +189,7 @@ For a reusable plan, explicitly save the same output under the repository's
 `.tmp/` after creating that directory. Review its `context`, `actions`, and
 `skipped` fields, including every `content_audit`. Complete the code/intent
 receipt, populate `intent_reviews` as documented in the reference (not needed
-for `no-own-commits` or `merged-pr-head` actions), and remove
+for `no-own-commits`, `merged-pr-head` or `exact-pr-head-squash` actions), and remove
 uncertain actions from the selected plan before pruning. Missing, unresolved or
 stale reviews make the helper skip deletion; `--confirmed` cannot bypass this. Saving this report is a caller-requested file write; the helper
 itself writes nothing during discovery.
@@ -205,10 +209,13 @@ is a byte-identical copy of the same path in the main checkout, not reached thro
 a link into the worktree (such as a synced
 env file) or sits under a regenerable directory: `node_modules`, `.next`,
 `.turbo`, `.cache`, `.parcel-cache`, `dist`, `build`, `coverage`, `generated`,
-Python caches (directories only), or a `*.tsbuildinfo` file. The plan lists both kinds under the
-worktree's `ignored` field. Any other ignored file is unique to the worktree;
-the helper names it and preserves the worktree. Relocate those files first;
-this skill never clears them to make cleanup pass.
+Python caches (directories only, or a symlink to one), a `*.tsbuildinfo` or
+`next-env.d.ts` file, or the top-level `.tmp/` agent scratch directory, which is
+disposable and removed with its worktree. The plan lists these under the
+worktree's `ignored` field as `duplicated`, `regenerable` and `scratch`. Any
+other ignored file, such as an `.env.local` that differs from the main checkout,
+is unique to the worktree; the helper names it and preserves the worktree.
+Relocate those files first; this skill never clears them to make cleanup pass.
 
 An active rebase, merge, cherry-pick, revert, sequencer, or bisect operation pins
 only the worktree it runs in and the branch it operates on: the checked-out branch
@@ -238,16 +245,19 @@ python3 <skill-directory>/scripts/cleanup.py prune --root <repository> \
   --scope worktrees --plan <repository>/.tmp/cleanup-plan.json --confirmed --exclusive-worktrees
 ```
 
-The helper rejects changes to repository identity, remote URL, trunk ID, current
-HEAD, or scope. Immediately before each action it refreshes PR protection,
+The helper rejects changes to repository identity, remote URL, current HEAD, or
+scope, and any trunk change other than a fast-forward. When trunk only advanced,
+prune re-proves each action against the new trunk instead of aborting (a trunk
+checkout may fast-forward with it). Proofs that carry their own evidence
+(`no-own-commits`, `merged-pr-head`, `exact-pr-head-squash`) continue when the
+proof kind and PR still match; an intent review is bound to the planned trunk,
+so other proofs need a fresh plan and review. Trunk must not move again between
+that proof and the deletion. Immediately before each action it refreshes PR protection,
 requires a recorded verified intent review bound to candidate/base/trunk IDs
-(except for a `no-own-commits` or `merged-pr-head` proof), recomputes that candidate's proof, and checks
+(except for a `no-own-commits`, `merged-pr-head` or `exact-pr-head-squash` proof), recomputes that candidate's proof, and checks
 that the exact candidate, ref, object ID, and clean worktree state still match.
-Create and verify the deterministic recovery ref before deletion; a preservation
-failure skips the action. This ref retains the entire tracked candidate history,
-including intermediate commits hidden by a squash. It is local Git recovery,
-not a remote backup. Never delete recovery refs as part of routine cleanup.
-Changed or unproven candidates are skipped with reasons.
+Prune creates no recovery refs. Changed or unproven candidates are skipped with
+reasons.
 
 - Local refs use an expected-old-object-ID deletion (`update-ref` compare and
   swap). No unguarded `branch -D` fallback runs. Checked-out branches are excluded.
@@ -261,14 +271,13 @@ Compare-and-swap protects branch tips, while the exclusive-access precondition
 protects worktree registration and filesystem races. Do not claim filesystem
 removal is atomic. Ignored files unique to the worktree preserve it, including
 files introduced after planning; a changed ignored listing skips the action.
-Recovery refs do not protect uncommitted or ignored data; preserve that data
-before cleanup. The helper never bypasses these checks with a force flag.
+The helper never bypasses these checks with a force flag.
 
 ## Completion
 
-Report the repository, trunk ID, scope, current-code and intent evidence, recovery
-refs for removed candidates, and
-reasons for every skip. Prune emits the same context, scope, and initial skipped
+Report the repository, trunk ID, scope, current-code and intent evidence, and
+the `summary` of kept candidates by reason, so the caller sees exactly what is
+not on trunk. Name the candidates behind each reason. Prune emits the same context, scope, and initial skipped
 list as planning, with removal results on its action list. A later command or data
 error preserves results for completed removals and marks affected actions skipped;
 exit status 1 signals these execution skips while the full JSON report remains

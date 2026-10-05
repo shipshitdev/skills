@@ -23,7 +23,7 @@ blob membership answer different questions from current behavior.
    feature flag disables it. Code may have landed and later been reverted. Keep
    partial, unverified or conflicting work and give a specific follow-up.
 5. Include only actions with both current-code proof and verified intent, or a
-   `merged-pr-head` or `no-own-commits` proof, in the selected plan. Omit uncertain actions; never forge a helper proof to permit
+   `merged-pr-head`, `exact-pr-head-squash` or `no-own-commits` proof, in the selected plan. Omit uncertain actions; never forge a helper proof to permit
    removal. Replan if the candidate, trunk or audit boundary changes.
 
 ## Receipt
@@ -38,7 +38,7 @@ For each candidate, report:
 - Current implementation locations and verification evidence supporting intent.
 - Code status: currently present, historical only, or unproven. Intent status:
   verified or unresolved, with a concrete reason.
-- Decision: eligible or retained. After deletion, the verified recovery ref.
+- Decision: eligible or retained.
 
 Keep the helper's full JSON together with this receipt if the caller asks to save
 it under repository `.tmp/`. Keep unresolved candidates visible in the final
@@ -47,7 +47,8 @@ report. Never report a semantic audit as an automated equivalence guarantee.
 ## Record the review in the selected JSON plan
 
 The helper emits an empty `intent_reviews` object. After actual inspection, add
-one entry for each verified action except `no-own-commits` and `merged-pr-head`
+one entry for each verified action except `no-own-commits`, `merged-pr-head` and
+`exact-pr-head-squash`
 proofs, keyed `<candidate-oid>:<audit-base-oid>`.
 Branches that share a tip can have different audit bases, so each action needs
 its own receipt. Copy the immutable IDs from that action's `content_audit`:
@@ -74,18 +75,4 @@ This is a fragment to add to the complete helper plan, not a replacement plan.
 Keep the helper's context and mechanical proofs intact. The helper verifies the
 review's binding and required evidence fields, not the truth of its prose.
 Never fill a verified review merely to unblock deletion. Missing, unresolved or
-stale review entries skip deletion without creating a recovery ref.
-
-## Recover tracked candidate history
-
-Read the verified ref in the prune report. Create a new branch from that ref in
-the same repository to restore the candidate tip and its original parents:
-
-```bash
-git show refs/cleanup/recovery/<candidate-oid>
-git branch recovered-work refs/cleanup/recovery/<candidate-oid>
-```
-
-The recovery ref survives ordinary garbage collection while it remains present.
-It does not back up filesystem data, cover deletion of the repository itself, or
-provide a remote copy. Routine cleanup must not delete these refs.
+stale review entries skip deletion.
