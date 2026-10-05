@@ -713,7 +713,7 @@ class GitFixtureTests(unittest.TestCase):
 
     def test_remote_branch_objects_are_fetched_before_proof(self):
         clone = self.directory / "clone"
-        self.command("git", "clone", "-q", str(self.remote), str(clone))
+        self.command("git", "clone", "-q", "--branch", "main", str(self.remote), str(clone))
         for args in (("config", "user.name", "x"), ("config", "user.email", "x@example.invalid"),
                      ("switch", "-c", "remote-only")):
             self.command("git", "-C", str(clone), *args)
@@ -777,7 +777,7 @@ class GitFixtureTests(unittest.TestCase):
 
     def test_object_fetches_create_no_tags(self):
         clone = self.directory / "clone"
-        self.command("git", "clone", "-q", str(self.remote), str(clone))
+        self.command("git", "clone", "-q", "--branch", "main", str(self.remote), str(clone))
         for args in (("config", "user.name", "x"), ("config", "user.email", "x@example.invalid"),
                      ("switch", "-c", "tagged")):
             self.command("git", "-C", str(clone), *args)
