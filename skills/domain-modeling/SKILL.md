@@ -27,7 +27,9 @@ any skill can do. This skill is for changing the model, not just consuming it.
 **Glossary file name.** This skill writes `CONTEXT.md` (and `CONTEXT-MAP.md` for
 multiple contexts). A repo that already uses `GLOSSARY.md` / `GLOSSARY-MAP.md`
 keeps that name: read and update whichever the repo has, and never create the
-second one beside it. A repo with neither gets `CONTEXT.md`.
+second one beside it. A repo with neither gets `CONTEXT.md`. Pick once, then
+**the glossary** below means the selected file and **the map** its `-MAP`
+companion.
 
 ## Contract
 
@@ -75,12 +77,12 @@ Most repos have a single context:
 └── src/
 ```
 
-If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The map
+If the map exists at the root, the repo has multiple contexts. The map
 points to where each one lives. Prefer the layout already recorded in
 `docs/agents/domain.md` when that file exists.
 
-Create files lazily — only when there is something to write. If no `CONTEXT.md`
-exists, create one when the first term is resolved. If no `docs/adr/` exists,
+Create files lazily — only when there is something to write. If the glossary
+does not exist, create it when the first term is resolved. If no `docs/adr/` exists,
 create it when the first ADR is needed.
 
 ## During the session
@@ -88,7 +90,7 @@ create it when the first ADR is needed.
 ### Challenge against the glossary
 
 When the user uses a term that conflicts with the existing language in
-`CONTEXT.md`, call it out immediately. "The glossary defines 'cancellation' as X,
+the glossary, call it out immediately. "The glossary defines 'cancellation' as X,
 but this sounds like Y — which is it?"
 
 ### Sharpen fuzzy language
@@ -108,13 +110,13 @@ When the user states how something works, check whether the code agrees. If they
 contradict, surface it: "The code cancels entire Orders, but you just said partial
 cancellation is possible — which is right?"
 
-### Update CONTEXT.md inline
+### Update the glossary inline
 
-When a term is resolved, update `CONTEXT.md` right there. Do not batch these up —
+When a term is resolved, update the glossary right there. Do not batch these up —
 capture them as they happen. Use the format in
 [references/CONTEXT-FORMAT.md](references/CONTEXT-FORMAT.md).
 
-`CONTEXT.md` is a glossary and nothing else. Keep implementation details,
+The glossary holds terms and nothing else. Keep implementation details,
 scratch notes, and specs out of it.
 
 ### Offer ADRs sparingly

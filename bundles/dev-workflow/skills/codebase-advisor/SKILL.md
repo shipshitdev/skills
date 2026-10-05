@@ -10,7 +10,13 @@ metadata:
   version: "2.2.2"
   tags: "audit, analysis, architecture, onboarding, planning, codebase-review, handoff-plans, orchestration, read-only"
   author: Ship Shit Dev
-  adapted_from: "shadcn/improve (MIT) — https://github.com/shadcn/improve; deepen variant from mattpocock/skills improve-codebase-architecture (MIT) at 4588b32ecab9"
+  source: https://github.com/shadcn/improve/blob/main/skills/improve/SKILL.md
+  upstream_repo: shadcn/improve
+  upstream_ref: main
+  upstream_commit: 5428507e7116
+  last_synced: "2026-06-12"
+  license: MIT
+  adapted_from: "shadcn/improve (MIT); deepen variant from mattpocock/skills improve-codebase-architecture (MIT) at 4588b32ecab9"
 ---
 
 # Codebase Advisor
