@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "178 AI agent skills for development workflows",
+  "description": "174 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -180,12 +180,6 @@
       "description": "Sets up AWS infrastructure: EC2, VPC, security groups, load balancers, Route53 DNS, and ACM certificates. Use when configuring or deploying AWS resources."
     },
     {
-      "name": "biome-validator",
-      "source": "./skills/biome-validator",
-      "version": "2.2.2",
-      "description": "Validates Biome 2.3+ config and flags outdated patterns such as schema version, domains, and recommended rules. Use before linting work or when auditing biome.json."
-    },
-    {
       "name": "blast-radius",
       "source": "./skills/blast-radius",
       "version": "2.2.2",
@@ -204,22 +198,10 @@
       "description": "File a GitHub issue of type Bug from a description — structures a clear bug report (summary, steps to reproduce, expected vs actual, environment), previews it, then on confirmation creates the issue with the Bug issue type (falling back to a bug label when the repo has no issue types). Use when the user asks to file a bug, open a bug report, create a GitHub bug issue, log a bug, or runs /bug."
     },
     {
-      "name": "bun-validator",
-      "source": "./skills/bun-validator",
-      "version": "2.2.2",
-      "description": "Validates Bun workspace config and monorepo setup: catalogs, isolated installs, Bun 1.3+ practices. Use when setting up or auditing a Bun monorepo or adding workspace dependencies."
-    },
-    {
       "name": "clarify",
       "source": "./skills/clarify",
       "version": "2.2.2",
       "description": "Improves unclear UX copy, error messages, microcopy, labels, and instructions. Use when text is confusing or the user wants better UX writing."
-    },
-    {
-      "name": "clerk-validator",
-      "source": "./skills/clerk-validator",
-      "version": "2.2.2",
-      "description": "Validates Clerk auth config and flags deprecated patterns: proxy.ts on Next.js 16, ClerkProvider setup. Use before Clerk work or when auditing an auth implementation."
     },
     {
       "name": "code-review",
@@ -654,12 +636,6 @@
       "description": "Writes NestJS Jest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint."
     },
     {
-      "name": "nextjs-validator",
-      "source": "./skills/nextjs-validator",
-      "version": "2.2.2",
-      "description": "Validates Next.js 16 config and flags deprecated 14/15 patterns — proxy.ts, Turbopack, Cache Components, App Router. Use before Next.js work or when auditing a project."
-    },
-    {
       "name": "nextra-writer",
       "source": "./skills/nextra-writer",
       "version": "2.2.2",
@@ -984,6 +960,12 @@
       "description": "Modernizes a stack: upgrades outdated dependencies, removes dead or deprecated packages, migrates stale framework patterns, verifying latest versions first. Edits package.json."
     },
     {
+      "name": "stack-validator",
+      "source": "./skills/stack-validator",
+      "version": "2.2.2",
+      "description": "Validates Biome 2.3+, Bun workspace, Clerk, Next.js 16 and Tailwind v4 config and flags deprecated patterns. Use before stack work or when AI-generated config may be outdated."
+    },
+    {
       "name": "standup",
       "source": "./skills/standup",
       "version": "2.2.2",
@@ -1018,12 +1000,6 @@
       "source": "./skills/tailwind",
       "version": "2.2.2",
       "description": "Applies Tailwind CSS v4 best practices when writing, reviewing or refactoring styles: @theme, build config, responsive, dark mode, container queries, CSS size and performance."
-    },
-    {
-      "name": "tailwind-validator",
-      "source": "./skills/tailwind-validator",
-      "version": "2.2.2",
-      "description": "Validates Tailwind v4 CSS-first setup and flags v3 patterns such as tailwind.config.js. Use when setting up or auditing Tailwind, or when AI output may contain v3 code."
     },
     {
       "name": "tdd",

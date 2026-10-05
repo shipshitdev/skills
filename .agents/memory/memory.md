@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **178 skills · 24 commands · 13 bundles · 191 plugins**.
+Generated catalog: **174 skills · 24 commands · 13 bundles · 187 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 178 | `skills/*/SKILL.md` |
+| Skills | 174 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 191 | skills + bundles |
+| Plugins | 187 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -102,6 +102,19 @@ Pstack destinations, so their hashes were re-recorded in `upstream/pstack/mappin
 Removed names no longer install through `npx skills add --skill <name>`; see the
 Retired skills table in `docs/skills/catalog-naming.md`. Rejected: keeping thin alias
 skills, because they cost a plugin, a directory and a trigger collision each.
+
+### Catalog simplification, stack validator (2026-10-05)
+
+Part 3 of #190. `biome-`, `bun-`, `clerk-`, `nextjs-` and `tailwind-validator` merged
+into one `stack-validator`: a single `scripts/validate.py` with per-stack check
+functions (`--stack biome|bun|clerk|nextjs|tailwind|all`, auto-detected when
+omitted), shared `Issue`/`ValidationResult` scaffolding and report, and
+`references/<stack>.md` holding each old SKILL body plus its full guide. Existing
+checks are unchanged except two deliberate fixes: the Bun check now accepts the
+default `bun.lock` (it only knew `bun.lockb`), and Clerk gained the script its old
+SKILL.md advertised but never shipped. New fixture tests live in
+`skills/stack-validator/tests/`. Rejected: keeping five thin skills with a shared
+library, because skills install individually and cannot share a script.
 
 ### External Skills Imported (2026-04-21)
 
