@@ -5,9 +5,9 @@
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
 <!-- catalog-summary:start -->
-184 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
+185 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
 
-Catalog: **184 skills · 24 commands · 13 bundles · 197 plugins**.
+Catalog: **185 skills · 24 commands · 13 bundles · 198 plugins**.
 <!-- catalog-summary:end -->
 
 Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
@@ -19,7 +19,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 |---|---|---|
 | `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
 | `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 197 generated plugins |
+| `.claude-plugin/` | Generated Claude marketplace catalog | 198 generated plugins |
 | `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
 | `.github/` | Issue templates and GitHub Actions workflows | Tracked |
 | `.husky/` | Git hook configuration | Tracked |
@@ -31,7 +31,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
 | `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 184 canonical skills |
+| `skills/` | Canonical public Agent Skills sources | 185 canonical skills |
 | `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
 <!-- catalog-layout:end -->
 
@@ -272,7 +272,7 @@ Plain `deslop` is the Shipshit adaptation. `pstack:deslop` is a separate upstrea
 plugin skill, not an alias.
 
 <!-- catalog-skills-heading:start -->
-## Skills (184)
+## Skills (185)
 <!-- catalog-skills-heading:end -->
 
 ### Dev Loop (16)

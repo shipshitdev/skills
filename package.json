@@ -1,5 +1,5 @@
 {
-  "description": "184 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.",
+  "description": "185 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.",
   "devDependencies": {
     "@biomejs/biome": "2.4.16",
     "husky": "9.1.7",

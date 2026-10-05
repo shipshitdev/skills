@@ -3282,12 +3282,12 @@
         {
           "executable": false,
           "path": "skills/github-pr-publish/SKILL.md",
-          "sha256": "487111fb8d51f63349fa2110faf94fe49ec819dea9a04b5b43152937c22b9241"
+          "sha256": "0030ddbeda76c0a08e12217c71a1d1a680247a9585663510e01fadd9a5774b33"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Adopt Pocock PR body template (#189): one body template with visual Summary, Evidence, Merge danger and Review guide replaces the step 5 and tidy lists; provenance metadata added; no authorization change.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

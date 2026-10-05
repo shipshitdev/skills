@@ -71,6 +71,23 @@ The route most work travels.
 Keep grilling, spec, and tickets in **one context window**. Each `/loop` /
 `executing-plans` run starts fresh from the ticket.
 
+## Phase boundaries
+
+A phase ends when its artifact is written (brief, spec, plan, ticket, PR). Decide
+what happens to the context at that boundary, not mid-phase. Ordered; the first
+yes wins:
+
+1. **Continue** when the next phase's primary source is already in this window
+   and the window is still in the smart zone (about 150k tokens).
+2. **`/clear`** when everything the next phase needs lives in files or issues and
+   this context is disposable.
+3. **`/handoff`** only when the work moves to a new harness, a new directory or
+   repository, a colleague, or forks a side task mid-phase. It is the narrow
+   branch, not the default.
+4. **Subagent** when the work is scoped tightly enough to run AFK and return one
+   summary.
+5. **`/compact`** when nothing above fits. Pass an instruction naming what to keep.
+
 ## On-ramps
 
 - **Bugs and incoming requests piling up** → `/prd intake` (`feature-intake`) or

@@ -263,6 +263,7 @@ behavior. Then apply changes following these principles:
 
 - `references/canonical-ownership.md` — Which rule belongs in which file
 - `references/healthy-config-example.md` — Example of a well-structured config set
+- File pointer: `references/writing-for-agents.md` from the selected `skill-creator` skill directory, for judging whether a steering line earns its load (cache vs environment, sediment, sprawl)
 
 ## Anti-Patterns
 
