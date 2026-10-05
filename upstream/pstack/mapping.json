@@ -394,12 +394,12 @@
         {
           "executable": false,
           "path": "skills/pstack/adapters/cursor/docs/guide/09-make-it-yours.md",
-          "sha256": "569eb31630ad3acf0c6bfd1e7a8b2bab1016bddae34b3c5030753809b3028570"
+          "sha256": "8d12c856a4929c03af85e212a9fb099522e68352eac0fb831489fb9fe952d43c"
         }
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1845,12 +1845,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/deep-mode.md",
-          "sha256": "c869c8dca6f98380b05e4492a96a302198288ca77f951107b402c6492c51b781"
+          "sha256": "8ddb3bf69310a8c8698ef72e171a8fee772337f83a874a5806269b341d5744fd"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Moved the reflect procedure and reviewer templates from skill-capture into retro deep mode; reviewed the adapted deep-mode mapping step.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1860,12 +1860,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/divergent-reviewer.md",
-          "sha256": "4460f740670d7f5fc2933133caeb6376112d9266c68f55210bd66e7f5cc4a4e1"
+          "sha256": "4d12c98ee5a11760da386a2f23c7923c34a65c30bf855457eda16070f98a148b"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1875,12 +1875,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/judgment-reviewer.md",
-          "sha256": "80964e161f9a8c037921cd42c7417c5b09edd761b01ea2f387c2aa9b2656802d"
+          "sha256": "3d359d3ee8af64dcde02066f32810629a68886d0dab650f31cf56e55c44f6517"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1890,11 +1890,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/synthesizer.md",
-          "sha256": "a16c8a0798118fc970c3ddd402ed5af52d4270d6d32eda3a400aaf6410c2172a"
+          "sha256": "4dba84029138feda38807ef2e09032f1d3cf206e3f3a4a03b7d99b3aacbf4568"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1904,12 +1905,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/tooling-reviewer.md",
-          "sha256": "5c80e57f8ed9a079415c7282e00d0bd98c987189cdcbc42dacd06db2bbb15f66"
+          "sha256": "e15d68c71f883da298cc7ff1b7b70f5d875c0539d3ffeb1005958cfef330356a"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4657,17 +4658,17 @@
         {
           "executable": false,
           "path": "skills/retro/references/deep-mode.md",
-          "sha256": "c869c8dca6f98380b05e4492a96a302198288ca77f951107b402c6492c51b781"
+          "sha256": "8ddb3bf69310a8c8698ef72e171a8fee772337f83a874a5806269b341d5744fd"
         },
         {
           "executable": false,
           "path": "skills/retro/SKILL.md",
-          "sha256": "6457faaba734ba6d062b5b8d5862c49ea338f1a86e2c9687c3116213be96735a"
+          "sha256": "4339ba95e2152fee3c9be0d975ae4dc5540438862a73ea09d93ae0f2755d6fa4"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Moved the reflect procedure and reviewer templates from skill-capture into retro deep mode; reviewed the adapted deep-mode mapping step.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4677,12 +4678,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/divergent-reviewer.md",
-          "sha256": "4460f740670d7f5fc2933133caeb6376112d9266c68f55210bd66e7f5cc4a4e1"
+          "sha256": "4d12c98ee5a11760da386a2f23c7923c34a65c30bf855457eda16070f98a148b"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4692,12 +4693,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/judgment-reviewer.md",
-          "sha256": "80964e161f9a8c037921cd42c7417c5b09edd761b01ea2f387c2aa9b2656802d"
+          "sha256": "3d359d3ee8af64dcde02066f32810629a68886d0dab650f31cf56e55c44f6517"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4707,11 +4708,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/synthesizer.md",
-          "sha256": "a16c8a0798118fc970c3ddd402ed5af52d4270d6d32eda3a400aaf6410c2172a"
+          "sha256": "4dba84029138feda38807ef2e09032f1d3cf206e3f3a4a03b7d99b3aacbf4568"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4721,12 +4723,12 @@
         {
           "executable": false,
           "path": "skills/retro/references/tooling-reviewer.md",
-          "sha256": "5c80e57f8ed9a079415c7282e00d0bd98c987189cdcbc42dacd06db2bbb15f66"
+          "sha256": "e15d68c71f883da298cc7ff1b7b70f5d875c0539d3ffeb1005958cfef330356a"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
