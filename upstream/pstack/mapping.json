@@ -10,7 +10,7 @@
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -20,12 +20,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "#188 content wave: reviewed destination hashes after adopting reviewed upstream changes (principles, benchmark checklist, perf playbooks, architect red flags, poteto-mode, show-me-your-work, how critique retirement).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -49,12 +49,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -78,11 +78,12 @@
         {
           "executable": false,
           "path": "skills/pstack/adapters/agents/poteto-agent.md",
-          "sha256": "5ce1228d963101b08234b2053894adf545dc66473a6a390902511c9150915ffc"
+          "sha256": "f5e1657eeb6bd742bb16eb82fb5f70849df5eaf89105328b314bb552435c13c9"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Inactive agent template; setup binds model and effort from existing harness roles.",
+      "review_note": "Adopted the skills preload (pstack) and the fresh-agent-per-task description. Provider names and model defaults not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -92,12 +93,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "#188 content wave: reviewed destination hashes after adopting reviewed upstream changes (principles, benchmark checklist, perf playbooks, architect red flags, poteto-mode, show-me-your-work, how critique retirement).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -281,7 +282,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical installer/setup preserves existing harness source of truth and selected roles; removes original-plugin reinstall, default model restoration and fixed Cursor model-file claims.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -296,7 +297,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -306,11 +307,12 @@
         {
           "executable": false,
           "path": "skills/pstack/adapters/cursor/docs/guide/03-understand.md",
-          "sha256": "afbf93c12e5401f436aeef85e884b24eea04aabb7626bd82bcdec1cc5e59c7c0"
+          "sha256": "01a6f80243705a663ad6d33d639a44107a667575d3e85bac67e627f61f4f4335"
         }
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
+      "review_note": "Removed the critique-mode section with the retired mode.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -340,7 +342,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority.",
+      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -370,7 +372,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -380,11 +382,12 @@
         {
           "executable": false,
           "path": "skills/pstack/adapters/cursor/docs/guide/08-principles.md",
-          "sha256": "4a49e443a3eb7ca2da002de603f6ffc994254f202116f9d400dbbe13d98668b6"
+          "sha256": "276aff5d7c7d0f0bb2114e0dda4a13327ee32760151a4d73273cd30308cc9648"
         }
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
+      "review_note": "Updated to 24 principles with the three new leaves.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -429,7 +432,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -523,11 +526,12 @@
         {
           "executable": false,
           "path": "skills/architect/references/architect-procedure.md",
-          "sha256": "ade10bba424516ab88bf7b0536c73faf3ce9276040830205eed3abc79ee80d2c"
+          "sha256": "4fcdb4a9ade84e0ac66104ee7cac8b6529877e54aa955cd4c22c51d05310fab7"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted the agent-proof design lens. Runner defaults and critique-mode mention not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -537,11 +541,12 @@
         {
           "executable": false,
           "path": "skills/architect/references/design-red-flags.md",
-          "sha256": "905066f9bbac81c573c2b325be47751d2c0f9325e0a0772bd4384e82dafe9336"
+          "sha256": "d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce"
         }
       ],
       "disposition": "identical",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted cursor-pstack's four new red flags (split ownership, two ways to do one task, importable internals, hand-synced list).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -556,6 +561,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -570,7 +576,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted. Reviewed adaptation to canonical routing and harness policy.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -585,7 +591,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority.",
+      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -600,7 +606,27 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "cursor-pstack:pstack/skills/benchmark-checklist/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/pstack/references/benchmark-checklist.md",
+          "sha256": "b78b263e33e2bea933dc35a13289720c96c176d969d91cecdd81efc6349b4302"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/references/poteto-mode-procedure.md",
+          "sha256": "2e77849df353f4ffdb8cd6efb27bcb360b0ec3e1d806bbb2b7f80a4b93596aae"
+        }
+      ],
+      "disposition": "adapted",
+      "reason": "Reference resource, not a catalog skill. Cursor skill-invocation wording and the nproc-only core count were made harness-neutral.",
+      "review_note": "Adopted as a pstack reference wired into the perf-issue and hillclimb playbooks, with pointers from performance-expert and evaluation.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -615,6 +641,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -629,6 +656,26 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "cursor-pstack:pstack/skills/correct/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/rules-capture/references/correct-procedure.md",
+          "sha256": "aff11e1b895fdaa5042ee9336ff136995871a7588c84bf0a97361ca9e4091d37"
+        },
+        {
+          "executable": false,
+          "path": "skills/rules-capture/SKILL.md",
+          "sha256": "5cf239a126de4136436708905c852cf336bf73b277e5bd7738b505798bb2f936"
+        }
+      ],
+      "disposition": "adapted",
+      "reason": "Folded into rules-capture as a procedure reference. A new catalog skill would duplicate the capture and promotion flow, so the slash command and Cursor wording were removed.",
+      "review_note": "Folded into rules-capture (references/correct-procedure.md plus an escalate-before-documenting section). Reviewed against principle-encode-lessons-in-structure.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -701,7 +748,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -711,40 +758,12 @@
         {
           "executable": false,
           "path": "skills/how/references/how-procedure.md",
-          "sha256": "f25f3a53064fb16cd54f0ad1f51dd515ce47956bbb6089395217547ce62595b9"
+          "sha256": "7eb32a84e50a1a5efa460c61d0d70a4c01915b8aa7a033d46d85b4f44960120a"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
-      "verification": [
-        "docs/pstack-import-verification.md"
-      ]
-    },
-    "cursor-pstack:pstack/skills/how/references/critic-prompt.md": {
-      "destinations": [
-        {
-          "executable": false,
-          "path": "skills/how/references/critic-prompt.md",
-          "sha256": "95b31cbed13cacf65f635fdfccc5f9f0ff073b52e4d2b4e934a74e9d59dfca87"
-        }
-      ],
-      "disposition": "adapted",
-      "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "verification": [
-        "docs/pstack-import-verification.md"
-      ]
-    },
-    "cursor-pstack:pstack/skills/how/references/critique-rubric.md": {
-      "destinations": [
-        {
-          "executable": false,
-          "path": "skills/how/references/critique-rubric.md",
-          "sha256": "5774ff2caf51796e54c4a61b63620a165de5801f23c8f47406e527abfbe9addc"
-        }
-      ],
-      "disposition": "identical",
-      "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Retired critique mode and the how critics role. Adversarial architecture review routes to interrogate and structural-review.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -759,6 +778,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -773,6 +793,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -787,7 +808,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -800,8 +821,9 @@
           "sha256": "2462f1347b99b412b04fcb0577b96d8744c801f792f2651746f9409fd4465dc9"
         }
       ],
-      "disposition": "identical",
-      "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -816,6 +838,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -830,6 +853,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -842,8 +866,9 @@
           "sha256": "a67bf02426f88714634ff481d667db821d4b2cea7b335bcd165fe3126e427fb5"
         }
       ],
-      "disposition": "identical",
-      "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -887,6 +912,62 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "cursor-pstack:pstack/skills/poteto-help/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/ask-dev-loop/SKILL.md",
+          "sha256": "91b75ea8220e8b8ac35f6b7683e68c9b467764b39e0f5363164a406cbb3d78a7"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+        }
+      ],
+      "disposition": "superseded",
+      "reason": "Cursor-specific skill (Custom Modes, /add-plugin, cursor.com links). Routing is covered by ask-dev-loop and the pstack router, so no catalog skill was added.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "cursor-pstack:pstack/skills/poteto-help/references/prompting.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/pstack/references/prompting.md",
+          "sha256": "2a17318b78a7b2c4f1232d49fc2b78453fb30fdd134f24c762d71152364cada0"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+        }
+      ],
+      "disposition": "adapted",
+      "reason": "Prompt-wording guidance kept as a pstack reference, with slash commands rewritten as skill names and the repeat mechanism left to the harness.",
+      "review_note": "Adopted prompting.md only, linked from the pstack skill and ask-dev-loop.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "cursor-pstack:pstack/skills/poteto-help/references/recipes.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/ask-dev-loop/SKILL.md",
+          "sha256": "91b75ea8220e8b8ac35f6b7683e68c9b467764b39e0f5363164a406cbb3d78a7"
+        }
+      ],
+      "disposition": "superseded",
+      "reason": "Cursor-specific recipes (Custom Modes, ~/.cursor/rules). Routing is covered by ask-dev-loop and the pstack router.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -896,12 +977,12 @@
         {
           "executable": false,
           "path": "skills/pstack/references/poteto-mode-procedure.md",
-          "sha256": "cdfe57a2a485a00f1956d4c4dc9d9c3c2339eea7d9ba3c98288a9acbb93d693c"
+          "sha256": "2e77849df353f4ffdb8cd6efb27bcb360b0ec3e1d806bbb2b7f80a4b93596aae"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | Adopted the fresh-subagents default, the evidence-or-label reply rule, the benchmark trigger and the new principle index lines. Model and routing defaults, effort defaults and reply-word wording not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -916,6 +997,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -930,6 +1012,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -939,11 +1022,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/autopilot-full.md",
-          "sha256": "6f11122dd7dbdf580175540d5c74778bd42156ef7ca247dcd5f18873a9d4444c"
+          "sha256": "cdbddb40d8a38eb269d503a0d78ec2b5362277034dc3d00f819cbc6b1e0e3dd6"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted fresh owner per queue item and push after each verifiable unit. /loop 1h, /goal, children.tsv and rebase-policy changes not adopted (local execution boundary).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -953,11 +1037,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/autopilot-stack.md",
-          "sha256": "53b16eaad820fa96ffec2d985e5b31cf02c557a8da1d29501b1e03df06c590f1"
+          "sha256": "dbd58b92ed389dedbbfa6dd2a7f73864949bbe9b8c5c62c63890e8d82beadc0a"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted push after each verifiable unit. /loop 1h and /goal not adopted (local execution boundary).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -972,6 +1057,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -986,6 +1072,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1000,7 +1087,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1015,6 +1102,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1024,11 +1112,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/hillclimb.md",
-          "sha256": "14fc5e37ab64dc6092d3e768ef3cf6384359395efe8a49d9720ce6c116d565b4"
+          "sha256": "59b8db345263bf1a8b8548684754272985670e20c3e17477572f85c758ffe804"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted harness vetting with the benchmark checklist and mantra ordering of hypotheses. Model-default sentence not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1038,11 +1127,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/investigation.md",
-          "sha256": "00933083fa82e26ab778dcab617886e1c5ccdb7c5366b0287837ac56b86716a6"
+          "sha256": "75909bb4102f741c9b01e168ecee65aba413bae9ee8a4b17cdf6c564e9fe9030"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Removed the critique-mode route; unclear premises route to interrogate.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1057,7 +1147,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1067,12 +1157,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/opening-a-pr.md",
-          "sha256": "cd6910f18c0092b39c7f81d400c4abd8a254b89a79c4f4930767801a8881825b"
+          "sha256": "9b06a5317d944181111b7501cb9f5b48a46baff7d55ba3258a0197d611b2f217"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | Adopted ## headings, What changed, always-present Scope, shorter body, 40-line squash cut-off and a harness-neutral built-in PR tool rule. Local technical-writing and deslop prose rules kept. Autopilot owner babysit exception not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1087,7 +1177,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1102,6 +1192,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1111,11 +1202,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/perf-issue.md",
-          "sha256": "5d11856ba2f2087a593ed6754a82eccf535b497b1e755136d21308ff3d8ed1c2"
+          "sha256": "613584bfebf01b6d00247b178eecf224aae2c28265a4b5fd3098b0918b73bf39"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted the seven performance mantras and the benchmark checklist link. Model-default sentence not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1130,6 +1222,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1144,6 +1237,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1158,6 +1252,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Read-only diagnosis cannot inject or hotfix live code; isolate experiments or obtain missing authority.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1172,7 +1267,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1187,6 +1282,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1201,6 +1297,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1215,6 +1312,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1229,7 +1327,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Deliberate safety divergence: routes through canonical evidence-based cleanup helper; preserves tracked/untracked/ignored/unpushed/in-use state and excludes cache/simulator deletion.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1286,7 +1384,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1531,6 +1629,26 @@
         "skills/git-cleanup/tests/test_cleanup.py"
       ]
     },
+    "cursor-pstack:pstack/skills/principle-attack-the-premise/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/pstack/references/principle-attack-the-premise.md",
+          "sha256": "87c8e3e8f3474da0e02080b3f222c9e9b67e4a0bef6068578cbfd27271b55ebc"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+        }
+      ],
+      "disposition": "superseded",
+      "reason": "Open Pstack's corrected principle text, scoped to imbalance problems, replaces this original.",
+      "review_note": "Adopted open-pstack's corrected principle (census scoped to imbalance problems) as a pstack reference with index lines.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
     "cursor-pstack:pstack/skills/principle-boundary-discipline/SKILL.md": {
       "destinations": [
         {
@@ -1541,6 +1659,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1555,6 +1674,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1569,6 +1689,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1597,6 +1718,27 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "cursor-pstack:pstack/skills/principle-explain-the-number/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/pstack/references/principle-explain-the-number.md",
+          "sha256": "cdf15c29ecd5c444f6d970f41c30492a783257a74741cbeafb4d77a7a849195d"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+        }
+      ],
+      "disposition": "adapted",
+      "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Adopted as a pstack principle reference and index line; links the benchmark checklist reference.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1611,6 +1753,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1625,6 +1768,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1639,6 +1783,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1653,6 +1798,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1681,6 +1827,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1695,6 +1842,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1709,6 +1857,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1723,6 +1872,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1737,6 +1887,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1751,6 +1902,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1765,6 +1917,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1779,6 +1932,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1793,6 +1947,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1807,6 +1962,27 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "cursor-pstack:pstack/skills/principle-test-behavior-not-implementation/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/pstack/references/principle-test-behavior-not-implementation.md",
+          "sha256": "d4978eb2c49914e996429ae259fe94ef27ba8e0276065d088b59bd55080aa857"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+        }
+      ],
+      "disposition": "superseded",
+      "reason": "Open Pstack 1.4.0 corrected assertions that wrongly claimed toBeDefined, toBeInstanceOf and toBeGreaterThan(0) pass on undefined, and keeps negative-path tests. The corrected text replaces this original.",
+      "review_note": "Adopted open-pstack 1.4.0 corrected text (assertions that return undefined do not fail negative-path tests). Added to the principle index.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1821,6 +1997,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1835,7 +2012,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1850,7 +2027,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Moved the reflect procedure and reviewer templates from skill-capture into retro deep mode; reviewed the adapted deep-mode mapping step.",
+      "review_note": "Moved the reflect procedure and reviewer templates from skill-capture into retro deep mode; reviewed the adapted deep-mode mapping step. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1865,7 +2042,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1880,7 +2057,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1895,6 +2072,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1909,7 +2087,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1924,6 +2102,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1933,12 +2112,12 @@
         {
           "executable": false,
           "path": "skills/show-me-your-work/references/show-me-your-work-procedure.md",
-          "sha256": "c7eee26048b525b288a96a03c4f2f8a339584005cea0e71481d55d8eb61e1a82"
+          "sha256": "5f765e9ef1ca50942436b70893d307ff2afc62433944fee0949cf631ed43f576"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | Adopted per-run start rows and supersede-only audit corrections. Kept the provider-neutral session-record audit and independent-review wording.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1962,11 +2141,12 @@
         {
           "executable": true,
           "path": "skills/show-me-your-work/scripts/log.sh",
-          "sha256": "1601bc18f9aba0af3f5d6375e4f2d5dc6102334d1bca935026c0e3547cdadbbf"
+          "sha256": "a65a4bc5fb7cdeadbdb7b7ff1ca4682f4d9c42420942b2977cd17b46c4ac338e"
         }
       ],
       "disposition": "identical",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted the non-truncating header write (>> with -s test), identical upstream.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1976,12 +2156,12 @@
         {
           "executable": false,
           "path": "skills/swarm/references/swarm-procedure.md",
-          "sha256": "5bc73543b2eabcdf7d60f625244f3406faa6a6d58d756dca9679d274e1f51fd4"
+          "sha256": "35179f8ed01de82f0fae1bf489b5e226ed215021d2e3862f281085c4ce1520e7"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | Adopted SHA and method in measurement briefs, respawn wording and list-every-proven-issue. Role-sheet wording not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1996,6 +2176,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2010,7 +2191,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2025,7 +2206,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2040,6 +2221,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2049,11 +2231,12 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/references/patterns.md",
-          "sha256": "eb73b5f3514c0c14d14bafca59ffb54b161422ea5fc5fe65e60c5b4d71c40178"
+          "sha256": "faa1362055374452efccac1b629677c61acfb0bcc6c4e3311836b5715638ee18"
         }
       ],
       "disposition": "identical",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted cursor-pstack's Zod schema-first example and trims; open-pstack's older text is superseded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2063,11 +2246,12 @@
         {
           "executable": false,
           "path": "skills/deslop/references/unslop-procedure.md",
-          "sha256": "cc35d8a73d63cf1f4be8924bc14099c0b814be13f62024b0b1c82a8a976c53bb"
+          "sha256": "3b8a8761550312ec57b9646b5678641905aefe91ae0a29885dfe0103fed909ca"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted rules 32 (mannered prose) and 33 (over-compression), also added to prose-slop.md. Removals and rule renumbering not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2082,6 +2266,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2096,6 +2281,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2110,6 +2296,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2124,6 +2311,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2152,6 +2340,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2166,6 +2355,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2178,8 +2368,9 @@
           "sha256": "486132457d3782eea64292ce7a2d3bbe3b24b372b20ca00de4329e820f74cd42"
         }
       ],
-      "disposition": "identical",
-      "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2194,6 +2385,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2208,6 +2400,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2222,6 +2415,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2236,6 +2430,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2250,6 +2445,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2279,7 +2475,7 @@
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2289,12 +2485,27 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:.github/unfret.json": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2319,12 +2530,27 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:.mergify.yml": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2334,12 +2560,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2349,12 +2575,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2406,11 +2632,12 @@
         {
           "executable": false,
           "path": "skills/pstack/licenses/NOTICE.txt",
-          "sha256": "07add961c74fa460694540fec432eead53ff2de3510a44512764df4751f21a74"
+          "sha256": "95f29b72195e39aa45393ae4ad8568b5b82a21c5a5491fcdbb34625c6086a3c0"
         }
       ],
-      "disposition": "identical",
-      "reason": "Copyright and license notice preserved in the installable distribution.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2420,12 +2647,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2435,12 +2662,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2450,12 +2677,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2465,12 +2692,42 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "#188 content wave: reviewed destination hashes after adopting reviewed upstream changes (principles, benchmark checklist, perf playbooks, architect red flags, poteto-mode, show-me-your-work, how critique retirement).",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:docs/plans/2026-10-01-triage-and-roadmap.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:docs/plans/upstream-0.15.0.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2480,12 +2737,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2495,12 +2752,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "#188 content wave: reviewed destination hashes after adopting reviewed upstream changes (principles, benchmark checklist, perf playbooks, architect red flags, poteto-mode, show-me-your-work, how critique retirement).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2515,7 +2772,7 @@
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2530,7 +2787,7 @@
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2554,11 +2811,12 @@
         {
           "executable": false,
           "path": "skills/pstack/adapters/agents/poteto-agent.md",
-          "sha256": "5ce1228d963101b08234b2053894adf545dc66473a6a390902511c9150915ffc"
+          "sha256": "f5e1657eeb6bd742bb16eb82fb5f70849df5eaf89105328b314bb552435c13c9"
         }
       ],
       "disposition": "adapted",
       "reason": "Inactive agent template; setup binds model and effort from existing harness roles.",
+      "review_note": "Adopted the skills preload (pstack) and the fresh-agent-per-task description. Provider names and model defaults not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2708,12 +2966,12 @@
         {
           "executable": false,
           "path": "upstream/pstack/README.md",
-          "sha256": "46e607019eb9573e48e57993db760fb39c873ab22a78fef1ddfe970e8fb42d6e"
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
         }
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2779,17 +3037,17 @@
         {
           "executable": false,
           "path": "skills/architect/references/architect-procedure.md",
-          "sha256": "ade10bba424516ab88bf7b0536c73faf3ce9276040830205eed3abc79ee80d2c"
+          "sha256": "4fcdb4a9ade84e0ac66104ee7cac8b6529877e54aa955cd4c22c51d05310fab7"
         },
         {
           "executable": false,
           "path": "skills/architect/SKILL.md",
-          "sha256": "dab7064967a4d541e0cb888768e87975662bd03c990ee98a9445070f47d00113"
+          "sha256": "74e6eae596652467e2ef9f0c038d9538493cfd8fc7b8a4650602c846c61e425f"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Adopted the agent-proof design lens. Runner defaults and critique-mode mention not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2799,11 +3057,12 @@
         {
           "executable": false,
           "path": "skills/architect/references/design-red-flags.md",
-          "sha256": "905066f9bbac81c573c2b325be47751d2c0f9325e0a0772bd4384e82dafe9336"
+          "sha256": "d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "Adopted cursor-pstack's four new red flags (split ownership, two ways to do one task, importable internals, hand-synced list).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2818,6 +3077,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2832,7 +3092,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted. Reviewed adaptation to canonical routing and harness policy.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2847,12 +3107,12 @@
         {
           "executable": false,
           "path": "skills/arena/SKILL.md",
-          "sha256": "ca03eac377a629834809caa10c7b771f74c799efea4b1b6817d36e284724f832"
+          "sha256": "89b5f13de5730ee0709af4ad048f8c5d2668a7152dfcd97c262f6f0396682a7e"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2867,12 +3127,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Creates or updates a personal mode from working conventions; canonical skill-creator and harness-selected roots; does not schedule automation.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2887,12 +3147,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "One canonical monitoring playbook owns all modes; removes shadow standalone entrypoint, implicit scheduling and topology rewrite permissions.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2907,12 +3167,12 @@
         {
           "executable": false,
           "path": "skills/blast-radius/SKILL.md",
-          "sha256": "0a5c420a5a42a6839c3c2c32ab606db3b0f4c326def74a72d54ec048af7bc139"
+          "sha256": "335a0f88dd0e182a3e388df845d9c5bdcb53fd8c01e518b51d49ae874c24a82a"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2927,12 +3187,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Plain-language restatement of the preceding response, routed conditionally from canonical pstack; not a session-resume workflow.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2947,12 +3207,12 @@
         {
           "executable": false,
           "path": "skills/create-verification-skill/SKILL.md",
-          "sha256": "bf49a3b60e4aee97a4545f7a64a9fb8f1f7f76944a7cea399fb19b1efbb52405"
+          "sha256": "22316ce8339163aceff0379cdc5bab8c9a01da27ac46541a4e3f55fd82480c03"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3010,12 +3270,12 @@
         {
           "executable": false,
           "path": "skills/deslop/SKILL.md",
-          "sha256": "102822b709c7163a5476f28777c095a6e53e675026de194e0e2f075edbe4f1ef"
+          "sha256": "eb1dca5e1e179060d99e025ee2bb504841b491cb63b6ba235d80324ee2ea4da6"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3030,12 +3290,12 @@
         {
           "executable": false,
           "path": "skills/figure-it-out/SKILL.md",
-          "sha256": "cc51059b33e74498fb1b4500629bdf7d867ad7131557376275e323c084079215"
+          "sha256": "166bfa766fb914bd291ac598129d9e201e71a3d0477a62fd592fdd35513dbf94"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3050,12 +3310,12 @@
         {
           "executable": false,
           "path": "skills/github-fix-ci/SKILL.md",
-          "sha256": "bf9836ac99167f0c132550904ae34f01feb1de95b83d7e0ff1ca53214f2a0f9f"
+          "sha256": "20fc3ce6a2a7758372b6383168e3b9fe1af71de88aa5cf3210bfadb0e03646bc"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3070,12 +3330,12 @@
         {
           "executable": false,
           "path": "skills/fix-merge-conflicts/SKILL.md",
-          "sha256": "5b5ca08fa14dac55e24ae4c270c166dbd1c0bb155a5cdaba33904971fade87df"
+          "sha256": "21602b9aa1d1cbf69d9cb3ccfc66181ed515a4db7e1c62a8757e560b388ba634"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3090,12 +3350,12 @@
         {
           "executable": false,
           "path": "skills/pr-comments/SKILL.md",
-          "sha256": "2a60ac49e29779ffd6d67b48d8a123191607216ac2e67373ecfd8882fd3391ba"
+          "sha256": "bddd35989c16cdafa650fb678bea7c3495c6a2309c469bb393b83547d55f85d4"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3105,45 +3365,17 @@
         {
           "executable": false,
           "path": "skills/how/references/how-procedure.md",
-          "sha256": "f25f3a53064fb16cd54f0ad1f51dd515ce47956bbb6089395217547ce62595b9"
+          "sha256": "7eb32a84e50a1a5efa460c61d0d70a4c01915b8aa7a033d46d85b4f44960120a"
         },
         {
           "executable": false,
           "path": "skills/how/SKILL.md",
-          "sha256": "cad4f317d5e5608814cc2376b125c921c5fd16efed68cab16f8f1a6e743cff82"
+          "sha256": "b0d14a35fd5d63fe7f7e4c37aefdc28b8f54593d7668027e187417053b7fead6"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
-      "verification": [
-        "docs/pstack-import-verification.md"
-      ]
-    },
-    "open-pstack:plugins/pstack/skills/how/references/critic-prompt.md": {
-      "destinations": [
-        {
-          "executable": false,
-          "path": "skills/how/references/critic-prompt.md",
-          "sha256": "95b31cbed13cacf65f635fdfccc5f9f0ff073b52e4d2b4e934a74e9d59dfca87"
-        }
-      ],
-      "disposition": "adapted",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "verification": [
-        "docs/pstack-import-verification.md"
-      ]
-    },
-    "open-pstack:plugins/pstack/skills/how/references/critique-rubric.md": {
-      "destinations": [
-        {
-          "executable": false,
-          "path": "skills/how/references/critique-rubric.md",
-          "sha256": "5774ff2caf51796e54c4a61b63620a165de5801f23c8f47406e527abfbe9addc"
-        }
-      ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Retired critique mode and the how critics role. Adversarial architecture review routes to interrogate and structural-review.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3158,6 +3390,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3172,6 +3405,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3186,12 +3420,12 @@
         {
           "executable": false,
           "path": "skills/interrogate/SKILL.md",
-          "sha256": "1c40e3028285f3a0730dc1de33baad31a0ee4dbb11bc09edd2c58a96cc510557"
+          "sha256": "d6c59da10b7c1833ae951d4e4909338f676f57238a157dcbc8f9bb1ae3a62aa6"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3204,8 +3438,9 @@
           "sha256": "2462f1347b99b412b04fcb0577b96d8744c801f792f2651746f9409fd4465dc9"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3220,6 +3455,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3234,6 +3470,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3246,8 +3483,9 @@
           "sha256": "a67bf02426f88714634ff481d667db821d4b2cea7b335bcd165fe3126e427fb5"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3262,12 +3500,12 @@
         {
           "executable": false,
           "path": "skills/maintain-verification-skill/SKILL.md",
-          "sha256": "aebc8839930e153a01ddd985e6a2e4e6e8e6bf1b99972d9edd7c967e456cd048"
+          "sha256": "3ca9c4f90077dea397adffb05abe637e6343b9f2ac60ded3cd1533b1e56a01b0"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3282,12 +3520,12 @@
         {
           "executable": false,
           "path": "skills/github-pr-publish/SKILL.md",
-          "sha256": "487111fb8d51f63349fa2110faf94fe49ec819dea9a04b5b43152937c22b9241"
+          "sha256": "a83ce067601bb8cd618c7ae66410f8190550cb89370d94f4a780cc8555756ccb"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3302,12 +3540,12 @@
         {
           "executable": false,
           "path": "skills/no-comments/SKILL.md",
-          "sha256": "fe590f6adc297401cd63ae7155eb092ee7ca551e13e08bb729f2538fa30a81a9"
+          "sha256": "c9e514ed09de6e4fba32778c4be3a062b7b25dc4f390365142159c770b7c720c"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3317,17 +3555,17 @@
         {
           "executable": false,
           "path": "skills/pstack/references/poteto-mode-procedure.md",
-          "sha256": "cdfe57a2a485a00f1956d4c4dc9d9c3c2339eea7d9ba3c98288a9acbb93d693c"
+          "sha256": "2e77849df353f4ffdb8cd6efb27bcb360b0ec3e1d806bbb2b7f80a4b93596aae"
         },
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "Adopted the fresh-subagents default, the evidence-or-label reply rule, the benchmark trigger and the new principle index lines. Model and routing defaults, effort defaults and reply-word wording not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3342,6 +3580,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3356,6 +3595,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3365,11 +3605,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/autopilot-full.md",
-          "sha256": "6f11122dd7dbdf580175540d5c74778bd42156ef7ca247dcd5f18873a9d4444c"
+          "sha256": "cdbddb40d8a38eb269d503a0d78ec2b5362277034dc3d00f819cbc6b1e0e3dd6"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted fresh owner per queue item and push after each verifiable unit. /loop 1h, /goal, children.tsv and rebase-policy changes not adopted (local execution boundary).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3379,11 +3620,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/autopilot-stack.md",
-          "sha256": "53b16eaad820fa96ffec2d985e5b31cf02c557a8da1d29501b1e03df06c590f1"
+          "sha256": "dbd58b92ed389dedbbfa6dd2a7f73864949bbe9b8c5c62c63890e8d82beadc0a"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted push after each verifiable unit. /loop 1h and /goal not adopted (local execution boundary).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3398,6 +3640,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3412,6 +3655,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3426,7 +3670,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3441,6 +3685,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3450,11 +3695,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/hillclimb.md",
-          "sha256": "14fc5e37ab64dc6092d3e768ef3cf6384359395efe8a49d9720ce6c116d565b4"
+          "sha256": "59b8db345263bf1a8b8548684754272985670e20c3e17477572f85c758ffe804"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted harness vetting with the benchmark checklist and mantra ordering of hypotheses. Model-default sentence not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3464,11 +3710,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/investigation.md",
-          "sha256": "00933083fa82e26ab778dcab617886e1c5ccdb7c5366b0287837ac56b86716a6"
+          "sha256": "75909bb4102f741c9b01e168ecee65aba413bae9ee8a4b17cdf6c564e9fe9030"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Removed the critique-mode route; unclear premises route to interrogate.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3483,7 +3730,7 @@
       ],
       "disposition": "adapted",
       "reason": "Preserves executable plan shape and verification coverage while binding cadence and notification policy to authorized harness configuration instead of hardcoded 30-minute/always-notify behavior.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3493,12 +3740,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/opening-a-pr.md",
-          "sha256": "cd6910f18c0092b39c7f81d400c4abd8a254b89a79c4f4930767801a8881825b"
+          "sha256": "9b06a5317d944181111b7501cb9f5b48a46baff7d55ba3258a0197d611b2f217"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | Adopted ## headings, What changed, always-present Scope, shorter body, 40-line squash cut-off and a harness-neutral built-in PR tool rule. Local technical-writing and deslop prose rules kept. Autopilot owner babysit exception not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3513,7 +3760,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3528,6 +3775,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3537,11 +3785,12 @@
         {
           "executable": false,
           "path": "skills/pstack/playbooks/perf-issue.md",
-          "sha256": "5d11856ba2f2087a593ed6754a82eccf535b497b1e755136d21308ff3d8ed1c2"
+          "sha256": "613584bfebf01b6d00247b178eecf224aae2c28265a4b5fd3098b0918b73bf39"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted the seven performance mantras and the benchmark checklist link. Model-default sentence not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3556,6 +3805,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3570,6 +3820,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3584,6 +3835,7 @@
       ],
       "disposition": "adapted",
       "reason": "Read-only diagnosis cannot inject or hotfix live code; isolate experiments or obtain missing authority.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3598,7 +3850,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3613,6 +3865,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3627,6 +3880,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3641,6 +3895,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3655,7 +3910,7 @@
       ],
       "disposition": "adapted",
       "reason": "Deliberate safety divergence: routes through canonical evidence-based cleanup helper; preserves tracked/untracked/ignored/unpushed/in-use state and excludes cache/simulator deletion.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3684,7 +3939,7 @@
       ],
       "disposition": "adapted",
       "reason": "Behavior-to-capability mapping uses actual active tools; no assumed structured-question absence, forced frontier panel, model default, feature enablement or plugin installation.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3699,7 +3954,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3854,8 +4109,9 @@
           "sha256": "7b9312229a810b2bc39b4a94f8bac69f580fe8fcbc8a23daff80a18e2866c1a2"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3882,8 +4138,9 @@
           "sha256": "dbd11806e2019571aac7a2dcf853db7a69981f186e3cca95ad0d3cd24525a49b"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3896,8 +4153,24 @@
           "sha256": "854ab9ad21731b8941139bff1a477f2ccca30abd3907ef790971f5e04e1791ad"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:plugins/pstack/skills/poteto-mode/scripts/runner/entry.ts": {
+      "destinations": [
+        {
+          "executable": true,
+          "path": "skills/pstack/scripts/runner/pstack-runner",
+          "sha256": "adb3524ffd73db07ef1126474c2bbd61a1c6d0186f9ccc05a1c6b24c6d3058e4"
+        }
+      ],
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3926,6 +4199,7 @@
       ],
       "disposition": "adapted",
       "reason": "Replaced upstream fixed four-model setup assertions with required explicit model, preservation, and native-route rejection tests; underlying runner suite retained.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3938,8 +4212,9 @@
           "sha256": "0c934fa100a8c79b9e8e4464ed92ccac80dae62a3571fede7628f0ca6f451a8c"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3952,8 +4227,9 @@
           "sha256": "452b630b65b9f91973f233c0e1c53760a9b80e7365cc90754707c15e2dbfd482"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3966,8 +4242,9 @@
           "sha256": "adb3524ffd73db07ef1126474c2bbd61a1c6d0186f9ccc05a1c6b24c6d3058e4"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3980,8 +4257,9 @@
           "sha256": "af2bab6ff09d8fb0af4776c93ffc580dbb60f049f65599f22de414d488cefa43"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3994,8 +4272,9 @@
           "sha256": "eb3cbb382a1034222bfa166c91f5930b3cb8910247305e796ac156a72760ada9"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4022,8 +4301,9 @@
           "sha256": "9661e142dee92fc60aaa72062f7470f6151333b95ea88306ff8f3ea8269cbffa"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4212,6 +4492,26 @@
         "skills/git-cleanup/tests/test_cleanup.py"
       ]
     },
+    "open-pstack:plugins/pstack/skills/principle-attack-the-premise/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/pstack/references/principle-attack-the-premise.md",
+          "sha256": "87c8e3e8f3474da0e02080b3f222c9e9b67e4a0bef6068578cbfd27271b55ebc"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+        }
+      ],
+      "disposition": "adapted",
+      "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
+      "review_note": "Adopted open-pstack's corrected principle (census scoped to imbalance problems) as a pstack reference with index lines.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
     "open-pstack:plugins/pstack/skills/principle-boundary-discipline/SKILL.md": {
       "destinations": [
         {
@@ -4222,12 +4522,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4242,12 +4542,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4262,12 +4562,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4282,12 +4582,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4302,12 +4602,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4322,12 +4622,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4342,12 +4642,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4362,12 +4662,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4382,12 +4682,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4402,12 +4702,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4422,12 +4722,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4442,12 +4742,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4462,12 +4762,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4482,12 +4782,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4502,12 +4802,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4522,12 +4822,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4542,12 +4842,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4562,12 +4862,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4582,12 +4882,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4602,12 +4902,32 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:plugins/pstack/skills/principle-test-behavior-not-implementation/SKILL.md": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "skills/pstack/references/principle-test-behavior-not-implementation.md",
+          "sha256": "d4978eb2c49914e996429ae259fe94ef27ba8e0276065d088b59bd55080aa857"
+        },
+        {
+          "executable": false,
+          "path": "skills/pstack/SKILL.md",
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
+        }
+      ],
+      "disposition": "adapted",
+      "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery. Open Pstack's corrected text replaces the original.",
+      "review_note": "Adopted open-pstack 1.4.0 corrected text (assertions that return undefined do not fail negative-path tests). Added to the principle index.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4622,12 +4942,12 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "f72832fddcfad018ce5b584d94a8af64f5a2b761e1e0dcde1996732b2ebe1822"
+          "sha256": "26c66f62b2b32d91fd297ac4a4ae81fea567695cd77a29b72155ef1946ffd073"
         }
       ],
       "disposition": "adapted",
       "reason": "Principle leaf resource loaded by canonical pstack, without duplicate discovery.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4642,12 +4962,12 @@
         {
           "executable": false,
           "path": "skills/recall/SKILL.md",
-          "sha256": "e04893b55cad181b1236196e4b11ba060b92b6e662c3501af4987c5bf392982e"
+          "sha256": "cc7548e6c277538a95be8b17f0fe318bd1dbe6675b13922e7fd2bd3423262970"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4662,12 +4982,12 @@
         {
           "executable": false,
           "path": "skills/retro/SKILL.md",
-          "sha256": "6457faaba734ba6d062b5b8d5862c49ea338f1a86e2c9687c3116213be96735a"
+          "sha256": "7ce4dcba58ac6b4d653700591cd3431d0224fa9cb5eb005722ad861f9c80cfca"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Moved the reflect procedure and reviewer templates from skill-capture into retro deep mode; reviewed the adapted deep-mode mapping step.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4682,7 +5002,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4697,7 +5017,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4712,6 +5032,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4726,7 +5047,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage.",
+      "review_note": "Integrated reviewed portable paths, canonical cleanup preservation and complete source coverage. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4741,11 +5062,12 @@
         {
           "executable": false,
           "path": "skills/setup-pstack/SKILL.md",
-          "sha256": "34301adc00228c39063c62e8baf881c28309604ab50ac8928f752d90032ac582"
+          "sha256": "6b7fa98a86305af5106430d4658a5bf9e0425d00a7ac1983a2c4d292fdf1a968"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4755,17 +5077,17 @@
         {
           "executable": false,
           "path": "skills/show-me-your-work/references/show-me-your-work-procedure.md",
-          "sha256": "c7eee26048b525b288a96a03c4f2f8a339584005cea0e71481d55d8eb61e1a82"
+          "sha256": "5f765e9ef1ca50942436b70893d307ff2afc62433944fee0949cf631ed43f576"
         },
         {
           "executable": false,
           "path": "skills/show-me-your-work/SKILL.md",
-          "sha256": "d566500a7afdc46d9bc02b57f17bf2488a79165352224161b2d5575c4cc7a5b8"
+          "sha256": "ce8e425c0d954aedf013d29fbb6a58d2cf5410409d452550941b7032ea5d778b"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Adopted per-run start rows and supersede-only audit corrections. Kept the provider-neutral session-record audit and independent-review wording.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4789,11 +5111,12 @@
         {
           "executable": true,
           "path": "skills/show-me-your-work/scripts/log.sh",
-          "sha256": "1601bc18f9aba0af3f5d6375e4f2d5dc6102334d1bca935026c0e3547cdadbbf"
+          "sha256": "a65a4bc5fb7cdeadbdb7b7ff1ca4682f4d9c42420942b2977cd17b46c4ac338e"
         }
       ],
       "disposition": "identical",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "Adopted the non-truncating header write (>> with -s test), identical upstream.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4803,17 +5126,17 @@
         {
           "executable": false,
           "path": "skills/swarm/references/swarm-procedure.md",
-          "sha256": "5bc73543b2eabcdf7d60f625244f3406faa6a6d58d756dca9679d274e1f51fd4"
+          "sha256": "35179f8ed01de82f0fae1bf489b5e226ed215021d2e3862f281085c4ce1520e7"
         },
         {
           "executable": false,
           "path": "skills/swarm/SKILL.md",
-          "sha256": "5cfb6116f5f19c8b4f41032caad07efe0d40fbe5f6af2e9d5cfd27bf0a815808"
+          "sha256": "61112bcee91578cf5fec8a6b0c7ef4b182ee06840368a9275691d3d9558e2b3c"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Adopted SHA and method in measurement briefs, respawn wording and list-every-proven-issue. Role-sheet wording not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4828,12 +5151,12 @@
         {
           "executable": false,
           "path": "skills/tdd/SKILL.md",
-          "sha256": "1c4b1f82f81b3a772d6f346174d04422dfb7acf6b519b1bf834ceb98114d5b36"
+          "sha256": "98474ea04320237c00773b77745bc5b1596e56dbc307560c0f10096f3edd2bff"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4848,12 +5171,12 @@
         {
           "executable": false,
           "path": "skills/teach/SKILL.md",
-          "sha256": "bdad094768666341655d5c6f6977d609521e741167c7e05b339454af9b2b6b1f"
+          "sha256": "f35105f053b37f41b3756d14fe0ea7f7931605ecc77cb4dd835ee2d4df56b01d"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4868,12 +5191,12 @@
         {
           "executable": false,
           "path": "skills/technical-writing/SKILL.md",
-          "sha256": "7fcfca6f47019397bab37e03eb44947520bf2d59795e44ab67d61d8286b74715"
+          "sha256": "7fc3d8d3c8872c01d87616e10db235ee2936748483885869c900d555bc8305d8"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4883,7 +5206,7 @@
         {
           "executable": false,
           "path": "skills/full-code-review/SKILL.md",
-          "sha256": "15937ad445e2aa6f94a54a669ce614236bd973b9dc57b97b9ac94bfb4e3e947d"
+          "sha256": "062697a9bc2e404d852b3defdbba87eb7e84ed2e8bae748c30585b107b8d1eef"
         },
         {
           "executable": false,
@@ -4893,7 +5216,7 @@
       ],
       "disposition": "superseded",
       "reason": "structural-review is the catalog's single code-quality rubric (#168); full-code-review points to it instead of carrying a duplicate procedure.",
-      "review_note": "Hide structural-review from the slash menu (#173): user-invocable: false frontmatter only; no behavior change.",
+      "review_note": "#188 content wave: reviewed destination hashes after the open-pstack 1b03678 pin bump in skill provenance and the refreshed upstream NOTICE.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4908,12 +5231,12 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/SKILL.md",
-          "sha256": "23038f38f4ef6b10907fcebde2ccb9faba33a6551ecfb88e762e50fcb922a15f"
+          "sha256": "13889f2e5a46a66d35f225bac42f436603a2c8c9ef5aedf5683f9a878cdb3f02"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4923,11 +5246,12 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/references/patterns.md",
-          "sha256": "eb73b5f3514c0c14d14bafca59ffb54b161422ea5fc5fe65e60c5b4d71c40178"
+          "sha256": "faa1362055374452efccac1b629677c61acfb0bcc6c4e3311836b5715638ee18"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "Adopted cursor-pstack's Zod schema-first example and trims; open-pstack's older text is superseded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4937,17 +5261,17 @@
         {
           "executable": false,
           "path": "skills/deslop/references/unslop-procedure.md",
-          "sha256": "cc35d8a73d63cf1f4be8924bc14099c0b814be13f62024b0b1c82a8a976c53bb"
+          "sha256": "3b8a8761550312ec57b9646b5678641905aefe91ae0a29885dfe0103fed909ca"
         },
         {
           "executable": false,
           "path": "skills/deslop/SKILL.md",
-          "sha256": "102822b709c7163a5476f28777c095a6e53e675026de194e0e2f075edbe4f1ef"
+          "sha256": "eb1dca5e1e179060d99e025ee2bb504841b491cb63b6ba235d80324ee2ea4da6"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Adopted rules 32 (mannered prose) and 33 (over-compression), also added to prose-slop.md. Removals and rule renumbering not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4956,18 +5280,13 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/commit-summary/references/what-did-i-get-done-procedure.md",
-          "sha256": "726f0fe17c2a55e52ce354e5e878d936602730835993454203cfbf9ff3dba296"
-        },
-        {
-          "executable": false,
-          "path": "skills/commit-summary/SKILL.md",
-          "sha256": "979df24467d5bc2524953d6cf102dd66db6bca8272d1a6a402f62ace524b43cf"
+          "path": "skills/standup/SKILL.md",
+          "sha256": "b8e89debf007d2bf2631e1d6b2446cee857317e0048d6c58b78a093b85effb04"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "disposition": "superseded",
+      "reason": "standup personal mode already summarizes the current author's commits over a requested window, excluding merges and uncommitted work, and carries the same concision and no-inferred-intent guardrails. The duplicate commit-summary procedure was removed.",
+      "review_note": "Repointed to standup after confirming its personal mode covers the author-scoped commit summary; removed the duplicate commit-summary procedure.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4982,12 +5301,12 @@
         {
           "executable": false,
           "path": "skills/why/SKILL.md",
-          "sha256": "be8b1d745929fdf9deedae872478d9208f4b75ec7f074c67737491f959a8de2f"
+          "sha256": "3140e6c203979adbf8a00d5a2cccf6d4bcee17ad32149bb6533af4d4cc074ae8"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5002,6 +5321,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5016,6 +5336,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5030,6 +5351,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5058,6 +5380,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5072,6 +5395,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5084,8 +5408,9 @@
           "sha256": "486132457d3782eea64292ce7a2d3bbe3b24b372b20ca00de4329e820f74cd42"
         }
       ],
-      "disposition": "identical",
-      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Local copy carries reviewed changes from the other upstream source; see review_note.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5100,6 +5425,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5114,6 +5440,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5128,6 +5455,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5142,6 +5470,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5156,6 +5485,67 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:scripts/upstream-audit.py": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:scripts/upstream-merge-probe.py": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:scripts/upstream-merge.py": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "verification": [
+        "docs/pstack-import-verification.md"
+      ]
+    },
+    "open-pstack:tests/setup-config-home-repro.sh": {
+      "destinations": [
+        {
+          "executable": false,
+          "path": "upstream/pstack/README.md",
+          "sha256": "ebbc22dba1f3dbdefb29a5a9c8b4f60f91ddd6c3e89ba4955ef4f532f10fe35e"
+        }
+      ],
+      "disposition": "metadata",
+      "reason": "Open Pstack repository infrastructure (upstream CI, merge tooling, planning notes). Not shipped, so only the archive keeps it.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5175,7 +5565,7 @@
       ],
       "disposition": "superseded",
       "reason": "Canonical catalog and installed-artifact checks replace the duplicate-provider reproduction fixture; upstream fixture remains in the snapshot.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

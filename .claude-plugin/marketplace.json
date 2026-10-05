@@ -537,7 +537,7 @@
       "name": "how",
       "source": "./skills/how",
       "version": "2.2.2",
-      "description": "Explains how a subsystem works: architecture, runtime flow, onboarding mental models; can critique architecture. Use for how does X work or code walkthroughs. Not for motivation."
+      "description": "Explains how a subsystem works: architecture, runtime flow, onboarding mental models. Use for how does X work or code walkthroughs. Not for motivation."
     },
     {
       "name": "html-style",

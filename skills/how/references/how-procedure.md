@@ -14,12 +14,9 @@ Explore the codebase to answer "how does X work?" questions. Produce clear archi
 
 **Dispatch contract.** Resolve every configured role through `provider-dispatch.md` (resolve the `pstack` skill through the active catalog). Values are provider-qualified descriptors; the parent chooses native versus external execution. On Codex, resolve remaining Claude tool names via `codex-tools.md` (resolve the `pstack` skill through the active catalog).
 
-Two modes:
+This procedure only explains. For adversarial review of an architecture or a diff, route to `interrogate` or `structural-review`.
 
-1. **Explain** (default). Explore the codebase and produce a clear explanation
-2. **Critique.** Explain first, then spawn multiple models to independently identify architectural issues
-
-## Explain Mode
+## Explain
 
 ### Step 1. Understand the Question and Assess Complexity
 
@@ -94,36 +91,3 @@ Follow this structure, adapted to the question. Not every section is needed for 
 **Where Things Live.** A brief map of the relevant files/directories. Not every file, just the ones needed to start working in this area.
 
 **Gotchas.** Non-obvious or surprising things that would trip someone up. Historical context that explains why something looks weird. Known sharp edges.
-
-## Critique Mode
-
-Triggered when the user asks for architectural issues, problems, or improvements, not just understanding.
-
-### Step 1. Explain First
-
-Run the full explain flow above (Steps 1-4). You must understand the architecture before critiquing it.
-
-### Step 2. Spawn Critics
-
-After the explanation is complete, start one architectural critic per descriptor in your configured how-critics list (from the active harness role map) in one fan-out phase.
-
-Route each critic in read-only mode using the model and requested effort supplied by the authorized harness role map. The lead does not raise effort or substitute providers from this procedure.
-
-Read `references/critic-prompt.md` for the prompt template. Each critic gets:
-
-1. The explanation from Step 1 (so they don't re-explore)
-2. The relevant file paths (so they can read the actual code)
-3. The architectural critique rubric from `references/critique-rubric.md`
-
-### Step 3. Lead Judgment
-
-Same framework as the interrogate skill. You're a pragmatic lead, not an aggregator.
-
-Categorize findings:
-
-- **Act on.** Architectural problems worth fixing now
-- **Consider.** Real concerns, but the cost/benefit is unclear
-- **Noted.** Valid observations, low priority
-- **Dismissed.** Wrong, missing context, or style preference
-
-Present the explanation first (from Step 1), then the critique verdict below it. The explanation should stand on its own; someone who just wants to understand the system shouldn't wade through critique.

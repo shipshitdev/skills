@@ -2,11 +2,13 @@
 
 Read the applicable leaf in full before applying its rule.
 
+- [attack the premise](principle-attack-the-premise.md)
 - [boundary discipline](principle-boundary-discipline.md)
 - [build the lever](principle-build-the-lever.md)
 - [encode lessons in structure](principle-encode-lessons-in-structure.md)
 - [exhaust the design space](principle-exhaust-the-design-space.md)
 - [experience first](principle-experience-first.md)
+- [explain the number](principle-explain-the-number.md)
 - [fix root causes](principle-fix-root-causes.md)
 - [foundational thinking](principle-foundational-thinking.md)
 - [guard the context window](principle-guard-the-context-window.md)
@@ -22,4 +24,5 @@ Read the applicable leaf in full before applying its rule.
 - [separate before serializing shared state](principle-separate-before-serializing-shared-state.md)
 - [sequence verifiable units](principle-sequence-verifiable-units.md)
 - [subtract before you add](principle-subtract-before-you-add.md)
+- [test behavior, not implementation](principle-test-behavior-not-implementation.md)
 - [type system discipline](principle-type-system-discipline.md)

@@ -1,12 +1,12 @@
 ---
 name: how
-description: "Explains how a subsystem works: architecture, runtime flow, onboarding mental models; can critique architecture. Use for how does X work or code walkthroughs. Not for motivation."
+description: "Explains how a subsystem works: architecture, runtime flow, onboarding mental models. Use for how does X work or code walkthroughs. Not for motivation."
 license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
-  portable_commit: "56bfd14418fa733e34d98f714f357d28788470e3"
+  portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
   version: "2.2.2"
-  tags: "architecture, walkthrough, onboarding, critique"
+  tags: "architecture, walkthrough, onboarding"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/how/SKILL.md
   upstream_repo: cursor/plugins
@@ -22,10 +22,8 @@ when_to_use: "where does this belong, ownership"
 Explore the codebase to answer "how does X work?" Produce an architectural
 explanation at the level of a senior engineer onboarding onto a subsystem.
 
-Two modes:
-
-1. **Explain** (default). Explore and produce a clear explanation.
-2. **Critique.** Explain first, then spawn independent critics.
+Explain only. For adversarial review of an architecture or a diff, route to
+`interrogate` or `structural-review`.
 
 Companion to `why`. This skill answers what the code does. `why` answers
 what forces led to its shape.
@@ -40,7 +38,6 @@ Inputs:
 Outputs:
 
 - The structured explanation below
-- In Critique mode, a lead verdict over critic findings
 
 Creates/Modifies:
 
@@ -56,9 +53,9 @@ Confirmation Required:
 
 Delegates To:
 
-- None. May spawn read-only explorer, explainer, and critic subagents.
+- None. May spawn read-only explorer and explainer subagents.
 
-## Explain mode
+## Explain
 
 ### Step 1. Understand the question
 
@@ -107,19 +104,6 @@ not pseudocode. Cite files and functions.
 **Where Things Live.** A brief map of the relevant files.
 
 **Gotchas.** Non-obvious edges and historical scars.
-
-## Critique mode
-
-Triggered when the user asks for architectural issues, not just
-understanding.
-
-1. Run the full explain flow.
-2. Spawn one architectural critic per available judgment family, all in
-   one message, read-only, on mixed capability tiers. Each gets the
-   explanation, file paths, [references/critic-prompt.md](references/critic-prompt.md),
-   and [references/critique-rubric.md](references/critique-rubric.md).
-3. Lead judgment. Categorize findings: Act on, Consider, Noted, Dismissed.
-   Present the explanation first, then the critique.
 
 ## How procedure
 
