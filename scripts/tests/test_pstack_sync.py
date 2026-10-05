@@ -239,6 +239,47 @@ class PstackSyncTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             sync.snapshot(checkout, self.git(checkout, "rev-parse", "HEAD"), ["."])
 
+    def test_declared_ignored_symlink_is_skipped_and_unlisted_symlinks_still_fail(self) -> None:
+        checkout, _, _ = self.repository()
+        (checkout / "repo-only").symlink_to("/outside")
+        (checkout / "unsafe").symlink_to("/outside")
+        self.git(checkout, "add", ".")
+        self.git(checkout, "commit", "-qm", "symlinks")
+        commit = self.git(checkout, "rev-parse", "HEAD")
+        skipped: list[str] = []
+        files = sync.snapshot(checkout, commit, ["."], ["repo-only", "unsafe"], skipped)
+        self.assertEqual(skipped, ["repo-only", "unsafe"])
+        self.assertNotIn("repo-only", files)
+        with self.assertRaises(ValueError):
+            sync.snapshot(checkout, commit, ["."], ["repo-only"])
+        with self.assertRaises(ValueError):
+            sync.snapshot(checkout, commit, ["."])
+
+    def test_candidate_records_ignored_paths_and_rejects_mapped_or_malformed_lists(self) -> None:
+        checkout, _, _ = self.repository()
+        (checkout / "repo-only").symlink_to("/outside")
+        self.git(checkout, "add", ".")
+        self.git(checkout, "commit", "-qm", "symlink")
+        commit = self.git(checkout, "rev-parse", "HEAD")
+        with self.assertRaises(ValueError):
+            sync.candidate(self.root, "fixture", checkout, commit, self.base / "unlisted")
+        self.source["ignored_paths"] = ["repo-only"]
+        self.save()
+        report = sync.candidate(self.root, "fixture", checkout, commit, self.base / "listed")
+        self.assertEqual(report["ignored_paths"], ["repo-only"])
+        candidate = json.loads((self.base / "listed/candidate-lock.json").read_text())
+        self.assertEqual(candidate["sources"][0]["ignored_paths"], ["repo-only"])
+        self.source["ignored_paths"] = ["removed.txt"]
+        self.save()
+        self.assertTrue(any("also archived" in e for e in sync.verify(self.root)))
+        self.source["ignored_paths"] = ["../escape"]
+        self.save()
+        self.assertTrue(any("Unsafe path" in e for e in sync.verify(self.root)))
+        self.source["ignored_paths"] = ["a", "a"]
+        self.save()
+        with self.assertRaises(ValueError):
+            sync.candidate(self.root, "fixture", checkout, commit, self.base / "dup")
+
 
 if __name__ == "__main__":
     unittest.main()
