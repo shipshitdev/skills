@@ -38,8 +38,18 @@ poteto-agent skill preload, show-me-your-work run markers and a non-truncating
 brief details and the prompting reference. Retired: how critique mode and the
 duplicate commit-summary activity procedure (standup personal mode covers it).
 Not adopted: model, routing and effort defaults, `/loop` and `/goal` autopilot
-cadence, Cursor-only UI and open-pstack repository infrastructure. Runner
-reliability changes land in the follow-up pull request.
+cadence, Cursor-only UI and open-pstack repository infrastructure.
+
+The runner reliability bundle from open-pstack 1b03678 is copied verbatim:
+terminal-event arrays, Grok and Claude terminal failure classification, retained
+`<receipt>.stdout` and `<receipt>.stderr` sidecars, distinct-path reservation,
+Grok preflight matching, a portable `sh` launcher that clears `BUN_OPTIONS` and
+`NODE_OPTIONS` and loads no environment file or `bunfig`, and a likely-sandbox hint.
+Two choices need explicit review. Grok lanes now use `--permission-mode auto` in
+both access modes, because headless Grok cancels a whole turn on a permission
+prompt and the Grok sandbox still confines writes. The runner also accepts the
+`ultra` effort value, which selects nothing by itself. Model tables and setup
+changes stay out; the user-owned role sheet keeps routing.
 
 ## Deliberate adaptations
 

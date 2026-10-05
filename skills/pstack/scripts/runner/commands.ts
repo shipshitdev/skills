@@ -128,8 +128,11 @@ export function invocationCommand(options: RunnerOptions): CommandSpec {
           options.model,
           "--reasoning-effort",
           options.effort,
+          // Headless Grok cancels the whole turn on a permission prompt, in both access modes.
+          // Auto mode reports a blocked call to the model instead; the sandbox still confines
+          // writes (read-only, or workspace for isolated-write).
           "--permission-mode",
-          permissionMode(options.mode),
+          "auto",
           "--sandbox",
           grokSandbox(options.mode),
           "--tools",

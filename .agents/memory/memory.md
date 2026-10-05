@@ -192,6 +192,10 @@ defaults, `/loop` and `/goal` autopilot cadence, Cursor-only UI and upstream rep
 infrastructure are never adopted. How critique mode is retired. The `correct`
 procedure lives in rules-capture, benchmark checklist and prompting in pstack
 references, and commit-summary no longer duplicates standup.
+The runner is open-pstack's reliability bundle, copied verbatim (portable launcher,
+stream sidecars, terminal-failure classification). Grok lanes run with
+`--permission-mode auto` (Vincent approved, 2026-10-05) because headless Grok cancels
+a turn on any permission prompt. Do not take the reverted Claude write-lane change.
 
 Duplicate installed providers may be disabled only after replacement verification.
 Preserve generated user role sheets and their actual source of truth. Source
