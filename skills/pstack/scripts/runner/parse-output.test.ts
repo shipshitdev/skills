@@ -24,6 +24,56 @@ describe("parseProviderOutput", () => {
     });
   });
 
+  it("extracts the last Claude result event and its terminal metadata", () => {
+    const parsed = parseProviderOutput("claude", JSON.stringify([
+      { type: "system", model: "claude-opus-9" },
+      { type: "result", result: "EARLIER_RESULT" },
+      null,
+      { type: "assistant", message: { content: [{ type: "text", text: "progress" }] } },
+      {
+        type: "result", is_error: false, result: "CLAUDE_ARRAY_OK",
+        session_id: "claude-array-session",
+        usage: { input_tokens: 14, output_tokens: 4, cache_read_input_tokens: 2 },
+        total_cost_usd: 0.03,
+        modelUsage: { "claude-haiku-4-5-20251001": {}, "claude-fable-9-9": {} },
+      },
+      { type: "system", result: "NOT_A_TERMINAL_RESULT" },
+    ]), "", "fable");
+    expect(parsed).toMatchObject({
+      text: "CLAUDE_ARRAY_OK", reportedModel: "claude-fable-9-9",
+      sessionId: "claude-array-session",
+      usage: { inputTokens: 14, outputTokens: 4, cachedInputTokens: 2 },
+      costUsd: 0.03,
+    });
+  });
+
+  it("rejects Claude terminal errors before accepting partial or missing text", () => {
+    for (const result of ["partial text", undefined]) {
+      const terminal = { type: "result", is_error: true, result };
+      for (const raw of [terminal, [{ type: "result", result: "earlier success" }, terminal]]) {
+        expect(() => parseProviderOutput("claude", JSON.stringify(raw), "", "fable"))
+          .toThrow("claude reported an error result");
+      }
+    }
+  });
+
+  it("rejects Claude arrays without a terminal result event", () => {
+    for (const raw of [[], [null, "text"], [{ type: "assistant", result: "progress" }]]) {
+      expect(() => parseProviderOutput("claude", JSON.stringify(raw), "", "fable"))
+        .toThrow("claude result did not contain a terminal event");
+    }
+  });
+
+  it("rejects Claude terminal results without final text", () => {
+    for (const result of [undefined, "", 42]) {
+      const terminal = { type: "result", is_error: false, result };
+      for (const raw of [terminal, [terminal]]) {
+        expect(() => parseProviderOutput("claude", JSON.stringify(raw), "", "fable"))
+          .toThrow("claude result did not contain final text");
+      }
+    }
+  });
+
   it("extracts Codex JSONL without inventing a provider-reported model", () => {
     const parsed = parseProviderOutput(
       "codex",
@@ -118,6 +168,47 @@ describe("parseProviderOutput", () => {
     expect(reportedModelMatches("claude", "fable", "fable")).toBe(false);
     expect(reportedModelMatches("claude", "fable", "fable-preview")).toBe(false);
     expect(reportedModelMatches("grok", "fable", "claude-fable-9-9")).toBe(false);
+  });
+
+  for (const [stopReason, expectedStatus] of [
+    ["cancelled", "cancelled"], ["canceled", "cancelled"], ["end_turn", "child-failed"],
+  ]) {
+    it(`issue78 retains terminal metadata for ${stopReason}`, () => {
+      let failure: unknown;
+      try {
+        parseProviderOutput("grok", JSON.stringify({
+          type: "result", subtype: "error_during_execution", is_error: true,
+          stop_reason: stopReason, errors: ["Exact provider reason"],
+          session_id: "terminal-session", modelUsage: { "grok-4.6-build": {} },
+          usage: { input_tokens: 30, output_tokens: 4 }, total_cost_usd: 0.02,
+        }), "", "grok-4.6");
+      } catch (error) {
+        failure = error;
+      }
+      expect(failure).toMatchObject({
+        message: "Exact provider reason", status: expectedStatus,
+        metadata: {
+          reportedModel: "grok-4.6-build", sessionId: "terminal-session",
+          usage: { inputTokens: 30, outputTokens: 4 }, costUsd: 0.02,
+        },
+      });
+    });
+  }
+
+  it("issue78 rejects incomplete terminal status", () => {
+    for (const terminal of [
+      { type: "result", result: "text" },
+      { type: "result", subtype: "success", result: "text" },
+      { type: "result", subtype: "", is_error: true },
+      { type: "result", subtype: "api_error", is_error: "true" },
+    ]) {
+      expect(() => parseProviderOutput("grok", JSON.stringify(terminal), "", "grok-4.6"))
+        .toThrow("valid terminal status");
+    }
+    expect(() => parseProviderOutput("grok", "not-json", "", "grok-4.6"))
+      .toThrow("non-JSON event");
+    expect(() => parseProviderOutput("grok", '{"type":"assistant"}', "", "grok-4.6"))
+      .toThrow("terminal event");
   });
 
   it("rejects malformed or textless responses", () => {

@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
-const startedAt = Date.now();
-const { main } = await import("./cli.ts");
-process.exitCode = await main(process.argv.slice(2), startedAt);
+#!/bin/sh
+unset BUN_OPTIONS NODE_OPTIONS
+case $0 in */*) dir=${0%/*} ;; *) dir=. ;; esac
+exec bun --no-env-file --config=/dev/null "$dir/entry.ts" "$@"

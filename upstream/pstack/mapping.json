@@ -3934,7 +3934,7 @@
       ],
       "disposition": "adapted",
       "reason": "Behavior-to-capability mapping uses actual active tools; no assumed structured-question absence, forced frontier panel, model default, feature enablement or plugin installation.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188 runner bundle: config-home resolution applies to setup that writes a role sheet; the local setup adapter writes none, so the rule is not adopted.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -3944,12 +3944,12 @@
         {
           "executable": false,
           "path": "skills/pstack/references/provider-dispatch.md",
-          "sha256": "ea718f9b6b50b54d3d259977eb8cf66c1c2e6c133286482368c637814e8437ec"
+          "sha256": "393f796413c94dd3335697a17cfd46bbad60dd40589db73dbe8ae86ad08b5cd0"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188 runner bundle: adopted the factual runner-behavior paragraphs (stream sidecars, distinct-path reservation, Grok preflight retry and auto permission mode, cancelled and provider-failure classification, host and parent prerequisites). Model matrix rows, Sol and Opus defaults and the previous-default compatibility rule not adopted (user-owned routing).",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4101,12 +4101,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/cli.test.ts",
-          "sha256": "7b9312229a810b2bc39b4a94f8bac69f580fe8fcbc8a23daff80a18e2866c1a2"
+          "sha256": "11aca3010ab7fca7e3509c3e8551b1eac2745a95aa89928eeee473aab337820c"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4130,12 +4130,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/commands.test.ts",
-          "sha256": "dbd11806e2019571aac7a2dcf853db7a69981f186e3cca95ad0d3cd24525a49b"
+          "sha256": "4eea031125f5dc2047f3bd5c8db09369cda017efd1e03b24f88d17fa4f3003bd"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4145,12 +4145,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/commands.ts",
-          "sha256": "854ab9ad21731b8941139bff1a477f2ccca30abd3907ef790971f5e04e1791ad"
+          "sha256": "a7ec3e4f98f40449715d326cdf8b2eaf1098297926bc05209cf7a8c9ff9c4565"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4158,14 +4158,14 @@
     "open-pstack:plugins/pstack/skills/poteto-mode/scripts/runner/entry.ts": {
       "destinations": [
         {
-          "executable": true,
-          "path": "skills/pstack/scripts/runner/pstack-runner",
-          "sha256": "adb3524ffd73db07ef1126474c2bbd61a1c6d0186f9ccc05a1c6b24c6d3058e4"
+          "executable": false,
+          "path": "skills/pstack/scripts/runner/entry.ts",
+          "sha256": "86bfe398a6a36df805fda000c842ecdfebffe0dceef89434be6dc494f21c3639"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4194,7 +4194,7 @@
       ],
       "disposition": "adapted",
       "reason": "Replaced upstream fixed four-model setup assertions with required explicit model, preservation, and native-route rejection tests; underlying runner suite retained.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188 runner bundle: upstream test pins the default model matrix and setup text, which this distribution does not ship. The local configured-role test is kept unchanged.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4204,12 +4204,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/parse-output.test.ts",
-          "sha256": "0c934fa100a8c79b9e8e4464ed92ccac80dae62a3571fede7628f0ca6f451a8c"
+          "sha256": "cf275164626d10de7bbc60ea5f1f834627af66f7e32463664d6ee604279390f7"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4219,12 +4219,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/parse-output.ts",
-          "sha256": "452b630b65b9f91973f233c0e1c53760a9b80e7365cc90754707c15e2dbfd482"
+          "sha256": "d6ffa06384206304ce87ac8eddcff8b9df1775c41af37965f487c487ee9be152"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4234,12 +4234,12 @@
         {
           "executable": true,
           "path": "skills/pstack/scripts/runner/pstack-runner",
-          "sha256": "adb3524ffd73db07ef1126474c2bbd61a1c6d0186f9ccc05a1c6b24c6d3058e4"
+          "sha256": "f760f3855ed45690529d8a3280823523f1f78e5774de7da690eb469a8b9fd28b"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4249,12 +4249,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/run.test.ts",
-          "sha256": "af2bab6ff09d8fb0af4776c93ffc580dbb60f049f65599f22de414d488cefa43"
+          "sha256": "98d3690594853b76dd4c67fb0b849f003d7c3ffa327764d856a328a036de27ac"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4264,12 +4264,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/run.ts",
-          "sha256": "eb3cbb382a1034222bfa166c91f5930b3cb8910247305e796ac156a72760ada9"
+          "sha256": "71f424b0d81fc09420ff619aea1e2e52916dfc9d4a258d4874889d4135aa5be4"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4293,12 +4293,12 @@
         {
           "executable": false,
           "path": "skills/pstack/scripts/runner/types.ts",
-          "sha256": "9661e142dee92fc60aaa72062f7470f6151333b95ea88306ff8f3ea8269cbffa"
+          "sha256": "924324b68c934ad284504140c4790875e3dc05eb1bcfe6bd705c8fc1c4cba8ff"
         }
       ],
-      "disposition": "adapted",
-      "reason": "Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
-      "review_note": "#188: Open Pstack 1b03678 runner reliability changes are adopted in the follow-up pull request for #188. This entry records the previously accepted local bytes.",
+      "disposition": "identical",
+      "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "review_note": "#188 runner reliability bundle: adopted open-pstack 1b03678 verbatim (terminal-event arrays, Grok and Claude terminal failure classification, retained stdout and stderr sidecars with two nullable receipt fields, distinct-path reservation, Grok preflight matching, portable sh launcher that clears BUN_OPTIONS and NODE_OPTIONS and loads no env file or bunfig, sandbox hint). Includes the Grok auto permission mode change and the ultra effort enum admission; neither selects a default.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
