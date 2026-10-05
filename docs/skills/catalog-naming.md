@@ -4,7 +4,7 @@ Migration from the catalog after board correctness and composition repairs,
 2026-09-05, kept current through the 2026-10-05 catalog simplification (#190). This is
 a migration inventory, not a runtime registry.
 
-176 skills and 24 commands. Eight rows record a rename from an earlier name (one of
+178 skills and 24 commands. Eight rows record a rename from an earlier name (one of
 them, `gh-address-comments`, was later merged into `pr-comments`). Skills folded into
 another since the migration are listed under Retired skills. Owning surfaces describe
 contracts; they are not mandatory naming prefixes.
@@ -86,6 +86,7 @@ contracts; they are not mandatory naming prefixes.
 | `graphql-architect` | `graphql-architect` | retain | api-design |
 | `grilling` | `grilling` | retain | discovery |
 | `grok-review` | `grok-review` | retain | grok-review |
+| `handoff` | `handoff` | retain | agent-context |
 | `how` | `how` | retain | code-explanation |
 | `html-style` | `html-style` | retain | design |
 | `husky-test-coverage` | `husky-test-coverage` | retain | code-quality-tooling |
@@ -143,6 +144,7 @@ contracts; they are not mandatory naming prefixes.
 | `redis-caching` | `redis-caching` | retain | redis |
 | `refactor-code` | `refactor-code` | retain | refactoring |
 | `release` | `release` | retain | release |
+| `retro` | `retro` | retain | agent-memory |
 | `review-dispatch` | `review-dispatch` | retain | code-review |
 | `roadmap-analyzer` | `roadmap-analyzer` | retain | product-strategy |
 | `roadmap-to-milestones` | `roadmap-to-milestones` | retain | roadmap-scheduling |
