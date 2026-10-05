@@ -1841,13 +1841,13 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/reflect-procedure.md",
-          "sha256": "82185b430df990dd9b89262e7294a0eafcee535a67bf13035a0d287f91f4ea3f"
+          "path": "skills/retro/references/deep-mode.md",
+          "sha256": "c869c8dca6f98380b05e4492a96a302198288ca77f951107b402c6492c51b781"
         }
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority.",
+      "review_note": "Moved the reflect procedure and reviewer templates from skill-capture into retro deep mode; reviewed the adapted deep-mode mapping step.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1856,7 +1856,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/divergent-reviewer.md",
+          "path": "skills/retro/references/divergent-reviewer.md",
           "sha256": "4460f740670d7f5fc2933133caeb6376112d9266c68f55210bd66e7f5cc4a4e1"
         }
       ],
@@ -1871,7 +1871,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/judgment-reviewer.md",
+          "path": "skills/retro/references/judgment-reviewer.md",
           "sha256": "80964e161f9a8c037921cd42c7417c5b09edd761b01ea2f387c2aa9b2656802d"
         }
       ],
@@ -1886,7 +1886,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/synthesizer.md",
+          "path": "skills/retro/references/synthesizer.md",
           "sha256": "a16c8a0798118fc970c3ddd402ed5af52d4270d6d32eda3a400aaf6410c2172a"
         }
       ],
@@ -1900,7 +1900,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/tooling-reviewer.md",
+          "path": "skills/retro/references/tooling-reviewer.md",
           "sha256": "5c80e57f8ed9a079415c7282e00d0bd98c987189cdcbc42dacd06db2bbb15f66"
         }
       ],
@@ -4642,18 +4642,18 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/reflect-procedure.md",
-          "sha256": "82185b430df990dd9b89262e7294a0eafcee535a67bf13035a0d287f91f4ea3f"
+          "path": "skills/retro/references/deep-mode.md",
+          "sha256": "c869c8dca6f98380b05e4492a96a302198288ca77f951107b402c6492c51b781"
         },
         {
           "executable": false,
-          "path": "skills/skill-capture/SKILL.md",
-          "sha256": "04a6520ae4fd5210b1833d419008c6d68f3c99196f10d9b077ea2134da216143"
+          "path": "skills/retro/SKILL.md",
+          "sha256": "6457faaba734ba6d062b5b8d5862c49ea338f1a86e2c9687c3116213be96735a"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Listing-budget pass (2026-10-03): description/when_to_use trimmed to the catalog listing budget and the shared Authorized Scope / Delivery Readiness boilerplate shortened; no behavior change.",
+      "review_note": "Moved the reflect procedure and reviewer templates from skill-capture into retro deep mode; reviewed the adapted deep-mode mapping step.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -4662,7 +4662,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/divergent-reviewer.md",
+          "path": "skills/retro/references/divergent-reviewer.md",
           "sha256": "4460f740670d7f5fc2933133caeb6376112d9266c68f55210bd66e7f5cc4a4e1"
         }
       ],
@@ -4677,7 +4677,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/judgment-reviewer.md",
+          "path": "skills/retro/references/judgment-reviewer.md",
           "sha256": "80964e161f9a8c037921cd42c7417c5b09edd761b01ea2f387c2aa9b2656802d"
         }
       ],
@@ -4692,7 +4692,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/synthesizer.md",
+          "path": "skills/retro/references/synthesizer.md",
           "sha256": "a16c8a0798118fc970c3ddd402ed5af52d4270d6d32eda3a400aaf6410c2172a"
         }
       ],
@@ -4706,7 +4706,7 @@
       "destinations": [
         {
           "executable": false,
-          "path": "skills/skill-capture/references/tooling-reviewer.md",
+          "path": "skills/retro/references/tooling-reviewer.md",
           "sha256": "5c80e57f8ed9a079415c7282e00d0bd98c987189cdcbc42dacd06db2bbb15f66"
         }
       ],

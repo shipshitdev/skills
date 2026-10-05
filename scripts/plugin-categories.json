@@ -207,6 +207,7 @@
         "refactor-code",
         "refactor-dispatch",
         "release",
+        "retro",
         "git-cleanup",
         "review-dispatch",
         "scaffold",

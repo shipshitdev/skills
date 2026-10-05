@@ -97,6 +97,8 @@ Not feature work — upkeep.
 - **`/review`** (`review-dispatch`) — pick the review depth and target.
 - **`code-review`** — correctness and security gate, plus spec fidelity against
   the originating issue.
+- **`/retro`** — a session was harder than it should have been; turn its
+  friction into checks, pointers and skill edits.
 
 ## Standalone
 
