@@ -189,7 +189,7 @@ For a reusable plan, explicitly save the same output under the repository's
 `.tmp/` after creating that directory. Review its `context`, `actions`, and
 `skipped` fields, including every `content_audit`. Complete the code/intent
 receipt, populate `intent_reviews` as documented in the reference (not needed
-for `no-own-commits` or `merged-pr-head` actions), and remove
+for `no-own-commits`, `merged-pr-head` or `exact-pr-head-squash` actions), and remove
 uncertain actions from the selected plan before pruning. Missing, unresolved or
 stale reviews make the helper skip deletion; `--confirmed` cannot bypass this. Saving this report is a caller-requested file write; the helper
 itself writes nothing during discovery.
@@ -247,11 +247,14 @@ python3 <skill-directory>/scripts/cleanup.py prune --root <repository> \
 
 The helper rejects changes to repository identity, remote URL, current HEAD, or
 scope, and any trunk change other than a fast-forward. When trunk only advanced,
-prune continues against the new trunk instead of aborting (a trunk checkout may
-fast-forward with it), and the proof kind, PR and review binding must stay the
-same. Immediately before each action it refreshes PR protection,
+prune re-proves each action against the new trunk instead of aborting (a trunk
+checkout may fast-forward with it). Proofs that carry their own evidence
+(`no-own-commits`, `merged-pr-head`, `exact-pr-head-squash`) continue when the
+proof kind and PR still match; an intent review is bound to the planned trunk,
+so other proofs need a fresh plan and review. Trunk must not move again between
+that proof and the deletion. Immediately before each action it refreshes PR protection,
 requires a recorded verified intent review bound to candidate/base/trunk IDs
-(except for a `no-own-commits` or `merged-pr-head` proof), recomputes that candidate's proof, and checks
+(except for a `no-own-commits`, `merged-pr-head` or `exact-pr-head-squash` proof), recomputes that candidate's proof, and checks
 that the exact candidate, ref, object ID, and clean worktree state still match.
 Prune creates no recovery refs. Changed or unproven candidates are skipped with
 reasons.

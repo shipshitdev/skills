@@ -742,6 +742,53 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(result["actions"][0]["result"], "skipped")
         self.assertEqual(self.git("rev-parse", "feature"), head)
 
+    def test_exact_squash_head_needs_no_intent_review(self):
+        self.squash()
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(plan["intent_reviews"], {})
+        self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "removed")
+
+    def test_trunk_advance_requires_renewed_review_for_content_proofs(self):
+        head, _merge = self.squash()
+        self.prs = []
+        plan = self.plan("local-branches")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
+        self.advance_trunk(("unrelated.txt", "unrelated\n"))
+        result = self.repo.apply(plan, "local-branches")
+        self.assertEqual(result["actions"][0]["result"], "skipped")
+        self.assertIn("renew", result["actions"][0]["reason"])
+        self.assertEqual(self.git("rev-parse", "feature"), head)
+
+    def test_trunk_moving_after_proof_skips_deletion(self):
+        head, _merge = self.squash()
+        plan = self.repo.plan("local-branches")
+        original = self.repo.evaluate
+
+        def evaluate_then_advance(*args, **kwargs):
+            result = original(*args, **kwargs)
+            self.advance_trunk(("late.txt", "late\n"))
+            return result
+
+        with patch.object(self.repo, "evaluate", side_effect=evaluate_then_advance):
+            result = self.repo.apply(plan, "local-branches")
+        self.assertEqual(result["actions"][0]["result"], "skipped")
+        self.assertIn("changed immediately before deletion", result["actions"][0]["reason"])
+        self.assertEqual(self.git("rev-parse", "feature"), head)
+
+    def test_object_fetches_create_no_tags(self):
+        clone = self.directory / "clone"
+        self.command("git", "clone", "-q", str(self.remote), str(clone))
+        for args in (("config", "user.name", "x"), ("config", "user.email", "x@example.invalid"),
+                     ("switch", "-c", "tagged")):
+            self.command("git", "-C", str(clone), *args)
+        (clone / "tagged.txt").write_text("tagged\n")
+        self.command("git", "-C", str(clone), "add", "tagged.txt")
+        self.command("git", "-C", str(clone), "commit", "-m", "tagged work")
+        self.command("git", "-C", str(clone), "tag", "v-tagged")
+        self.command("git", "-C", str(clone), "push", "-q", "origin", "tagged", "v-tagged")
+        self.repo.plan("remote-branches")
+        self.assertEqual(self.git("tag"), "")
+
     def test_scratch_generated_files_and_linked_modules_do_not_block_removal(self):
         worktree = self.make_worktree()
         (self.root / ".git/info/exclude").write_text(".tmp/\nnext-env.d.ts\nnode_modules\n")
@@ -912,7 +959,9 @@ class GitFixtureTests(unittest.TestCase):
 
     def test_missing_intent_review_blocks_deletion_and_creates_no_recovery_ref(self):
         head, _merge = self.squash()
+        self.prs = []
         plan = self.repo.plan("local-branches")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "content-on-trunk")
         result = self.repo.apply(plan, "local-branches")
         self.assertEqual(result["actions"][0]["result"], "skipped")
         self.assertIn("intent review missing", result["actions"][0]["reason"])
@@ -921,6 +970,7 @@ class GitFixtureTests(unittest.TestCase):
 
     def test_stale_or_unverified_intent_review_cannot_authorize_deletion(self):
         head, _merge = self.squash()
+        self.prs = []
         plan = self.plan("local-branches")
         for field, value in (("candidate_oid", "bad"), ("trunk_oid", "bad"),
                              ("base_oid", "bad"), ("status", "unresolved"),

@@ -44,8 +44,9 @@ REGENERABLE_FILES = {"next-env.d.ts"}
 SCRATCH = ".tmp"
 # Reflog messages that move a ref without creating work on it.
 CREATED = ("branch: Created from ", "Branch: renamed ")
-# Proof kinds whose evidence is mechanical, so pruning needs no intent review.
-REVIEW_FREE = ("no-own-commits", "merged-pr-head")
+# Proof kinds whose evidence is mechanical, so pruning needs no intent review:
+# a ref that never held commits, or a tip GitHub records as delivered by a merged PR.
+REVIEW_FREE = ("no-own-commits", "merged-pr-head", "exact-pr-head-squash")
 
 
 class Repository:
@@ -213,8 +214,8 @@ class Repository:
 
     def fetch_objects(self, *refs: str) -> None:
         """Fetch objects for refs without creating or moving any local ref."""
-        # An empty refmap stops the opportunistic remote-tracking update.
-        fetch = ("git", "fetch", "--no-write-fetch-head", "--no-prune", "--refmap=", "origin")
+        # An empty refmap stops the opportunistic remote-tracking update; tags stay unfetched.
+        fetch = ("git", "fetch", "--no-write-fetch-head", "--no-prune", "--no-tags", "--refmap=", "origin")
         if refs and self.run(*fetch, *refs, accepted=(0, 1, 128)).returncode != 0:
             # One vanished ref fails the batch; retry the rest one at a time.
             for ref in refs if len(refs) > 1 else ():
@@ -677,8 +678,8 @@ class Repository:
                 and old["content_audit"]["base_oid"] == new["content_audit"]["base_oid"])
 
     def revalidate(self, context: dict, action: dict) -> None:
-        if not self.same_repository(context, self.context(context["trunk"])):
-            raise Refused("repository changed immediately before deletion")
+        if self.context(context["trunk"]) != context:
+            raise Refused("repository or trunk changed immediately before deletion")
         worktrees = self.worktrees()
         self.assert_not_pinned(action, self.active_operations(worktrees))
         if action["kind"] == "remote":
@@ -715,9 +716,8 @@ class Repository:
                 review = reviews.get(f"{action['oid']}:{audit['base_oid']}", {})
                 if not isinstance(review, dict):
                     raise Refused("invalid intent review record; preserve candidate")
-                # A ref that never held its own commits has no intent to review,
-                # and a merged PR head already carries GitHub's merge record;
-                # the fresh evaluation below rejects a forged proof kind.
+                # Review-free kinds carry their own evidence; the fresh evaluation
+                # below rejects a forged proof kind.
                 if action["proof"].get("kind") not in REVIEW_FREE and (
                         review.get("status") != "verified"
                         or review.get("candidate_oid") != action["oid"]
@@ -731,11 +731,20 @@ class Repository:
                     raise Refused("exclusive worktree access not established")
                 if any(removed.get(path) != "removed" for path in action.get("after_worktrees", [])):
                     raise Refused("worktree holding this branch was not removed")
-                # Recompute proof and state immediately before each mutation, against
-                # the trunk fetched for this run; revalidation accepts later advances.
+                # Recompute proof and state against freshly fetched trunk immediately
+                # before each mutation. Trunk may have fast-forwarded since planning;
+                # an intent review is bound to the planned trunk, so only
+                # review-free proofs carry over to a newer one.
+                context = self.context(plan["context"]["trunk"])
+                if not self.same_repository(plan["context"], context):
+                    raise Refused("repository changed; replan")
+                if (context["trunk_oid"] != plan["context"]["trunk_oid"]
+                        and action["proof"].get("kind") not in REVIEW_FREE):
+                    raise Refused("trunk advanced since the intent review; replan and renew it")
                 if not self.unchanged(action, self.evaluate(action, context, scope)):
                     raise Refused("candidate evidence differs from the reviewed plan")
-                self.revalidate(plan["context"], action)
+                # Deletion must use the exact trunk this proof was computed against.
+                self.revalidate(context, action)
                 if action["kind"] == "local":
                     # CAS prevents deleting newer commits; never branch -D.
                     self.git("update-ref", "--no-deref", "-d", action["ref"], action["oid"])

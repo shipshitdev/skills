@@ -23,7 +23,7 @@ blob membership answer different questions from current behavior.
    feature flag disables it. Code may have landed and later been reverted. Keep
    partial, unverified or conflicting work and give a specific follow-up.
 5. Include only actions with both current-code proof and verified intent, or a
-   `merged-pr-head` or `no-own-commits` proof, in the selected plan. Omit uncertain actions; never forge a helper proof to permit
+   `merged-pr-head`, `exact-pr-head-squash` or `no-own-commits` proof, in the selected plan. Omit uncertain actions; never forge a helper proof to permit
    removal. Replan if the candidate, trunk or audit boundary changes.
 
 ## Receipt
@@ -47,7 +47,8 @@ report. Never report a semantic audit as an automated equivalence guarantee.
 ## Record the review in the selected JSON plan
 
 The helper emits an empty `intent_reviews` object. After actual inspection, add
-one entry for each verified action except `no-own-commits` and `merged-pr-head`
+one entry for each verified action except `no-own-commits`, `merged-pr-head` and
+`exact-pr-head-squash`
 proofs, keyed `<candidate-oid>:<audit-base-oid>`.
 Branches that share a tip can have different audit bases, so each action needs
 its own receipt. Copy the immutable IDs from that action's `content_audit`:
