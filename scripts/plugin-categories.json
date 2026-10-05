@@ -84,8 +84,7 @@
         "nestjs-testing-expert",
         "incremental-fetch",
         "turborepo",
-        "typescript-expert",
-        "typescript-refactor"
+        "typescript-expert"
       ]
     },
     "ai-agents": {
@@ -103,7 +102,6 @@
         "evaluation",
         "advanced-evaluation",
         "comment-mode",
-        "spec-first",
         "agent-browser",
         "codex-image-gen",
         "agent-dispatch"
@@ -112,7 +110,6 @@
     "workspace": {
       "description": "Project setup and workspace initialization",
       "skills": [
-        "fullstack-workspace-init",
         "project-init-orchestrator",
         "env-setup",
         "linter-formatter-init",
@@ -134,7 +131,6 @@
         "feature-intake",
         "icp",
         "interview",
-        "grill-me",
         "grilling",
         "domain-modeling",
         "prototype",
@@ -152,7 +148,6 @@
       "description": "GitHub workflow and automation skills",
       "skills": [
         "bug",
-        "github-address-comments",
         "board-sync",
         "github-fix-ci",
         "github-inbox",
@@ -187,7 +182,6 @@
         "agent-architecture-audit",
         "agent-config-audit",
         "ai-agent-cost-optimizer",
-        "changelog-generator",
         "code-review",
         "codebase-advisor",
         "codebase-design",
@@ -205,7 +199,6 @@
         "production-audit",
         "receiving-code-review",
         "refactor-code",
-        "refactor-dispatch",
         "release",
         "git-cleanup",
         "review-dispatch",
@@ -239,7 +232,6 @@
       "description": "Autonomous GitHub issue-to-PR loop with PRDs, plans, board dispatch, QA, and review",
       "skills": [
         "interview",
-        "grill-me",
         "grilling",
         "domain-modeling",
         "ask-dev-loop",

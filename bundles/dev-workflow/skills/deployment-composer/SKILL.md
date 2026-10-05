@@ -59,7 +59,6 @@ Delegates To:
 - `github-fix-ci`
 - `ec2-backend-deployer`
 - `testing-cicd-init`
-- `changelog-generator`
 
 ## Composed Skills
 
@@ -70,7 +69,6 @@ Delegates To:
 | `github-fix-ci` | Failed GitHub Actions checks on release or deploy PRs |
 | `ec2-backend-deployer` | Docker + GitHub Actions + EC2 backend deployment setup |
 | `testing-cicd-init` | Missing or weak GitHub Actions/test infrastructure |
-| `changelog-generator` | Release notes from commit history |
 | Provider-specific skills | Vercel, Docker, Turborepo, monitoring, or app-specific deployment when present |
 
 ## Discovery Phase
@@ -135,7 +133,7 @@ If the repo has no CI or weak gates:
 
 If the release needs user-facing notes or a PR body:
 
-1. Use `changelog-generator` for commit summaries.
+1. Use `release` in `notes` mode for user-facing notes from commit history.
 2. Include migrations, env changes, and rollback notes when visible.
 
 ## Deployment Workflow

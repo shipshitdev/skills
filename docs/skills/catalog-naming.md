@@ -1,9 +1,13 @@
 # Catalog naming inventory
 
 Migration from the catalog after board correctness and composition repairs,
-2026-09-05. This is a historical migration inventory, not a runtime registry.
+2026-09-05, kept current through the 2026-10-05 catalog simplification (#190). This is
+a migration inventory, not a runtime registry.
 
-186 skills: seven renamed, 179 retained. All 29 commands retained with their routes updated. Owning surfaces describe contracts; they are not mandatory naming prefixes.
+176 skills and 24 commands. Eight rows record a rename from an earlier name (one of
+them, `gh-address-comments`, was later merged into `pr-comments`). Skills folded into
+another since the migration are listed under Retired skills. Owning surfaces describe
+contracts; they are not mandatory naming prefixes.
 
 ## Skills
 
@@ -18,7 +22,6 @@ Migration from the catalog after board correctness and composition repairs,
 | `agent-folder-init` | `agent-folder-init` | retain | agent-configuration |
 | `ai-agent-cost-optimizer` | `ai-agent-cost-optimizer` | retain | agent-cost |
 | `ai-loading-ux` | `ai-loading-ux` | retain | design |
-| `ai-regression-testing` | `ai-regression-testing` | retain | agent-evaluation |
 | `api-design-expert` | `api-design-expert` | retain | api-design |
 | `architect` | `architect` | retain | architecture |
 | `arena` | `arena` | retain | agent-orchestration |
@@ -30,7 +33,6 @@ Migration from the catalog after board correctness and composition repairs,
 | `blast-radius` | `blast-radius` | retain | change-analysis |
 | `bug` | `bug` | retain | issue-intake |
 | `bun-validator` | `bun-validator` | retain | bun-workspace |
-| `changelog-generator` | `changelog-generator` | retain | release-notes |
 | `clarify` | `clarify` | retain | design |
 | `clerk-validator` | `clerk-validator` | retain | clerk-authentication |
 | `code-review` | `code-review` | retain | code-review |
@@ -43,14 +45,13 @@ Migration from the catalog after board correctness and composition repairs,
 | `content-script-developer` | `content-script-developer` | retain | browser-extensions |
 | `context-degradation` | `context-degradation` | retain | agent-context |
 | `context-engineering` | `context-engineering` | retain | agent-context |
-| `context-fundamentals` | `context-fundamentals` | retain | agent-context |
 | `context-optimization` | `context-optimization` | retain | agent-context |
 | `create-verification-skill` | `create-verification-skill` | retain | skill-maintenance |
 | `critique` | `critique` | retain | design |
 | `cto-advisor` | `cto-advisor` | retain | engineering-leadership |
 | `debug` | `debug` | retain | debugging |
 | `dependency-audit` | `dependency-audit` | retain | dependency-security |
-| `deploy` | `deploy` | retain | deployment |
+| `deploy` | `deploy-app` | rename | deployment |
 | `deploy-dispatch` | `deploy-dispatch` | retain | deployment |
 | `deployment-composer` | `deployment-composer` | retain | deployment |
 | `design-consistency-auditor` | `design-consistency-auditor` | retain | design |
@@ -65,7 +66,6 @@ Migration from the catalog after board correctness and composition repairs,
 | `error-handling-expert` | `error-handling-expert` | retain | error-handling |
 | `evaluation` | `evaluation` | retain | agent-evaluation |
 | `executing-plans` | `executing-plans` | retain | agent-orchestration |
-| `execution-debugging` | `execution-debugging` | retain | debugging |
 | `expo-architect` | `expo-architect` | retain | expo-mobile |
 | `feature-intake` | `feature-intake` | retain | issue-intake |
 | `figure-it-out` | `figure-it-out` | retain | agent-orchestration |
@@ -73,8 +73,7 @@ Migration from the catalog after board correctness and composition repairs,
 | `fix-merge-conflicts` | `fix-merge-conflicts` | retain | git |
 | `frontend-design` | `frontend-design` | retain | design |
 | `full-code-review` | `full-code-review` | retain | code-review |
-| `fullstack-workspace-init` | `fullstack-workspace-init` | retain | product-initialization |
-| `gh-address-comments` | `github-address-comments` | rename | github |
+| `gh-address-comments` | `pr-comments` | rename, then merged (#190) | pull-request-feedback |
 | `gh-board-sync` | `board-sync` | rename | board-workflow |
 | `gh-fix-ci` | `github-fix-ci` | rename | github |
 | `gh-inbox` | `github-inbox` | rename | github |
@@ -143,10 +142,7 @@ Migration from the catalog after board correctness and composition repairs,
 | `receiving-code-review` | `receiving-code-review` | retain | code-review |
 | `redis-caching` | `redis-caching` | retain | redis |
 | `refactor-code` | `refactor-code` | retain | refactoring |
-| `refactor-dispatch` | `refactor-dispatch` | retain | refactoring |
 | `release` | `release` | retain | release |
-| `release-dispatch` | `release-dispatch` | retain | release |
-| `release-pr-gates` | `release-pr-gates` | retain | release |
 | `review-dispatch` | `review-dispatch` | retain | code-review |
 | `roadmap-analyzer` | `roadmap-analyzer` | retain | product-strategy |
 | `roadmap-to-milestones` | `roadmap-to-milestones` | retain | roadmap-scheduling |
@@ -155,6 +151,7 @@ Migration from the catalog after board correctness and composition repairs,
 | `security-audit` | `security-audit` | retain | application-security |
 | `security-expert` | `security-expert` | retain | application-security |
 | `setup-agent-routing` | `setup-agent-routing` | retain | agent-configuration |
+| `setup-pstack` | `setup-pstack` | retain | agent-orchestration |
 | `shadcn` | `shadcn` | retain | shadcn |
 | `shadcn-setup` | `shadcn-setup` | retain | shadcn |
 | `shape` | `shape` | retain | design |
@@ -164,13 +161,11 @@ Migration from the catalog after board correctness and composition repairs,
 | `skill-creator` | `skill-creator` | retain | skill-maintenance |
 | `skill-dispatch` | `skill-dispatch` | retain | skill-maintenance |
 | `skill-scout` | `skill-scout` | retain | skill-maintenance |
-| `spec-first` | `spec-first` | retain | product-specification |
 | `stack-modernization` | `stack-modernization` | retain | stack-modernization |
 | `standup` | `standup` | retain | work-summary |
 | `stripe-implementer` | `stripe-implementer` | retain | stripe |
 | `structural-review` | `structural-review` | retain | code-review |
 | `swarm` | `swarm` | retain | agent-orchestration |
-| `systematic-debugging` | `systematic-debugging` | retain | debugging |
 | `table-filters` | `table-filters` | retain | design |
 | `tailwind` | `tailwind` | retain | tailwind |
 | `tailwind-validator` | `tailwind-validator` | retain | tailwind |
@@ -186,15 +181,35 @@ Migration from the catalog after board correctness and composition repairs,
 | `tool-design` | `tool-design` | retain | agent-architecture |
 | `turborepo` | `turborepo` | retain | monorepo |
 | `typescript-expert` | `typescript-expert` | retain | typescript |
-| `typescript-refactor` | `typescript-refactor` | retain | typescript |
 | `vercel-deploy` | `vercel-deploy` | retain | vercel |
 | `verification-before-completion` | `verification-before-completion` | retain | work-evidence |
 | `wait-what` | `wait-what` | retain | code-explanation |
+| `weekly-review` | `weekly-review` | retain | engineering-maintenance |
 | `why` | `why` | retain | code-explanation |
 | `wizard` | `wizard` | retain | human-setup |
 | `workspace-performance-audit` | `workspace-performance-audit` | retain | performance |
 | `worktree` | `worktree` | retain | git |
 | `writing-plans` | `writing-plans` | retain | product-specification |
+
+## Retired skills
+
+Folded into another skill since the migration. Use the destination instead; removed
+names no longer install through `npx skills add --skill <name>`.
+
+| Retired | Now | Change |
+|---|---|---|
+| `ai-regression-testing` | `testing-expert` (AI regression mode) | #169 |
+| `execution-debugging` | `debug` (scoped mode) | #169 |
+| `systematic-debugging` | `debug` (`references/systematic-debugging.md`) | #169 |
+| `context-fundamentals` | `context-optimization` (`references/fundamentals.md`) | #169 |
+| `release-dispatch` | `release` | #167 |
+| `release-pr-gates` | `release` | #167 |
+| `changelog-generator` | `release` (`notes` mode, `references/notes.md`) | #190 |
+| `typescript-refactor` | `typescript-expert` (`references/rules/`) | #190 |
+| `spec-first` | `prd-dispatch` (`spec` mode) | #190 |
+| `fullstack-workspace-init` | `project-init-orchestrator` | #190 |
+| `grill-me` | `grilling` | #190 |
+| `refactor-dispatch` | deleted; `/refactor` routes to its engines directly | #190 |
 
 ## Commands
 
@@ -204,12 +219,10 @@ Migration from the catalog after board correctness and composition repairs,
 | `/agent` | `/agent` | retain | agent-configuration |
 | `/ask` | `/ask` | retain | workflow-navigation |
 | `/board` | `/board` | retain | board-workflow |
-| `/bug` | `/bug` | retain | issue-intake |
 | `/cleanup` | `/cleanup` | retain | git |
 | `/codex-loop` | `/codex-loop` | retain | agent-orchestration |
 | `/deploy` | `/deploy` | retain | deployment |
 | `/design` | `/design` | retain | design |
-| `/deslop` | `/deslop` | retain | code-cleanup |
 | `/env` | `/env` | retain | development-environment |
 | `/feature` | `/feature` | retain | issue-intake |
 | `/fix-ci` | `/fix-ci` | retain | ci-repair |
@@ -220,18 +233,15 @@ Migration from the catalog after board correctness and composition repairs,
 | `/prompt` | `/prompt` | retain | prompt-design |
 | `/qa` | `/qa` | retain | qa |
 | `/refactor` | `/refactor` | retain | refactoring |
-| `/release` | `/release` | retain | release |
 | `/review` | `/review` | retain | code-review |
 | `/roadmap` | `/roadmap` | retain | roadmap-planning |
 | `/scan` | `/scan` | retain | application-security |
 | `/skill` | `/skill` | retain | skill-maintenance |
-| `/standup` | `/standup` | retain | work-summary |
 | `/suggest` | `/suggest` | retain | pull-request-feedback |
 | `/test` | `/test` | retain | testing |
-| `/wait-what` | `/wait-what` | retain | code-explanation |
 
 No prefix sweep of Git, testing, design, release, AWS, or agent skills is proposed. Retained names do not imply provider neutrality: PR comments, merge, issue filing, and milestone planning remain explicit about their current GitHub mechanisms.
 
 The JSON companion records per-row rationale and command identifier references. `skill-contract-evidence.json` captures descriptions and Contract blocks used to assign ownership. This is a planning artifact, not a competing runtime catalog.
 
-Root confirmed that all 29 command names remain unchanged. The unselected alternative was to rename the three provider-only standalone adapters /address, /fix-ci, and /suggest to their github-* skill names. It is recorded rather than silently expanding the agreed seven-skill migration.
+Root confirmed that the command names were unchanged by the migration (29 then; the `/bug`, `/deslop`, `/release`, `/standup`, `/wait-what` and `/weekly-review` command files were dropped later because the same-named skills own those slash names). The unselected alternative was to rename the three provider-only standalone adapters /address, /fix-ci, and /suggest to their github-* skill names. It is recorded rather than silently expanding the agreed seven-skill migration.

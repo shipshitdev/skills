@@ -148,19 +148,6 @@
       "modifications": "Vendored from Vercel's agent-browser repo as a standalone marketplace plugin. Tracks the upstream `agent-browser` CLI (npm). No behavioral changes beyond provenance metadata."
     },
     {
-      "skill": "changelog-generator",
-      "desc": "Generate user-facing release notes from git commit history — categorize changes and rewrite technical commits as customer-friendly entries.",
-      "source": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/changelog-generator/SKILL.md",
-      "source_path": "changelog-generator/SKILL.md",
-      "upstream_repo": "ComposioHQ/awesome-claude-skills",
-      "upstream_ref": "master",
-      "upstream_commit": "044d48b594f0",
-      "last_synced": "2026-06-12",
-      "license": "Unspecified (no upstream LICENSE)",
-      "mode": "rolling",
-      "modifications": "Vendored from ComposioHQ/awesome-claude-skills. NOTE: upstream repo ships NO LICENSE file — content is all-rights-reserved by default; redistribution permission is unconfirmed. Flag for review before relying on it."
-    },
-    {
       "skill": "context-optimization",
       "desc": "Apply optimization techniques (compaction, observation masking, KV-cache, partitioning) to extend effective context capacity.",
       "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md",

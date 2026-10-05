@@ -8,7 +8,7 @@ metadata:
   version: "2.2.2"
   tags: "interview, discovery, requirements, planning"
   author: Ship Shit Dev
-when_to_use: "interview me, grill me, grill-me, grill me with docs, discovery interview, requirements interview, before PRD, clarify requirements, /interview"
+when_to_use: "interview me, grill me, grill me with docs, discovery interview, requirements interview, before PRD, clarify requirements, /interview"
 ---
 
 # Interview
@@ -34,7 +34,7 @@ Outputs:
 - Concise context scan summary.
 - Settled decisions from `grilling`.
 - Final interview brief ready for `prd-writer`, `feature-intake`, `shape`,
-  `spec-first`, or direct implementation.
+  `/prd spec`, or direct implementation.
 
 Creates/Modifies:
 
@@ -59,7 +59,7 @@ Delegates To:
 - `domain-modeling` when a term crystallizes or conflicts with `CONTEXT.md`.
 
 Recommend next (do not invoke): `prd-writer`, `feature-intake`, `shape`,
-`spec-first`, `prd-quality-gate`.
+`/prd spec`, `prd-quality-gate`.
 
 ## When To Use
 
@@ -159,7 +159,7 @@ End with this structure:
 - <unresolved item, or "None">
 
 ### Recommended Next Step
-<prd-writer | feature-intake | shape | spec-first | direct implementation>
+<prd-writer | feature-intake | shape | /prd spec | direct implementation>
 ```
 
 Keep the brief concise enough to paste into a tracker issue or hand to a PRD

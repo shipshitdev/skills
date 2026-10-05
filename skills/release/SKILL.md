@@ -7,7 +7,7 @@ metadata:
   version: "2.2.2"
   tags: "git, github, release, tag, semver, changelog, patch-notes, trunk-based, ci-cd, quality-gates"
 allowed-tools: Bash(git *) Bash(gh *) Bash(jq *)
-when_to_use: "/release, tag a release, is master green, release notes"
+when_to_use: "/release, tag a release, is master green, release notes, app store notes"
 ---
 
 # Release
@@ -58,7 +58,8 @@ Confirmation Required:
 Delegates To:
 
 - Run the `github-fix-ci` skill when the user asks to fix failing required checks
-- Run the `changelog-generator` skill when a house-styled changelog is requested
+- File pointer: `references/notes.md` for customer-facing notes (app store text,
+  update emails, public changelog pages, house-styled changelogs)
 - Recommend `deploy-app` when the repo has no CI-driven deploy for the release
 - Recommend `git-cleanup` (`/cleanup`) after the release lands
 
@@ -165,7 +166,10 @@ force one with a `Release-As: X.Y.Z` commit footer, never a local tag.
 Plain English, grouped and in this order, empty groups omitted: **Breaking
 changes** (with migration note), **Features**, **Fixes**, **Performance**,
 **Internal** (brief). Lead with the outcome for users, link PR numbers, keep
-engineering detail light. `notes` mode stops here.
+engineering detail light. For customer-facing output (app store notes, update
+emails, a public changelog page, a requested house style) read
+`references/notes.md` in this skill's directory and follow it. `notes` mode
+stops here.
 
 ## Phase 5: Plan and Confirmation
 

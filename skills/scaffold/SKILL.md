@@ -43,7 +43,7 @@ Confirmation Required:
 Delegates To:
 
 - `project-init-orchestrator` when the user needs a whole new project
-- `fullstack-workspace-init` / `npx @shipshitdev/v0` when the user needs a new Shipshit.dev product repo
+- `project-init-orchestrator` (v0 route) / `npx @shipshitdev/v0` when the user needs a new Shipshit.dev product repo
 - Framework-specific skills such as `nestjs-expert`, `react-patterns`, `shadcn`, or `typescript-expert`
 
 ## Steps
