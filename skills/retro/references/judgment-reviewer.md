@@ -31,11 +31,13 @@ Two valid finding shapes:
 
 If a skill was neither invoked nor a missed-trigger candidate, drop it. Adding text to a skill the parent never opened does not change behavior.
 
+Environment findings are exempt from this skill scope: route them as `environment:` and cite the friction moment that proves them.
+
 Surface 3-5 durable learnings. For each:
 
 - Principle: one sentence describing what generalizes. State the rule, not the label, no name-dropping.
 - Evidence: the exact moment in the transcript that surfaced it (turn number or short quote).
-- Routing: most relevant existing skill (give the `SKILL.md` path as it appears in the transcript), OR `tune description: <skill path>` when the skill should have triggered but didn't, OR "new skill: <kebab-name>" if no existing skill is a real home.
+- Routing: most relevant existing skill (give the `SKILL.md` path as it appears in the transcript), OR `tune description: <skill path>` when the skill should have triggered but didn't, OR "new skill: <kebab-name>" if no existing skill is a real home, OR `environment: <category>: <file or check>` when the durable fix is a navigation pointer, guardrail, reviewer standard, steering cut, tool economy fix or information-access fix rather than skill text.
 
 Skip trivial things (typos, tool retries, mechanical setup). Skip anything already obvious from the existing skill the parent followed. Skip implementation details that drift: specific SHAs, current file paths, version numbers, exact byte counts. Only surface principles and patterns that survive code drift.
 

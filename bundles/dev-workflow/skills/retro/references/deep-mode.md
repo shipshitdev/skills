@@ -29,23 +29,22 @@ Start all three read-only lanes in one fan-out phase through provider dispatch. 
 
 | Lens | Model descriptor | Prompt template |
 |---|---|---|
-| Judgment | your configured reflect-judgment choice (default `inherit-parent`) | `judgment-reviewer.md` |
-| Tooling | your configured reflect-tooling choice (default `inherit-parent`) | `tooling-reviewer.md` |
-| Divergent | your configured reflect-judgment choice (default `inherit-parent`) | `divergent-reviewer.md` |
+| Judgment | your configured reflect-judgment choice (default `inherit-parent`) | the judgment reviewer template |
+| Tooling | your configured reflect-tooling choice (default `inherit-parent`) | the tooling reviewer template |
+| Divergent | your configured reflect-judgment choice (default `inherit-parent`) | the divergent reviewer template |
 
-Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in the `Agent` response body.
+Retro's Deep mode section links every template. Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in the `Agent` response body.
 
 ## 3. Synthesize
 
-Dispatch one lane using your configured reflect-judgment descriptor (default `inherit-parent`). Preserve relevant MCP access because the synthesizer spot-verifies citations. Use `synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+Dispatch one lane using your configured reflect-judgment descriptor (default `inherit-parent`). Preserve relevant MCP access because the synthesizer spot-verifies citations. Use the synthesizer template verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
 
 ## 4. Map into retro
 
 Convert the synthesizer output into retro candidates:
 
-- Each Accepted row becomes a candidate in the matching retro category: a skill
-  body edit, description tune or new skill is **Skill**; anything else takes the
-  category its Routing names.
+- Each Accepted row becomes a candidate: a skill body edit, description tune or
+  new skill is **Skill**; an `environment:` row takes the category it names.
 - Each Backlog row (a lint rule, script, metadata flag or runtime check would
   enforce it) becomes a **Guardrail** candidate.
 - Each Rejected row goes to retro's dropped list with its reason.
