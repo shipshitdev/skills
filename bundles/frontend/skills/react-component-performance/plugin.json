@@ -1,6 +1,6 @@
 {
   "name": "react-component-performance",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Diagnose slow React components and apply targeted render-time fixes.",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: security-expert
 description: Applies OWASP Top 10 security practices to React, Next.js and NestJS code. Use for auth, sensitive data, encryption or hashing, CORS/CSP, or reviewing vulnerabilities.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "security, owasp, application-security"
 when_to_use: "security headers, multi-tenancy isolation"
 ---

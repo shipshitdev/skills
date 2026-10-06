@@ -2,7 +2,7 @@
 name: memory-systems
 description: Designs memory architectures for agents that persist state across sessions and keep entities consistent. Use when choosing among Mem0, Zep/Graphiti, Letta, LangMem, or Cognee.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/memory-systems/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

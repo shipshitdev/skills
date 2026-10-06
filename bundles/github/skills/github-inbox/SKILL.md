@@ -4,7 +4,7 @@ description: Triages a GitHub work inbox of assigned issues, review requests, me
 compatibility: Requires GitHub CLI gh access. The bundled inbox report script runs with Node.js or Bun.
 allowed-tools: Bash(gh *) Bash(node *) Bash(bun *)
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "github, inbox, triage, issues, pull-requests"
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/triage/SKILL.md
   upstream_repo: mattpocock/skills

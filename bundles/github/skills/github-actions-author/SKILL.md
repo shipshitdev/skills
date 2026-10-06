@@ -5,7 +5,7 @@ compatibility: Requires access to GitHub Actions documentation for version-sensi
 disable-model-invocation: true
 allowed-tools: Bash(git *) Bash(gh *) Bash(bun *)
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "github, actions, ci-cd, workflows, security"
 ---
 

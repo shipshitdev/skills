@@ -2,7 +2,7 @@
 name: production-audit
 description: Audits an app's production readiness from code, CI, config, migrations, observability, and deploy paths, returning a ship/block verdict. Use before launch or after risky merges.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "production, audit, launch, deployment, reliability"
 when_to_use: "is this ready to ship, launch readiness, go-live check"
 ---

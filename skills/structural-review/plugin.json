@@ -1,6 +1,6 @@
 {
   "name": "structural-review",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Review PR structure, maintainability, abstraction quality, types, and stack hygiene.",
   "author": {
     "name": "Ship Shit Dev",

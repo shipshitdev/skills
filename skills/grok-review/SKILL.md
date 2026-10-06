@@ -4,7 +4,7 @@ description: Runs an independent second-opinion review of a diff through the Gro
 license: MIT
 compatibility: Requires the `grok` CLI (logged in) and git; gh for PR targets.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "code-review, second-opinion, grok, cli, cross-check"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *) Bash(grok *) Bash(command -v *) Bash(mktemp *)

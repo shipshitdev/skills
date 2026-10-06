@@ -1,6 +1,6 @@
 {
   "name": "agent-config-audit",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Audit and sync AI agent config files, hooks, settings, and workspace rules.",
   "author": {
     "name": "Ship Shit Dev",

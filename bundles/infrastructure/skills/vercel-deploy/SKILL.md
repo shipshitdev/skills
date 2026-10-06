@@ -6,7 +6,7 @@ disable-model-invocation: true
 argument-hint: "[preview | prod | rollback | env]"
 allowed-tools: Bash(vercel *)
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "vercel, deploy, nextjs, rollback, environments, infrastructure"
   author: Ship Shit Dev
 when_to_use: "deploy to Vercel, ship a preview, deploy to production, promote to production, roll back the deploy, revert deployment, manage Vercel env vars, /deploy vercel"

@@ -3,7 +3,7 @@ name: research
 description: Investigates a question against primary sources and writes one Markdown note citing each claim. Use for docs, API, version or limit facts, or reading legwork to delegate.
 license: MIT
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "research, sources, citations, documentation"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/research/SKILL.md

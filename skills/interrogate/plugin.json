@@ -1,6 +1,6 @@
 {
   "name": "interrogate",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Adversarial multi-reviewer pass over a diff.",
   "author": {
     "name": "Ship Shit Dev",

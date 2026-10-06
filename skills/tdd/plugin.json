@@ -1,6 +1,6 @@
 {
   "name": "tdd",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Failing-test-first TDD with a cheap-path gate and evidence before done.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "dependency-audit",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Audit dependency CVEs, leaked secrets, and lockfile integrity; wire the checks into CI.",
   "author": {
     "name": "Ship Shit Dev",

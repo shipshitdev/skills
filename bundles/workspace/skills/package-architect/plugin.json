@@ -1,6 +1,6 @@
 {
   "name": "package-architect",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Design and maintain TypeScript packages in a monorepo, including exports and build configuration.",
   "author": {
     "name": "Ship Shit Dev",

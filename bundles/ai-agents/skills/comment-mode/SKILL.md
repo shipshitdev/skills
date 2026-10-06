@@ -2,7 +2,7 @@
 name: comment-mode
 description: Granular feedback on drafts without rewriting. Generates highlighted HTML with click-to-reveal inline comments. Use when user says "comment on this", "leave comments on", "give feedback on", or asks for feedback on a draft. Supports multiple lenses—editor feedback, POV simulation ("as brian would react"), or focused angles ("word choice only", "weak arguments"). A granular alternative to rewrites that lets users review feedback incrementally without losing their voice.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "feedback, comments, editing"
 allowed-tools: Bash(open *) Write
 disable-model-invocation: true

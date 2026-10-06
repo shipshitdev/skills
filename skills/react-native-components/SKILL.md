@@ -2,7 +2,7 @@
 name: react-native-components
 description: Guides React Native component building — StyleSheet, dynamic styling, FlatList performance, accessible mobile UI. Use when building React Native UI components.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "[react-native, components, styling, performance, ui, accessibility, hooks]"
   category: mobile
   difficulty: advanced

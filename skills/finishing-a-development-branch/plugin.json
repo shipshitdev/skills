@@ -1,6 +1,6 @@
 {
   "name": "finishing-a-development-branch",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Publish a branch and verify independent review, CI, and complete delivery",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: rules-capture
 description: Detects user preferences and workflow rules in conversation and records them in .agents/memory/captured-rules.md for promotion. Use on always/never or corrections to the AI.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "preferences, rules, documentation, automation"
 when_to_use: "from now on, I prefer, stop doing X, the rule is"
 ---

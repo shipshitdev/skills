@@ -3,7 +3,7 @@ name: frontend-design
 description: Builds distinctive, production-grade frontend interfaces that avoid generic AI aesthetics. Use when creating web components, pages, landing pages, dashboards, or styling web UI.
 license: Complete terms in LICENSE.txt
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   source: https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
   upstream_repo: anthropics/skills
   upstream_ref: main

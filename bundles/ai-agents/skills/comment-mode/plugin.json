@@ -1,6 +1,6 @@
 {
   "name": "comment-mode",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Granular feedback on drafts without rewriting. Generates highlighted HTML with click-to-reveal inlin",
   "author": {
     "name": "Ship Shit Dev",

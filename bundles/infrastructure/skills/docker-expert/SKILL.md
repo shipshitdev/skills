@@ -2,7 +2,7 @@
 name: docker-expert
 description: Writes Dockerfiles, multi-stage builds, and docker-compose setups for NestJS and Next.js apps. Use when containerizing an app or fixing container networking or health checks.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "docker, containers, infrastructure"
 when_to_use: "volumes, Postgres/Redis containers"
 ---

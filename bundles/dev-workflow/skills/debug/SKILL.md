@@ -2,7 +2,7 @@
 name: debug
 description: "Debugs failures end to end: builds a repro loop, ranks hypotheses, instruments, and fixes the root cause with a regression test. Use for bugs, crashes, or a fix that failed."
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "debugging, triage, reproduction, instrumentation, root-cause, regression"
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md
   upstream_repo: mattpocock/skills

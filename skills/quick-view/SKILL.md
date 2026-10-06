@@ -2,7 +2,7 @@
 name: quick-view
 description: Generates minimal HTML pages to review lists, tables, drafts, or summaries in a browser. Use when output is hard to read in the terminal.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "html, review, preview"
 when_to_use: "show me, view this, open as webpage, make reviewable"
 ---

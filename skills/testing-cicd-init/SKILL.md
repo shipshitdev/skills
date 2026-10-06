@@ -2,7 +2,7 @@
 name: testing-cicd-init
 description: Installs Vitest and GitHub Actions CI with Bun and 80% coverage for Next.js, NestJS, or React. Use for new test infrastructure or first CI setup.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "testing, ci, vitest"
 when_to_use: "set up vitest, add coverage, first CI"
 ---

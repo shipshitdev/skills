@@ -5,7 +5,7 @@ user-invocable: true
 disable-model-invocation: true
 argument-hint: "[topic, feature, issue, or decision]"
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "interview, discovery, requirements, planning, questionnaire"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/productivity/to-questionnaire/SKILL.md

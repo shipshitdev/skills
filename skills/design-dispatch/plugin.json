@@ -1,6 +1,6 @@
 {
   "name": "design-dispatch",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Front door for UI/design review — routes audit/clarify/critique/layout/polish/shape to the engine.",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: design-dispatch
 description: Router behind /design. Parses audit, clarify, critique, layout, polish, quieter, shape, or consistency and delegates to the matching design engine.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "design, ux, ui, dispatcher, frontend, orchestration"
   author: Ship Shit Dev
 when_to_use: "/design, design audit, critique the UI, polish the UI, check design consistency"

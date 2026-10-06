@@ -2,7 +2,7 @@
 name: html-style
 description: Applies opinionated styling to barebones HTML, turning tables, lists, status text, buttons, and layouts into a cohesive design. Use when the user has plain unstyled HTML.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "html, styling, frontend"
 when_to_use: "/html-style, make this look good"
 ---

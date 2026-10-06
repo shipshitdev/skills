@@ -2,7 +2,7 @@
 name: ec2-backend-deployer
 description: Deploys backends to EC2 via Docker, GitHub Actions CI/CD, and Tailscale SSH. Use when wiring automated deploys for NestJS, Next.js, or Express to EC2.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "ec2, deployment, backend"
 when_to_use: "container registry"
 ---

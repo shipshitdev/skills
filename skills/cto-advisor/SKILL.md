@@ -3,7 +3,7 @@ name: cto-advisor
 description: "Advises engineering leadership: ADRs, technology and vendor evaluation, team scaling, DORA targets. Org-level, not a repo scan. Use for CTO or tech strategy questions."
 license: MIT
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "leadership, engineering, architecture, strategy, metrics"
 when_to_use: "hiring plan, build vs buy"
 ---

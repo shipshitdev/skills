@@ -3,7 +3,7 @@ name: setup-agent-routing
 description: Writes an Agent skills routing block in CLAUDE.md/AGENTS.md plus docs/agents/ recording issue tracker, kanban labels and domain docs. Use once per repo before the dev-loop skills.
 license: MIT
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "setup, routing, github, labels, dev-loop"
   author: Ship Shit Dev
 allowed-tools: Bash(git remote*) Bash(gh label list*) Bash(gh project list*) Bash(gh repo view*)

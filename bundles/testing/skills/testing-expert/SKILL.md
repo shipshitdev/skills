@@ -2,7 +2,7 @@
 name: testing-expert
 description: "Sets testing strategy: test level, coverage targets, test data, flake diagnosis, plus regression tests for AI blind spots. Use when deciding what to test or fixing flakes."
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "testing, strategy, coverage, flakiness, test-design"
   author: Ship Shit Dev
 when_to_use: "testing pyramid, sandbox vs production drift"

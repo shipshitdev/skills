@@ -3,7 +3,7 @@ name: landing-page-vercel
 description: Scaffolds a production-ready static landing page with working email capture form, analytics, and responsive design. Activates on "create landing page", "build a landing page", "launch page for product", or similar requests. Optionally deploys to Vercel on explicit request.
 disable-model-invocation: true
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "landing-page, vercel, frontend"
 ---
 

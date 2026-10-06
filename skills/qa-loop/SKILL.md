@@ -9,7 +9,7 @@ description: >-
   the current checkout.
 compatibility: Requires Git and a locally runnable application. Portless is used when already configured by the project.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "qa, localhost, browser-testing, debugging, screenshots, git"
   author: Ship Shit Dev
 when_to_use: "start QA, QA localhost, live QA loop, fix these localhost issues, screenshot QA, test and fix the local app"

@@ -1,6 +1,6 @@
 {
   "name": "commit-summary",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Generate Conventional Commit messages, split logical changes, and create commits after approval.",
   "author": {
     "name": "Ship Shit Dev",

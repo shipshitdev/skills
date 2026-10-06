@@ -1,6 +1,6 @@
 {
   "name": "retro",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Review a finished agent session and propose environment fixes, most severe first.",
   "author": {
     "name": "Ship Shit Dev",

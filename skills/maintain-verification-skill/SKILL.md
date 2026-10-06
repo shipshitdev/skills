@@ -5,7 +5,7 @@ license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "verification, maintenance, feature-map"
   author: Ship Shit Dev
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/maintain-verification-skill/SKILL.md

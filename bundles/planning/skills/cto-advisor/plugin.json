@@ -1,6 +1,6 @@
 {
   "name": "cto-advisor",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Advise engineering leadership on architecture direction, ADRs, team scaling, and DORA metrics.",
   "author": {
     "name": "Ship Shit Dev",
