@@ -40,9 +40,12 @@ PINS = {
 SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 # Per-mode theme defaults written to app.json; layout.tsx applies them as shadcn CSS variables.
+# Every default pair (including the primary below and the accent on its background) is at least
+# WCAG AA 4.5:1; tests/test_scaffold.py enforces it.
+DEFAULT_PRIMARY = "#4f46e5"
 THEME_MODES = {
-    "dark": {"background": "#0a0a0a", "foreground": "#fafafa"},
-    "light": {"background": "#ffffff", "foreground": "#0a0a0a"},
+    "dark": {"background": "#0a0a0a", "foreground": "#fafafa", "accent": "#f59e0b"},
+    "light": {"background": "#ffffff", "foreground": "#0a0a0a", "accent": "#b45309"},
 }
 
 
@@ -192,16 +195,18 @@ def create_theme(
     background is given, `foreground` is left out so lib/theme.ts picks the higher-contrast
     text color, and `mode` is left out unless requested so it follows the background.
     """
-    theme: dict = {
-        "primary": primary or "#6366f1",
-        "accent": accent or "#f59e0b",
-    }
+    theme: dict = {"primary": primary or DEFAULT_PRIMARY}
+    if accent:
+        theme["accent"] = accent
     if background:
+        # accent (when not given) and foreground are derived from the background by lib/theme.ts
         theme["background"] = background
         if mode:
             theme["mode"] = mode
     else:
         chosen = mode or "dark"
+        if not accent:
+            theme["accent"] = THEME_MODES[chosen]["accent"]
         theme["background"] = THEME_MODES[chosen]["background"]
         theme["foreground"] = THEME_MODES[chosen]["foreground"]
         theme["mode"] = chosen

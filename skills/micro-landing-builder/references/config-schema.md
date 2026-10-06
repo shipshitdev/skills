@@ -41,7 +41,7 @@ interface MetaConfig {
 ```typescript
 interface ThemeConfig {
   primary: string;           // --primary and --ring (bg-primary, text-primary)
-  accent: string;            // --brand (text-brand), the extra brand accent
+  accent?: string;           // --brand (text-brand); a background-appropriate amber when omitted
   background: string;        // --background (bg-background)
   foreground?: string;       // --foreground; near-black or near-white by WCAG contrast on background when omitted
   mode?: "dark" | "light";   // Token set in globals.css; inferred from background brightness when omitted
@@ -52,7 +52,9 @@ interface ThemeConfig {
 }
 ```
 
-Card, popover and muted-text colors are derived from `background` and `foreground`, so a light background never gets light text. Text on `bg-primary` uses `--primary-foreground` and text on `bg-brand` uses `--brand-foreground`; `lib/theme.ts` picks near-black or near-white for each by WCAG contrast ratio. Colors must be `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa`; other formats fail the build, and alpha is treated as opaque for contrast (with a warning).
+Card, popover and muted-text colors are derived from `background` and `foreground`, so a light background never gets light text. Text on `bg-primary` uses `--primary-foreground` and text on `bg-brand` uses `--brand-foreground`; `lib/theme.ts` picks near-black or near-white for each by WCAG contrast ratio. Colors must be exactly `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa`: `scaffold.py` and `batch_create.py` reject anything else, and at runtime `lib/theme.ts` ignores an invalid value with a build warning and uses the default (it is never written to the page). Alpha is treated as opaque for contrast, with a warning. When neither near-black nor near-white reaches 4.5:1 on your color, the text color becomes pure black or white; your color is unchanged.
+
+**Defaults** are chosen to pass WCAG AA (4.5:1): primary `#4f46e5` (white-ish text 6.0:1), dark accent `#f59e0b` on `#0a0a0a` (9.2:1), light accent `#b45309` on `#ffffff` (5.0:1), and near-black/near-white foreground pairs. Custom colors keep their value and only the text drawn on them is adjusted to reach 4.5:1. How a custom `primary` or `accent` contrasts with the page background (for example `text-primary` on a dark background) is not checked, so verify that yourself.
 
 **Recommended fonts:**
 
@@ -260,7 +262,7 @@ interface SocialLink {
     "ogImage": "/og.png"
   },
   "theme": {
-    "primary": "#6366f1",
+    "primary": "#4f46e5",
     "accent": "#f59e0b",
     "background": "#0a0a0a",
     "font": {

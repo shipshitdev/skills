@@ -1,6 +1,6 @@
 export type Theme = {
   primary: string
-  accent: string
+  accent?: string
   background: string
   foreground?: string
   mode?: string
@@ -35,7 +35,11 @@ function contrast(a: Rgba, b: Rgba): number {
   return (hi + 0.05) / (lo + 0.05)
 }
 
-const DEFAULTS = { primary: "#6366f1", accent: "#f59e0b", background: "#0a0a0a" }
+// Defaults are chosen to pass WCAG AA (4.5:1): primary has AA text on it, and the accent
+// default has AA contrast against the background it lands on.
+const DEFAULTS = { primary: "#4f46e5", background: "#0a0a0a" }
+const ACCENT_ON_DARK = "#f59e0b"
+const ACCENT_ON_LIGHT = "#b45309"
 
 // Returns a color that is safe to serialize into the style attribute. React escapes HTML
 // but not CSS separators, so anything that is not an anchored hex color (for example
@@ -65,17 +69,30 @@ function safeColor(
   return fallback && fallbackRgba ? { value: fallback, rgba: fallbackRgba } : null
 }
 
-// Whichever of the near-black / near-white pair has the higher contrast on `color`.
+const AA = 4.5
+const PURE_BLACK = "#000000"
+const PURE_WHITE = "#ffffff"
+
+// Text color for `color`: the near-black / near-white pair when one of them reaches AA (4.5:1),
+// otherwise the pure black or white extreme, which always reaches at least 4.58:1. The user's
+// color is never changed; only the text drawn on it is.
 function bestForeground(color: Rgba): string {
   const dark = contrast(color, parseColor(NEAR_BLACK) as Rgba)
   const light = contrast(color, parseColor(NEAR_WHITE) as Rgba)
-  return dark >= light ? NEAR_BLACK : NEAR_WHITE
+  if (Math.max(dark, light) >= AA) return dark >= light ? NEAR_BLACK : NEAR_WHITE
+  const black = contrast(color, parseColor(PURE_BLACK) as Rgba)
+  const white = contrast(color, parseColor(PURE_WHITE) as Rgba)
+  return black >= white ? PURE_BLACK : PURE_WHITE
 }
 
 // True when dark text reads better than light text on this color.
+function usesDarkText(color: Rgba): boolean {
+  return bestForeground(color) === NEAR_BLACK || bestForeground(color) === PURE_BLACK
+}
+
 export function isLight(color: string): boolean {
   const parsed = parseColor(color)
-  return parsed ? bestForeground(parsed) === NEAR_BLACK : false
+  return parsed ? usesDarkText(parsed) : false
 }
 
 // Turns app.json `theme` into the token set (mode) and CSS variable overrides.
@@ -83,14 +100,18 @@ export function isLight(color: string): boolean {
 // brightness, so a light background alone gives the full light token set.
 export function resolveTheme(theme: Theme) {
   const primary = safeColor("primary", theme.primary, DEFAULTS.primary)!
-  const accent = safeColor("accent", theme.accent, DEFAULTS.accent)!
   const background = safeColor("background", theme.background, DEFAULTS.background)!
+  const accent = safeColor(
+    "accent",
+    theme.accent,
+    usesDarkText(background.rgba) ? ACCENT_ON_LIGHT : ACCENT_ON_DARK,
+  )!
   const explicitForeground = safeColor("foreground", theme.foreground, undefined)
 
   const mode: "dark" | "light" =
     theme.mode === "light" || theme.mode === "dark"
       ? theme.mode
-      : bestForeground(background.rgba) === NEAR_BLACK
+      : usesDarkText(background.rgba)
         ? "light"
         : "dark"
 
