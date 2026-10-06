@@ -69,8 +69,8 @@ cat apps/extension/package.json  # Plasmo
 Workspace: GenFeedAI
 ├── apps/
 │   ├── web (Next.js 16, React 19)
-│   ├── api (NestJS 11, Prisma, Postgres)
-│   ├── mobile (Expo 50, React Native)
+│   ├── api (NestJS 12, Prisma, Postgres)
+│   ├── mobile (Expo SDK 57, React Native)
 │   └── extension (Plasmo, Chrome MV3)
 ├── packages/
 │   ├── ui (@genfeedai/ui)

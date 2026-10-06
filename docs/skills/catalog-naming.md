@@ -208,7 +208,7 @@ names no longer install through `npx skills add --skill <name>`.
 | `grilling` | `grill-me` (renamed back; `/grill-me` is the name in use) | rename |
 | `biome-validator` | `stack-validator` (`--stack biome`, `references/biome.md`) | #190 |
 | `bun-validator` | `stack-validator` (`--stack bun`, `references/bun.md`) | #190 |
-| `clerk-validator` | `stack-validator` (`--stack clerk`, `references/clerk.md`) | #190 |
+| `clerk-validator` | removed: Clerk is no longer part of the house stack (Better Auth); the `clerk` stack and `references/clerk.md` were dropped from `stack-validator` | #223 |
 | `nextjs-validator` | `stack-validator` (`--stack nextjs`, `references/nextjs.md`) | #190 |
 | `tailwind-validator` | `stack-validator` (`--stack tailwind`, `references/tailwind.md`) | #190 |
 | `refactor-dispatch` | deleted; `/refactor` routes to its engines directly | #190 |
