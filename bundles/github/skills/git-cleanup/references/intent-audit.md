@@ -21,10 +21,27 @@ blob membership answer different questions from current behavior.
    follow the repository's verification host and scope rules.
 4. Classify code and intent separately. Code may be present while a caller or
    feature flag disables it. Code may have landed and later been reverted. Keep
-   partial, unverified or conflicting work and give a specific follow-up.
+   partial, unverified or conflicting work and give a specific follow-up, unless a
+   complete helper-verified `merged-pr-head` proof establishes delivery. For that
+   proof, later trunk edits or reverts do not require a verified current-intent review.
 5. Include only actions with both current-code proof and verified intent, or a
    `merged-pr-head`, `exact-pr-head-squash` or `no-own-commits` proof, in the selected plan. Omit uncertain actions; never forge a helper proof to permit
    removal. Replan if the candidate, trunk or audit boundary changes.
+
+## Merged-head exception
+
+Apply `merged-pr-head` only when the helper verifies a merged same-repository PR,
+a locally available merge commit in captured trunk history, and a PR head equal
+to or containing the frozen candidate tip. A candidate with commits beyond that
+head is not covered. The proof remains valid if trunk later edited or reverted
+the delivered code; classify current content separately. If any proof evidence is
+missing or verification fails, retain the candidate for the conservative content
+and intent audit and record the failed gate. Merged status alone is insufficient.
+
+For example, a candidate contained in the verified merged head remains eligible
+when trunk later reverts its feature. A candidate with a missing local merge
+object or extra commits beyond the merged head remains retained until the normal
+audit proves its work. All other cleanup safety gates still apply.
 
 ## Receipt
 
@@ -38,6 +55,11 @@ For each candidate, report:
 - Current implementation locations and verification evidence supporting intent.
 - Code status: currently present, historical only, or unproven. Intent status:
   verified or unresolved, with a concrete reason.
+- Proof type (`proof.kind`) and the evidence establishing it. For `merged-pr-head`,
+  include `proof.pr`, `proof.head`, `proof.merge`, candidate and captured trunk
+  SHAs, and helper-verified head containment and merge ancestry. Record a missing
+  or failed proof gate explicitly; current content may be historical only without
+  invalidating a complete merged-head proof.
 - Decision: eligible or retained.
 
 Keep the helper's full JSON together with this receipt if the caller asks to save
