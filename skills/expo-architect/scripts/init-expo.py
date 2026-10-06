@@ -158,10 +158,7 @@ def create_tsconfig() -> str:
         "compilerOptions": {
             "strict": True,
             "paths": {
-                "@/*": ["./*"],
-                "@/components/*": ["components/*"],
-                "@/lib/*": ["lib/*"],
-                "@/types/*": ["types/*"]
+                "@/*": ["./*"]
             }
         },
         "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
