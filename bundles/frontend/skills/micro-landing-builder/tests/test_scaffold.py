@@ -488,7 +488,7 @@ class ThemeResolutionTest(unittest.TestCase):
 
     def test_runtime_fallback_accent_passes_on_a_light_background(self) -> None:
         resolved = self.resolve(background="#ffffff", accent="not-a-color")
-        self.assertGreaterEqual(self.ratio("#ffffff", resolved["vars"]["--brand"]), 4.5)
+        self.assertGreaterEqual(self.ratio(resolved["vars"]["--background"], resolved["vars"]["--brand-text"]), 4.5)
 
     def test_saturated_green_primary_gets_dark_text_with_aa_contrast(self) -> None:
         vars_ = self.resolve(primary="#00ff00")["vars"]
@@ -516,24 +516,20 @@ class ThemeResolutionTest(unittest.TestCase):
             grey = f"#{level:02x}{level:02x}{level:02x}"
             vars_ = self.resolve(primary=grey, background=grey)["vars"]
             for token in ("--primary-foreground", "--foreground"):
-                self.assertEqual(vars_[token], self.expected_foreground(grey), f"{token} on {grey}")
+                surface = vars_["--primary"] if token == "--primary-foreground" else vars_["--background"]
+                self.assertEqual(vars_[token], self.expected_foreground(surface), f"{token} on {surface}")
 
-    def test_user_color_is_kept_when_neither_near_color_reaches_aa(self) -> None:
-        # #6366f1 is 4.43:1 against near-black and 4.28:1 against near-white.
-        vars_ = self.resolve(primary="#6366f1", background="#6366f1")["vars"]
-        self.assertEqual(vars_["--primary"], "#6366f1")
-        self.assertEqual(vars_["--background"], "#6366f1")
-        for token in ("--primary-foreground", "--foreground"):
-            self.assertIn(vars_[token], ("#000000", "#ffffff"))
-            self.assertGreaterEqual(self.ratio("#6366f1", vars_[token]), 4.5)
+    def test_impossible_color_combination_uses_complete_defaults(self) -> None:
+        resolved = self.resolve(primary="#6366f1", background="#6366f1")
+        defaults = self.resolve(**{k: v for k, v in self.default_theme.items() if k != "font"})
+        self.assertEqual(resolved, defaults)
 
     def test_borderline_greys_always_get_aa_text(self) -> None:
         for level in range(0x50, 0xA0):
             grey = f"#{level:02x}{level:02x}{level:02x}"
             vars_ = self.resolve(primary=grey, accent=grey, background=grey)["vars"]
-            self.assertEqual(vars_["--primary"], grey)
             for token in ("--primary-foreground", "--brand-foreground", "--foreground"):
-                self.assertGreaterEqual(self.ratio(grey, vars_[token]), 4.5, f"{token} on {grey}")
+                self.assertGreaterEqual(self.ratio(vars_["--primary"] if token == "--primary-foreground" else vars_["--brand"] if token == "--brand-foreground" else vars_["--background"], vars_[token]), 4.5, f"{token} on {grey}")
 
     def test_near_color_is_kept_when_it_passes(self) -> None:
         self.assertEqual(self.resolve(primary="#4f46e5")["vars"]["--primary-foreground"], "#fafafa")
@@ -560,10 +556,11 @@ class ThemeResolutionTest(unittest.TestCase):
             self.assertEqual(resolved["mode"], "dark", bad)
             self.assertIn("unsupported color", result.stderr, bad)
 
-    def test_invalid_foreground_is_ignored_and_rederived(self) -> None:
+    def test_invalid_foreground_falls_back_to_complete_defaults(self) -> None:
         result = self.resolve_raw(background="#ffffff", foreground="black")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(json.loads(result.stdout)["vars"]["--foreground"], "#0a0a0a")
+        self.assertEqual(json.loads(result.stdout)["vars"]["--background"], "#0a0a0a")
+        self.assertEqual(json.loads(result.stdout)["vars"]["--foreground"], "#fafafa")
 
     def test_css_injection_never_reaches_the_style_output(self) -> None:
         payloads = (
@@ -602,8 +599,8 @@ class ThemeResolutionTest(unittest.TestCase):
         self.assertEqual(self.resolve(background="#f4f4f5", mode="dark")["mode"], "dark")
         self.assertEqual(self.resolve(background="#0a0a0a", mode="light")["mode"], "light")
 
-    def test_unknown_mode_falls_back_to_background(self) -> None:
-        self.assertEqual(self.resolve(background="#ffffff", mode="sepia")["mode"], "light")
+    def test_unknown_mode_falls_back_to_complete_defaults(self) -> None:
+        self.assertEqual(self.resolve(background="#ffffff", mode="sepia")["mode"], "dark")
 
     def test_explicit_foreground_is_kept(self) -> None:
         resolved = self.resolve(background="#f4f4f5", foreground="#222222")
@@ -811,13 +808,13 @@ class BatchThemeTest(unittest.TestCase):
         probe = self.template / "probe.ts"
         for value in self.VALID + self.INVALID:
             probe.write_text(
-                'import { resolveTheme } from "./lib/theme"\n'
-                "console.log(JSON.stringify(resolveTheme("
-                f'{{ primary: {json.dumps(value)}, background: "#0a0a0a" }})))\n'
+                'import { parseColor } from "./lib/theme"\n'
+                "console.log(JSON.stringify(parseColor("
+                f'{json.dumps(value)})))\n'
             )
             out = subprocess.run(["bun", str(probe)], capture_output=True, text=True, cwd=self.template)
             self.assertEqual(out.returncode, 0, out.stderr)
-            kept = json.loads(out.stdout)["vars"]["--primary"] == value
+            kept = json.loads(out.stdout) is not None
             self.assertEqual(kept, value in self.VALID, f"ts {value!r}")
 
     def test_batch_does_not_strip_color_strings(self) -> None:

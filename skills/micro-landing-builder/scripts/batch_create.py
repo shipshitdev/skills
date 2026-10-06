@@ -24,7 +24,7 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 # Color validation is shared with scaffold.py (and mirrored in lib/theme.ts): exactly
 # #rgb, #rgba, #rrggbb or #rrggbbaa, no surrounding whitespace, no empty strings.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from scaffold import COLOR_PATTERN, THEME_MODES  # noqa: E402
+from scaffold import COLOR_PATTERN, THEME_MODES, validate_theme  # noqa: E402
 
 THEME_FIELDS = ("primary", "accent", "background")
 
@@ -123,9 +123,11 @@ def load_projects_from_csv(csv_path: Path) -> list[dict[str, Any]]:
         duplicates = sorted({name for name in columns if columns.count(name) > 1})
         if duplicates:
             raise ValueError(f"duplicate CSV header(s) {duplicates}")
-        for cells in reader:
+        for line_number, cells in enumerate(reader, start=2):
             if not any(cell.strip() for cell in cells):
                 continue
+            if len(cells) != len(columns):
+                raise ValueError(f"CSV row {line_number}: expected {len(columns)} cells, got {len(cells)}")
             row = dict(zip(columns, cells))
             project: dict[str, Any] = {
                 key: row.get(key, "").strip() for key in ("slug", "name", "domain", "concept")
@@ -182,6 +184,7 @@ def clone_from_template(
         if theme:
             apply_theme(config.setdefault("theme", {}), theme)
 
+        validate_theme(config.get("theme", {}))
         with open(app_json_path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=2)
 
@@ -221,7 +224,7 @@ def create_from_scaffold(
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"❌ Failed to create {slug}: {result.stderr}", file=sys.stderr)
-        raise RuntimeError(f"Scaffold failed for {slug}")
+        raise RuntimeError(f"Scaffold failed for {slug}: {result.stdout.strip()} {result.stderr.strip()}")
     print(result.stdout)
 
 
@@ -246,6 +249,8 @@ def batch_create(
 
     for project in projects:
         label = project.get("slug", "unknown") if isinstance(project, dict) else "unknown"
+        target_dir = None
+        owns_target = False
         try:
             # Everything about one project, including malformed JSON values, stays inside this
             # handler so a bad entry can never abort the rest of the batch.
@@ -278,6 +283,7 @@ def batch_create(
                 print(f"⚠️  Skipping {slug}: already exists")
                 continue
 
+            owns_target = True
             if template_dir and template_dir.exists():
                 clone_from_template(template_dir, target_dir, slug, name, domain, concept, theme)
             else:
@@ -286,6 +292,8 @@ def batch_create(
                 )
             created.append(slug)
         except Exception as e:
+            if owns_target and target_dir is not None and target_dir.exists():
+                shutil.rmtree(target_dir)
             print(f"❌ Skipping {label!r}: {e}", file=sys.stderr)
             failed.append(project)
 

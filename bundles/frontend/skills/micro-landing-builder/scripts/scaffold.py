@@ -11,6 +11,7 @@ import os
 import re
 import shutil
 import sys
+import subprocess
 from pathlib import Path
 from textwrap import dedent
 
@@ -61,6 +62,23 @@ def validate_color(flag: str, value: str) -> str:
         )
         sys.exit(1)
     return value
+
+
+def validate_theme(theme: dict) -> None:
+    """Use the exact runtime resolver to validate every final hex pair before writing files."""
+    try:
+        result = subprocess.run(
+            ["bun", str(SKILL_DIR / "scripts/validate-theme.ts")],
+            input=json.dumps(theme), capture_output=True, text=True,
+        )
+    except FileNotFoundError as error:
+        raise ValueError("Bun is required to validate landing themes") from error
+    if result.returncode:
+        raise ValueError(f"Theme validator failed: {result.stderr.strip()}")
+    errors = json.loads(result.stdout)
+    if errors:
+        raise ValueError("Invalid theme: " + "; ".join(errors) +
+                         ". Choose a darker/lighter background or remove the explicit foreground.")
 
 
 def validate_slug(slug: str) -> None:
@@ -412,6 +430,11 @@ def scaffold_landing(
         if value is not None:
             validate_color(flag, value)
     theme = create_theme(theme_mode, primary, accent, background)
+    try:
+        validate_theme(theme)
+    except ValueError as error:
+        print(f"Error: {error}")
+        sys.exit(1)
 
     # Safety check
     cwd = Path.cwd()

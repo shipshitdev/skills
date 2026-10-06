@@ -37,6 +37,11 @@
     --color-secondary-foreground: var(--secondary-foreground);
     --color-secondary: var(--secondary);
     --color-primary-foreground: var(--primary-foreground);
+    --color-secondary-hover: var(--secondary-hover);
+    --color-destructive-fill: var(--destructive-fill);
+    --color-destructive-fill-foreground: var(--destructive-fill-foreground);
+    --color-destructive-hover: var(--destructive-hover);
+    --color-destructive-hover-foreground: var(--destructive-hover-foreground);
     --color-primary: var(--primary);
     --color-popover-foreground: var(--popover-foreground);
     --color-popover: var(--popover);
@@ -136,7 +141,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
     }
   body {
     @apply bg-background text-foreground;

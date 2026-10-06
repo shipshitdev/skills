@@ -199,7 +199,7 @@ project1,Project One,project1.com,AI-powered analytics
 project2,Project Two,project2.com,Cloud infrastructure
 ```
 
-Optional theme columns (headers are trimmed and case-insensitive; unknown or duplicate headers abort with an error; the file may have a UTF-8 BOM): `primary`, `accent`, `background`, `theme_mode` (`dark` or `light`). Colors must be exactly `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa` (no spaces, no empty strings in JSON; an empty CSV cell means "not set"). Invalid rows are skipped and the run exits nonzero. With `--template`, the colors and mode are applied to the cloned `app.json`, and an inherited `foreground`, `mode` and `accent` are cleared when a new `background` is given (the accent is re-derived unless you supply one).
+Optional theme columns (headers are trimmed and case-insensitive; unknown or duplicate headers and rows with the wrong cell count abort with an error; the file may have a UTF-8 BOM): `primary`, `accent`, `background`, `theme_mode` (`dark` or `light`). Colors must be exactly `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa` (no spaces, no empty strings in JSON; an empty CSV cell means "not set"). Invalid rows are skipped and the run exits nonzero. With `--template`, the colors and mode are applied to the cloned `app.json`, and an inherited `foreground`, `mode` and `accent` are cleared when a new `background` is given (the accent is re-derived unless you supply one).
 
 ### JSON Format
 
@@ -289,7 +289,7 @@ To add custom sections:
 2. Import it in `app/page.tsx`
 3. Register it in the `sectionComponents` map under its `type`
 
-Change colors in `app.json` `theme` (`primary`, `accent`, `background`, `foreground`, `mode`): `app/layout.tsx` applies them inline through `lib/theme.ts`, which accepts `#rgb`, `#rgba`, `#rrggbb` and `#rrggbbaa` (`scaffold.py` and `batch_create.py` reject anything else; at runtime an invalid value is ignored with a build warning and the default is used; alpha is treated as opaque for contrast and warns) and picks each text color (`--foreground`, `--primary-foreground`, `--brand-foreground`) as near-black or near-white by WCAG contrast (pure black or white when neither near color reaches 4.5:1; your color is never changed), so they override the matching variables in `app/globals.css`. When `mode` is omitted it follows the `background` brightness (a light background gives the full light token set); an explicit `mode` always wins. Edit `app/globals.css` for the tokens `app.json` does not set (for example `--radius`, `--secondary`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
+Change colors in `app.json` `theme` (`primary`, `accent`, `background`, `foreground`, `mode`). Bun validates the complete theme before scaffold or clone creation, using the same resolver as `app/layout.tsx`. Invalid themes fail with the failing pair and contrast ratio; choose a darker/lighter background or remove an explicit foreground. Invalid runtime edits warn and use the complete default theme. Colors accept anchored `#rgb`, `#rgba`, `#rrggbb` and `#rrggbbaa`; alpha is normalized to opaque six-digit hex with a warning. Every text pair is checked at 4.5:1, and focus indicators and input borders at 3:1, on the final rounded colors. Mode is inferred from the background unless explicitly requested; the audited surface colors work in either mode. Use the token utilities instead of hardcoded colors. See `references/config-schema.md` for derivation and validation details.
 
 ## References
 
