@@ -35,6 +35,10 @@ Outputs:
 - Per-path base/candidate/trunk entries, patch evidence, and unresolved intent
 - Planned actions and skipped candidates with reasons, plus a `summary` that counts
   removable actions and kept candidates by reason (what is not on trunk, and why)
+- A read-only `triage` on every skipped candidate: PR state (`open`, `merged`,
+  `closed-unmerged`, `none`), whether the remote ref still exists, and path counts
+  split `landed` / `unlanded` / `both-changed` (plus `restored-on-trunk`). Triage
+  never authorizes deletion.
 - Removed and skipped actions after revalidation
 
 Creates/Modifies:
@@ -98,7 +102,11 @@ Separate these conclusions:
   exactly what must be inspected next.
 
 A deleted remote branch or a merged PR at some other commit is triage context,
-not proof. A candidate whose tip is or precedes a merged PR head is different:
+not proof. Kept reasons are distinct: `not on trunk: commits beyond merged PR #N`,
+`not on trunk: PR #N closed without merging`, `not on trunk: no PR`, `in-flight
+open PR`, `objects-missing-locally` (the candidate or a merged PR's merge commit
+is absent locally; fetch and replan), and `remote ref deleted upstream — nothing
+to do` (the ref no longer exists on origin). A candidate whose tip is or precedes a merged PR head is different:
 see the `merged-pr-head` rule below. Remove it with the plan; never leave it for
 manual deletion.
 

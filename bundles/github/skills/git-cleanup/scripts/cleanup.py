@@ -28,9 +28,10 @@ SCOPES = {
 class Refused(RuntimeError):
     """Evidence is missing, changed, or unsafe."""
 
-    def __init__(self, message: str, audit: dict | None = None):
+    def __init__(self, message: str, audit: dict | None = None, triage: dict | None = None):
         super().__init__(message)
         self.audit = audit
+        self.triage = triage
 
 
 FAILURES = (Refused, OSError, ValueError, KeyError, TypeError)
@@ -202,17 +203,40 @@ class Repository:
     def duplicate(file: Path, original: Path, worktree: Path) -> bool:
         # A byte-identical copy in the main checkout survives the removal, unless
         # the main checkout reaches it through a link into this worktree.
-        original = Path(os.path.realpath(original.parent)) / original.name
-        if original.parent == worktree.resolve() or worktree.resolve() in original.parent.parents:
+        removed = worktree.resolve()
+
+        def inside(path: Path) -> bool:
+            return path == removed or removed in path.parents
+
+        def chain(path: Path) -> list[Path] | None:
+            """Every path a lookup of `path` visits, parents and link hops included."""
+            hops, current = [], path
+            for _ in range(40):
+                parent = Path(os.path.realpath(current.parent))
+                hops.append(parent)
+                current = parent / current.name
+                hops.append(current)
+                if not current.is_symlink():
+                    return hops
+                current = Path(os.path.join(parent, os.readlink(current)))
+            return None  # a link loop never reaches a surviving file
+
+        hops = chain(original)
+        # A main-checkout link routed through this worktree breaks when it goes,
+        # even if its final target lies elsewhere.
+        if hops is None or any(inside(hop) for hop in hops):
             return False
+        target = Path(os.path.realpath(original))
         if file.is_symlink():
-            return original.is_symlink() and os.readlink(file) == os.readlink(original)
+            # Compare where both links end up, not their text; a link whose
+            # target is broken or lies in the removed worktree keeps nothing alive.
+            if not original.is_symlink():
+                return False
+            mine = Path(os.path.realpath(file))
+            return not inside(mine) and mine == target and mine.exists()
         # A main-checkout link (apps/workers/.env.local -> ../api/.env.local)
         # keeps its target, so a copy of that target survives unless the link
         # resolves into this worktree.
-        target = Path(os.path.realpath(original))
-        if target == worktree.resolve() or worktree.resolve() in target.parents:
-            return False
         return file.is_file() and target.is_file() and filecmp.cmp(file, target, shallow=False)
 
     def unmoved_since_creation(self, ref: str, oid: str, worktree: str | None = None) -> bool:
@@ -400,6 +424,8 @@ class Repository:
                 "trunk": trunk, "trunk_oid": remote_oid, "current": current,
                 "head": self.oid("HEAD")}
 
+    DELETED_UPSTREAM = "remote ref deleted upstream \u2014 nothing to do"
+
     OPERATION_MARKERS = ("rebase-merge", "rebase-apply", "MERGE_HEAD", "CHERRY_PICK_HEAD",
                          "REVERT_HEAD", "sequencer", "BISECT_LOG")
     OPERATION_REASON = "active operation in this worktree or on this branch; preserve until it finishes"
@@ -521,6 +547,33 @@ class Repository:
             return f"not on trunk: PR #{closed[0]} closed without merging"
         return "not on trunk: no PR"
 
+    @staticmethod
+    def triage(prs: list[dict], remote_ref_exists: bool | None, audit: dict | None = None) -> dict:
+        """Read-only facts for a kept candidate; they never authorize deletion."""
+        merged = [pr["number"] for pr in prs if pr.get("merged_at")]
+        closed = [pr["number"] for pr in prs if pr.get("state") == "closed" and not pr.get("merged_at")]
+        opened = [pr["number"] for pr in prs if pr.get("state") == "open"]
+        state, number = next(((name, found[0]) for name, found in
+                              (("open", opened), ("merged", merged), ("closed-unmerged", closed)) if found),
+                             ("none", None))
+        result = {"pr_state": state, "pr": number, "remote_ref_exists": remote_ref_exists}
+        if audit:
+            # Three-way view per path: merge base vs candidate vs trunk.
+            names = {"exact-entry": "landed", "patch-present": "landed",
+                     "unchanged-on-trunk": "unlanded", "both-changed": "both-changed",
+                     "restored-on-trunk": "restored-on-trunk"}
+            counts: dict[str, int] = {}
+            for item in audit.get("paths", []):
+                name = names.get(item["state"], item["state"])
+                counts[name] = counts.get(name, 0) + 1
+            result["paths"] = dict(sorted(counts.items()))
+        return result
+
+    def missing_merge_objects(self, prs: list[dict]) -> list[dict]:
+        """Merged PRs whose merge commit is not local, so trunk cannot be compared to them."""
+        return [pr for pr in prs if pr.get("merged_at") and pr.get("merge_commit_sha")
+                and not self.has_commit(pr["merge_commit_sha"])]
+
     def proof(self, oid: str, trunk: str, prs: list[dict], *, unmoved: bool = False) -> dict:
         if any(pr.get("state") == "open" for pr in prs):
             raise Refused("in-flight open PR")
@@ -552,6 +605,11 @@ class Repository:
             if pr:
                 return {"kind": "merged-pr-head", "pr": pr["number"], "head": pr["head"]["sha"],
                         "merge": pr["merge_commit_sha"], "ahead": ahead, "content_audit": audit}
+            absent = self.missing_merge_objects(prs)
+            if absent:
+                raise Refused(f"objects-missing-locally: merge commit {absent[0]['merge_commit_sha'][:12]} "
+                              f"of merged PR #{absent[0]['number']} is not local; fetch it and replan; "
+                              "preserve candidate", audit)
             raise Refused(self.unproven(prs) + "; inspect code and intent, preserve candidate", audit)
         if self.ancestor(oid, trunk):
             return {"kind": "ancestor", "ahead": ahead, "content_audit": audit}
@@ -616,24 +674,37 @@ class Repository:
         elif kind == "remote":
             self.git("check-ref-format", ref)
             heads = self.remote_heads() if heads is None else heads
-            if heads.get(ref) != oid:
+            if ref not in heads:
+                raise Refused(self.DELETED_UPSTREAM, triage={"remote_ref_exists": False})
+            if heads[ref] != oid:
                 raise Refused("remote ref changed since discovery")
+        if not self.has_commit(oid):
+            # Neither a missing ref nor a missing object is a proof failure.
+            if kind == "remote":
+                if ref not in self.remote_heads():
+                    # The live check supersedes the planning snapshot in triage.
+                    raise Refused(self.DELETED_UPSTREAM, triage={"remote_ref_exists": False})
+                self.fetch_objects(ref)
+            if not self.has_commit(oid):
+                raise Refused(f"objects-missing-locally: {oid[:12]} is not local; fetch it and replan")
         if self.oid(oid) != oid:
             raise Refused("candidate must contain an immutable object ID")
-        if branch:
-            if pr_cache is not None:
-                if branch not in pr_cache:
-                    pr_cache[branch] = self.pull_requests(context["repository"], branch)
-                prs = pr_cache[branch]
-            else:
-                prs = self.pull_requests(context["repository"], branch)
-        elif pr_cache is not None:
-            if "@" + oid not in pr_cache:
-                pr_cache["@" + oid] = self.commit_pull_requests(context["repository"], oid)
-            prs = pr_cache["@" + oid]
+        # Lookups are keyed by the trunk this run proves against, so a run
+        # never re-paginates PRs for a branch it has already seen.
+        key = (context["trunk_oid"], branch or "@" + oid)
+        if pr_cache is not None and key in pr_cache:
+            prs = pr_cache[key]
         else:
-            prs = self.commit_pull_requests(context["repository"], oid)
-        result["proof"] = self.proof(oid, context["trunk_oid"], prs, unmoved=unmoved)
+            prs = (self.pull_requests(context["repository"], branch) if branch
+                   else self.commit_pull_requests(context["repository"], oid))
+            if pr_cache is not None:
+                pr_cache[key] = prs
+        exists = ("refs/heads/" + branch in heads) if branch and heads is not None else None
+        try:
+            result["proof"] = self.proof(oid, context["trunk_oid"], prs, unmoved=unmoved)
+        except Refused as error:
+            error.triage = self.triage(prs, exists, error.audit)
+            raise
         return result
 
     def plan(self, scope: str, trunk: str | None = None) -> dict:
@@ -674,6 +745,10 @@ class Repository:
                 item = {**candidate, "reason": str(error)}
                 if isinstance(error, Refused) and error.audit is not None:
                     item["content_audit"] = error.audit
+                # Candidates refused before a PR lookup still report the remote ref.
+                branch = candidate["ref"].removeprefix("refs/heads/") if candidate["ref"] else ""
+                item["triage"] = (getattr(error, "triage", None) or {
+                    "remote_ref_exists": ("refs/heads/" + branch in remote_heads) if branch else None})
                 skipped.append(item)
         kept: dict[str, int] = {}
         for item in skipped:
