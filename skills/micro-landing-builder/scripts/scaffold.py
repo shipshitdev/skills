@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -33,6 +35,37 @@ PINS = {
     "lucide-react": "1.52.0",
     "tw-animate-css": "1.4.0",
 }
+
+
+SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
+# Per-mode theme defaults written to app.json; layout.tsx applies them as shadcn CSS variables.
+THEME_MODES = {
+    "dark": {"background": "#0a0a0a", "foreground": "#fafafa"},
+    "light": {"background": "#ffffff", "foreground": "#0a0a0a"},
+}
+
+
+def validate_slug(slug: str) -> None:
+    """Reject anything but a single path segment of lowercase letters, digits and hyphens."""
+    if not SLUG_PATTERN.fullmatch(slug):
+        print(
+            f"Error: invalid slug {slug!r}. Use one segment of lowercase letters, digits and "
+            "hyphens, starting with a letter or digit (for example 'mystartup')."
+        )
+        sys.exit(1)
+
+
+def resolve_destination(root: Path, slug: str) -> Path:
+    """Return root/slug and require its real path to stay strictly under the real root."""
+    validate_slug(slug)
+    real_root = Path(os.path.realpath(root))
+    destination = root / slug
+    real_destination = Path(os.path.realpath(destination))
+    if real_destination.parent != real_root or destination.is_symlink():
+        print(f"Error: {destination} resolves outside {root}.")
+        sys.exit(1)
+    return destination
 
 
 def create_package_json(name: str) -> str:
@@ -133,7 +166,7 @@ def create_vercel_json(domain: str) -> str:
     }, indent=2)
 
 
-def create_app_json(name: str, slug: str, domain: str, concept: str) -> str:
+def create_app_json(name: str, slug: str, domain: str, concept: str, mode: str = "dark") -> str:
     return json.dumps({
         "name": name,
         "slug": slug,
@@ -146,7 +179,9 @@ def create_app_json(name: str, slug: str, domain: str, concept: str) -> str:
         "theme": {
             "primary": "#6366f1",
             "accent": "#f59e0b",
-            "background": "#0a0a0a",
+            "background": THEME_MODES[mode]["background"],
+            "foreground": THEME_MODES[mode]["foreground"],
+            "mode": mode,
             "font": {
                 "heading": "Fraunces",
                 "body": "Space Grotesk"
@@ -327,10 +362,11 @@ def scaffold_landing(
     domain: str,
     concept: str,
     allow_outside: bool,
+    theme_mode: str = "dark",
 ) -> None:
     """Create a new landing page project."""
 
-    project_dir = root / slug
+    project_dir = resolve_destination(root, slug)
 
     # Safety check
     cwd = Path.cwd()
@@ -358,7 +394,7 @@ def scaffold_landing(
         "postcss.config.mjs": create_postcss_config(),
         "tsconfig.json": create_tsconfig(),
         "vercel.json": create_vercel_json(domain),
-        "app.json": create_app_json(name, slug, domain, concept),
+        "app.json": create_app_json(name, slug, domain, concept, theme_mode),
         ".gitignore": create_gitignore(),
     }
 
@@ -413,6 +449,12 @@ def main() -> None:
         help="Product concept (e.g., 'AI-powered analytics')",
     )
     parser.add_argument(
+        "--theme-mode",
+        choices=sorted(THEME_MODES),
+        default="dark",
+        help="Color mode written to app.json theme (default: dark)",
+    )
+    parser.add_argument(
         "--allow-outside",
         action="store_true",
         help="Allow creating files outside current directory",
@@ -427,6 +469,7 @@ def main() -> None:
         domain=args.domain,
         concept=args.concept,
         allow_outside=args.allow_outside,
+        theme_mode=args.theme_mode,
     )
 
 
