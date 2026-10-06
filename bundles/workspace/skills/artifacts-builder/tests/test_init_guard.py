@@ -73,6 +73,27 @@ class InitDestinationGuardTest(unittest.TestCase):
         calls = self.log.read_text().splitlines() if self.log.exists() else []
         self.assertTrue(all(call.startswith("create vite") for call in calls), calls)
 
+    def test_stops_when_create_vite_writes_package_json_then_fails(self) -> None:
+        write_stub(
+            self.bin,
+            "bun",
+            '[ "$1" = "-v" ] && echo 1.4.2 && exit 0\n'
+            f'echo "$@" >> "{self.log}"\n'
+            'mkdir -p "$3" && echo "{}" > "$3/package.json"\n'
+            """echo '<link rel="icon" href="/x.svg"><title>t</title>' > "$3/index.html"\n"""
+            "exit 1",
+        )
+        result = self.run_init("half")
+        self.assertNotEqual(result.returncode, 0)
+        # nothing past create-vite ran: no template cleanup, edits or installs
+        half = self.root / "half"
+        self.assertEqual(sorted(p.name for p in half.iterdir()), ["index.html", "package.json"])
+        self.assertEqual((half / "package.json").read_text(), "{}\n")
+        self.assertIn('<link rel="icon"', (half / "index.html").read_text())
+        calls = self.log.read_text().splitlines()
+        self.assertEqual(len(calls), 1, calls)
+        self.assertTrue(calls[0].startswith("create vite"), calls)
+
     def test_allows_an_empty_existing_directory(self) -> None:
         (self.root / "empty").mkdir()
         result = self.run_init("empty")

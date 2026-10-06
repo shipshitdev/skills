@@ -17,6 +17,7 @@ Inputs:
 
 - One or more landing definitions: slug, name, domain, concept, and config
 - Destination root
+- Slugs: one path segment of lowercase letters, digits and hyphens; anything else is rejected
 - Optional domain mapping
 
 Outputs:
@@ -74,6 +75,12 @@ python3 scripts/scaffold.py \
   --domain "mystartup.com" \
   --concept "AI-powered analytics"
 
+# Light theme (app.json theme.mode "light" with a white background and dark text)
+python3 scripts/scaffold.py \
+  --slug mystartup \
+  --name "My Startup" \
+  --theme-mode light
+
 # Allow outside current directory
 python3 scripts/scaffold.py \
   --root ~/www/landings \
@@ -95,7 +102,8 @@ mystartup/
 ├── public/
 │   └── (images go here)
 ├── lib/
-│   └── utils.ts          # cn() helper
+│   ├── utils.ts          # cn() helper
+│   └── theme.ts          # app.json theme -> mode and CSS variable overrides
 ├── components/
 │   ├── ui/               # shadcn: button, card, badge, accordion, input
 │   └── sections/         # header, hero, stats, features, pricing, testimonials, faq, cta, footer
@@ -124,7 +132,9 @@ The landing is entirely driven by `app.json`. See `references/config-schema.md` 
   "theme": {
     "primary": "#6366f1",
     "accent": "#f59e0b",
-    "background": "#0a0a0a"
+    "background": "#0a0a0a",
+    "foreground": "#fafafa",
+    "mode": "dark"
   },
   "analytics": {
     "plausible": "mystartup.com"
@@ -270,7 +280,7 @@ To add custom sections:
 2. Import it in `app/page.tsx`
 3. Register it in the `sectionComponents` map under its `type`
 
-Restyle through the CSS variables in `app/globals.css` (for example `--primary`, `--radius`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
+Change colors in `app.json` `theme` (`primary`, `accent`, `background`, `foreground`, `mode`): `app/layout.tsx` applies them inline through `lib/theme.ts`, so they override the matching variables in `app/globals.css`. When `mode` is omitted it follows the `background` brightness (a light background gives the full light token set); an explicit `mode` always wins. Edit `app/globals.css` for the tokens `app.json` does not set (for example `--radius`, `--secondary`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
 
 ## References
 

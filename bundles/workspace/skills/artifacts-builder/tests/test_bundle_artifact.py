@@ -103,13 +103,41 @@ class BundleArtifactTest(unittest.TestCase):
     def test_failed_build_keeps_the_previous_bundle_and_leaves_no_temp_output(self) -> None:
         project = self.project(main='import "./does-not-exist.js"\n')
         (project / "bundle.html").write_text("PREVIOUS BUNDLE")
+        before = {p.name for p in project.iterdir()}
 
         result = self.bundle(project)
 
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual((project / "bundle.html").read_text(), "PREVIOUS BUNDLE")
-        self.assertFalse((project / "dist-bundle").exists())
-        leftovers = [p.name for p in project.iterdir() if p.name.startswith("bundle.html.")]
+        leftovers = sorted(p.name for p in project.iterdir() if p.name not in before)
+        self.assertEqual(leftovers, ["vite.singlefile.config.ts"])
+
+    def test_public_symlink_escape_is_rejected_end_to_end(self) -> None:
+        project = self.project(body='<img alt="x" src="/secret.png" />')
+        outside = project.parent / "outside"
+        outside.mkdir()
+        (outside / "secret.png").write_bytes(b"TOP-SECRET")
+        (project / "public").mkdir()
+        (project / "public" / "secret.png").symlink_to(outside / "secret.png")
+
+        result = self.bundle(project)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("/secret.png", result.stdout + result.stderr)
+        self.assertFalse((project / "bundle.html").exists())
+
+    def test_concurrent_runs_use_separate_build_directories(self) -> None:
+        project = self.project()
+        procs = [
+            subprocess.Popen(
+                ["bash", str(BUNDLE)], cwd=project, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            )
+            for _ in range(2)
+        ]
+        outputs = [p.communicate()[0] for p in procs]
+        self.assertEqual([p.returncode for p in procs], [0, 0], "\n".join(outputs))
+        self.assertIn("<title>fixture</title>", (project / "bundle.html").read_text())
+        leftovers = [p.name for p in project.iterdir() if p.name.startswith((".bundle-", "bundle.html."))]
         self.assertEqual(leftovers, [])
 
 

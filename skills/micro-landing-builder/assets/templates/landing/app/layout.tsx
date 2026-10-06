@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import type { CSSProperties } from "react"
 
 import config from "../app.json"
+import { resolveTheme } from "@/lib/theme"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -9,14 +10,9 @@ export const metadata: Metadata = {
   description: config.meta.description,
 }
 
-// app.json theme values override the shadcn CSS variables declared in globals.css.
-const themeVars = {
-  "--primary": config.theme.primary,
-  "--primary-foreground": "#ffffff",
-  "--ring": config.theme.primary,
-  "--brand": config.theme.accent,
-  "--background": config.theme.background,
-} as CSSProperties
+// app.json theme -> shadcn token set (mode) and CSS variable overrides; see lib/theme.ts.
+const { mode, vars } = resolveTheme(config.theme)
+const themeVars = vars as CSSProperties
 
 export default function RootLayout({
   children,
@@ -24,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark" style={themeVars}>
+    <html lang="en" className={mode === "dark" ? "dark" : undefined} style={themeVars}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

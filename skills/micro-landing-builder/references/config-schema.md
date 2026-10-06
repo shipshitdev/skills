@@ -43,6 +43,8 @@ interface ThemeConfig {
   primary: string;           // --primary and --ring (bg-primary, text-primary)
   accent: string;            // --brand (text-brand), the extra brand accent
   background: string;        // --background (bg-background)
+  foreground?: string;       // --foreground; derived from background brightness when omitted
+  mode?: "dark" | "light";   // Token set in globals.css; inferred from background brightness when omitted
   font: {
     heading: string;         // Informational: set in layout.tsx <link> and --font-heading in globals.css
     body: string;            // Informational: set in layout.tsx <link> and --font-sans in globals.css
@@ -50,7 +52,7 @@ interface ThemeConfig {
 }
 ```
 
-Text on `bg-primary` uses `--primary-foreground`, which `layout.tsx` sets to white; change it there if your primary color is light.
+Card, popover and muted-text colors are derived from `background` and `foreground`, so a light background never gets light text. Text on `bg-primary` uses `--primary-foreground`, which `layout.tsx` sets to white (or near-black when `primary` is light).
 
 **Recommended fonts:**
 

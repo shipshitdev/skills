@@ -73,7 +73,8 @@ This creates `bundle.html` - a self-contained artifact with all JavaScript, CSS,
 - Installs `vite-plugin-singlefile` as a dev dependency
 - Writes `vite.singlefile.config.ts`, which extends your `vite.config.*` and inlines all JS, CSS, fonts and assets into `index.html`
 - Runs `bunx vite build` with that config (object, promise or function-style `vite.config.*` all work)
-- Inlines the files in `public/` that the HTML or CSS reference (images, fonts, icons) as data URIs, and fails with the list of any local reference it cannot inline
+- Inlines the files that the HTML or CSS reference (images, fonts, icons, linked stylesheets and their own `url()` dependencies) as data URIs, keeping `#fragments`, and fails with the list of any local reference it cannot inline or that escapes the project through a symlink
+- Builds in a private temporary work directory per run, so concurrent runs do not collide
 - Replaces `bundle.html` only after every step succeeded, so a failed build never destroys the previous bundle
 
 Files referenced only by hard-coded path strings inside JavaScript are not detected: import them from code (Vite inlines those) or reference them from the HTML or CSS.

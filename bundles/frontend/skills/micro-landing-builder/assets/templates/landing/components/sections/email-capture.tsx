@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type FormEvent } from "react"
+import { useId, useState, type FormEvent } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,6 +16,7 @@ export function EmailCapture({
   placeholder = "Enter your email",
   buttonText = "Join Waitlist",
 }: EmailCaptureProps) {
+  const inputId = useId()
   const [status, setStatus] = useState<Status>("idle")
   const [message, setMessage] = useState("")
 
@@ -41,11 +42,11 @@ export function EmailCapture({
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-md flex-col gap-2">
       <div className="flex gap-2">
-        <label htmlFor="email" className="sr-only">
+        <label htmlFor={inputId} className="sr-only">
           Email address
         </label>
         <Input
-          id="email"
+          id={inputId}
           name="email"
           type="email"
           required
