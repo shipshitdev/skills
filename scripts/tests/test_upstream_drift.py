@@ -395,6 +395,35 @@ class SkillDriftTests(unittest.TestCase):
         self.assertTrue(drift.drifted(report))
         self.assertIn("UNRESOLVABLE", drift.render([report]))
 
+    def test_missing_derived_head_or_tags_keeps_other_sources(self) -> None:
+        self.add_skill("missing", self.blob("ref/missing.md"), upstream_commit=PIN_R)
+        self.add_skill("tagged", self.blob("ref/tagged.md"), upstream_version="v1.0.0")
+        self.add_skill("healthy", self.blob("ref/healthy.md", repo="u/healthy"), upstream_commit=PIN_R)
+        gh = self.fake(compares={"u/healthy": (HEAD_A, ahead("ref/healthy.md"))})
+
+        def missing(args):
+            if "repos/u/up" in args or "repos/u/up/tags?per_page=100" in args:
+                raise subprocess.CalledProcessError(1, args, stderr="gh: Not Found (HTTP 404)")
+            return gh(args)
+
+        reports = self.reports(missing)
+        self.assertEqual(drift.state(reports["missing"]), "inconclusive")
+        self.assertEqual(drift.state(reports["tagged"]), "inconclusive")
+        self.assertEqual(drift.state(reports["healthy"]), "drifted")
+        self.assertIn("UNRESOLVABLE", drift.render(list(reports.values())))
+
+    def test_resolution_errors_still_fail_for_pstack_or_unrelated_errors(self) -> None:
+        self.add_skill("broken", self.blob("ref/broken.md"), upstream_commit=PIN_R)
+        for detail in ("gh: API rate limit exceeded (HTTP 403)", "gh: Server Error (HTTP 500)"):
+            def unavailable(args):
+                raise subprocess.CalledProcessError(1, args, stderr=detail)
+            with self.assertRaises(subprocess.CalledProcessError):
+                drift.inspect_skill(drift.discover_skills(self.root, set())[0], drift.Context(unavailable))
+        def missing(args):
+            raise subprocess.CalledProcessError(1, args, stderr="gh: Not Found (HTTP 404)")
+        with self.assertRaises(subprocess.CalledProcessError):
+            drift.inspect(LOCK["sources"][0], missing)
+
     def test_missing_pin_and_unknown_commit_are_unresolvable(self) -> None:
         self.add_skill("nopin", self.blob("ref/nopin.md"))
         self.add_skill("badpin", self.blob("ref/badpin.md"), upstream_commit=PIN_R)

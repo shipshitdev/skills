@@ -307,7 +307,17 @@ def discover_skills(root: Path, covered: set[str]) -> list[dict]:
 
 
 def inspect_skill(skill: dict, ctx: Context) -> dict:
-    report = _inspect_skill(skill, ctx)
+    try:
+        report = _inspect_skill(skill, ctx)
+    except subprocess.CalledProcessError as error:
+        if skill["group"] == "pstack" or not unresolvable_pin(error):
+            raise
+        report = {"id": skill["id"], "group": skill["group"], "repo": skill["repo"],
+                  "branch": "", "pinned": skill["pin"], "head": "", "paths": [skill["path"]],
+                  "status": "unknown", "ahead_by": 0, "files": [], "truncated": False,
+                  "commits": [], "inconclusive": True,
+                  "unresolvable": "upstream head or release tags could not be resolved (not found upstream)",
+                  "compare_url": f"https://github.com/{skill['repo']}"}
     report["pin_file"] = skill["pin_file"]
     return report
 
