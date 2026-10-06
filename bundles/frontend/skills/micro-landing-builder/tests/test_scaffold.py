@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -220,6 +221,7 @@ class ThemeModeTest(unittest.TestCase):
             return {
                 "config": json.loads((app / "app.json").read_text()),
                 "layout": (app / "app" / "layout.tsx").read_text(),
+                "theme": (app / "lib" / "theme.ts").read_text(),
                 "capture": (app / "components" / "sections" / "email-capture.tsx").read_text(),
             }
 
@@ -237,7 +239,7 @@ class ThemeModeTest(unittest.TestCase):
         self.assertEqual(theme["mode"], "dark")
         self.assertEqual(theme["background"], "#0a0a0a")
         self.assertGreater(self.luminance(theme["foreground"]), 0.5)
-        self.assertIn('className={mode === "dark" ? "dark" : undefined}', built["layout"])
+        self.assertIn('mode === "dark" ? "dark" : undefined', built["layout"])
 
     def test_light_mode_pairs_a_dark_foreground_with_a_light_background(self) -> None:
         theme = self.build("--theme-mode", "light")["config"]["theme"]
@@ -245,10 +247,11 @@ class ThemeModeTest(unittest.TestCase):
         self.assertGreater(self.luminance(theme["background"]), 0.5)
         self.assertLess(self.luminance(theme["foreground"]), 0.5)
 
-    def test_layout_applies_paired_foreground_tokens(self) -> None:
-        layout = self.build()["layout"]
+    def test_theme_module_applies_paired_foreground_tokens(self) -> None:
+        theme = self.build()["theme"]
         for token in ("--foreground", "--muted-foreground", "--card", "--card-foreground"):
-            self.assertIn(f'"{token}"', layout)
+            self.assertIn(f'"{token}"', theme)
+        layout = self.build()["layout"]
         self.assertNotIn('className="dark"', layout)
 
     def test_email_capture_uses_unique_ids(self) -> None:
@@ -256,6 +259,66 @@ class ThemeModeTest(unittest.TestCase):
         self.assertIn("useId()", capture)
         self.assertNotIn('id="email"', capture)
         self.assertNotIn('htmlFor="email"', capture)
+
+
+@unittest.skipUnless(shutil.which("bun"), "bun is required to evaluate lib/theme.ts")
+class ThemeResolutionTest(unittest.TestCase):
+    """Runs the generated app's lib/theme.ts (the logic layout.tsx applies) under bun."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls._tmp = tempfile.TemporaryDirectory()
+        result = run(
+            "scaffold.py",
+            "--root", cls._tmp.name,
+            "--slug", "t",
+            "--name", "T",
+            "--allow-outside",
+        )
+        assert result.returncode == 0, result.stderr
+        cls.app = Path(cls._tmp.name) / "t"
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls._tmp.cleanup()
+
+    def resolve(self, **theme: str) -> dict:
+        base = {"primary": "#6366f1", "accent": "#f59e0b", "background": "#0a0a0a"}
+        script = self.app / "probe.ts"
+        script.write_text(
+            'import { resolveTheme } from "./lib/theme"\n'
+            f"console.log(JSON.stringify(resolveTheme({json.dumps({**base, **theme})})))\n"
+        )
+        result = subprocess.run(
+            ["bun", str(script)], capture_output=True, text=True, cwd=self.app
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return json.loads(result.stdout)
+
+    def test_light_background_without_mode_infers_light_tokens(self) -> None:
+        resolved = self.resolve(background="#f4f4f5")
+        self.assertEqual(resolved["mode"], "light")
+        self.assertEqual(resolved["vars"]["--foreground"], "#0a0a0a")
+
+    def test_dark_background_without_mode_stays_dark(self) -> None:
+        self.assertEqual(self.resolve()["mode"], "dark")
+        self.assertEqual(self.resolve(background="#111827")["mode"], "dark")
+
+    def test_explicit_mode_wins_over_background(self) -> None:
+        self.assertEqual(self.resolve(background="#f4f4f5", mode="dark")["mode"], "dark")
+        self.assertEqual(self.resolve(background="#0a0a0a", mode="light")["mode"], "light")
+
+    def test_unknown_mode_falls_back_to_background(self) -> None:
+        self.assertEqual(self.resolve(background="#ffffff", mode="sepia")["mode"], "light")
+
+    def test_explicit_foreground_is_kept(self) -> None:
+        resolved = self.resolve(background="#f4f4f5", foreground="#222222")
+        self.assertEqual(resolved["vars"]["--foreground"], "#222222")
+
+    def test_layout_uses_resolved_mode_for_the_dark_class(self) -> None:
+        layout = (self.app / "app" / "layout.tsx").read_text()
+        self.assertIn("resolveTheme", layout)
+        self.assertIn('mode === "dark" ? "dark" : undefined', layout)
 
 
 class BatchCreateTest(unittest.TestCase):

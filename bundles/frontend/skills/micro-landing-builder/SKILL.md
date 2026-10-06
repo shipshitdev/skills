@@ -102,7 +102,8 @@ mystartup/
 ├── public/
 │   └── (images go here)
 ├── lib/
-│   └── utils.ts          # cn() helper
+│   ├── utils.ts          # cn() helper
+│   └── theme.ts          # app.json theme -> mode and CSS variable overrides
 ├── components/
 │   ├── ui/               # shadcn: button, card, badge, accordion, input
 │   └── sections/         # header, hero, stats, features, pricing, testimonials, faq, cta, footer
@@ -279,7 +280,7 @@ To add custom sections:
 2. Import it in `app/page.tsx`
 3. Register it in the `sectionComponents` map under its `type`
 
-Change colors in `app.json` `theme` (`primary`, `accent`, `background`, `foreground`, `mode`): `app/layout.tsx` applies them inline, so they override the matching variables in `app/globals.css`. Edit `app/globals.css` for the tokens `app.json` does not set (for example `--radius`, `--secondary`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
+Change colors in `app.json` `theme` (`primary`, `accent`, `background`, `foreground`, `mode`): `app/layout.tsx` applies them inline through `lib/theme.ts`, so they override the matching variables in `app/globals.css`. When `mode` is omitted it follows the `background` brightness (a light background gives the full light token set); an explicit `mode` always wins. Edit `app/globals.css` for the tokens `app.json` does not set (for example `--radius`, `--secondary`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
 
 ## References
 
