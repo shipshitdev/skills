@@ -87,7 +87,7 @@ For example, deciding whether to summarize a long agent session has two parts: (
 A contributor coming to context engineering for the first time should read:
 
 1. This skill, to internalize the attention-budget framing and the U-shaped curve.
-2. `context-degradation`, to see what context failures look like in practice and how to diagnose them.
+2. [degradation.md](./degradation.md), to see what context failures look like in practice and how to diagnose them.
 3. Two or three of `context-optimization`, `memory-systems` depending on which operational concern is most relevant to their project.
 
 Skipping step 1 produces operators who apply techniques without understanding why; skipping the operational skills produces theorists who do not know which technique fits which failure mode.
@@ -156,7 +156,7 @@ This skill is the conceptual foundation. It does not own operational work; it pr
 
 Routing map for operational work:
 
-- `context-degradation`: diagnosing attention failures, lost-in-middle, poisoning, distraction.
+- [degradation.md](./degradation.md): diagnosing attention failures, lost-in-middle, poisoning, distraction.
 - `context-optimization`: token-efficiency tactics (masking, partitioning, caching, budgets).
 - `memory-systems`: cross-session memory architectures with entity tracking.
 - `multi-agent-patterns`: when to split work across agents for context isolation.

@@ -91,14 +91,11 @@
         "mcp-builder",
         "skill-creator",
         "context-optimization",
-        "context-degradation",
         "memory-systems",
         "multi-agent-patterns",
         "tool-design",
         "evaluation",
-        "advanced-evaluation",
         "comment-mode",
-        "agent-browser",
         "codex-image-gen",
         "agent-dispatch"
       ]
@@ -180,7 +177,6 @@
         "agent-config-audit",
         "ai-agent-cost-optimizer",
         "code-review",
-        "codebase-advisor",
         "codebase-design",
         "commit-summary",
         "deslop",

@@ -4,7 +4,8 @@
 Two kinds of sources feed one report:
 
 - the pinned Pstack imports in upstream/pstack/lock.json (whole import scopes), and
-- every skills/*/SKILL.md whose `metadata.source` is a GitHub URL in a repository
+- every skills/*/SKILL.md, and every skills/*/references/*.md with frontmatter (an
+  absorbed upstream skill), whose `metadata.source` is a GitHub URL in a repository
   the lock file does not cover. Rolling pins (`upstream_commit`) are compared with
   the default branch; tagged pins (`upstream_version`) with the newest release tag
   of the same tag family.
@@ -275,10 +276,23 @@ def parse_source(source: str, ref: str) -> tuple[str, str] | None:
     return (match.group(1), path) if path else None
 
 
+def tracked_files(root: Path) -> list[tuple[str, Path]]:
+    """Every file that may carry upstream provenance, with the id it reports under.
+
+    A skill's SKILL.md reports under the skill name. A skill that absorbed another
+    upstream skill keeps that skill's pin in the frontmatter of the reference file
+    holding its body, which reports as `<skill>/<reference>`.
+    """
+    found = [(path.parent.name, path) for path in (root / "skills").glob("*/SKILL.md")]
+    found += [(f"{path.parent.parent.name}/{path.stem}", path)
+              for path in (root / "skills").glob("*/references/*.md")]
+    return sorted(found)
+
+
 def discover_skills(root: Path, covered: set[str]) -> list[dict]:
     """Every skill deriving from a GitHub repo the pstack lock file does not already cover."""
     skills: list[dict] = []
-    for skill_file in sorted((root / "skills").glob("*/SKILL.md")):
+    for skill_id, skill_file in tracked_files(root):
         meta = parse_frontmatter_metadata(skill_file.read_text())
         parsed = parse_source(meta.get("source", ""), meta.get("upstream_ref", ""))
         if not parsed or parsed[0].lower() in covered:
@@ -286,7 +300,7 @@ def discover_skills(root: Path, covered: set[str]) -> list[dict]:
         repo, path = parsed
         pin, kind = (meta["upstream_commit"], "rolling") if meta.get("upstream_commit") else (
             (meta["upstream_version"], "tagged") if meta.get("upstream_version") else ("", "none"))
-        skills.append({"id": skill_file.parent.name, "group": repo, "repo": repo, "path": path,
+        skills.append({"id": skill_id, "group": repo, "repo": repo, "path": path,
                        "pin": pin, "kind": kind, "latest": meta.get("upstream_latest", "")})
     return skills
 

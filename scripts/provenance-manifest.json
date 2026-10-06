@@ -135,19 +135,6 @@
       "modifications": "Vendored as a standalone marketplace plugin. The prior `source: \"Dimillian/Skills (MIT)\"` shorthand was upgraded to a verifiable upstream URL + pinned commit. No behavioral changes."
     },
     {
-      "skill": "agent-browser",
-      "desc": "Drive a headless browser from the CLI — navigate, fill forms, screenshot, mock network, and extract data for web testing.",
-      "source": "https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md",
-      "source_path": "skills/agent-browser/SKILL.md",
-      "upstream_repo": "vercel-labs/agent-browser",
-      "upstream_ref": "main",
-      "upstream_commit": "d33bdb36f3f7",
-      "last_synced": "2026-06-12",
-      "license": "Apache-2.0",
-      "mode": "rolling",
-      "modifications": "Vendored from Vercel's agent-browser repo as a standalone marketplace plugin. Tracks the upstream `agent-browser` CLI (npm). No behavioral changes beyond provenance metadata."
-    },
-    {
       "skill": "context-optimization",
       "desc": "Apply optimization techniques (compaction, observation masking, KV-cache, partitioning) to extend effective context capacity.",
       "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md",
@@ -159,19 +146,6 @@
       "license": "MIT",
       "mode": "rolling",
       "modifications": "Ported to upstream v2.1.0 (2026-05-15 corpus, commit cbc2c978133d) on 2026-06-12 — body and references match upstream. Cross-references to upstream sibling skills not vendored here (context-compression, filesystem-context, project-development, latent-briefing) were removed so routing only names skills present in this marketplace. scripts/compaction.py carries two local hardening fixes over upstream (CodeRabbit-flagged, candidates to push back): ContextBudget now rejects total_limit<=0 and scales the reserved buffer so reservation_limit stays non-negative; calculate_cache_metrics now debits the unhit remainder of a partial cache hit from misses, where upstream counted only the hit fraction and so inflated hit_rate."
-    },
-    {
-      "skill": "context-degradation",
-      "desc": "Recognize, diagnose, and mitigate context-degradation patterns (lost-in-middle, poisoning, distraction, confusion, clash) in agent systems.",
-      "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-degradation/SKILL.md",
-      "source_path": "skills/context-degradation/SKILL.md",
-      "upstream_repo": "muratcankoylan/Agent-Skills-for-Context-Engineering",
-      "upstream_ref": "main",
-      "upstream_commit": "25e1fa79a33f",
-      "last_synced": "2026-06-13",
-      "license": "MIT",
-      "mode": "rolling",
-      "modifications": "Imported 2026-01-20 (this repo's commit ef42a98) from muratcankoylan/Agent-Skills-for-Context-Engineering at v1.0.0-era content. Ported forward 2026-06-13 to upstream HEAD (commit 25e1fa79a33f); local body now tracks upstream v2.1.0 — carried the 7-entry Gotchas section, claim-* evidence IDs, Examples 3-4, Model-Specific Degradation Thresholds table, and negative-activation routing. References to siblings not vendored here (context-compression, filesystem-context) were stripped so routing names only marketplace skills. Local divergence: scripts/degradation_detector.py adopts the upstream numpy->stdlib rewrite (dependency removed); references/patterns.md is byte-identical to upstream. A 2026-06-13 review-hardening pass (CodeRabbit on PR #21) further diverges scripts/degradation_detector.py: detect_lost_in_middle now excludes negative/out-of-range critical indices from the score denominator, and analyze_context_structure measures middle-band content by line-span overlap rather than section-start only — candidates to push upstream. To diff: compare the upstream path on main since commit 25e1fa79a33f."
     },
     {
       "skill": "memory-systems",
@@ -224,19 +198,6 @@
       "license": "MIT",
       "mode": "rolling",
       "modifications": "Imported 2026-01-20 (this repo's commit ef42a98) from muratcankoylan/Agent-Skills-for-Context-Engineering at v1.0.0-era content. Ported forward 2026-06-13 to upstream HEAD (commit 25e1fa79a33f); local body now tracks upstream v1.2.0 — carried the deterministic-validation concept, Examples 3-4 (deterministic gate + quality-gate dimensions), 8-entry Gotchas, the claim-evaluation-browsecomp-variance ID, and the softened Performance Drivers table (concrete 80%/~10%/~5% -> qualitative Primary/Secondary labels). Reference to a sibling not vendored here (harness-engineering) was stripped. Local divergence: scripts/evaluator.py adopts the upstream citation-detection fix (naive bracket-matching -> academic-citation regex). references/metrics.md is byte-identical to upstream. A 2026-06-13 review-hardening pass (CodeRabbit on PR #21) further diverges scripts/evaluator.py: evaluation_history and samples are now bounded deques (10k/50k) to cap memory growth, and two no-op f-string prefixes were removed (Ruff F541) — candidates to push upstream. To diff: compare the upstream path on main since commit 25e1fa79a33f."
-    },
-    {
-      "skill": "advanced-evaluation",
-      "desc": "Master LLM-as-a-Judge techniques — direct scoring, pairwise comparison, rubric generation, and bias mitigation (position, length, verbosity, authority).",
-      "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/advanced-evaluation/SKILL.md",
-      "source_path": "skills/advanced-evaluation/SKILL.md",
-      "upstream_repo": "muratcankoylan/Agent-Skills-for-Context-Engineering",
-      "upstream_ref": "main",
-      "upstream_commit": "25e1fa79a33f",
-      "last_synced": "2026-06-13",
-      "license": "MIT",
-      "mode": "rolling",
-      "modifications": "Imported 2026-01-20 (this repo's commit ef42a98) from muratcankoylan/Agent-Skills-for-Context-Engineering at v1.0.0-era content (then pinned to creation commit 0b9a3b81bfea). Ported forward 2026-06-13 to upstream HEAD (commit 25e1fa79a33f); local body now tracks upstream v2.1.0 — carried full direct-scoring and pairwise prompt templates, the Metric Selection Framework table, three worked JSON examples, a 10-item Guidelines section, 8-entry Gotchas, a Scaling Evaluation section, the claim-advanced-evaluation-position-swap ID, and a fully rewritten scripts/evaluation_example.py. references/full-guide.md was renamed to references/evaluation-pipeline.md to match upstream. Reference to a sibling not vendored here (harness-engineering) was stripped; cross-links to tool-design (vendored) are retained. Local divergence: gpt-5.2 and claude-4-5-sonnet model names in references were genericized. To diff: compare the upstream path on main since commit 25e1fa79a33f."
     },
     {
       "skill": "shadcn",

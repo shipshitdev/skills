@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **173 skills · 24 commands · 13 bundles · 186 plugins**.
+Generated catalog: **169 skills · 24 commands · 13 bundles · 182 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 173 | `skills/*/SKILL.md` |
+| Skills | 169 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 186 | skills + bundles |
+| Plugins | 182 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -131,6 +131,39 @@ schema failed as invalid JSON), and Clerk gained the script its old SKILL.md
 advertised but never shipped. New fixture tests live in
 `skills/stack-validator/tests/`. Rejected: keeping five thin skills with a shared
 library, because skills install individually and cannot share a script.
+
+### Catalog simplification, derived-skill overlaps (2026-10-06)
+
+Vincent approved four consolidations from the upstream audit after #225 (#235), each
+removing an overlap between a derived skill and an existing one. Items 1-3 landed
+together (item 4, `shadcn-setup` into `shadcn`, rides with the `shadcn` Tailwind v4
+rewrite in #232):
+
+- `advanced-evaluation` became `evaluation`'s LLM-as-judge mode
+  (`references/llm-as-judge.md` plus the `judge-*` references and
+  `scripts/llm_judge_example.py`); `context-degradation` became
+  `context-optimization`'s diagnose mode (`references/degradation.md`,
+  `references/degradation-patterns.md`, `scripts/degradation_detector.py`). Both come from
+  muratcankoylan/Agent-Skills-for-Context-Engineering; the duplicated activation,
+  integration and guideline text was merged, not stacked.
+- `codebase-advisor` became the survey modes of `codebase-design` (`survey`, `report`,
+  `deepen`, `branch`, `next`, `plan`, `review-plan`, `execute`, `reconcile`,
+  `--issues`). The read-only hard rules and the operating contract now live in
+  `codebase-design/SKILL.md`; the workflow is `references/survey.md`. The skill is no
+  longer `disable-model-invocation`, so the contract says survey modes start only on
+  explicit request, and `gh issue create` is no longer pre-approved. `codebase-design`
+  replaced it in the validator's required-contract list.
+- `agent-browser` was dropped. It wrapped a third-party CLI that overlaps the harnesses'
+  own browsers; `qa-loop` now names the harness's built-in browser or page-automation
+  tools, worded platform-neutrally. Tracking of vercel-labs/agent-browser ended on purpose.
+- Provenance survives through reference-file frontmatter: an absorbed upstream skill keeps
+  its `metadata.source`/`upstream_commit`/`last_synced` in the frontmatter of the reference
+  that holds its body, and `scripts/upstream-drift.py` now also scans
+  `skills/*/references/*.md` (ids such as `evaluation/llm-as-judge`). shadcn/improve stays
+  tracked through `codebase-design/references/survey.md`.
+- Removed names no longer install through `npx skills add --skill <name>`; see the
+  Retired skills table in `docs/skills/catalog-naming.md`. Rejected: keeping thin alias
+  skills, because they cost a plugin, a directory and a trigger collision each.
 
 ### External Skills Imported (2026-04-21)
 
@@ -249,7 +282,7 @@ upstream `4588b32ecab9`). Landed in order: `writing-for-agents` became
 `skill-creator/references/writing-for-agents.md` (only levers skill-standards
 lacked); `handoff` is a small user-invoked skill with a phase-boundaries tree in
 `ask-dev-loop`; `improve-codebase-architecture` became the `deepen` variant of
-`codebase-advisor`; `github-pr-publish` has one PR body template (Summary with a
+`codebase-advisor` (now `codebase-design deepen`, #235); `github-pr-publish` has one PR body template (Summary with a
 visual, Evidence, Merge danger, Review guide, Follow-ups) credited to Pocock and
 Dex Horthy's `show-me` (humanlayer/skills, MIT). Installed upstream duplicates in
 `~/.agents/skills` (handoff, improve-codebase-architecture, writing-for-agents)

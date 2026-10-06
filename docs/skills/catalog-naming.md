@@ -1,10 +1,10 @@
 # Catalog naming inventory
 
 Migration from the catalog after board correctness and composition repairs,
-2026-09-05, kept current through the 2026-10-05 catalog simplification (#190). This is
+2026-09-05, kept current through the 2026-10-06 consolidation (#235). This is
 a migration inventory, not a runtime registry.
 
-173 skills and 24 commands. Eight rows record a rename from an earlier name (one of
+169 skills and 24 commands. Eight rows record a rename from an earlier name (one of
 them, `gh-address-comments`, was later merged into `pr-comments`). Skills folded into
 another since the migration are listed under Retired skills. Owning surfaces describe
 contracts; they are not mandatory naming prefixes.
@@ -14,9 +14,7 @@ contracts; they are not mandatory naming prefixes.
 | Current | Canonical | Action | Owning surface |
 |---|---|---|---|
 | `accessibility` | `accessibility` | retain | accessibility |
-| `advanced-evaluation` | `advanced-evaluation` | retain | agent-evaluation |
 | `agent-architecture-audit` | `agent-architecture-audit` | retain | agent-architecture |
-| `agent-browser` | `agent-browser` | retain | browser-automation |
 | `agent-config-audit` | `agent-config-audit` | retain | agent-configuration |
 | `agent-dispatch` | `agent-dispatch` | retain | agent-configuration |
 | `agent-folder-init` | `agent-folder-init` | retain | agent-configuration |
@@ -33,14 +31,12 @@ contracts; they are not mandatory naming prefixes.
 | `bug` | `bug` | retain | issue-intake |
 | `clarify` | `clarify` | retain | design |
 | `code-review` | `code-review` | retain | code-review |
-| `codebase-advisor` | `codebase-advisor` | retain | change-analysis |
 | `codebase-design` | `codebase-design` | retain | architecture |
 | `codex-image-gen` | `codex-image-gen` | retain | artifact-production |
 | `comment-mode` | `comment-mode` | retain | document-feedback |
 | `commit-summary` | `commit-summary` | retain | git |
 | `component-library` | `component-library` | retain | react-components |
 | `content-script-developer` | `content-script-developer` | retain | browser-extensions |
-| `context-degradation` | `context-degradation` | retain | agent-context |
 | `context-optimization` | `context-optimization` | retain | agent-context |
 | `create-verification-skill` | `create-verification-skill` | retain | skill-maintenance |
 | `critique` | `critique` | retain | design |
@@ -215,6 +211,10 @@ names no longer install through `npx skills add --skill <name>`.
 | `context-engineering` | removed: no consumers; execution skills read repo instructions themselves | #190 |
 | `mongodb-atlas-checker` | removed: the house stack is Postgres only; use `postgres-ops` | #207 |
 | `mongodb-migration-expert` | removed: the house stack is Postgres only; use `postgres-ops` (Prisma migrations) | #207 |
+| `advanced-evaluation` | `evaluation` (LLM-as-judge mode, `references/llm-as-judge.md`) | #235 |
+| `context-degradation` | `context-optimization` (diagnose mode, `references/degradation.md`) | #235 |
+| `codebase-advisor` | `codebase-design` (`survey`, `report`, `deepen` and the other survey modes, `references/survey.md`) | #235 |
+| `agent-browser` | removed: it wrapped a third-party CLI that overlaps the harness's built-in browser and page-automation tools; `qa-loop` names those tools instead | #235 |
 
 ## Commands
 

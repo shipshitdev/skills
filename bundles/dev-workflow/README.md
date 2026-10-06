@@ -15,7 +15,6 @@ Code review, debugging, refactoring, release, and AI-assisted development workfl
 - `agent-config-audit`
 - `ai-agent-cost-optimizer`
 - `code-review`
-- `codebase-advisor`
 - `codebase-design`
 - `commit-summary`
 - `deslop`

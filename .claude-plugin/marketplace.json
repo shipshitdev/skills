@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "173 AI agent skills for development workflows",
+  "description": "169 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -90,22 +90,10 @@
       "description": "Applies WCAG 2.1 AA to web UI and fixes failures. Use when building or reviewing components for a11y, ARIA, keyboard navigation, focus traps, or contrast."
     },
     {
-      "name": "advanced-evaluation",
-      "source": "./skills/advanced-evaluation",
-      "version": "2.2.2",
-      "description": "Designs LLM-as-a-Judge evaluation systems with direct scoring, pairwise comparison, and rubric calibration. Use when comparing model outputs or debugging inconsistent evals."
-    },
-    {
       "name": "agent-architecture-audit",
       "source": "./skills/agent-architecture-audit",
       "version": "2.2.2",
       "description": "Audits LLM agent apps for wrapper regressions, prompt or memory contamination, tool misuse, and hidden retry loops. Use when an agent fails in-product but works as a direct call."
-    },
-    {
-      "name": "agent-browser",
-      "source": "./skills/agent-browser",
-      "version": "2.2.2",
-      "description": "Automates a browser to navigate sites, fill forms, take screenshots, test web apps, and extract page data. Use when a task needs real page interaction."
     },
     {
       "name": "agent-config-audit",
@@ -210,16 +198,10 @@
       "description": "Reviews a PR or diff for correctness, security, and spec fidelity, including TypeScript, database safety, tests, and flag leaks. Use for /code-review or is this safe to merge."
     },
     {
-      "name": "codebase-advisor",
-      "source": "./skills/codebase-advisor",
-      "version": "2.2.2",
-      "description": "Survey any codebase as a senior advisor, then hand back either prioritized self-contained implementation plans for OTHER models/agents to execute, or a written architecture and health analysis for humans. Strictly read-only on source code — never implements, fixes, or refactors anything itself. Use when asked to audit or analyze a codebase, review its architecture, assess project health for onboarding, find improvement opportunities (bugs, security, performance, test coverage, tech debt, migrations, DX), suggest features or where to take the project next (roadmap, product direction), or generate handoff plans for another agent to implement. Does NOT edit code directly — it declines and hands off a plan instead."
-    },
-    {
       "name": "codebase-design",
       "source": "./skills/codebase-design",
       "version": "2.2.2",
-      "description": "Supplies shared deep-module vocabulary. Use when designing or improving a module interface, placing a seam, or making code more testable or AI-navigable."
+      "description": "Supplies deep-module vocabulary and runs read-only codebase surveys (plans, report, deepen). Use to design an interface or place a seam, or when asked to audit, deepen, or write handoff plans."
     },
     {
       "name": "codex-image-gen",
@@ -252,16 +234,10 @@
       "description": "Builds browser-extension content scripts: DOM integration, injecting UI into third-party pages, SPA navigation, dynamic DOM changes. Use when writing or updating a content script."
     },
     {
-      "name": "context-degradation",
-      "source": "./skills/context-degradation",
-      "version": "2.2.2",
-      "description": "Diagnoses and mitigates context degradation in agents: lost-in-middle, poisoning, distraction, confusion, clash. Use when context grows large or agent quality drops unexpectedly."
-    },
-    {
       "name": "context-optimization",
       "source": "./skills/context-optimization",
       "version": "2.2.2",
-      "description": "Improves context efficiency: budgets, observation masking, KV-cache strategy, partitioning, retrieval scoping. Use when token cost or context budget constrains a task."
+      "description": "Improves context efficiency and diagnoses context degradation: budgets, masking, KV-cache, partitioning, lost-in-middle, poisoning. Use when token cost or context quality constrains a task."
     },
     {
       "name": "create-verification-skill",
@@ -375,7 +351,7 @@
       "name": "evaluation",
       "source": "./skills/evaluation",
       "version": "2.2.2",
-      "description": "Builds evaluation frameworks for agent systems. Use when testing agent performance, validating context engineering choices, or measuring improvements over time."
+      "description": "Builds evaluation frameworks for agent systems, including LLM-as-judge design. Use when testing agent performance, comparing model outputs, or debugging inconsistent evals."
     },
     {
       "name": "executing-plans",

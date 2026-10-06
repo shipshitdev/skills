@@ -4,11 +4,12 @@
 
 ## How provenance works
 
-Three layers, kept in sync:
+Four layers, kept in sync:
 
 1. **`SKILL.md` frontmatter** — under `metadata:`: `source` (the exact upstream file URL), `upstream_repo`, `upstream_ref`/`upstream_commit` (rolling upstreams) or `upstream_version`/`upstream_latest` (tagged upstreams), `last_synced`, `license`.
 2. **`README.md` `## Upstream` section** — the same facts in a table plus a "Checking for upstream changes" instruction.
-3. **The validator** — `scripts/validate-skill-sync.sh` `check_provenance()`: any skill with `metadata.source` must have a README `## Upstream` section and a `last_synced` ≤ 90 days old, else it warns (non-fatal).
+3. **Absorbed upstream skills** — when a skill folds in another derived skill, the absorbed body's reference file keeps its own `metadata:` frontmatter (`source`, `upstream_repo`, `upstream_ref`, `upstream_commit`, `last_synced`, `license`) and the surviving README gets an "Absorbed upstream" section. `scripts/upstream-drift.py` reads `skills/*/references/*.md` frontmatter the same way as `SKILL.md`, reporting under `<skill>/<reference>`.
+4. **The validator** — `scripts/validate-skill-sync.sh` `check_provenance()`: any skill with `metadata.source` must have a README `## Upstream` section and a `last_synced` ≤ 90 days old, else it warns (non-fatal).
 
 **Two provenance modes:**
 
@@ -34,7 +35,7 @@ After porting anything worth bringing home: bump `metadata.upstream_commit` (or 
 
 ## Automated drift check
 
-`.github/workflows/upstream-drift.yml` runs `scripts/upstream-drift.py` weekly (and on dispatch). It checks the Pstack imports from `upstream/pstack/lock.json` plus every `skills/*/SKILL.md` whose `metadata.source` is a GitHub blob URL in a repo the lock file does not cover. Rolling pins (`upstream_commit`) are compared with the default branch; tagged pins (`upstream_version`) with the newest tag of the same family, tolerating a bare prefix (`v3.1.1` for `skill-v3.1.1`) only within the family named by `upstream_latest`, never across tag families. A pin that resolves to no real tag or commit is reported as unresolvable and counts as inconclusive, never clean.
+`.github/workflows/upstream-drift.yml` runs `scripts/upstream-drift.py` weekly (and on dispatch). It checks the Pstack imports from `upstream/pstack/lock.json` plus every `skills/*/SKILL.md` and every `skills/*/references/*.md` (absorbed upstream) whose frontmatter `metadata.source` is a GitHub blob URL in a repo the lock file does not cover. Rolling pins (`upstream_commit`) are compared with the default branch; tagged pins (`upstream_version`) with the newest tag of the same family, tolerating a bare prefix (`v3.1.1` for `skill-v3.1.1`) only within the family named by `upstream_latest`, never across tag families. A pin that resolves to no real tag or commit is reported as unresolvable and counts as inconclusive, never clean.
 
 One aggregate issue (marker `<!-- pstack-drift-check -->`, found in any state) carries the report: edited in place, commented only when the drift set changes (the previous set is the hidden `drift-state` block in its body), reopened when drift returns, closed only when everything is clean and conclusive. Run `python3 scripts/upstream-drift.py --repo shipshitdev/skills --dry-run` to see the would-be action.
 
@@ -89,11 +90,15 @@ Agent workflow skills. **The prior `author: Ship Shit Dev` frontmatter on three 
 |-------|---------------|
 | react-component-performance | `3db84e63d050` |
 
-### vercel-labs/agent-browser — Apache-2.0 — `rolling` (`main`)
+`vercel-labs/agent-browser` (`agent-browser`, `d33bdb36f3f7`) was dropped on 2026-10-06 (#235): the skill wrapped a third-party CLI that overlaps the harnesses' built-in browser tools, so its tracking ended on purpose and `qa-loop` names the harness's own browser tools instead.
 
-| Skill | Synced commit |
-|-------|---------------|
-| agent-browser | `d33bdb36f3f7` |
+### shadcn/improve — MIT — `rolling` (`main`)
+
+| Skill | Upstream path | Synced commit |
+|-------|---------------|---------------|
+| codebase-design (`references/survey.md`) | `skills/improve/SKILL.md` | `5428507e7116` |
+
+`codebase-advisor` was folded into `codebase-design` as its survey modes on 2026-10-06 (#235). The survey workflow body keeps the pin in `references/survey.md` frontmatter. Its `deepen` mode derives from mattpocock/skills `improve-codebase-architecture` (`4588b32ecab9`); that file is attribution only and not tracked.
 
 ### muratcankoylan/Agent-Skills-for-Context-Engineering — MIT — `rolling` (`main`)
 
@@ -107,16 +112,18 @@ Eight skills derive from this repo, all verified by fetching the live upstream f
 
 **Ported to upstream HEAD on 2026-06-13** (synced commit `25e1fa79a33f`). Originally imported 2026-01-20 (this repo's commit `ef42a98`) at v1.0.0-era content; now brought forward to current upstream HEAD. Each carries the upstream additions home — Gotchas sections, `claim-*` evidence IDs, "Do not activate" routing, and the expanded tables/examples each gained. Cross-references to upstream siblings **not vendored here** (`context-compression`, `filesystem-context`, `project-development`, `latent-briefing`, `hosted-agents`, `bdi-mental-states`, `harness-engineering`) were stripped so routing names only marketplace skills; cross-links to vendored siblings (`tool-design`, `evaluation`, `context-fundamentals`, `context-optimization`) were retained. Local divergences preserved: `multi-agent-patterns` keeps its local-only "Dispatching Parallel Agents" section (no upstream equivalent); `tool-design` genericizes Vercel-specific case-study/Sandbox references (the model name in its code example is genericized to a `YOUR_MODEL` placeholder); `advanced-evaluation` renamed `references/full-guide.md` → `references/evaluation-pipeline.md` to match upstream; carried-forward upstream improvements include `context-degradation`'s numpy→stdlib detector rewrite and `evaluation`'s citation-detection regex fix. Re-check by diffing each upstream path on `main` since `25e1fa79a33f`.
 
+`context-degradation` and `advanced-evaluation` (both `25e1fa79a33f`) were folded into `context-optimization` (diagnose mode, `references/degradation.md`) and `evaluation` (LLM-as-judge mode, `references/llm-as-judge.md`) on 2026-10-06 (#235). Each reference file keeps the upstream pin in its own frontmatter, so the drift check still tracks the original upstream paths.
+
 `context-fundamentals` (`cbc2c978133d`) was folded into `context-optimization/references/fundamentals.md` with its components reference and `scripts/context_manager.py` on 2026-10-03 (#168). Diff upstream `skills/context-fundamentals/` against that reference when re-syncing.
 
 | Skill | Synced commit | Local version | Notable upstream content carried |
 |-------|---------------|---------------|----------------------------------|
-| context-degradation | `25e1fa79a33f` | v2.1.0 | Gotchas (7), claim-* IDs, Examples 3-4, Model-Specific Degradation Thresholds table |
+| context-optimization/degradation (was context-degradation) | `25e1fa79a33f` | v2.1.0 | Gotchas (7), claim-* IDs, Examples 3-4, Model-Specific Degradation Thresholds table |
 | memory-systems | `25e1fa79a33f` | v4.1.0 | Production-framework + benchmark tables, Gotchas (8), Error Recovery — largest drift |
 | multi-agent-patterns | `25e1fa79a33f` | v2.1.0 | Gotchas (8), "Do not activate", de-specified token table; local-only Dispatching Parallel Agents preserved |
 | tool-design | `25e1fa79a33f` | v2.2.0 | "Build for Future Models", Tool Audit Checklist, Gotchas (4→9) |
 | evaluation | `25e1fa79a33f` | v1.2.0 | Deterministic-validation, Examples 3-4, Gotchas (8), softened % claims, citation-regex fix |
-| advanced-evaluation | `25e1fa79a33f` | v2.1.0 | Prompt templates, Metric Selection table, worked JSON examples, Guidelines (10), Gotchas (8), Scaling |
+| evaluation/llm-as-judge (was advanced-evaluation) | `25e1fa79a33f` | v2.1.0 | Prompt templates, Metric Selection table, worked JSON examples, Guidelines (10), Gotchas (8), Scaling |
 
 ### pproenca/dot-skills — MIT — `rolling` (`master`)
 

@@ -54,7 +54,7 @@ PLATFORM_EXEMPT_SKILLS=""
 CONTRACT_REQUIRED_SKILLS="
 agent-config-audit
 agent-folder-init
-codebase-advisor
+codebase-design
 deploy-app
 deployment-composer
 feature-intake

@@ -70,7 +70,7 @@ Confirmation Required:
 Delegates To:
 
 - `debug` for failures that require deeper root-cause isolation
-- `agent-browser` for browser interaction, console/network evidence, and screenshots
+- the harness's built-in browser or page-automation tools, when available, for browser interaction, console/network evidence, and screenshots
 - `test-runner` for focused automated verification when project and host rules allow it
 - `qa-reviewer` only when the user requests a final whole-change review
 
