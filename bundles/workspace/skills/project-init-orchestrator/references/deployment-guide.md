@@ -88,7 +88,7 @@ REDIS_URL=redis://...
 # Auth (Better Auth runs inside the API at /api/auth)
 BETTER_AUTH_SECRET=...        # openssl rand -base64 32
 BETTER_AUTH_URL=https://api.yourdomain.com
-FRONTEND_URL=https://yourdomain.com
+FRONTEND_URLS=https://yourdomain.com  # comma-separated; every frontend app's origin
 COOKIE_DOMAIN=.yourdomain.com  # shares the session cookie with the dashboard (see Frontend)
 
 # Optional
@@ -140,7 +140,7 @@ variable:
 ```bash
 # API environment
 COOKIE_DOMAIN=.yourdomain.com
-FRONTEND_URL=https://yourdomain.com          # also the Better Auth trustedOrigins entry
+FRONTEND_URLS=https://yourdomain.com         # also the Better Auth trustedOrigins entries
 BETTER_AUTH_URL=https://api.yourdomain.com
 ```
 
@@ -151,7 +151,7 @@ Notes:
 - Production URLs are https, so Better Auth adds the `__Secure-` cookie prefix;
   `getSessionCookie` in `proxy.ts` accepts both names.
 - The browser sends the cookie to the API cross-origin because the client uses
-  `credentials: "include"` and the API's CORS allows `FRONTEND_URL` with credentials.
+  `credentials: "include"` and the API's CORS allows every `FRONTEND_URLS` origin with credentials.
 - Locally leave `COOKIE_DOMAIN` unset: `localhost:3000` and `localhost:3001` already share
   cookies (cookies are not isolated by port).
 - Alternative without cookie domains: rewrite `/api/auth/*` through the dashboard in
@@ -162,6 +162,14 @@ Notes:
 For multiple Next.js apps, create one Vercel project per app and set each project's root
 directory to `frontend/apps/<app>` (for example `frontend/apps/dashboard` and
 `frontend/apps/admin`). Deploys run from CI, not from a local CLI.
+
+Every app that calls the API needs its origin in the API's `FRONTEND_URLS` (comma-separated,
+used for both CORS and Better Auth `trustedOrigins`; `FRONTEND_URL` still works for a single
+origin). Adding an app is a one-line change followed by an API restart:
+
+```bash
+FRONTEND_URLS=https://yourdomain.com,https://admin.yourdomain.com
+```
 
 ---
 

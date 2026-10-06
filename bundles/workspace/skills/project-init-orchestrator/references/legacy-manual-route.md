@@ -54,7 +54,7 @@ generates all of this, so the manual route only needs it when you assemble a wor
 
 **Environment:**
 
-- `.env.example` with `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_URL`
+- `.env.example` with `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_URLS`
   and `NEXT_PUBLIC_API_URL`
 
 ## Phase 3: Entity Generation
@@ -343,7 +343,7 @@ PORT=3001
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/myproject?schema=public
 BETTER_AUTH_SECRET=<openssl rand -base64 32>
 BETTER_AUTH_URL=http://localhost:3001
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URLS=http://localhost:3000   # comma-separated origins (CORS + trustedOrigins)
 ```
 
 **Dashboard (`frontend/apps/dashboard/.env.local`):**

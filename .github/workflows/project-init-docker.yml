@@ -1,0 +1,101 @@
+name: Project init Docker
+
+# Builds and boots the API image the project-init-orchestrator scaffold generates.
+# Path-filtered on purpose: it is not a required check, so unrelated PRs skip it.
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "skills/project-init-orchestrator/**"
+      - ".github/workflows/project-init-docker.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  api-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: throwaway
+          POSTGRES_DB: scaffold
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      WORKSPACE: ${{ github.workspace }}/../scaffold-ws
+      IMAGE: scaffold-api
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Generate the workspace
+        run: |
+          python3 skills/project-init-orchestrator/scripts/init-workspace.py \
+            --root "$WORKSPACE" --name "CI App" --org ci --entities task --allow-outside
+
+      - name: Install workspace dependencies (writes bun.lock)
+        working-directory: ${{ env.WORKSPACE }}
+        run: bun install
+
+      - name: Plant a decoy api/.env
+        # The image must not contain it: the root .dockerignore has to keep it out of the context
+        working-directory: ${{ env.WORKSPACE }}
+        run: echo "BETTER_AUTH_SECRET=must-not-ship" > api/.env
+
+      - name: Build the API image
+        working-directory: ${{ env.WORKSPACE }}
+        run: docker build -f api/Dockerfile -t "$IMAGE" .
+
+      - name: Image carries no env files
+        run: |
+          docker run --rm --entrypoint sh "$IMAGE" -c 'test ! -e /app/api/.env'
+          docker run --rm --entrypoint sh "$IMAGE" -c \
+            'test -z "$(find /app -name ".env*" -not -path "*/node_modules/*")"'
+
+      - name: Start the API against a throwaway database
+        run: |
+          docker run -d --name api --network host \
+            -e PORT=3001 \
+            -e DATABASE_URL="postgresql://postgres:throwaway@127.0.0.1:5432/scaffold?schema=public" \
+            -e BETTER_AUTH_SECRET="ci-throwaway-secret-ci-throwaway-secret" \
+            -e BETTER_AUTH_URL="http://localhost:3001" \
+            -e FRONTEND_URLS="http://localhost:3000" \
+            "$IMAGE"
+          for _ in $(seq 1 30); do
+            if curl -fsS -o /dev/null http://127.0.0.1:3001/api/docs; then
+              echo "API is up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "API did not start" >&2
+          docker logs api >&2
+          exit 1
+
+      - name: Routes are mapped and guarded
+        run: |
+          curl -fsS http://127.0.0.1:3001/api/docs-json | grep -q '"/tasks"'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3001/tasks)" = "401"
+
+      - name: API logs on failure
+        if: failure()
+        run: docker logs api || true

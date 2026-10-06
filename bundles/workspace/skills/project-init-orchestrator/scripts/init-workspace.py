@@ -461,6 +461,7 @@ def create_api_main_ts() -> str:
         import { toNodeHandler } from "better-auth/node";
         import { AppModule } from "./app.module";
         import { AuthService } from "./auth/auth.service";
+        import { allowedOrigins } from "./config/origins";
 
         async function bootstrap() {
           // Better Auth parses its own request bodies, so Nest's body parser is attached
@@ -469,9 +470,9 @@ def create_api_main_ts() -> str:
             bodyParser: false,
           });
 
-          // CORS with credentials so the dashboard can send the session cookie
+          // CORS with credentials so the apps in FRONTEND_URLS can send the session cookie
           app.enableCors({
-            origin: process.env.FRONTEND_URL ?? "http://localhost:3000",
+            origin: allowedOrigins(),
             credentials: true,
           });
 
@@ -506,6 +507,64 @@ def create_api_main_ts() -> str:
           console.log(`API running on http://localhost:${port}`);
         }
         bootstrap();
+    """)
+
+
+def create_api_origins_ts() -> str:
+    return dedent("""\
+        const DEFAULT_ORIGIN = "http://localhost:3000";
+
+        /**
+         * Origins of the frontend apps allowed to call the API. Used for both CORS and Better
+         * Auth trustedOrigins. FRONTEND_URLS is a comma-separated list; FRONTEND_URL (a single
+         * origin) is still accepted as a fallback.
+         */
+        export function allowedOrigins(env: NodeJS.ProcessEnv = process.env): string[] {
+          const raw = env.FRONTEND_URLS || env.FRONTEND_URL || DEFAULT_ORIGIN;
+          const origins = raw
+            .split(",")
+            .map((origin) => origin.trim().replace(/\\/+$/, ""))
+            .filter(Boolean);
+
+          return origins.length > 0 ? origins : [DEFAULT_ORIGIN];
+        }
+    """)
+
+
+def create_api_origins_spec() -> str:
+    return dedent("""\
+        import { describe, expect, it } from "vitest";
+        import { allowedOrigins } from "./origins";
+
+        describe("allowedOrigins", () => {
+          it("defaults to the local dashboard", () => {
+            expect(allowedOrigins({})).toEqual(["http://localhost:3000"]);
+          });
+
+          it("splits a comma-separated FRONTEND_URLS and trims entries", () => {
+            expect(
+              allowedOrigins({ FRONTEND_URLS: "http://localhost:3000, http://localhost:3002/ ," }),
+            ).toEqual(["http://localhost:3000", "http://localhost:3002"]);
+          });
+
+          it("falls back to the single FRONTEND_URL", () => {
+            expect(allowedOrigins({ FRONTEND_URL: "https://app.example.com" })).toEqual([
+              "https://app.example.com",
+            ]);
+          });
+
+          it("prefers FRONTEND_URLS over FRONTEND_URL", () => {
+            expect(
+              allowedOrigins({ FRONTEND_URLS: "https://a.example.com", FRONTEND_URL: "https://b.example.com" }),
+            ).toEqual(["https://a.example.com"]);
+          });
+
+          it("ignores an empty FRONTEND_URLS", () => {
+            expect(allowedOrigins({ FRONTEND_URLS: " , ", FRONTEND_URL: "" })).toEqual([
+              "http://localhost:3000",
+            ]);
+          });
+        });
     """)
 
 
@@ -2394,6 +2453,7 @@ def generate_auth_service() -> str:
         import { Injectable } from "@nestjs/common";
         import { betterAuth } from "better-auth";
         import { prismaAdapter } from "better-auth/adapters/prisma";
+        import { allowedOrigins } from "../config/origins";
         import { PrismaService } from "../prisma/prisma.service";
 
         function createAuth(prisma: PrismaService) {
@@ -2406,7 +2466,7 @@ def generate_auth_service() -> str:
             database: prismaAdapter(prisma, { provider: "postgresql" }),
             baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3001",
             secret: process.env.BETTER_AUTH_SECRET,
-            trustedOrigins: [process.env.FRONTEND_URL ?? "http://localhost:3000"],
+            trustedOrigins: allowedOrigins(),
             emailAndPassword: { enabled: true },
             advanced: {
               crossSubDomainCookies: cookieDomain
@@ -2787,7 +2847,11 @@ def generate_env_example() -> str:
 
         # API
         PORT=3001
-        FRONTEND_URL=http://localhost:3000
+        # Comma-separated origins of every frontend app allowed to call the API (CORS and Better
+        # Auth trustedOrigins). Add a new app's origin here, e.g.
+        # FRONTEND_URLS=http://localhost:3000,http://localhost:3002
+        # FRONTEND_URL is still accepted as a single-origin fallback.
+        FRONTEND_URLS=http://localhost:3000
         # Production with api.example.com + example.com: share the session cookie with the
         # dashboard (leave unset locally)
         # COOKIE_DOMAIN=.example.com
@@ -2986,6 +3050,8 @@ def scaffold_workspace(
         root / ".dockerignore": create_api_dockerignore(),
         root / "api" / "apps" / "api" / "src" / "main.ts": create_api_main_ts(),
         root / "api" / "apps" / "api" / "src" / "app.module.ts": app_module_content,
+        root / "api" / "apps" / "api" / "src" / "config" / "origins.ts": create_api_origins_ts(),
+        root / "api" / "apps" / "api" / "src" / "config" / "origins.spec.ts": create_api_origins_spec(),
         root / "api" / "AGENTS.md": create_agents_md(f"{name} API"),
         root / "api" / "CLAUDE.md": create_claude_md(f"{name} API"),
 
