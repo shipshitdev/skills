@@ -585,7 +585,7 @@
       "name": "micro-landing-builder",
       "source": "./skills/micro-landing-builder",
       "version": "2.2.2",
-      "description": "Scaffolds, clones, and deploys config-driven NextJS landing pages that use a shared UI components package. Use when creating single or multiple startup landing pages with email capture, analytics, and modern design. Supports batch creation from templates or CSV/JSON files and Vercel deployment with custom domains. Each landing is a standalone NextJS app driven by an app.json config file."
+      "description": "Scaffolds, clones, and deploys config-driven NextJS landing pages built on shadcn/ui and Tailwind v4. Use when creating single or multiple startup landing pages with email capture, analytics, and modern design. Supports batch creation from templates or CSV/JSON files and Vercel deployment with custom domains. Each landing is a standalone NextJS app driven by an app.json config file."
     },
     {
       "name": "monitoring-setup",

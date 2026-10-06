@@ -1,7 +1,7 @@
 {
   "name": "micro-landing-builder",
   "version": "2.2.2",
-  "description": "Scaffold, clone, and deploy config-driven NextJS landing pages that use a shared UI components packa",
+  "description": "Scaffold, clone, and deploy config-driven NextJS landing pages on shadcn/ui and Tailwind v4",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

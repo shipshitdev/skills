@@ -92,7 +92,6 @@ def create_from_scaffold(
     name: str,
     domain: str,
     concept: str,
-    ui_package: str,
     scaffold_script: Path,
 ) -> None:
     """Create a new landing page using scaffold script."""
@@ -104,7 +103,6 @@ def create_from_scaffold(
         "--name", name,
         "--domain", domain,
         "--concept", concept,
-        "--ui-package", ui_package,
         "--allow-outside",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -118,7 +116,6 @@ def batch_create(
     root: Path,
     projects: list[dict[str, Any]],
     template_dir: Path | None,
-    ui_package: str,
     scaffold_script: Path,
     allow_outside: bool,
 ) -> None:
@@ -156,7 +153,7 @@ def batch_create(
                 clone_from_template(template_dir, target_dir, slug, name, domain, concept)
             else:
                 create_from_scaffold(
-                    root, slug, name, domain, concept, ui_package, scaffold_script
+                    root, slug, name, domain, concept, scaffold_script
                 )
             created.append(slug)
         except Exception as e:
@@ -198,12 +195,6 @@ def main() -> None:
         help="JSON file with array of {slug, name, domain, concept} objects",
     )
     parser.add_argument(
-        "--ui-package",
-        type=str,
-        default="@agenticindiedev/ui",
-        help="UI components package (default: @agenticindiedev/ui)",
-    )
-    parser.add_argument(
         "--allow-outside",
         action="store_true",
         help="Allow creating files outside current directory",
@@ -232,7 +223,6 @@ def main() -> None:
         root=args.root.resolve(),
         projects=projects,
         template_dir=args.template.resolve() if args.template else None,
-        ui_package=args.ui_package,
         scaffold_script=scaffold_script,
         allow_outside=args.allow_outside,
     )
