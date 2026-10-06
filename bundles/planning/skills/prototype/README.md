@@ -12,10 +12,10 @@ Derived from **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT)
 |-------|-------|
 | Source | [`skills/engineering/prototype/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md) |
 | Upstream ref | `main` |
-| Synced at commit | `8b78b531ab96` |
-| Last synced | 2026-08-14 |
+| Synced at commit | `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d` |
+| Last synced | 2026-10-06 |
 | License | MIT |
 
 **Local modifications:** Adapted to house style: Contract block, branch files moved to `references/`, and an explicit boundary against `artifacts-builder` / `theme-factory`. Attribution only — not a sync target.
 
-**Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/engineering/prototype/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md) on `main` since commit `8b78b531ab96`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.
+**Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/engineering/prototype/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md) on `main` since commit `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.

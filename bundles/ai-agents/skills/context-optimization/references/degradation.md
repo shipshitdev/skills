@@ -3,8 +3,8 @@ metadata:
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-degradation/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main
-  upstream_commit: 25e1fa79a33f
-  last_synced: "2026-06-13"
+  upstream_commit: 58b55a8921758d13453b440704fb1b5b208c0b0e
+  last_synced: "2026-10-06"
   license: MIT
 ---
 # Context Degradation: Diagnosis and Mitigation

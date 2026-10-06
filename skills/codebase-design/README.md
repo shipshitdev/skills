@@ -14,13 +14,13 @@ Derived from **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT)
 |-------|-------|
 | Source | [`skills/engineering/codebase-design/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/SKILL.md) |
 | Upstream ref | `main` |
-| Synced at commit | `8b78b531ab96` |
-| Last synced | 2026-08-14 |
+| Synced at commit | `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d` |
+| Last synced | 2026-10-06 |
 | License | MIT |
 
 **Local modifications:** Adapted to house style: Contract block, deepening/design-it-twice moved to `references/`, and an explicit split from `tech-debt` (inventory vs language). The survey modes were folded in from `codebase-advisor` on 2026-10-06 (#235); see below. Attribution only — not a sync target.
 
-**Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/engineering/codebase-design/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/SKILL.md) on `main` since commit `8b78b531ab96`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.
+**Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/engineering/codebase-design/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/SKILL.md) on `main` since commit `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.
 
 ## Absorbed upstream: codebase-advisor
 
@@ -41,10 +41,10 @@ mode derived from **[mattpocock/skills](https://github.com/mattpocock/skills)** 
 |-------|----------------|------------------------------|
 | Source | [`skills/improve/SKILL.md`](https://github.com/shadcn/improve/blob/main/skills/improve/SKILL.md) | [`skills/engineering/improve-codebase-architecture/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md) |
 | Upstream ref | `main` | `main` |
-| Synced at commit | `5428507e7116` | `4588b32ecab9` |
-| Last synced | 2026-06-12 | 2026-10-05 |
+| Synced at commit | `cac56e1ebd3c279aa9153616cfeac7b174ab90f9` | `4588b32ecab9` |
+| Last synced | 2026-10-06 | 2026-10-05 |
 | License | MIT | MIT |
 
 **Local modifications:** Adapted to house style: strict read-only advisor contract, plan and report modes, and a `deepen` mode (`references/deepen-survey.md`) with hot-spot scoping, the deletion test and an `interview` handoff. The `deepen` survey is attribution only, not a sync target; only the shadcn/improve path is tracked by the drift check.
 
-**Checking for upstream changes:** diff [`skills/improve/SKILL.md`](https://github.com/shadcn/improve/blob/main/skills/improve/SKILL.md) on `main` since commit `5428507e7116`, port anything worth bringing home into `references/survey.md`, then bump `upstream_commit` and `last_synced` in that file's frontmatter and this table.
+**Checking for upstream changes:** diff [`skills/improve/SKILL.md`](https://github.com/shadcn/improve/blob/main/skills/improve/SKILL.md) on `main` since commit `cac56e1ebd3c279aa9153616cfeac7b174ab90f9`, port anything worth bringing home into `references/survey.md`, then bump `upstream_commit` and `last_synced` in that file's frontmatter and this table.

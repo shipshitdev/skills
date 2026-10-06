@@ -6,8 +6,8 @@ metadata:
   source: https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main
-  upstream_commit: f2cbfbefebbf
-  last_synced: "2026-06-12"
+  upstream_commit: 8ca22dba9a94f28898bbce59f2537ff4d87c747d
+  last_synced: "2026-10-06"
   license: MIT
   tags: "planning, implementation-plan, tasks, tdd, dry, yagni, decomposition"
 when_to_use: "write a plan, break into tasks, spec to tasks"
@@ -77,7 +77,10 @@ Delegates To:
    (existing path/symbol, decision ID, or None with a reason), Check (exact command,
    cwd, and expected result), and Stop if (condition requiring planner escalation)
    on every step, using the canonical template. The executor edits only Touch paths.
-6. Map every acceptance ID to decisions, steps, and concrete checks. Inspect the
+6. Identify the most consequential input classes or failure modes implied by the
+   requirements but not yet covered by checks. Bind each to its owning step and
+   a concrete fixture; record a checked-empty result when none remain.
+   Map every acceptance ID to decisions, steps, and concrete checks. Inspect the
    command definitions and CI configuration; record cwd, permitted execution host,
    environment/fixtures and expected result. Proposed new tests need exact paths,
    behaviors/fixtures and invocation through a verified runner, not full test code.

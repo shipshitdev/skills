@@ -249,6 +249,17 @@ Duplicate installed providers may be disabled only after replacement verificatio
 Preserve generated user role sheets and their actual source of truth. Source
 coverage and runtime unit tests do not prove a live harness cutover.
 
+### Upstream review (2026-10-06, #224)
+
+Reviewed all tracked sources; Cursor Pstack advanced to df581122, Open Pstack
+stays at 1b03678. Useful standalone design, planning, touch/motion verification,
+cache-cost and glossary changes were ported. Description quoting and prose-only
+changes were reviewed without replacing owned adaptations. Impeccable provenance
+now records the reviewed skill-v4.5.0 tag. Source pins mean reviewed-through,
+including deliberate exclusions, rather than byte parity. Preserve provider
+routing, host limits and opt-in automation. Complete dispositions live in
+`docs/upstream-review-2026-10-06.md`.
+
 ### Pocock craft and primitives (2026-08-14)
 
 Adapted selected patterns from [mattpocock/skills](https://github.com/mattpocock/skills) (MIT) without copying the 25-skill catalog:

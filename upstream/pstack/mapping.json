@@ -10,7 +10,7 @@
       ],
       "disposition": "superseded",
       "reason": "Shipshit publishes the canonical package through its existing marketplace; upstream registrations must not enable a second provider.",
-      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Issue #148: reviewed local prepared-issue precedence and mandatory different-lab delivery gate; focused delivery and dispatch regressions passed on Mac Studio. Independent final-head review tracked on PR #149. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -54,7 +54,7 @@
       ],
       "disposition": "metadata",
       "reason": "Upstream repository documentation, development configuration or branding retained byte-for-byte in the source archive; canonical distribution and synchronization documented here.",
-      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Documented ignored_paths in the upstream tracking README; no upstream content changed. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -282,7 +282,7 @@
       ],
       "disposition": "adapted",
       "reason": "Canonical installer/setup preserves existing harness source of truth and selected roles; removes original-plugin reinstall, default model restoration and fixed Cursor model-file claims.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -297,7 +297,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -312,7 +312,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Removed the critique-mode section with the retired mode.",
+      "review_note": "Removed the critique-mode section with the retired mode. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -327,7 +327,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -342,7 +342,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -357,7 +357,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -372,7 +372,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -387,7 +387,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Updated to 24 principles with the three new leaves.",
+      "review_note": "Updated to 24 principles with the three new leaves. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -402,7 +402,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep. | #188: merged origin/master and re-recorded destination hashes.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep. | #188: merged origin/master and re-recorded destination hashes. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -417,7 +417,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -432,7 +432,7 @@
       ],
       "disposition": "adapted",
       "reason": "Dormant Cursor adapter; explicit setup verifies supported capabilities and authorized effects.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -531,7 +531,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Adopted the agent-proof design lens. Runner defaults and critique-mode mention not adopted.",
+      "review_note": "Adopted the agent-proof design lens. Runner defaults and critique-mode mention not adopted. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -576,7 +576,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted. Reviewed adaptation to canonical routing and harness policy.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -591,7 +591,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Resolve follow-up documentation findings and align capture persistence with explicit authority. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -641,7 +641,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -763,7 +763,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Retired critique mode and the how critics role. Adversarial architecture review routes to interrogate and structural-review.",
+      "review_note": "Retired critique mode and the how critics role. Adversarial architecture review routes to interrogate and structural-review. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -808,7 +808,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -927,7 +927,7 @@
       ],
       "disposition": "superseded",
       "reason": "Cursor-specific skill (Custom Modes, /add-plugin, cursor.com links). Routing is covered by ask-dev-loop and the pstack router, so no catalog skill was added.",
-      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented.",
+      "review_note": "Post-merge review of #198/#200: benchmark checklist linked directly from the pstack entry point; malformed Grok output exit precedence documented. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -977,7 +977,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | Adopted the fresh-subagents default, the evidence-or-label reply rule, the benchmark trigger and the new principle index lines. Model and routing defaults, effort defaults and reply-word wording not adopted.",
+      "review_note": "Address independent review F1-F5 and semantic audit; include canonical entrypoints in source mappings. | Adopted the fresh-subagents default, the evidence-or-label reply rule, the benchmark trigger and the new principle index lines. Model and routing defaults, effort defaults and reply-word wording not adopted. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -1392,8 +1392,9 @@
           "sha256": "174b86d21ff51ccd28d1a8c938cb2e0c6fa287b209d4ca6c03932fcb1b53372e"
         }
       ],
-      "disposition": "identical",
-      "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
+      "disposition": "adapted",
+      "reason": "Keep provider-neutral verifier fixture identity in the packaged orchestration suite; upstream changed only its model-specific label.",
+      "review_note": " | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2022,7 +2023,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "Retro deep mode: environment routing in reviewer and synthesizer templates, one-level template links, cursor guide points at /retro --deep. | #188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2097,7 +2098,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -2261,7 +2262,7 @@
       ],
       "disposition": "adapted",
       "reason": "Original capability carried through the portable Open Pstack implementation. Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept. | #224: reviewed through df581122; preserve harness-owned routing, opt-in providers and existing local adaptations. Portable guide advice already lives in prompting, benchmark, verification and principle resources. Cursor cloud defaults, automatic schedules, model defaults and fixture identity churn excluded.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
@@ -5146,12 +5147,12 @@
         {
           "executable": false,
           "path": "skills/tdd/SKILL.md",
-          "sha256": "98474ea04320237c00773b77745bc5b1596e56dbc307560c0f10096f3edd2bff"
+          "sha256": "d9c2a0c9a955a1016402c27cf878be66215cd1e586803fa2a6a7d209a908e561"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "#188: reviewed against open-pstack 1b03678 and cursor-pstack 807c031: upstream prose trims, model and routing defaults and Cursor-only changes not adopted; local text kept.",
+      "review_note": "#224: reviewed standalone ports, refreshed derived provenance and preserved all harness-owned routing and current local adaptations; focused verification runs on Mac Studio.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

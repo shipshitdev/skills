@@ -51,6 +51,14 @@ prompt and the Grok sandbox still confines writes. The runner also accepts the
 `ultra` effort value, which selects nothing by itself. Model tables and setup
 changes stay out; the user-owned role sheet keeps routing.
 
+## 2026-10-06 review (issue #224)
+
+Cursor advanced to df581122; Open Pstack remains at 1b03678. The 25 changed
+Cursor files were reviewed without changing provider routing, model defaults,
+automation cadence or runtime behavior. Portable guide advice already exists
+in canonical resources. See [the complete upstream review](upstream-review-2026-10-06.md)
+for adopted derived-skill changes and explicit exclusions.
+
 ## Deliberate adaptations
 
 - One Shipshit execution router replaces upstream poteto-mode entry points.

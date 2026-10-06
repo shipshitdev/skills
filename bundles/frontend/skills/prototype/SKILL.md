@@ -9,8 +9,8 @@ metadata:
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md
   upstream_repo: mattpocock/skills
   upstream_ref: main
-  upstream_commit: 8b78b531ab96
-  last_synced: "2026-08-14"
+  upstream_commit: 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d
+  last_synced: "2026-10-06"
   license: MIT
 when_to_use: "spike, mock up, try variants, throwaway"
 ---

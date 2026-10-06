@@ -6,8 +6,8 @@ metadata:
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main
-  upstream_commit: cbc2c978133d
-  last_synced: "2026-06-12"
+  upstream_commit: 58b55a8921758d13453b440704fb1b5b208c0b0e
+  last_synced: "2026-10-06"
   license: MIT
   tags: "context, optimization, degradation, agents"
 when_to_use: "context window anatomy, attention, long-context failures, quality drops as context grows"
@@ -97,7 +97,7 @@ Apply this ordering in every prompt:
 4. Conversation history (grows but shares prefix with prior turns)
 5. Current query and dynamic content (least stable — always last)
 
-Design prompts for cache stability: remove timestamps, session counters, and request IDs from the system prompt. Move dynamic metadata into a separate user message or tool result where it does not break the prefix. Even a single whitespace change in the prefix invalidates the entire cached block downstream of that change.
+Design prompts for cache stability: remove timestamps, session counters, and request IDs from the system prompt. Move dynamic metadata into a separate user message or tool result where it does not break the prefix. Even a single whitespace change in the prefix invalidates the entire cached block downstream of that change. Compaction or masking of earlier history also requires processing the following text again; batch these edits and prefer edits near the end when the runtime allows it. Measure the cache and latency impact rather than assuming token reduction is free.
 
 Target 70%+ cache hit rate for stable workloads. At scale, this translates to 50%+ cost reduction and 40%+ latency reduction on cached tokens.
 
