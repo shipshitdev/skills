@@ -8,11 +8,28 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
+
+# Same rule as scaffold.py: one path segment, lowercase letters, digits and hyphens.
+SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
+
+def destination_for(root: Path, slug: str) -> Path | None:
+    """Return root/slug, or None when the slug is unsafe or resolves outside the root."""
+    if not SLUG_PATTERN.fullmatch(slug):
+        return None
+    target = root / slug
+    real_root = Path(os.path.realpath(root))
+    if Path(os.path.realpath(target)).parent != real_root or target.is_symlink():
+        return None
+    return target
 
 
 def load_projects_from_csv(csv_path: Path) -> list[dict[str, Any]]:
@@ -142,7 +159,11 @@ def batch_create(
             failed.append(project)
             continue
 
-        target_dir = root / slug
+        target_dir = destination_for(root, slug)
+        if target_dir is None:
+            print(f"❌ Skipping {slug!r}: slug must be one segment of [a-z0-9-] inside the root")
+            failed.append(project)
+            continue
 
         if target_dir.exists():
             print(f"⚠️  Skipping {slug}: already exists")
@@ -167,6 +188,7 @@ def batch_create(
         print(f"\nCreated projects: {', '.join(created)}")
     if failed:
         print(f"\nFailed projects: {[p.get('slug', 'unknown') for p in failed]}")
+        sys.exit(1)
 
 
 def main() -> None:

@@ -78,7 +78,7 @@ grep -n "p-\[\|m-\[\|gap-\[" *.tsx
 - [ ] App shells use `bg-background text-foreground` tokens
 - [ ] Modals use the shadcn `Dialog`
 - [ ] Inputs use the shadcn `Input` (shared focus ring)
-- [ ] Buttons use standard variants (`.btn-secondary`, etc.)
+- [ ] Buttons use standard variants (`<Button variant="secondary">`, etc.)
 
 ### Manual inspection
 
