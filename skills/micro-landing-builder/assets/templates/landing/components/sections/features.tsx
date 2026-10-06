@@ -46,7 +46,7 @@ export function Features({ title, subtitle, items }: FeaturesProps) {
           return (
             <Card key={item.title}>
               <CardHeader>
-                <Icon className="mb-2 size-6 text-brand" aria-hidden="true" />
+                <Icon className="mb-2 size-6 text-brand-text" aria-hidden="true" />
                 <CardTitle>{item.title}</CardTitle>
                 <CardDescription>{item.description}</CardDescription>
               </CardHeader>

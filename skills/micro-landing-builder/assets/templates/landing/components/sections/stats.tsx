@@ -4,7 +4,7 @@ interface StatsProps {
 
 export function Stats({ items }: StatsProps) {
   return (
-    <section className="border-y bg-card/40">
+    <section className="border-y bg-card">
       <dl className="mx-auto grid max-w-4xl grid-cols-2 gap-8 px-4 py-12 text-center sm:grid-cols-3 md:grid-cols-4">
         {items.map((item) => (
           <div key={item.label}>

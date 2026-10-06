@@ -1,7 +1,7 @@
 export type Theme = {
-  primary: string
+  primary?: string
   accent?: string
-  background: string
+  background?: string
   foreground?: string
   mode?: string
 }
@@ -50,34 +50,6 @@ const DEFAULTS = { primary: "#4f46e5", background: "#0a0a0a" }
 const ACCENT_ON_DARK = "#f59e0b"
 const ACCENT_ON_LIGHT = "#b45309"
 
-// Returns a color that is safe to serialize into the style attribute. React escapes HTML
-// but not CSS separators, so anything that is not an anchored hex color (for example
-// "#fff;outline:10px solid red") is dropped and the default is used instead.
-// Alpha is treated as opaque for contrast, with a warning.
-function safeColor(
-  key: string,
-  color: string | undefined,
-  fallback: string | undefined,
-): { value: string; rgba: Rgba } | null {
-  const parsed = color === undefined ? null : parseColor(color)
-  if (color !== undefined && parsed) {
-    if (parsed.a < 1) {
-      console.warn(
-        `app.json theme.${key} has alpha ${parsed.a.toFixed(2)}; contrast is computed as if it were opaque.`,
-      )
-    }
-    return { value: color, rgba: parsed }
-  }
-  if (color !== undefined) {
-    console.warn(
-      `app.json theme.${key}: unsupported color ${JSON.stringify(color)} ignored. ` +
-        "Use #rgb, #rgba, #rrggbb or #rrggbbaa.",
-    )
-  }
-  const fallbackRgba = fallback ? parseColor(fallback) : null
-  return fallback && fallbackRgba ? { value: fallback, rgba: fallbackRgba } : null
-}
-
 const AA = 4.5
 const PURE_BLACK = "#000000"
 const PURE_WHITE = "#ffffff"
@@ -106,7 +78,6 @@ export function isLight(color: string): boolean {
 
 const WHITE: Rgba = { r: 255, g: 255, b: 255, a: 1 }
 const BLACK: Rgba = { r: 0, g: 0, b: 0, a: 1 }
-const TEXT_TARGET = 4.5
 
 // Opaque hover color for a filled primary: moves away from the text color so contrast with the
 // text improves. (hover:bg-primary/80 blended with the surface behind it and could drop below AA.)
@@ -117,71 +88,91 @@ function hoverColor(primary: Rgba, textIsDark: boolean): Rgba {
   return mixRgba(primary, textIsDark ? BLACK : WHITE, amount)
 }
 
-// Text-safe variant of `color` for small text on every surface: the color itself when it
-// already reaches AA on all of them, otherwise the smallest step toward `toward` that does.
-function readableText(
-  value: string,
-  color: Rgba,
-  surfaces: Rgba[],
-  toward: Rgba,
-): string {
+// Search opaque, rounded sRGB in 5% steps. Validate the actual emitted hex on every surface.
+function readableText(color: Rgba, surfaces: Rgba[], toward: Rgba, target = AA): string {
   for (let step = 0; step <= 20; step++) {
-    const candidate = step === 0 ? color : mixRgba(color, toward, step / 20)
-    if (surfaces.every((surface) => contrast(candidate, surface) >= TEXT_TARGET)) {
-      return step === 0 ? value : toHex(candidate)
-    }
+    const value = toHex(mixRgba(color, toward, step / 20))
+    if (surfaces.every((surface) => contrast(parseColor(value)!, surface) >= target)) return value
   }
-  return toHex(toward)
+  return toHex(toward) // The complete pair audit below rejects an insufficient fallback.
 }
 
-// Turns app.json `theme` into the token set (mode) and CSS variable overrides.
-// An explicit mode ("dark" | "light") wins; otherwise it follows the background
-// brightness, so a light background alone gives the full light token set.
-export function resolveTheme(theme: Theme) {
-  const primary = safeColor("primary", theme.primary, DEFAULTS.primary)!
-  const background = safeColor("background", theme.background, DEFAULTS.background)!
-  const accent = safeColor(
-    "accent",
-    theme.accent,
-    usesDarkText(background.rgba) ? ACCENT_ON_LIGHT : ACCENT_ON_DARK,
-  )!
-  const explicitForeground = safeColor("foreground", theme.foreground, undefined)
-
-  const mode: "dark" | "light" =
-    theme.mode === "light" || theme.mode === "dark"
-      ? theme.mode
-      : usesDarkText(background.rgba)
-        ? "light"
-        : "dark"
-
-  // Text colors are paired with the configured background so a light or dark
-  // background never ends up with same-tone text.
-  const foreground = explicitForeground?.value ?? bestForeground(background.rgba)
-
-  const foregroundRgba = explicitForeground?.rgba ?? (parseColor(foreground) as Rgba)
-  const card = mixRgba(background.rgba, foregroundRgba, 0.06)
-  const surfaces = [background.rgba, card]
-  const primaryText = bestForeground(primary.rgba)
-  const hover = hoverColor(primary.rgba, primaryText === NEAR_BLACK || primaryText === PURE_BLACK)
-
-  const vars = {
-    "--primary": primary.value,
-    "--primary-foreground": primaryText,
-    "--primary-hover": toHex(hover),
-    "--primary-hover-foreground": bestForeground(hover),
-    "--primary-text": readableText(primary.value, primary.rgba, surfaces, foregroundRgba),
-    "--ring": primary.value,
-    "--brand": accent.value,
-    "--brand-foreground": bestForeground(accent.rgba),
-    "--brand-text": readableText(accent.value, accent.rgba, surfaces, foregroundRgba),
-    "--background": background.value,
-    "--foreground": foreground,
-    "--card": toHex(card),
-    "--card-foreground": foreground,
-    "--popover": toHex(card),
-    "--popover-foreground": foreground,
-    "--muted-foreground": toHex(mixRgba(background.rgba, foregroundRgba, 0.7)),
+export function inspectTheme(input: Theme) {
+  const validObject = input && typeof input === "object" && !Array.isArray(input)
+  const theme = validObject ? input : {}
+  const errors: string[] = validObject ? [] : ["theme must be an object"]
+  function color(key: string, value: string | undefined, fallback: string): string {
+    const parsed = typeof value === "string" ? parseColor(value) : null
+    if (value !== undefined && !parsed) errors.push(`theme.${key}: unsupported color; use an anchored hex color`)
+    if (parsed && parsed.a < 1) console.warn(`theme.${key} alpha is normalized to opaque hex.`)
+    return toHex(parsed ?? parseColor(fallback)!)
   }
+  const primary = color("primary", theme.primary, DEFAULTS.primary)
+  const background = color("background", theme.background, DEFAULTS.background)
+  const backgroundRgba = parseColor(background)!
+  const foreground = color("foreground", theme.foreground, bestForeground(backgroundRgba))
+  const foregroundRgba = parseColor(foreground)!
+  const brand = color("accent", theme.accent, usesDarkText(backgroundRgba) ? ACCENT_ON_LIGHT : ACCENT_ON_DARK)
+  const mode: "dark" | "light" = theme.mode === "dark" || theme.mode === "light"
+    ? theme.mode : usesDarkText(backgroundRgba) ? "light" : "dark"
+  if (theme.mode !== undefined && theme.mode !== "dark" && theme.mode !== "light") {
+    errors.push("theme.mode must be dark or light")
+  }
+  const card = toHex(mixRgba(backgroundRgba, foregroundRgba, 0.06))
+  const secondaryHover = toHex(mixRgba(backgroundRgba, foregroundRgba, 0.09))
+  const surfaces = [background, card, secondaryHover].map((value) => parseColor(value)!)
+  const primaryRgba = parseColor(primary)!
+  const hover = toHex(hoverColor(primaryRgba, usesDarkText(primaryRgba)))
+  const vars: Record<string, string> = {
+    "--primary": primary,
+    "--primary-foreground": bestForeground(primaryRgba),
+    "--primary-hover": hover,
+    "--primary-hover-foreground": bestForeground(parseColor(hover)!),
+    "--primary-text": readableText(primaryRgba, surfaces, foregroundRgba),
+    "--brand": brand,
+    "--brand-foreground": bestForeground(parseColor(brand)!),
+    "--brand-text": readableText(parseColor(brand)!, surfaces, foregroundRgba),
+    "--background": background,
+    "--foreground": foreground,
+    "--card": card,
+    "--card-foreground": foreground,
+    "--popover": card,
+    "--popover-foreground": foreground,
+    "--muted": card,
+    "--muted-foreground": readableText(mixRgba(backgroundRgba, foregroundRgba, 0.7), surfaces, foregroundRgba),
+    "--secondary": card,
+    "--secondary-foreground": foreground,
+    "--secondary-hover": secondaryHover,
+    "--accent": card,
+    "--accent-foreground": foreground,
+    "--ring": readableText(primaryRgba, surfaces, foregroundRgba, 3),
+    "--input": readableText(mixRgba(backgroundRgba, foregroundRgba, 0.4), surfaces, foregroundRgba, 3),
+    "--border": readableText(mixRgba(backgroundRgba, foregroundRgba, 0.4), surfaces, foregroundRgba, 3),
+    "--destructive": readableText(parseColor("#dc2626")!, surfaces, foregroundRgba),
+    "--destructive-fill": "#b91c1c",
+    "--destructive-fill-foreground": "#ffffff",
+    "--destructive-hover": "#991b1b",
+    "--destructive-hover-foreground": "#ffffff",
+  }
+  function pair(text: string, surface: string, target: number) {
+    const ratio = contrast(parseColor(vars[`--${text}`])!, parseColor(vars[`--${surface}`])!)
+    if (ratio < target) errors.push(`${text} on ${surface}: contrast ${ratio.toFixed(4)}:1 < ${target}:1`)
+  }
+  for (const surface of ["background", "card", "secondary-hover"]) {
+    for (const text of ["foreground", "muted-foreground", "primary-text", "brand-text", "destructive"]) pair(text, surface, AA)
+    for (const edge of ["ring", "input", "border"]) pair(edge, surface, 3)
+  }
+  for (const fill of ["primary", "primary-hover", "brand", "destructive-fill", "destructive-hover"]) {
+    pair(`${fill}-foreground`, fill, AA)
+  }
+  return { resolved: { mode, vars }, errors }
+}
 
-  return { mode, vars }
+// Invalid runtime edits fall back to one complete default theme, preserving no partial override.
+export function resolveTheme(theme: Theme) {
+  const result = inspectTheme(theme)
+  if (!result.errors.length) return result.resolved
+  console.warn(`Invalid app.json theme: ${result.errors.join("; ")}. Using the complete default theme. ` +
+    "Choose a darker/lighter background or remove the explicit foreground.")
+  return inspectTheme({}).resolved
 }

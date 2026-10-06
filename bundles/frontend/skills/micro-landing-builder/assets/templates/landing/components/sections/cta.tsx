@@ -15,7 +15,7 @@ interface CTAProps {
 
 export function CTA({ headline, subheadline, emailCapture, cta }: CTAProps) {
   return (
-    <section id="signup" className="scroll-mt-14 border-t bg-card/40">
+    <section id="signup" className="scroll-mt-14 border-t bg-card">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 px-4 py-20 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-balance">{headline}</h2>
         {subheadline ? <p className="text-muted-foreground">{subheadline}</p> : null}
