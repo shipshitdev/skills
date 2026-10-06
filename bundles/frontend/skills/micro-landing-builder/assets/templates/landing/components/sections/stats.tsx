@@ -9,7 +9,7 @@ export function Stats({ items }: StatsProps) {
         {items.map((item) => (
           <div key={item.label}>
             <dt className="text-sm text-muted-foreground">{item.label}</dt>
-            <dd className="font-heading text-3xl font-bold text-primary">{item.value}</dd>
+            <dd className="font-heading text-3xl font-bold text-primary-text">{item.value}</dd>
           </div>
         ))}
       </dl>

@@ -30,7 +30,7 @@ export function Hero({
   return (
     <section className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 py-24 text-center">
       {eyebrow ? (
-        <Badge variant="outline" className="text-brand">
+        <Badge variant="outline" className="text-brand-text">
           {eyebrow}
         </Badge>
       ) : null}

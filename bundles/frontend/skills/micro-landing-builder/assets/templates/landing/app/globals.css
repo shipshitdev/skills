@@ -9,6 +9,10 @@
     --font-heading: "Fraunces", ui-serif, Georgia, serif;
     --color-brand: var(--brand);
     --color-brand-foreground: var(--brand-foreground);
+    --color-brand-text: var(--brand-text);
+    --color-primary-hover: var(--primary-hover);
+    --color-primary-hover-foreground: var(--primary-hover-foreground);
+    --color-primary-text: var(--primary-text);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -76,6 +80,10 @@
     --radius: 0.625rem;
     --brand: oklch(0.769 0.188 70.08);
     --brand-foreground: oklch(0.145 0 0);
+    --brand-text: oklch(0.52 0.12 55);
+    --primary-hover: oklch(0.269 0 0);
+    --primary-hover-foreground: oklch(0.985 0 0);
+    --primary-text: oklch(0.205 0 0);
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -89,6 +97,10 @@
 .dark {
     --brand: oklch(0.769 0.188 70.08);
     --brand-foreground: oklch(0.145 0 0);
+    --brand-text: oklch(0.769 0.188 70.08);
+    --primary-hover: oklch(0.97 0 0);
+    --primary-hover-foreground: oklch(0.205 0 0);
+    --primary-text: oklch(0.922 0 0);
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);

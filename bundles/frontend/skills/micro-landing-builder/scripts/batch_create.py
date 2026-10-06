@@ -45,7 +45,7 @@ def parse_theme(project: dict[str, Any]) -> dict[str, str] | None:
         theme[field] = value
     mode = project.get("theme_mode")
     if mode is not None:
-        if mode not in THEME_MODES:
+        if not isinstance(mode, str) or mode not in THEME_MODES:
             return None
         theme["mode"] = mode
     return theme
@@ -98,20 +98,38 @@ def destination_for(root: Path, slug: str) -> Path | None:
     return target
 
 
+CSV_COLUMNS = ("slug", "name", "domain", "concept", *THEME_FIELDS, "theme_mode")
+
+
 def load_projects_from_csv(csv_path: Path) -> list[dict[str, Any]]:
-    """Load project definitions from CSV file."""
-    projects = []
-    with open(csv_path, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            project = {
-                "slug": (row.get("slug") or "").strip(),
-                "name": (row.get("name") or "").strip(),
-                "domain": (row.get("domain") or "").strip(),
-                "concept": (row.get("concept") or "").strip(),
+    """Load project definitions from CSV file.
+
+    The file is read as UTF-8 with an optional BOM. Header names are trimmed and matched
+    case-insensitively against the documented columns; unknown or duplicate headers are an
+    error. Theme cell values are kept exactly as written (an empty cell means "not set").
+    """
+    projects: list[dict[str, Any]] = []
+    with open(csv_path, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.reader(f)
+        header = next(reader, None)
+        if header is None:
+            return projects
+        columns = [name.strip().lower() for name in header]
+        unknown = [raw for raw, name in zip(header, columns) if name not in CSV_COLUMNS]
+        if unknown:
+            raise ValueError(
+                f"unknown CSV header(s) {unknown}; allowed: {', '.join(CSV_COLUMNS)}"
+            )
+        duplicates = sorted({name for name in columns if columns.count(name) > 1})
+        if duplicates:
+            raise ValueError(f"duplicate CSV header(s) {duplicates}")
+        for cells in reader:
+            if not any(cell.strip() for cell in cells):
+                continue
+            row = dict(zip(columns, cells))
+            project: dict[str, Any] = {
+                key: row.get(key, "").strip() for key in ("slug", "name", "domain", "concept")
             }
-            # CSV cannot express "absent", so an empty cell leaves the theme field unset; any
-            # other value (including whitespace) is kept as is and validated later.
             for column in (*THEME_FIELDS, "theme_mode"):
                 cell = row.get(column)
                 if cell:
@@ -227,36 +245,39 @@ def batch_create(
     failed = []
 
     for project in projects:
-        slug = project.get("slug", "").strip()
-        name = project.get("name", "").strip()
-        domain = project.get("domain", "").strip()
-        concept = project.get("concept", "innovative solution").strip()
-
-        if not slug or not name:
-            print(f"⚠️  Skipping invalid project: {project}")
-            failed.append(project)
-            continue
-
-        theme = parse_theme(project)
-        if theme is None:
-            print(
-                f"❌ Skipping {slug!r}: primary, accent and background must be "
-                "#rgb, #rgba, #rrggbb or #rrggbbaa and theme_mode must be dark or light"
-            )
-            failed.append(project)
-            continue
-
-        target_dir = destination_for(root, slug)
-        if target_dir is None:
-            print(f"❌ Skipping {slug!r}: slug must be one segment of [a-z0-9-] inside the root")
-            failed.append(project)
-            continue
-
-        if target_dir.exists():
-            print(f"⚠️  Skipping {slug}: already exists")
-            continue
-
+        label = project.get("slug", "unknown") if isinstance(project, dict) else "unknown"
         try:
+            # Everything about one project, including malformed JSON values, stays inside this
+            # handler so a bad entry can never abort the rest of the batch.
+            if not isinstance(project, dict):
+                raise ValueError(f"project entry must be an object, got {type(project).__name__}")
+            fields = {}
+            for key, default in (("slug", ""), ("name", ""), ("domain", ""), ("concept", "innovative solution")):
+                value = project.get(key, default)
+                if not isinstance(value, str):
+                    raise ValueError(f"{key} must be a string")
+                fields[key] = value.strip()
+            slug, name = fields["slug"], fields["name"]
+            domain, concept = fields["domain"], fields["concept"]
+
+            if not slug or not name:
+                raise ValueError("slug and name are required")
+
+            theme = parse_theme(project)
+            if theme is None:
+                raise ValueError(
+                    "primary, accent and background must be #rgb, #rgba, #rrggbb or #rrggbbaa "
+                    "and theme_mode must be dark or light"
+                )
+
+            target_dir = destination_for(root, slug)
+            if target_dir is None:
+                raise ValueError("slug must be one segment of [a-z0-9-] inside the root")
+
+            if target_dir.exists():
+                print(f"⚠️  Skipping {slug}: already exists")
+                continue
+
             if template_dir and template_dir.exists():
                 clone_from_template(template_dir, target_dir, slug, name, domain, concept, theme)
             else:
@@ -265,7 +286,7 @@ def batch_create(
                 )
             created.append(slug)
         except Exception as e:
-            print(f"❌ Failed to create {slug}: {e}", file=sys.stderr)
+            print(f"❌ Skipping {label!r}: {e}", file=sys.stderr)
             failed.append(project)
 
     print(f"\n📊 Summary:")
@@ -274,7 +295,10 @@ def batch_create(
     if created:
         print(f"\nCreated projects: {', '.join(created)}")
     if failed:
-        print(f"\nFailed projects: {[p.get('slug', 'unknown') for p in failed]}")
+        print(
+            "\nFailed projects: "
+            f"{[p.get('slug', 'unknown') if isinstance(p, dict) else 'unknown' for p in failed]}"
+        )
         sys.exit(1)
 
 
@@ -313,7 +337,11 @@ def main() -> None:
 
     # Determine projects source
     if args.csv:
-        projects = load_projects_from_csv(args.csv)
+        try:
+            projects = load_projects_from_csv(args.csv)
+        except ValueError as e:
+            print(f"Error: {args.csv}: {e}", file=sys.stderr)
+            sys.exit(1)
     elif args.json:
         projects = load_projects_from_json(args.json)
     else:

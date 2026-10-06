@@ -199,7 +199,7 @@ project1,Project One,project1.com,AI-powered analytics
 project2,Project Two,project2.com,Cloud infrastructure
 ```
 
-Optional theme columns: `primary`, `accent`, `background`, `theme_mode` (`dark` or `light`). Colors must be exactly `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa` (no spaces, no empty strings in JSON; an empty CSV cell means "not set"). Invalid rows are skipped and the run exits nonzero. With `--template`, the colors and mode are applied to the cloned `app.json`, and an inherited `foreground`, `mode` and `accent` are cleared when a new `background` is given (the accent is re-derived unless you supply one).
+Optional theme columns (headers are trimmed and case-insensitive; unknown or duplicate headers abort with an error; the file may have a UTF-8 BOM): `primary`, `accent`, `background`, `theme_mode` (`dark` or `light`). Colors must be exactly `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa` (no spaces, no empty strings in JSON; an empty CSV cell means "not set"). Invalid rows are skipped and the run exits nonzero. With `--template`, the colors and mode are applied to the cloned `app.json`, and an inherited `foreground`, `mode` and `accent` are cleared when a new `background` is given (the accent is re-derived unless you supply one).
 
 ### JSON Format
 
