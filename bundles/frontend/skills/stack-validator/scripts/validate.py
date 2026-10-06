@@ -484,9 +484,7 @@ def check_bun_single_lockfile(root: Path, result: ValidationResult) -> None:
     if not root_lockfiles:
         result.add_issue('warning', 'bun.lock', 'No bun.lock at root (run bun install)',
                          fix='bun install')
-        return
-
-    if len(root_lockfiles) > 1:
+    elif len(root_lockfiles) > 1:
         result.add_issue('error', 'bun.lockb',
                          'Both bun.lock and bun.lockb at root - keep only bun.lock',
                          fix='rm bun.lockb && bun install')

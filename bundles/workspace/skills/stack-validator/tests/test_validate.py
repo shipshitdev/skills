@@ -136,7 +136,15 @@ class BunTests(FixtureCase):
         write(self.root, "bun.lockb", "")
         result = self.run_structure()
         self.assertTrue(any("Both bun.lock and bun.lockb" in m for m in self.messages(result, "error")))
-        self.assertNotIn("Single lockfile at root", result.passed)
+        self.assertFalse(any(m.startswith("Single") for m in result.passed))
+
+    def test_nested_lockfile_is_an_error_without_root_lockfile(self) -> None:
+        write(self.root, "package.json", package(workspaces=["apps/*"]))
+        write(self.root, "tools/scripts/bun.lock", "")
+        result = validate.ValidationResult()
+        validate.check_bun_single_lockfile(self.root, result)
+        self.assertTrue(any("No bun.lock at root" in m for m in self.messages(result, "warning")))
+        self.assertTrue(any("Extra lockfile" in m for m in self.messages(result, "error")))
 
     def test_root_dependencies_and_missing_catalog_warn(self) -> None:
         write(self.root, "package.json", package(workspaces=["apps/*"], dependencies={"react": "^19.0.0"}))
