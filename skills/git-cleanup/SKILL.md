@@ -150,7 +150,8 @@ its merge commit present locally and in captured trunk history, whose head is
 the candidate tip or descends from it. A tip behind the head is common when
 commits were pushed to the PR from another checkout; the helper fetches the
 missing head from `refs/pull/<n>/head`. A detached worktree finds its PR by
-commit. The `content_audit` stays in the plan to show what trunk changed
+commit, falling back to a PR search because GitHub's commit-to-PR listing omits
+squash-merged heads. The `content_audit` stays in the plan to show what trunk changed
 afterwards. The proof needs no intent review, because trunk's later edits are
 its own decisions and GitHub retains the PR head. A tip with commits beyond the
 merged head holds unlanded work and takes the normal audit.
@@ -204,14 +205,19 @@ Protected names use exact string comparisons: `main`, `master`, `HEAD`, the
 selected trunk, and the caller's current branch. Names containing punctuation
 are never regular expressions. Preserve the main checkout and the caller's
 worktree. Preserve missing, locked, dirty, or symlink worktrees, including
-untracked files and dirty submodules. An ignored file blocks removal unless it
+untracked files and dirty submodules. The one untracked exception is a symlink
+named like a regenerable directory (a linked `node_modules` that a
+`node_modules/` ignore rule misses); the plan lists it as `untracked_links` and
+prune unlinks it, never its target, before removal. An ignored file blocks removal unless it
 is a byte-identical copy of the same path in the main checkout, not reached through
 a link into the worktree (such as a synced
 env file) or sits under a regenerable directory: `node_modules`, `.next`,
 `.turbo`, `.cache`, `.parcel-cache`, `dist`, `build`, `coverage`, `generated`,
-Python caches (directories only, or a symlink to one), a `*.tsbuildinfo` or
-`next-env.d.ts` file, or the top-level `.tmp/` agent scratch directory, which is
-disposable and removed with its worktree. The plan lists these under the
+`.expo`, `.build`, `.venv`, `venv`, `test-results`, `playwright-report`,
+`blob-report`, Husky's `.husky/_` shims, Python caches (directories only, or a
+symlink to one), a `*.tsbuildinfo`, `*.log` or `next-env.d.ts` file, or a `.tmp/`
+agent scratch directory at any depth, which is disposable and removed with its
+worktree. The plan lists these under the
 worktree's `ignored` field as `duplicated`, `regenerable` and `scratch`. Any
 other ignored file, such as an `.env.local` that differs from the main checkout,
 is unique to the worktree; the helper names it and preserves the worktree.

@@ -1197,6 +1197,77 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(plan["actions"], [])
         self.assertIn("workers/.env.local", plan["skipped"][0]["reason"])
 
+    def test_detached_squash_merged_head_is_found_by_search(self):
+        head, _merge = self.squash()
+        self.commit("later trunk edit", "third\n")
+        self.git("push", "origin", "main")
+        self.git("branch", "-D", "feature")
+        worktree = self.root / ".worktrees/detached"
+        self.git("worktree", "add", "--detach", str(worktree), head)
+        pr, previous = self.prs[0], self.repo.run.side_effect
+
+        def run(*args, **kwargs):
+            if args[:2] == ("gh", "api") and f"repos/owner/repo/commits/{head}/pulls" in args:
+                return subprocess.CompletedProcess(args, 0, json.dumps([[]]), "")
+            if args[:2] == ("gh", "api") and "search/issues" in args:
+                return subprocess.CompletedProcess(args, 0, json.dumps({"items": [{"number": 1}]}), "")
+            if args[:3] == ("gh", "api", "repos/owner/repo/pulls/1"):
+                return subprocess.CompletedProcess(args, 0, json.dumps(pr), "")
+            return previous(*args, **kwargs)
+
+        self.repo.run.side_effect = run
+        plan = self.repo.plan("worktrees")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "merged-pr-head")
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "removed")
+
+    def test_tool_output_and_nested_scratch_do_not_block_removal(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text(
+            ".expo/\n.build/\n.venv/\ntest-results/\n.husky/_/\n*.log\n.tmp/\n")
+        for name, content in ((".expo/cache.json", "{}"), (".build/debug/app", "bin"),
+                              (".venv/bin/python", "py"), ("test-results/run.json", "{}"),
+                              (".husky/_/h", "hook"), ("typecheck.log", "log"),
+                              ("playwright/.tmp/probe.spec.ts", "scratch")):
+            (worktree / name).parent.mkdir(parents=True, exist_ok=True)
+            (worktree / name).write_text(content)
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["skipped"], [], plan["skipped"])
+        ignored = plan["actions"][0]["ignored"]
+        self.assertEqual(ignored["scratch"], ["playwright/.tmp/"])
+        self.assertEqual(ignored["regenerable"], [".build/", ".expo/", ".husky/_/", ".venv/",
+                                                  "test-results/", "typecheck.log"])
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "removed")
+
+    def test_untracked_dependency_link_does_not_block_removal(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text("node_modules/\n")
+        (self.root / "node_modules/dep").mkdir(parents=True)
+        (worktree / "node_modules").symlink_to(self.root / "node_modules")
+        self.assertIn("?? node_modules", self.command("git", "-C", str(worktree), "status", "--porcelain"))
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"][0]["ignored"]["untracked_links"], ["node_modules"])
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "removed")
+        self.assertFalse(worktree.exists())
+        self.assertTrue((self.root / "node_modules/dep").is_dir())
+
+    def test_other_untracked_entries_still_block_removal(self):
+        for name, link in (("node_modules", False), ("notes", True)):
+            with self.subTest(name=name, link=link):
+                self.setUp()
+                worktree = self.make_worktree()
+                target = worktree / name
+                if link:
+                    (self.root / "elsewhere").mkdir()
+                    target.symlink_to(self.root / "elsewhere")
+                else:
+                    target.write_text("hand-written\n")
+                plan = self.plan("worktrees")
+                self.assertEqual(plan["actions"], [])
+                self.assertTrue(plan["skipped"][0]["reason"].startswith("dirty"))
+
     def test_regenerable_names_cover_directories_not_files(self):
         worktree = self.make_worktree()
         (self.root / ".git/info/exclude").write_text("generated\n")
