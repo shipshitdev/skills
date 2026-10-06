@@ -209,17 +209,32 @@ class Repository:
             return path == removed or removed in path.parents
 
         def chain(path: Path) -> list[Path] | None:
-            """Every path a lookup of `path` visits, parents and link hops included."""
-            hops, current = [], path
-            for _ in range(40):
-                parent = Path(os.path.realpath(current.parent))
-                hops.append(parent)
-                current = parent / current.name
-                hops.append(current)
-                if not current.is_symlink():
-                    return hops
-                current = Path(os.path.join(parent, os.readlink(current)))
-            return None  # a link loop never reaches a surviving file
+            """Every path a lookup of `path` visits, resolving one component at a time.
+
+            Collapsing a parent with realpath would hide a directory link inside
+            this worktree, so each component and each link hop is recorded first.
+            """
+            parts = list((path if path.is_absolute() else Path.cwd() / path).parts)
+            current, pending, hops, links = Path(parts[0]), parts[:0:-1], [], 0
+            while pending:
+                part = pending.pop()
+                if part in ("", "."):
+                    continue
+                candidate = current.parent if part == ".." else current / part
+                hops.append(candidate)
+                if part != ".." and candidate.is_symlink():
+                    links += 1
+                    if links > 40:
+                        return None  # a link loop never reaches a surviving file
+                    target = Path(os.readlink(candidate))
+                    if target.is_absolute():
+                        current = Path(target.parts[0])
+                        pending.extend(target.parts[:0:-1])
+                    else:
+                        pending.extend(target.parts[::-1])
+                    continue
+                current = candidate
+            return hops
 
         hops = chain(original)
         # A main-checkout link routed through this worktree breaks when it goes,

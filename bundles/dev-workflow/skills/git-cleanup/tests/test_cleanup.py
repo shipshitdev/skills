@@ -1392,6 +1392,20 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual(plan["actions"], [])
         self.assertIn("app.link", plan["skipped"][0]["reason"])
 
+    def test_main_link_through_a_directory_link_in_the_worktree_is_not_a_duplicate(self):
+        worktree = self.ignored_link_fixture()
+        (self.root / ".git/info/exclude").write_text("*.link\ntarget.txt\n.tmp/\n")
+        (worktree / ".tmp").mkdir()
+        # The traversal through the worktree hides in a parent component.
+        (worktree / ".tmp/shared").symlink_to(self.root / "shared", target_is_directory=True)
+        (self.root / "app.link").symlink_to(worktree / ".tmp/shared/target.txt")
+        (worktree / "app.link").symlink_to(self.root / "shared/target.txt")
+        self.assertEqual(os.path.realpath(worktree / "app.link"), os.path.realpath(self.root / "app.link"))
+        self.assertFalse(Repository.duplicate(worktree / "app.link", self.root / "app.link", worktree))
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertIn("app.link", plan["skipped"][0]["reason"])
+
     def test_link_loop_is_not_a_duplicate(self):
         worktree = self.ignored_link_fixture()
         (self.root / "a.link").symlink_to("b.link")
