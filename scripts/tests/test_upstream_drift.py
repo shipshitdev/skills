@@ -332,7 +332,8 @@ class SkillDriftTests(unittest.TestCase):
         self.assertEqual(drift.state(self.reports(clean)["big"]), "clean")
 
     def test_tagged_drift_tolerates_the_tag_prefix(self) -> None:
-        self.add_skill("tagged", self.blob("ref/tagged.md"), upstream_version="v1.0.0")
+        self.add_skill("tagged", self.blob("ref/tagged.md"), upstream_version="v1.0.0",
+                       upstream_latest="skill-v1.2.0")
         tags = {UP: ["skill-v1.2.0", "skill-v1.0.0", "skill-v1.1.0", "ext-v9.0.0", "skill-v1.3.0-rc.1"]}
         gh = self.fake(compares={UP: (HEAD_A, identical())}, tags=tags,
                        by_base={(UP, "skill-v1.0.0"): ahead("ref/tagged.md")})
@@ -350,6 +351,17 @@ class SkillDriftTests(unittest.TestCase):
         reports = self.reports(gh)
         self.assertEqual(drift.state(reports["latest"]), "clean")
         self.assertEqual(drift.state(reports["untouched"]), "clean")
+
+    def test_bare_pin_never_switches_to_an_unrelated_tag_family(self) -> None:
+        tags = {UP: ["cli-v2.1.1", "cli-v2.2.0", "skill-v3.0.4"]}
+        self.add_skill("named", self.blob("ref/named.md"), upstream_version="v2.1.1",
+                       upstream_latest="skill-v3.0.4")
+        self.add_skill("unnamed", self.blob("ref/unnamed.md"), upstream_version="v2.1.1")
+        gh = self.fake(compares={UP: (HEAD_A, identical())}, tags=tags)
+        reports = self.reports(gh)
+        for name in ("named", "unnamed"):
+            self.assertEqual(drift.state(reports[name]), "inconclusive", name)
+            self.assertNotEqual(reports[name]["pinned"], "cli-v2.1.1", name)
 
     def test_unresolvable_tag_pin_is_inconclusive_never_clean(self) -> None:
         self.add_skill("ghost", self.blob("ref/ghost.md"), upstream_version="skill-v2.1.1")
