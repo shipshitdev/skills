@@ -139,8 +139,22 @@ export async function getUserId(): Promise<string | null> {
 }
 ```
 
-If Better Auth runs in a separate API (the house layout), call that API with the incoming
-cookie instead: `authClient.getSession({ fetchOptions: { headers: await headers() } })`.
+If Better Auth runs in a separate API (the house layout), forward the incoming cookie to
+that API instead. `getSession` on the client returns `{ data, error }`, not the session:
+
+```typescript
+// lib/session.ts (auth served by a separate API)
+import { headers } from 'next/headers';
+import { authClient } from '@/lib/auth-client';
+
+export async function getUserId(): Promise<string | null> {
+  const { data, error } = await authClient.getSession({
+    fetchOptions: { headers: await headers() },
+  });
+  if (error) return null;
+  return data?.user.id ?? null;
+}
+```
 
 ---
 
@@ -376,9 +390,10 @@ export async function POST(request: NextRequest) {
       amount,
       currency,
       automatic_payment_methods: { enabled: true },
+      // Caller metadata first, trusted userId last, so a request cannot rebind the payment.
       metadata: {
-        userId,
         ...metadata,
+        userId,
       },
     });
 
@@ -438,9 +453,10 @@ async createPaymentIntent(
     amount: dto.amount,
     currency: dto.currency || 'usd',
     automatic_payment_methods: { enabled: true },
+    // Caller metadata first, trusted userId last, so a request cannot rebind the payment.
     metadata: {
-      userId: user.id,
       ...dto.metadata,
+      userId: user.id,
     },
   });
 
@@ -990,9 +1006,10 @@ export async function createStripeCustomer({
   const customer = await stripe.customers.create({
     email,
     name,
+    // Trusted userId last; the webhook resolves the user from this key.
     metadata: {
-      userId,
       ...metadata,
+      userId,
     },
   });
 
@@ -1059,7 +1076,11 @@ export async function updateStripeCustomer({
 
   if (email) updateParams.email = email;
   if (name) updateParams.name = name;
-  if (metadata) updateParams.metadata = metadata;
+  if (metadata) {
+    // Never let an update rebind the customer to another user.
+    const { userId: _ignored, ...safeMetadata } = metadata;
+    updateParams.metadata = safeMetadata;
+  }
   if (defaultPaymentMethodId) {
     updateParams.invoice_settings = {
       default_payment_method: defaultPaymentMethodId,
