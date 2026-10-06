@@ -258,6 +258,7 @@ def create_api_package_json(org: str) -> str:
             "typescript": "5.9.3",
             "@biomejs/biome": "2.3.11",
             "prisma": "7.10.0",
+            "dotenv": "18.0.5",
             "unplugin-swc": "2.0.0",
             "@swc/core": "1.16.13",
             "vitest": "3.0.7",
@@ -1613,9 +1614,10 @@ def generate_api_vitest_config() -> str:
 
 def create_prisma_config() -> str:
     return dedent("""\
+        import "dotenv/config";
         import { defineConfig, env } from "prisma/config";
 
-        // Run Prisma through Bun (bunx --bun prisma ...) so .env is loaded.
+        // Prisma 7 does not load .env on its own; dotenv above does.
         export default defineConfig({
           schema: "prisma/schema",
           migrations: { path: "prisma/migrations" },
@@ -1728,6 +1730,11 @@ def generate_github_actions_ci() -> str:
             branches: [main]
           pull_request:
             branches: [main]
+
+        # prisma generate reads the config, which requires DATABASE_URL to be set.
+        # Unit tests mock PrismaService, so a placeholder URL is enough here.
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ci?schema=public
 
         jobs:
           lint:
