@@ -1337,6 +1337,151 @@ class GitFixtureTests(unittest.TestCase):
             self.assertEqual(self.repo.apply(plan, "local-branches")["actions"][0]["result"], "skipped")
         self.assertEqual(self.git("rev-parse", "feature"), new)
 
+    def ignored_link_fixture(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text("*.link\ntarget.txt\n")
+        (self.root / "shared").mkdir()
+        (self.root / "shared/target.txt").write_text("shared\n")
+        return worktree
+
+    def test_symlinks_with_different_text_and_same_target_are_duplicates(self):
+        worktree = self.ignored_link_fixture()
+        (self.root / "app.link").symlink_to("shared/target.txt")
+        (worktree / "app.link").symlink_to(self.root / "shared/./target.txt")
+        self.assertTrue(Repository.duplicate(worktree / "app.link", self.root / "app.link", worktree))
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"][0]["ignored"]["duplicated"], ["app.link"])
+
+    def test_symlink_resolving_into_removed_worktree_is_not_a_duplicate(self):
+        worktree = self.ignored_link_fixture()
+        (worktree / "target.txt").write_text("only copy\n")
+        (self.root / "app.link").symlink_to(worktree / "target.txt")
+        (worktree / "app.link").symlink_to("target.txt")
+        self.assertFalse(Repository.duplicate(worktree / "app.link", self.root / "app.link", worktree))
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertIn("app.link", plan["skipped"][0]["reason"])
+
+    def test_broken_symlink_is_not_a_duplicate(self):
+        worktree = self.ignored_link_fixture()
+        (self.root / "app.link").symlink_to("shared/missing.txt")
+        (worktree / "app.link").symlink_to(self.root / "shared/missing.txt")
+        self.assertFalse(Repository.duplicate(worktree / "app.link", self.root / "app.link", worktree))
+        self.assertEqual(self.plan("worktrees")["actions"], [])
+
+    def test_symlink_needs_its_original_to_be_a_link_to_the_same_target(self):
+        worktree = self.ignored_link_fixture()
+        (self.root / "shared/other.txt").write_text("shared\n")
+        (self.root / "app.link").symlink_to("shared/other.txt")
+        (worktree / "app.link").symlink_to(self.root / "shared/target.txt")
+        self.assertFalse(Repository.duplicate(worktree / "app.link", self.root / "app.link", worktree))
+        (self.root / "plain.link").write_text("shared\n")
+        (worktree / "plain.link").symlink_to(self.root / "shared/target.txt")
+        self.assertFalse(Repository.duplicate(worktree / "plain.link", self.root / "plain.link", worktree))
+
+    def push_remote_only(self, name="remote-only"):
+        clone = self.directory / f"clone-{name}"
+        self.command("git", "clone", "-q", "--branch", "main", str(self.remote), str(clone))
+        for args in (("config", "user.name", "x"), ("config", "user.email", "x@example.invalid"),
+                     ("switch", "-c", name)):
+            self.command("git", "-C", str(clone), *args)
+        (clone / f"{name}.txt").write_text("remote\n")
+        self.command("git", "-C", str(clone), "add", f"{name}.txt")
+        self.command("git", "-C", str(clone), "commit", "-m", "remote work")
+        self.command("git", "-C", str(clone), "push", "-q", "origin", name)
+        return self.command("git", "-C", str(clone), "rev-parse", "HEAD")
+
+    def test_remote_ref_deleted_upstream_after_plan_is_not_a_proof_failure(self):
+        self.git("branch", "feature")
+        self.git("push", "origin", "feature")
+        plan = self.plan("remote-branches")
+        self.assertEqual(self.action_names(plan), ["refs/heads/feature"])
+        self.command("git", "--git-dir", str(self.remote), "update-ref", "-d", "refs/heads/feature")
+        result = self.repo.apply(plan, "remote-branches")["actions"][0]
+        self.assertEqual(result["result"], "skipped")
+        self.assertEqual(result["reason"], Repository.DELETED_UPSTREAM)
+        self.assertNotIn("no proof", result["reason"])
+
+    def test_remote_ref_vanishing_before_its_objects_arrive_is_deleted_upstream(self):
+        oid = self.push_remote_only()
+        context = self.repo.context()
+        heads = self.repo.remote_heads()
+        self.assertEqual(heads["refs/heads/remote-only"], oid)
+        self.command("git", "--git-dir", str(self.remote), "update-ref", "-d", "refs/heads/remote-only")
+        candidate = {"kind": "remote", "ref": "refs/heads/remote-only", "oid": oid}
+        with self.assertRaises(Refused) as caught:
+            self.repo.evaluate(candidate, context, "remote-branches", heads=heads)
+        self.assertEqual(str(caught.exception), Repository.DELETED_UPSTREAM)
+
+    def test_unfetchable_candidate_objects_are_reported_as_missing_locally(self):
+        oid = self.push_remote_only()
+        context = self.repo.context()
+        heads = self.repo.remote_heads()
+        candidate = {"kind": "remote", "ref": "refs/heads/remote-only", "oid": oid}
+        with patch.object(self.repo, "fetch_objects"), self.assertRaises(Refused) as caught:
+            self.repo.evaluate(candidate, context, "remote-branches", heads=heads)
+        self.assertTrue(str(caught.exception).startswith("objects-missing-locally:"), str(caught.exception))
+
+    def test_unfetched_merge_commit_of_unproven_candidate_is_missing_locally(self):
+        self.squash()
+        self.git("switch", "feature")
+        self.commit("unmerged", "unmerged\n")
+        self.git("switch", "main")
+        self.prs[0]["merge_commit_sha"] = "0123456789abcdef0123456789abcdef01234567"
+        plan = self.plan("local-branches")
+        self.assertEqual(plan["actions"], [])
+        reason = plan["skipped"][0]["reason"]
+        self.assertTrue(reason.startswith("objects-missing-locally: merge commit 0123456789ab"), reason)
+        self.assertIn("PR #1", reason)
+
+    def test_unproven_candidates_report_pr_state_remote_ref_and_path_split(self):
+        self.squash()
+        self.git("switch", "feature")
+        self.commit("unmerged", "unmerged\n")
+        self.git("switch", "main")
+        self.git("branch", "no-pr", "main")
+        self.git("switch", "no-pr")
+        self.commit("lone", "lone\n", "lone.txt")
+        self.git("switch", "main")
+        merged_head = self.prs[0]["head"]["sha"]
+        self.prs[0]["head"]["sha"] = merged_head
+        prs = {"feature": self.prs, "no-pr": []}
+        with patch.object(self.repo, "pull_requests", side_effect=lambda _repo, branch: prs[branch]):
+            plan = self.repo.plan("local-branches")
+        triage = {item["ref"]: item["triage"] for item in plan["skipped"]}
+        self.assertEqual(triage["refs/heads/feature"]["pr_state"], "merged")
+        self.assertEqual(triage["refs/heads/feature"]["pr"], 1)
+        self.assertFalse(triage["refs/heads/feature"]["remote_ref_exists"])
+        self.assertEqual(triage["refs/heads/no-pr"]["pr_state"], "none")
+        self.assertEqual(triage["refs/heads/no-pr"]["paths"], {"unlanded": 1})
+        # Trunk moved past the candidate and edited the same path: both changed.
+        self.assertEqual(triage["refs/heads/feature"]["paths"], {"both-changed": 1})
+        # Remote ref presence is reported without changing the refusal.
+        self.git("push", "origin", "feature")
+        with patch.object(self.repo, "pull_requests", side_effect=lambda _repo, branch: prs[branch]):
+            again = self.repo.plan("local-branches")
+        feature = next(item for item in again["skipped"] if item["ref"] == "refs/heads/feature")
+        self.assertTrue(feature["triage"]["remote_ref_exists"])
+        self.assertEqual(feature["reason"].split(";")[0], "not on trunk: commits beyond merged PR #1")
+
+    def test_open_pr_candidate_triage_reports_open_state(self):
+        self.git("branch", "feature")
+        self.prs = [{"number": 9, "state": "open", "merged_at": None,
+                     "head": {"ref": "feature", "sha": "x", "repo": {"full_name": "owner/repo"}},
+                     "base": {"ref": "main", "repo": {"full_name": "owner/repo"}}}]
+        plan = self.plan("local-branches")
+        item = next(item for item in plan["skipped"] if item["ref"] == "refs/heads/feature")
+        self.assertEqual(item["reason"], "in-flight open PR")
+        self.assertEqual(item["triage"]["pr_state"], "open")
+
+    def test_pr_lookups_are_cached_per_run_and_branch(self):
+        worktree = self.make_worktree()
+        self.git("push", "origin", "feature")
+        with patch.object(self.repo, "pull_requests", return_value=[]) as lookup:
+            self.repo.plan("all")
+        self.assertEqual([call.args[1] for call in lookup.call_args_list].count("feature"), 1)
+        self.assertTrue(worktree.exists())
+
 
 if __name__ == "__main__":
     unittest.main()
