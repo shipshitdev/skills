@@ -21,8 +21,27 @@ def page(body: str = "", head: str = "") -> str:
     return f'<!doctype html><html><head><meta charset="UTF-8">{head}</head><body>{body}</body></html>'
 
 
+DEPENDENCIES = ["parse5@8.0.1", "postcss@8.5.29", "postcss-value-parser@4.2.0"]
+
+
 @unittest.skipUnless(shutil.which("bun"), "bun is required")
 class InlineLocalAssetsTest(unittest.TestCase):
+    deps_tmp: tempfile.TemporaryDirectory
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        # The inliner runs from inside a project, where bundle-artifact.sh has installed its parsers
+        cls.deps_tmp = tempfile.TemporaryDirectory()
+        deps = Path(cls.deps_tmp.name)
+        (deps / "package.json").write_text('{"name":"inliner-deps","private":true,"type":"module"}\n')
+        installed = subprocess.run(["bun", "add", *DEPENDENCIES], cwd=deps, capture_output=True, text=True)
+        if installed.returncode != 0:
+            raise unittest.SkipTest(f"cannot install parser dependencies: {installed.stderr[-300:]}")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.deps_tmp.cleanup()
+
     def setUp(self) -> None:
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
@@ -35,13 +54,17 @@ class InlineLocalAssetsTest(unittest.TestCase):
         self.outside.mkdir()
         (self.outside / "secret.png").write_bytes(b"TOP-SECRET")
         self.out = self.base / "out.html"
+        # Run a copy next to a node_modules symlink, as the bundle script does inside the project
+        self.script = self.base / "inline-local-assets.mjs"
+        shutil.copy(INLINER, self.script)
+        (self.base / "node_modules").symlink_to(Path(self.deps_tmp.name) / "node_modules")
 
     def write_page(self, body: str = "", head: str = "") -> None:
         (self.dist / "index.html").write_text(page(body, head))
 
     def inline(self) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            ["bun", str(INLINER), str(self.dist), str(self.out), str(self.project)],
+            ["bun", str(self.script), str(self.dist), str(self.out), str(self.project)],
             cwd=self.base,
             capture_output=True,
             text=True,
@@ -140,7 +163,7 @@ class InlineLocalAssetsTest(unittest.TestCase):
         self.write_page('<img src="/icon.svg#view">', "<style>.i{background:url(/icon.svg#frag)}</style>")
         html = self.ok()
         self.assertRegex(html, r'src="data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#view"')
-        self.assertRegex(html, r"url\(data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#frag\)")
+        self.assertRegex(html, r'url\("data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#frag"\)')
 
     # --- symlink escapes -----------------------------------------------------------------
 
@@ -244,7 +267,7 @@ class InlineLocalAssetsTest(unittest.TestCase):
         )
         html = self.ok()
         self.assertRegex(html, r'src="data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#a&amp;b"')
-        self.assertRegex(html, r"src='data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#q&#39;z'")
+        self.assertRegex(html, r'src="data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#q\'z"')
         self.assertRegex(html, r'style="background:url\(&quot;data:image/png;base64,[A-Za-z0-9+/=]+&quot;\)"')
         self.assertIn('title="a&amp;b"', html)
 
@@ -257,6 +280,110 @@ class InlineLocalAssetsTest(unittest.TestCase):
         html = self.ok()
         self.assertEqual(html.count("data:image/png;base64,"), 2)
         self.assertIn('href="data:text/css;base64,', html)
+
+    # --- parser-grade HTML, srcset and CSS handling -------------------------------------------
+
+    def test_empty_comment_close_does_not_hide_following_markup(self) -> None:
+        self.write_page("<!--><img src=/missing.png>")
+        self.fails_naming("/missing.png")
+
+    def test_srcset_keeps_data_uris_with_commas_and_inlines_local_candidates(self) -> None:
+        (self.dist / "x.png").write_bytes(PNG)
+        (self.dist / "a,b.png").write_bytes(PNG)
+        data = "data:image/png;base64,AAAA"
+        self.write_page(f'<img srcset="{data} 1x, /x.png 2x, /a,b.png 3x">')
+        html = self.ok()
+        srcset = re.search(r'srcset="([^"]*)"', html).group(1)
+        self.assertTrue(srcset.startswith(f"{data} 1x, data:image/png;base64,"), srcset)
+        self.assertEqual(srcset.count("data:image/png;base64,"), 3)
+        self.assertNotIn("/x.png", srcset)
+        self.assertNotIn("a,b.png", srcset)
+
+    def test_srcset_with_a_missing_local_candidate_fails(self) -> None:
+        self.write_page('<img srcset="data:image/png;base64,AAAA 1x, /nope.png 2x">')
+        self.fails_naming("/nope.png")
+
+    def test_css_strings_that_look_like_urls_are_not_dependencies(self) -> None:
+        self.write_page("", '<style>.a::after{content:"url(example)"}.b::after{content:\'url(/nope.png)\'}</style>')
+        html = self.ok()
+        self.assertIn('content:"url(example)"', html)
+
+    def test_quoted_css_urls_may_contain_parentheses(self) -> None:
+        (self.dist / "a)b.png").write_bytes(PNG)
+        self.write_page("", '<style>.a{background:url("/a)b.png")}</style>')
+        html = self.ok()
+        self.assertIn("data:image/png;base64,", html)
+        self.assertNotIn("a)b.png", html)
+
+    def test_css_comments_and_image_set_are_handled_by_the_css_parser(self) -> None:
+        (self.dist / "x.png").write_bytes(PNG)
+        self.write_page(
+            "",
+            '<style>/* url(/commented.png) */.a{background:image-set("/x.png" 1x, url(/x.png) 2x)}'
+            '@import "/imp.css";</style>',
+        )
+        (self.dist / "imp.css").write_text(".z{color:red}")
+        html = self.ok()
+        self.assertIn("/* url(/commented.png) */", html)
+        self.assertEqual(html.count("data:image/png;base64,"), 2)
+        self.assertIn("data:text/css;base64,", html)
+
+    def test_stylesheet_urls_resolve_against_the_lexical_url_directory(self) -> None:
+        (self.dist / "styles").mkdir()
+        (self.dist / "css").mkdir()
+        (self.dist / "styles" / "theme.css").write_text(".a{background:url(img.png)}")
+        (self.dist / "css" / "img.png").write_bytes(PNG)  # next to the URL the page links
+        (self.dist / "css" / "alias.css").symlink_to(self.dist / "styles" / "theme.css")
+        self.write_page("", '<link rel="stylesheet" href="/css/alias.css">')
+        html = self.ok()
+        match = re.search(r'href="data:text/css;base64,([^"]+)"', html)
+        self.assertIsNotNone(match, html)
+        self.assertIn("data:image/png;base64,", base64.b64decode(match.group(1)).decode())
+
+    # --- distinct-content fixtures: the right bytes must be inlined --------------------------
+
+    def inlined(self, html: str) -> list[bytes]:
+        return [base64.b64decode(m) for m in re.findall(r"data:[^;\"')]+;base64,([A-Za-z0-9+/=]+)", html)]
+
+    def test_legacy_name_without_semicolon_decodes_but_stays_literal_before_equals(self) -> None:
+        (self.dist / "\u00a9.png").write_bytes(b"COPYRIGHT-SIGN")
+        (self.dist / "x&copy=y.png").write_bytes(b"LITERAL-COPY-EQUALS")
+        (self.dist / "a&amp=b.png").write_bytes(b"LITERAL-AMP-EQUALS")
+        self.write_page('<img src="/&copy.png"><img src="/x&copy=y.png"><img src="/a&amp=b.png">')
+        self.assertEqual(
+            self.inlined(self.ok()), [b"COPYRIGHT-SIGN", b"LITERAL-COPY-EQUALS", b"LITERAL-AMP-EQUALS"]
+        )
+
+    def test_windows_1252_c1_numeric_references_are_remapped(self) -> None:
+        (self.dist / "\u20ac.png").write_bytes(b"EURO-SIGN")
+        self.write_page('<img src="/&#128;.png"><img src="/&#x80;.png"><img src="/&#x20AC;.png">')
+        self.assertEqual(self.inlined(self.ok()), [b"EURO-SIGN"] * 3)
+
+    def test_srcset_candidates_are_parsed_from_the_decoded_value(self) -> None:
+        (self.dist / "a,b.png").write_bytes(b"COMMA-FILE")
+        (self.dist / "a\u00a0b.png").write_bytes(b"NBSP-FILE")
+        (self.dist / "plain.png").write_bytes(b"PLAIN-FILE")
+        for attr, extra in (("srcset", ""), ("imagesrcset", ' rel="preload" as="image"')):
+            with self.subTest(attr=attr):
+                if attr == "srcset":
+                    self.write_page(
+                        '<img srcset="/a&comma;b.png 1x"><img srcset="/a&nbsp;b.png 1x, /plain.png 2x">'
+                    )
+                else:
+                    self.write_page(
+                        "",
+                        f'<link{extra} imagesrcset="/a&comma;b.png 1x">'
+                        f'<link{extra} imagesrcset="/a&nbsp;b.png 1x, /plain.png 2x">',
+                    )
+                if self.out.exists():
+                    self.out.unlink()
+                html = self.ok()
+                self.assertEqual(
+                    self.inlined(html), [b"COMMA-FILE", b"NBSP-FILE", b"PLAIN-FILE"], attr
+                )
+                values = re.findall(rf'{attr}="([^"]*)"', html)
+                self.assertEqual(len(values), 2)
+                self.assertEqual(values[0].count("data:"), 1, "one candidate, not split on the comma")
 
 
 if __name__ == "__main__":

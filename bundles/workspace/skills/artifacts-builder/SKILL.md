@@ -70,11 +70,11 @@ This creates `bundle.html` - a self-contained artifact with all JavaScript, CSS,
 
 **What the script does**:
 
-- Installs `vite-plugin-singlefile` as a dev dependency
+- Installs `vite-plugin-singlefile` and the inliner's parsers (`parse5`, `postcss`, `postcss-value-parser`, pinned) as dev dependencies when they are missing
 - Writes `vite.singlefile.config.ts`, which extends your `vite.config.*` and inlines all JS, CSS, fonts and assets into `index.html`
-- Runs `bunx vite build` with that config (object, promise or function-style `vite.config.*` all work)
-- Inlines the files that the HTML or CSS reference (images, fonts, icons, linked stylesheets and their own `url()` dependencies) as data URIs, keeping `#fragments`, and fails with the list of any local reference it cannot inline or that escapes the project through a symlink
-- Decodes HTML character references (`&amp;`, `&#47;`, `&#x2F;`, ...) in attribute values before resolving them, so an entity-encoded reference is inlined or rejected, never skipped; an unrecognized `&name;` in a resolved attribute fails the bundle
+- Runs `bunx vite build` with that config and a per-run `--outDir` (object, promise or function-style `vite.config.*` all work, and a retained custom `vite.singlefile.config.ts` is honoured even if it hard-codes `build.outDir`)
+- Inlines the files that the HTML or CSS reference (images, fonts, icons, `srcset`/`imagesrcset` candidates, linked stylesheets and their own `url()` and `@import` dependencies, resolved against the stylesheet's URL directory) as data URIs, keeping `#fragments`, and fails with the list of any local reference it cannot inline or that escapes the project through a symlink
+- Parses HTML with `parse5` (browser-grade tokenizing: comment recovery such as `<!-->`, any-case and unquoted attributes, character references such as `&copy`, `&#128;`, `&#x2F;`) and CSS with `postcss` (only real `url()`, `image-set()` and `@import` tokens count; `content:"url(x)"` is text), so an encoded or oddly written reference is inlined or rejected, never skipped
 - Builds in a private temporary work directory per run, so concurrent runs do not collide
 - Replaces `bundle.html` only after every step succeeded, so a failed build never destroys the previous bundle
 
