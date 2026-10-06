@@ -48,7 +48,7 @@ The CSS entry file starts with `@import "tailwindcss";`. There is no `tailwind.c
 
 ## 3. Path alias
 
-`components.json` aliases must match TypeScript. In Vite projects add `paths` to both `tsconfig.json` and `tsconfig.app.json` (no `baseUrl` needed on TypeScript 6; see the `setup-path-aliases` rule):
+`components.json` aliases must match TypeScript. In Vite projects add `paths` to both `tsconfig.json` and `tsconfig.app.json` (no `baseUrl` needed on TypeScript 6, since `paths` resolves relative to the tsconfig):
 
 ```json
 { "compilerOptions": { "paths": { "@/*": ["./src/*"] } } }

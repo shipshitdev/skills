@@ -35,7 +35,7 @@ VERY IMPORTANT: To avoid what is often referred to as "AI slop", avoid using exc
 
 ### Step 1: Initialize Project
 
-Run the initialization script to create a new React project:
+Run the initialization script to create a new React project (it refuses a project name that already exists and is not an empty directory):
 
 ```bash
 bash scripts/init-artifact.sh <project-name>
@@ -72,7 +72,11 @@ This creates `bundle.html` - a self-contained artifact with all JavaScript, CSS,
 
 - Installs `vite-plugin-singlefile` as a dev dependency
 - Writes `vite.singlefile.config.ts`, which extends your `vite.config.*` and inlines all JS, CSS, fonts and assets into `index.html`
-- Runs `bunx vite build` with that config and copies the result to `bundle.html`
+- Runs `bunx vite build` with that config (object, promise or function-style `vite.config.*` all work)
+- Inlines the files in `public/` that the HTML or CSS reference (images, fonts, icons) as data URIs, and fails with the list of any local reference it cannot inline
+- Replaces `bundle.html` only after every step succeeded, so a failed build never destroys the previous bundle
+
+Files referenced only by hard-coded path strings inside JavaScript are not detected: import them from code (Vite inlines those) or reference them from the HTML or CSS.
 
 ### Step 4: Share Artifact with User
 

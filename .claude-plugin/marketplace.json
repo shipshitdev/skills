@@ -867,7 +867,7 @@
       "name": "shadcn",
       "source": "./skills/shadcn",
       "version": "2.2.2",
-      "description": "Applies shadcn/ui best practices (Radix, forms, tables, theming) and sets up shadcn/ui on Tailwind v4: init, components.json, cn(), v3 migration. Use to build, review or install shadcn."
+      "description": "Applies shadcn/ui best practices (Radix, forms, tables, theming) and sets up shadcn/ui on Tailwind v4 (init, components.json, cn, v3 migration). Use to build, review or install."
     },
     {
       "name": "shape",
