@@ -11,6 +11,14 @@ fi
 
 PROJECT_NAME="$1"
 
+# Never scaffold into (or over) something that already exists: the steps below delete template
+# assets and overwrite config. An existing empty directory is fine.
+if [ -e "$PROJECT_NAME" ] && { [ ! -d "$PROJECT_NAME" ] || [ -n "$(ls -A "$PROJECT_NAME")" ]; }; then
+  echo "Error: '$PROJECT_NAME' already exists and is not an empty directory."
+  echo "       Choose a new project name or remove it first."
+  exit 1
+fi
+
 # Bun is the package manager and runner for the whole scaffold
 if ! command -v bun &> /dev/null; then
   echo "Error: Bun is not installed. Install it from https://bun.sh and re-run."
@@ -44,7 +52,15 @@ sed_inplace() {
 }
 
 echo "Creating new React + Vite project: $PROJECT_NAME"
-bun create vite "$PROJECT_NAME" --template react-ts --no-interactive
+if ! bun create vite "$PROJECT_NAME" --template react-ts --no-interactive; then
+  echo "Error: create-vite failed or was cancelled; nothing was changed afterwards."
+  exit 1
+fi
+
+if [ ! -f "$PROJECT_NAME/package.json" ]; then
+  echo "Error: create-vite did not create '$PROJECT_NAME/package.json'; stopping."
+  exit 1
+fi
 
 cd "$PROJECT_NAME"
 

@@ -41,6 +41,21 @@ class NodeVersionCheckTest(unittest.TestCase):
             with self.subTest(version=version):
                 self.assertTrue(supported(version))
 
+    def test_rejects_prereleases_and_malformed_suffixes(self) -> None:
+        for version in (
+            "v22.12.0-rc.1",
+            "22.12.0-rc.1",
+            "v24.0.0-nightly20260101",
+            "22.12.0-",
+            "22.12.0+",
+            "v22.12.0+build",
+            "v22.12.0 ",
+            "v22.12.0.1",
+            "v22.12.x",
+        ):
+            with self.subTest(version=version):
+                self.assertFalse(supported(version))
+
     def test_rejects_unparsable_input(self) -> None:
         for version in ("", "node", "v22", "v22.12"):
             with self.subTest(version=version):
