@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote
 from typing import Callable
@@ -21,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[1]
 TITLE = "chore(pstack): upstream drift detected"
 MARKER = "<!-- pstack-drift-check -->"
 MAX_FILES = 40
+# Commit dates are not monotonic along ancestry; widen the date window and filter by ancestry.
+DATE_SKEW = timedelta(days=30)
 # The compare API returns at most 300 files; a full page may hide more changes.
 COMPARE_FILE_CAP = 300
 WRITE_TOKEN_ENV = "PSTACK_DRIFT_WRITE_TOKEN"
@@ -70,17 +73,27 @@ def tracked(path: str, source: dict) -> bool:
 
 
 def scoped_commits(repo: str, source: dict, head: str, run: Runner) -> list[dict] | None:
-    """List commits touching the tracked roots since the pin; None when it cannot be scoped."""
+    """List commits in pin..head touching the tracked roots; None when it cannot be scoped."""
     roots = source.get("paths", ["."])
     if "." in roots:
         return None  # whole-repo scope has no path filter to narrow the history
-    since = run(["api", f"repos/{repo}/commits/{source['commit']}",
-                 "--jq", ".commit.committer.date"]).strip()
+    pinned_at = run(["api", f"repos/{repo}/commits/{source['commit']}",
+                     "--jq", ".commit.committer.date"]).strip()
+    since = (datetime.fromisoformat(pinned_at.replace("Z", "+00:00")) - DATE_SKEW).astimezone(timezone.utc)
+    since_text = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+    # Exact membership of pin..head: an ancestor of the pin can carry a later
+    # timestamp and must never count as drift, whatever its date says.
+    in_range = {
+        commit["sha"]
+        for page in decode_pages(run(["api", "--paginate",
+                                      f"repos/{repo}/compare/{source['commit']}...{head}?per_page=100"]))
+        for commit in page.get("commits", [])
+    }
     found: dict[str, dict] = {}
     for root in roots:
-        query = f"sha={head}&path={quote(root.rstrip('/'))}&since={quote(since)}&per_page=100"
+        query = f"sha={head}&path={quote(root.rstrip('/'))}&since={quote(since_text)}&per_page=100"
         for commit in decode_pages(run(["api", "--paginate", f"repos/{repo}/commits?{query}"])):
-            if commit["sha"] != source["commit"]:
+            if commit["sha"] in in_range:
                 subject = (commit.get("commit", {}).get("message") or "").splitlines()[:1]
                 found[commit["sha"]] = {"sha": commit["sha"], "subject": subject[0] if subject else ""}
     return list(found.values())

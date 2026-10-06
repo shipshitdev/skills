@@ -27,10 +27,12 @@ LOCK = {"schema_version": 1, "sources": [
 class FakeGh:
     """Stands in for the gh CLI; never touches the network."""
 
-    def __init__(self, compares: dict, issues: list | None = None, commits: dict | None = None) -> None:
+    def __init__(self, compares: dict, issues: list | None = None, commits: dict | None = None,
+                 range_commits: dict | None = None) -> None:
         self.compares = compares  # repo -> (head sha, compare payload)
         self.issues = issues or []
         self.commits = commits or {}  # repo -> commits touching the tracked path since the pin
+        self.range_commits = range_commits or {}  # repo -> shas in pin..head
         self.calls: list[list[str]] = []
         self.writes: list[list[str]] = []
 
@@ -43,6 +45,8 @@ class FakeGh:
                 pages = [self.issues[i:i + 100] for i in range(0, len(self.issues), 100)] or [[]]
                 return "".join(json.dumps(page) for page in pages)
             head, payload = self.compares[repo]
+            if "--paginate" in args and "/compare/" in endpoint:
+                return json.dumps({"commits": [{"sha": sha} for sha in self.range_commits.get(repo, [])]})
             if "/commits/" in endpoint:
                 return "2026-01-01T00:00:00Z\n"
             if "/commits?" in endpoint:
@@ -174,12 +178,21 @@ class PstackDriftTests(unittest.TestCase):
         commits = {"o/mono": [{"sha": "d" * 40, "commit": {"message": "touch pstack\n\nbody"}},
                               {"sha": PIN_B, "commit": {"message": "the pin"}}]}
         gh = FakeGh({"o/open": (PIN_A, identical()), "o/mono": (HEAD_A, self.truncated_payload())},
-                    commits=commits)
+                    commits=commits, range_commits={"o/mono": ["d" * 40]})
         report = drift.inspect(LOCK["sources"][1], gh)
         self.assertTrue(drift.drifted(report))
         self.assertEqual([c["subject"] for c in report["commits"]], ["touch pstack"])
         self.assertIn("checked through commit history", drift.render([report]))
         self.assertTrue(any("--paginate" in call and "path=pstack" in call[-1] for call in gh.calls))
+
+    def test_ancestor_with_later_timestamp_is_not_drift(self) -> None:
+        # The path listing returns an ancestor of the pin (date-window match) that is outside pin..head.
+        commits = {"o/mono": [{"sha": "e" * 40, "commit": {"message": "old ancestor, later date"}}]}
+        gh = FakeGh({"o/mono": (HEAD_A, self.truncated_payload())}, commits=commits,
+                    range_commits={"o/mono": ["d" * 40]})
+        report = drift.inspect(LOCK["sources"][1], gh)
+        self.assertEqual(report["commits"], [])
+        self.assertFalse(drift.drifted(report))
 
     def test_truncated_compare_with_no_scoped_commits_is_clean(self) -> None:
         gh = FakeGh({"o/mono": (HEAD_A, self.truncated_payload())}, commits={"o/mono": []})
