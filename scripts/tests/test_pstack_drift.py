@@ -27,22 +27,31 @@ LOCK = {"schema_version": 1, "sources": [
 class FakeGh:
     """Stands in for the gh CLI; never touches the network."""
 
-    def __init__(self, compares: dict, issues: list | None = None) -> None:
+    def __init__(self, compares: dict, issues: list | None = None, commits: dict | None = None) -> None:
         self.compares = compares  # repo -> (head sha, compare payload)
         self.issues = issues or []
+        self.commits = commits or {}  # repo -> commits touching the tracked path since the pin
+        self.calls: list[list[str]] = []
         self.writes: list[list[str]] = []
 
     def __call__(self, args: list[str]) -> str:
+        self.calls.append(args)
         if args[0] == "api":
-            repo = args[1].split("/")[1] + "/" + args[1].split("/")[2]
+            endpoint = next(a for a in args[1:] if a.startswith("repos/"))
+            repo = "/".join(endpoint.split("/")[1:3])
+            if repo == "x/y":  # the tracking repository's issue list, served 100 per page
+                pages = [self.issues[i:i + 100] for i in range(0, len(self.issues), 100)] or [[]]
+                return "".join(json.dumps(page) for page in pages)
             head, payload = self.compares[repo]
-            if args[1].endswith(f"repos/{repo}"):
+            if "/commits/" in endpoint:
+                return "2026-01-01T00:00:00Z\n"
+            if "/commits?" in endpoint:
+                return json.dumps(self.commits.get(repo, []))
+            if endpoint == f"repos/{repo}":
                 return "main\n"
-            if "/branches/" in args[1]:
+            if "/branches/" in endpoint:
                 return head + "\n"
             return json.dumps(payload)
-        if args[:2] == ["issue", "list"]:
-            return json.dumps(self.issues)
         self.writes.append(args)
         return "https://github.com/x/y/issues/9\n"
 
@@ -55,6 +64,18 @@ def ahead(*names: str, count: int = 3) -> dict:
     return {"status": "ahead", "ahead_by": count, "files": [{"filename": n} for n in names]}
 
 
+def renamed(old: str, new: str) -> dict:
+    return {"status": "ahead", "ahead_by": 1,
+            "files": [{"filename": new, "previous_filename": old, "status": "renamed"}]}
+
+
+def gh_issue(number: int, body: str = "", pull: bool = False) -> dict:
+    issue = {"number": number, "title": f"issue {number}", "body": body}
+    if pull:
+        issue["pull_request"] = {}
+    return issue
+
+
 class PstackDriftTests(unittest.TestCase):
     def setUp(self) -> None:
         scratch = tempfile.TemporaryDirectory()
@@ -64,7 +85,7 @@ class PstackDriftTests(unittest.TestCase):
         (self.root / "upstream/pstack/lock.json").write_text(json.dumps(LOCK))
 
     def run_main(self, gh: FakeGh, *extra: str) -> int:
-        return drift.main(["--root", str(self.root), "--repo", "x/y", *extra], run=gh)
+        return drift.main(["--root", str(self.root), "--repo", "x/y", *extra], run=gh, write=gh)
 
     def test_no_drift_opens_nothing(self) -> None:
         gh = FakeGh({"o/open": (PIN_A, identical()), "o/mono": (PIN_B, identical())})
@@ -127,6 +148,73 @@ class PstackDriftTests(unittest.TestCase):
         body = drift.render([report])
         self.assertIn("and 5 more", body)
         self.assertNotIn(f"f{drift.MAX_FILES + 4}.md", body)
+
+
+    def test_rename_out_of_tracked_path_is_drift(self) -> None:
+        report = drift.inspect(LOCK["sources"][1],
+                               FakeGh({"o/mono": (HEAD_A, renamed("pstack/skills/a.md", "elsewhere/a.md"))}))
+        self.assertTrue(drift.drifted(report))
+        body = drift.render([report])
+        self.assertIn("`elsewhere/a.md` (renamed from `pstack/skills/a.md`)", body)
+
+    def test_rename_into_tracked_path_is_drift(self) -> None:
+        report = drift.inspect(LOCK["sources"][1],
+                               FakeGh({"o/mono": (HEAD_A, renamed("other/a.md", "pstack/a.md"))}))
+        self.assertTrue(drift.drifted(report))
+
+    def test_rename_outside_tracked_paths_is_not_drift(self) -> None:
+        report = drift.inspect(LOCK["sources"][1],
+                               FakeGh({"o/mono": (HEAD_A, renamed("other/a.md", "other/b.md"))}))
+        self.assertFalse(drift.drifted(report))
+
+    def truncated_payload(self) -> dict:
+        return ahead(*[f"other/f{i}.md" for i in range(drift.COMPARE_FILE_CAP)], count=9)
+
+    def test_truncated_compare_with_scoped_commits_is_drift(self) -> None:
+        commits = {"o/mono": [{"sha": "d" * 40, "commit": {"message": "touch pstack\n\nbody"}},
+                              {"sha": PIN_B, "commit": {"message": "the pin"}}]}
+        gh = FakeGh({"o/open": (PIN_A, identical()), "o/mono": (HEAD_A, self.truncated_payload())},
+                    commits=commits)
+        report = drift.inspect(LOCK["sources"][1], gh)
+        self.assertTrue(drift.drifted(report))
+        self.assertEqual([c["subject"] for c in report["commits"]], ["touch pstack"])
+        self.assertIn("checked through commit history", drift.render([report]))
+        self.assertTrue(any("--paginate" in call and "path=pstack" in call[-1] for call in gh.calls))
+
+    def test_truncated_compare_with_no_scoped_commits_is_clean(self) -> None:
+        gh = FakeGh({"o/mono": (HEAD_A, self.truncated_payload())}, commits={"o/mono": []})
+        self.assertFalse(drift.drifted(drift.inspect(LOCK["sources"][1], gh)))
+
+    def test_truncated_whole_repo_source_is_inconclusive_and_never_closes(self) -> None:
+        payloads = {"o/open": (PIN_A, self.truncated_payload()), "o/mono": (PIN_B, identical())}
+        gh = FakeGh(payloads, [gh_issue(7, drift.MARKER)])
+        self.assertEqual(self.run_main(gh), 0)
+        self.assertTrue(all(call[:2] != ["issue", "close"] for call in gh.writes))
+        report = drift.inspect(LOCK["sources"][0], gh)
+        self.assertTrue(report["inconclusive"])
+        self.assertIn("INCONCLUSIVE", drift.render([report]))
+
+    def test_lookup_finds_oldest_tracker_among_more_than_200_issues(self) -> None:
+        issues = [gh_issue(i, "noise") for i in range(300, 0, -1)]
+        issues.append(gh_issue(1000, drift.MARKER, pull=True))  # a PR carrying the marker is ignored
+        issues.append(gh_issue(5, drift.MARKER))
+        gh = FakeGh({}, issues)
+        found = drift.find_open("x/y", gh)
+        self.assertEqual(found["number"], 5)
+        (call,) = gh.calls
+        self.assertIn("--paginate", call)
+        self.assertNotIn("--limit", call)
+
+    def test_missing_write_token_fails_without_writing(self) -> None:
+        gh = FakeGh({"o/open": (PIN_A, identical()), "o/mono": (HEAD_A, ahead("pstack/a.md"))})
+        code = drift.main(["--root", str(self.root), "--repo", "x/y"], run=gh, env={})
+        self.assertEqual(code, 1)
+        self.assertEqual(gh.writes, [])
+        self.assertEqual(gh.calls, [])
+
+    def test_dry_run_does_not_need_write_token(self) -> None:
+        gh = FakeGh({"o/open": (PIN_A, identical()), "o/mono": (PIN_B, identical())})
+        self.assertEqual(drift.main(["--root", str(self.root), "--dry-run"], run=gh, env={}), 0)
 
 
 if __name__ == "__main__":

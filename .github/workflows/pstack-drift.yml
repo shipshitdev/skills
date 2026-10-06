@@ -10,9 +10,13 @@ on:
     - cron: "17 6 * * 1" # Mondays 06:17 UTC
   workflow_dispatch:
 
+# Reads (upstream compare, issue lookup) use the read-only github.token. Issue
+# writes use PROJECTS_TOKEN because events from github.token never trigger
+# issue-governance.yml, which fills the board fields; the script fails when the
+# secret is absent rather than opening an ungoverned issue.
 permissions:
   contents: read
-  issues: write
+  issues: read
 
 concurrency:
   group: pstack-drift
@@ -29,4 +33,5 @@ jobs:
       - name: Check upstream drift
         env:
           GH_TOKEN: ${{ github.token }}
+          PSTACK_DRIFT_WRITE_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
         run: python3 scripts/pstack-drift.py --repo "$GITHUB_REPOSITORY"
