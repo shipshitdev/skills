@@ -191,6 +191,10 @@ gh pr list --author "<resolved-host-author>" --state merged \
   --json number,title,url,mergedAt
 ```
 
+The `merged:` qualifier is date-granular. Compare each returned `mergedAt` with
+the frozen absolute start and end instants and omit any PR outside that interval.
+If enrichment is unavailable, say so without changing the frozen scope.
+
 ## Personal Phase 4: Output
 
 Default — a terse personal recap:

@@ -69,8 +69,14 @@ auto-merge policy.
 The inspected [knowledge-work root license][kw-license], [official root
 license][official-license], and each of the five selected plugin-local licenses
 contain Apache License 2.0 terms. All five plugin-local license files matched at
-inspection. Retain source attribution and check notices/license conditions before
-any future adaptation or redistribution. No Anthropic skill body, agent prompt,
+inspection. One discrepancy: at the pinned commit the [`pr-review-toolkit`
+README][official-toolkit-readme] ends with a License section stating MIT, while
+its [plugin-local `LICENSE`][official-toolkit-license] contains Apache License 2.0
+terms (its `plugin.json` declares no license). The conflict is unresolved
+upstream, so treat `pr-review-toolkit` as having an ambiguous license: do not
+copy or adapt its agents or prompts until the upstream owner clarifies, and
+apply the stricter Apache 2.0 conditions if ever reusing it before then. Retain source attribution and check notices/license
+conditions before any future adaptation or redistribution. No Anthropic skill body, agent prompt,
 or script is copied into this change: the comparison is original analysis, and
 the shared-history procedure is an in-house extraction/extension of weekly-review.
 Consequently this change introduces no vendored or adapted Anthropic skill and
@@ -92,4 +98,6 @@ no upstream-sync metadata. Source comparisons are pinned so future drift is visi
 [official-simplifier]: https://github.com/anthropics/claude-plugins-official/blob/ab024cdcfa7ca80be204acd4907656ba5a968589/plugins/code-simplifier/agents/code-simplifier.md
 [official-commit]: https://github.com/anthropics/claude-plugins-official/tree/ab024cdcfa7ca80be204acd4907656ba5a968589/plugins/commit-commands
 [kw-license]: https://github.com/anthropics/knowledge-work-plugins/blob/8444efcd48f7012f09797778a36a33e73d0861f4/LICENSE
+[official-toolkit-readme]: https://github.com/anthropics/claude-plugins-official/blob/ab024cdcfa7ca80be204acd4907656ba5a968589/plugins/pr-review-toolkit/README.md
+[official-toolkit-license]: https://github.com/anthropics/claude-plugins-official/blob/ab024cdcfa7ca80be204acd4907656ba5a968589/plugins/pr-review-toolkit/LICENSE
 [official-license]: https://github.com/anthropics/claude-plugins-official/blob/ab024cdcfa7ca80be204acd4907656ba5a968589/LICENSE
