@@ -46,6 +46,20 @@ THEME_MODES = {
 }
 
 
+COLOR_PATTERN = re.compile(r"^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
+
+
+def validate_color(flag: str, value: str) -> str:
+    """Theme colors must be #rgb, #rgba, #rrggbb or #rrggbbaa (lib/theme.ts parses nothing else)."""
+    if not COLOR_PATTERN.fullmatch(value):
+        print(
+            f"Error: invalid color {value!r} for {flag}. "
+            "Use #rgb, #rgba, #rrggbb or #rrggbbaa."
+        )
+        sys.exit(1)
+    return value
+
+
 def validate_slug(slug: str) -> None:
     """Reject anything but a single path segment of lowercase letters, digits and hyphens."""
     if not SLUG_PATTERN.fullmatch(slug):
@@ -166,7 +180,36 @@ def create_vercel_json(domain: str) -> str:
     }, indent=2)
 
 
-def create_app_json(name: str, slug: str, domain: str, concept: str, mode: str = "dark") -> str:
+def create_theme(
+    mode: str | None = None,
+    primary: str | None = None,
+    accent: str | None = None,
+    background: str | None = None,
+) -> dict:
+    """Theme block for app.json.
+
+    With no overrides the file carries the full dark (or --theme-mode) defaults. When a
+    background is given, `foreground` is left out so lib/theme.ts picks the higher-contrast
+    text color, and `mode` is left out unless requested so it follows the background.
+    """
+    theme: dict = {
+        "primary": primary or "#6366f1",
+        "accent": accent or "#f59e0b",
+    }
+    if background:
+        theme["background"] = background
+        if mode:
+            theme["mode"] = mode
+    else:
+        chosen = mode or "dark"
+        theme["background"] = THEME_MODES[chosen]["background"]
+        theme["foreground"] = THEME_MODES[chosen]["foreground"]
+        theme["mode"] = chosen
+    theme["font"] = {"heading": "Fraunces", "body": "Space Grotesk"}
+    return theme
+
+
+def create_app_json(name: str, slug: str, domain: str, concept: str, theme: dict | None = None) -> str:
     return json.dumps({
         "name": name,
         "slug": slug,
@@ -176,17 +219,7 @@ def create_app_json(name: str, slug: str, domain: str, concept: str, mode: str =
             "description": f"{name}: {concept}. Join thousands of users.",
             "ogImage": "/og.png"
         },
-        "theme": {
-            "primary": "#6366f1",
-            "accent": "#f59e0b",
-            "background": THEME_MODES[mode]["background"],
-            "foreground": THEME_MODES[mode]["foreground"],
-            "mode": mode,
-            "font": {
-                "heading": "Fraunces",
-                "body": "Space Grotesk"
-            }
-        },
+        "theme": theme or create_theme(),
         "analytics": {
             "plausible": domain if domain else None,
             "ga": None
@@ -362,11 +395,18 @@ def scaffold_landing(
     domain: str,
     concept: str,
     allow_outside: bool,
-    theme_mode: str = "dark",
+    theme_mode: str | None = None,
+    primary: str | None = None,
+    accent: str | None = None,
+    background: str | None = None,
 ) -> None:
     """Create a new landing page project."""
 
     project_dir = resolve_destination(root, slug)
+    for flag, value in (("--primary", primary), ("--accent", accent), ("--background", background)):
+        if value is not None:
+            validate_color(flag, value)
+    theme = create_theme(theme_mode, primary, accent, background)
 
     # Safety check
     cwd = Path.cwd()
@@ -394,7 +434,7 @@ def scaffold_landing(
         "postcss.config.mjs": create_postcss_config(),
         "tsconfig.json": create_tsconfig(),
         "vercel.json": create_vercel_json(domain),
-        "app.json": create_app_json(name, slug, domain, concept, theme_mode),
+        "app.json": create_app_json(name, slug, domain, concept, theme),
         ".gitignore": create_gitignore(),
     }
 
@@ -451,9 +491,12 @@ def main() -> None:
     parser.add_argument(
         "--theme-mode",
         choices=sorted(THEME_MODES),
-        default="dark",
-        help="Color mode written to app.json theme (default: dark)",
+        default=None,
+        help="Color mode written to app.json theme (default: dark, or inferred from --background)",
     )
+    parser.add_argument("--primary", help="Primary color: #rgb, #rgba, #rrggbb or #rrggbbaa")
+    parser.add_argument("--accent", help="Accent (brand) color: #rgb, #rgba, #rrggbb or #rrggbbaa")
+    parser.add_argument("--background", help="Background color: #rgb, #rgba, #rrggbb or #rrggbbaa")
     parser.add_argument(
         "--allow-outside",
         action="store_true",
@@ -470,6 +513,9 @@ def main() -> None:
         concept=args.concept,
         allow_outside=args.allow_outside,
         theme_mode=args.theme_mode,
+        primary=args.primary,
+        accent=args.accent,
+        background=args.background,
     )
 
 

@@ -21,6 +21,27 @@ from typing import Any
 SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 
+# Same rule as scaffold.py: #rgb, #rgba, #rrggbb or #rrggbbaa, nothing else reaches app.json.
+COLOR_PATTERN = re.compile(r"^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
+THEME_FIELDS = ("primary", "accent", "background")
+
+
+def theme_args(project: dict[str, Any]) -> list[str] | None:
+    """Optional per-project theme flags for scaffold.py, or None when a color is invalid."""
+    args: list[str] = []
+    for field in THEME_FIELDS:
+        value = project.get(field)
+        if value in (None, ""):
+            continue
+        if not isinstance(value, str) or not COLOR_PATTERN.fullmatch(value.strip()):
+            return None
+        args += [f"--{field}", value.strip()]
+    mode = project.get("theme_mode")
+    if mode in ("dark", "light"):
+        args += ["--theme-mode", mode]
+    return args
+
+
 def destination_for(root: Path, slug: str) -> Path | None:
     """Return root/slug, or None when the slug is unsafe or resolves outside the root."""
     if not SLUG_PATTERN.fullmatch(slug):
@@ -110,6 +131,7 @@ def create_from_scaffold(
     domain: str,
     concept: str,
     scaffold_script: Path,
+    extra_args: list[str] | None = None,
 ) -> None:
     """Create a new landing page using scaffold script."""
     cmd = [
@@ -121,6 +143,7 @@ def create_from_scaffold(
         "--domain", domain,
         "--concept", concept,
         "--allow-outside",
+        *(extra_args or []),
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
@@ -159,6 +182,15 @@ def batch_create(
             failed.append(project)
             continue
 
+        extra_args = theme_args(project)
+        if extra_args is None:
+            print(
+                f"❌ Skipping {slug!r}: primary, accent and background must be "
+                "#rgb, #rgba, #rrggbb or #rrggbbaa"
+            )
+            failed.append(project)
+            continue
+
         target_dir = destination_for(root, slug)
         if target_dir is None:
             print(f"❌ Skipping {slug!r}: slug must be one segment of [a-z0-9-] inside the root")
@@ -174,7 +206,7 @@ def batch_create(
                 clone_from_template(template_dir, target_dir, slug, name, domain, concept)
             else:
                 create_from_scaffold(
-                    root, slug, name, domain, concept, scaffold_script
+                    root, slug, name, domain, concept, scaffold_script, extra_args
                 )
             created.append(slug)
         except Exception as e:

@@ -43,7 +43,7 @@ interface ThemeConfig {
   primary: string;           // --primary and --ring (bg-primary, text-primary)
   accent: string;            // --brand (text-brand), the extra brand accent
   background: string;        // --background (bg-background)
-  foreground?: string;       // --foreground; derived from background brightness when omitted
+  foreground?: string;       // --foreground; near-black or near-white by WCAG contrast on background when omitted
   mode?: "dark" | "light";   // Token set in globals.css; inferred from background brightness when omitted
   font: {
     heading: string;         // Informational: set in layout.tsx <link> and --font-heading in globals.css
@@ -52,7 +52,7 @@ interface ThemeConfig {
 }
 ```
 
-Card, popover and muted-text colors are derived from `background` and `foreground`, so a light background never gets light text. Text on `bg-primary` uses `--primary-foreground`, which `layout.tsx` sets to white (or near-black when `primary` is light).
+Card, popover and muted-text colors are derived from `background` and `foreground`, so a light background never gets light text. Text on `bg-primary` uses `--primary-foreground` and text on `bg-brand` uses `--brand-foreground`; `lib/theme.ts` picks near-black or near-white for each by WCAG contrast ratio. Colors must be `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa`; other formats fail the build, and alpha is treated as opaque for contrast (with a warning).
 
 **Recommended fonts:**
 

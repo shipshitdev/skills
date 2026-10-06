@@ -178,6 +178,57 @@ class SlugConfinementTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(list(self.outside.iterdir()), [])
 
+    def test_invalid_theme_color_is_rejected_at_scaffold_time(self) -> None:
+        for flag in ("--primary", "--accent", "--background"):
+            result = run(
+                "scaffold.py", "--root", str(self.root), "--slug", "c", "--name", "X",
+                "--allow-outside", flag, "rgb(0, 255, 0)",
+            )
+            self.assertNotEqual(result.returncode, 0, flag)
+            self.assertIn("color", result.stdout + result.stderr)
+        self.assertEqual(list(self.root.iterdir()), [])
+
+    def test_injection_strings_are_rejected_at_scaffold_time(self) -> None:
+        for payload in ("#fff;outline:10px solid red", "#fff\n", "#fff} body{display:none"):
+            for flag in ("--primary", "--accent", "--background"):
+                result = run(
+                    "scaffold.py", "--root", str(self.root), "--slug", "inj", "--name", "X",
+                    "--allow-outside", f"{flag}={payload}",
+                )
+                self.assertNotEqual(result.returncode, 0, f"{flag} {payload!r}")
+        self.assertEqual(list(self.root.iterdir()), [])
+
+    def test_batch_validates_theme_colors_per_project(self) -> None:
+        projects = self.base / "themed.json"
+        projects.write_text(
+            json.dumps(
+                [
+                    {"slug": "bad", "name": "A", "primary": "#fff;outline:10px solid red"},
+                    {"slug": "good", "name": "B", "primary": "#00ff00", "background": "#f4f4f5"},
+                ]
+            )
+        )
+        result = run(
+            "batch_create.py", "--root", str(self.root), "--json", str(projects), "--allow-outside",
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((self.root / "bad").exists())
+        theme = json.loads((self.root / "good" / "app.json").read_text())["theme"]
+        self.assertEqual(theme["primary"], "#00ff00")
+        self.assertEqual(theme["background"], "#f4f4f5")
+
+    def test_theme_color_flags_are_written_to_app_json(self) -> None:
+        result = run(
+            "scaffold.py", "--root", str(self.root), "--slug", "c", "--name", "X",
+            "--allow-outside", "--primary", "#00ff00", "--background", "#f4f4f5",
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        theme = json.loads((self.root / "c" / "app.json").read_text())["theme"]
+        self.assertEqual(theme["primary"], "#00ff00")
+        self.assertEqual(theme["background"], "#f4f4f5")
+        self.assertNotIn("mode", theme)
+        self.assertNotIn("foreground", theme)
+
     def test_valid_slug_still_scaffolds(self) -> None:
         result = self.scaffold("my-site-2")
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -282,18 +333,115 @@ class ThemeResolutionTest(unittest.TestCase):
     def tearDownClass(cls) -> None:
         cls._tmp.cleanup()
 
-    def resolve(self, **theme: str) -> dict:
+    def resolve_raw(self, **theme: str) -> subprocess.CompletedProcess:
         base = {"primary": "#6366f1", "accent": "#f59e0b", "background": "#0a0a0a"}
         script = self.app / "probe.ts"
         script.write_text(
             'import { resolveTheme } from "./lib/theme"\n'
             f"console.log(JSON.stringify(resolveTheme({json.dumps({**base, **theme})})))\n"
         )
-        result = subprocess.run(
+        return subprocess.run(
             ["bun", str(script)], capture_output=True, text=True, cwd=self.app
         )
+
+    def resolve(self, **theme: str) -> dict:
+        result = self.resolve_raw(**theme)
         self.assertEqual(result.returncode, 0, result.stderr)
         return json.loads(result.stdout)
+
+    @staticmethod
+    def channel(value: int) -> float:
+        c = value / 255
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+
+    @classmethod
+    def wcag_luminance(cls, color: str) -> float:
+        hex_ = color.lstrip("#")
+        if len(hex_) in (3, 4):
+            hex_ = "".join(ch * 2 for ch in hex_)
+        r, g, b = (int(hex_[i : i + 2], 16) for i in (0, 2, 4))
+        return 0.2126 * cls.channel(r) + 0.7152 * cls.channel(g) + 0.0722 * cls.channel(b)
+
+    @classmethod
+    def ratio(cls, a: str, b: str) -> float:
+        hi, lo = sorted((cls.wcag_luminance(a), cls.wcag_luminance(b)), reverse=True)
+        return (hi + 0.05) / (lo + 0.05)
+
+    def test_saturated_green_primary_gets_dark_text_with_aa_contrast(self) -> None:
+        vars_ = self.resolve(primary="#00ff00")["vars"]
+        self.assertGreaterEqual(self.ratio("#00ff00", vars_["--primary-foreground"]), 4.5)
+
+    def test_opaque_eight_digit_white_is_light(self) -> None:
+        resolved = self.resolve(background="#ffffffff")
+        self.assertEqual(resolved["mode"], "light")
+        self.assertGreaterEqual(self.ratio("#ffffff", resolved["vars"]["--foreground"]), 7)
+
+    def test_short_and_alpha_forms_are_parsed(self) -> None:
+        self.assertEqual(self.resolve(background="#fff")["mode"], "light")
+        self.assertEqual(self.resolve(background="#fffe")["mode"], "light")
+        self.assertEqual(self.resolve(background="#000f")["mode"], "dark")
+
+    def test_mid_greys_pick_the_higher_contrast_foreground(self) -> None:
+        near_black, near_white = "#0a0a0a", "#fafafa"
+        for level in range(0x40, 0xC0, 0x10):
+            grey = f"#{level:02x}{level:02x}{level:02x}"
+            vars_ = self.resolve(primary=grey, background=grey)["vars"]
+            best = max((near_black, near_white), key=lambda fg: self.ratio(grey, fg))
+            for token in ("--primary-foreground", "--foreground"):
+                self.assertEqual(vars_[token], best, f"{token} on {grey}")
+
+    def test_accent_gets_a_paired_foreground(self) -> None:
+        vars_ = self.resolve(accent="#facc15")["vars"]
+        self.assertGreaterEqual(self.ratio("#facc15", vars_["--brand-foreground"]), 4.5)
+
+    def test_mode_inference_matches_foreground_choice(self) -> None:
+        for background in ("#767676", "#777777", "#808080", "#595959"):
+            resolved = self.resolve(background=background)
+            light = resolved["mode"] == "light"
+            best_is_dark = (
+                self.ratio(background, "#0a0a0a") >= self.ratio(background, "#fafafa")
+            )
+            self.assertEqual(light, best_is_dark, background)
+
+    def test_invalid_colors_fall_back_to_defaults_with_a_warning(self) -> None:
+        for bad in ("red", "rgb(0, 255, 0)", "#12", "#12345", "#ggg", "oklch(0.7 0.2 140)", ""):
+            result = self.resolve_raw(primary=bad, accent=bad, background=bad)
+            self.assertEqual(result.returncode, 0, bad)
+            resolved = json.loads(result.stdout)
+            self.assertEqual(resolved["vars"]["--primary"], "#6366f1", bad)
+            self.assertEqual(resolved["vars"]["--brand"], "#f59e0b", bad)
+            self.assertEqual(resolved["vars"]["--background"], "#0a0a0a", bad)
+            self.assertEqual(resolved["mode"], "dark", bad)
+            self.assertIn("unsupported color", result.stderr, bad)
+
+    def test_invalid_foreground_is_ignored_and_rederived(self) -> None:
+        result = self.resolve_raw(background="#ffffff", foreground="black")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["vars"]["--foreground"], "#0a0a0a")
+
+    def test_css_injection_never_reaches_the_style_output(self) -> None:
+        payloads = (
+            "#fff;outline:10px solid red",
+            "#fff\n",
+            "#fff} body{display:none",
+            "#ffffff;background:url(//evil.example/x)",
+            "red;position:fixed",
+        )
+        for payload in payloads:
+            for key in ("primary", "accent", "background", "foreground"):
+                result = self.resolve_raw(**{key: payload})
+                self.assertEqual(result.returncode, 0, result.stderr)
+                for name, value in json.loads(result.stdout)["vars"].items():
+                    for fragment in ("outline", "evil", "display", "position", ";", "}", "\n"):
+                        self.assertNotIn(fragment, value, f"{key}={payload!r} -> {name}")
+
+    def test_four_digit_white_is_light(self) -> None:
+        self.assertEqual(self.resolve(background="#ffff")["mode"], "light")
+
+    def test_translucent_color_warns_but_resolves(self) -> None:
+        result = self.resolve_raw(primary="#00ff0080")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("alpha", result.stderr)
 
     def test_light_background_without_mode_infers_light_tokens(self) -> None:
         resolved = self.resolve(background="#f4f4f5")
