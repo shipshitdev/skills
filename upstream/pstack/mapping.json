@@ -1613,12 +1613,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "1be705ffa526b8ca91ae5faca22985e61217cfc2d2c10982650b90bc96990cdb"
+          "sha256": "959927f2f4ffdd46123deb7e46831353563d72b91b7c1583575d3183c0ff4cbb"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: merged PR heads behind or detached, fetched remote objects, scratch and linked copies, no recovery refs, trunk advance during prune",
+      "review_note": "git-cleanup: squash-merged detached heads by search, tool output and nested scratch, untracked dependency links",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4476,12 +4476,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "1be705ffa526b8ca91ae5faca22985e61217cfc2d2c10982650b90bc96990cdb"
+          "sha256": "959927f2f4ffdd46123deb7e46831353563d72b91b7c1583575d3183c0ff4cbb"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup: merged PR heads behind or detached, fetched remote objects, scratch and linked copies, no recovery refs, trunk advance during prune",
+      "review_note": "git-cleanup: squash-merged detached heads by search, tool output and nested scratch, untracked dependency links",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
