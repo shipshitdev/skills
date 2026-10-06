@@ -21,7 +21,7 @@ Derived from **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT)
 | Last synced | 2026-10-05 |
 | License | MIT |
 
-**Local modifications:** Adapted to house style: Contract block, GitHub-only tracker mechanics (native sub-issues and blocked-by, claim by assignment), a public-repo confirmation, ticket types resolved through this catalog's `research`, `prototype`, `grilling` and `domain-modeling` skills, and a handoff to `/prd prepare` instead of upstream's spec skill. The upstream tracker-doc section on wayfinding operations is not adopted. Attribution only; not a sync target.
+**Local modifications:** Adapted to house style: Contract block, GitHub-only tracker mechanics (native sub-issues and blocked-by, claim by assignment), a public-repo confirmation, ticket types resolved through this catalog's `research`, `prototype`, `grill-me` and `domain-modeling` skills, and a handoff to `/prd prepare` instead of upstream's spec skill. The upstream tracker-doc section on wayfinding operations is not adopted. Attribution only; not a sync target.
 
 **Checking for upstream changes:** when upstream has moved ahead of the synced
 marker above, diff

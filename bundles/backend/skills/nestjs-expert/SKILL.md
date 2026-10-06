@@ -108,10 +108,12 @@ app.useGlobalPipes(new ValidationPipe({
 
 Schema lives in `prisma/schema.prisma`; one global `PrismaService` wraps the client. Feature services depend on `PrismaService` — controllers never touch it.
 
-Prisma 7: the `prisma-client` generator needs an explicit `output` (import `PrismaClient` from that path, not `@prisma/client`), the client needs a driver adapter (`@prisma/adapter-pg`), and the connection URL lives in `prisma.config.ts`. A CommonJS Nest build sets `moduleFormat = "cjs"` in the generator block.
+Prisma 7: the `prisma-client` generator needs an explicit `output` (import `PrismaClient` from that path, not `@prisma/client`), the client needs a driver adapter (`@prisma/adapter-pg`), and the connection URL lives in `prisma.config.ts`. A CommonJS Nest build sets `moduleFormat = "cjs"` in the generator block. `output` is resolved relative to the schema file, so `prisma/schema.prisma` with `../src/generated/prisma` writes the client to `src/generated/prisma`, which the service below imports from `src/prisma/`. Keep that folder git-ignored and regenerate it in CI and Docker builds.
+
+Set `datasource: { url: process.env.DATABASE_URL }` in `prisma.config.ts` rather than `env("DATABASE_URL")`: `env()` throws when the variable is missing, which breaks `prisma generate` in clean CI and Docker builds that have no `.env`. `migrate` commands still fail with a clear error when the URL is absent.
 
 ```typescript
-// prisma/prisma.service.ts
+// src/prisma/prisma.service.ts
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client';
 
@@ -135,7 +137,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 // prisma/schema.prisma
 generator client {
   provider     = "prisma-client"
-  output       = "../generated/prisma"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 

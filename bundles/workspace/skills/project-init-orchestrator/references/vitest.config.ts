@@ -1,26 +1,30 @@
 /**
- * Vitest Configuration Template
+ * Vitest Configuration Template for NestJS
  *
- * Copy this to your project and adjust paths as needed.
- * This configuration enforces 80% coverage thresholds.
+ * Copy this to your API project (rename to vitest.config.mts to avoid Vite's CommonJS
+ * config warning) and adjust paths as needed. This configuration enforces 80% coverage
+ * thresholds and matches the config init-workspace.py generates.
  */
 
+import swc from "unplugin-swc";
 import { defineConfig } from "vitest/config";
-import path from "path";
 
 export default defineConfig({
+  // esbuild does not emit decorator metadata, which NestJS dependency injection needs;
+  // unplugin-swc does (requires: bun add -D unplugin-swc @swc/core)
+  plugins: [swc.vite({ module: { type: "es6" } })],
   test: {
     // Use global test APIs (describe, it, expect)
     globals: true,
 
     // Environment for tests
-    environment: "node", // Use "jsdom" for frontend tests
+    environment: "node",
 
     // Test file patterns
-    include: ["src/**/*.{test,spec}.{ts,tsx}", "**/*.{test,spec}.{ts,tsx}"],
+    include: ["**/*.spec.ts", "**/*.test.ts"],
 
     // Exclude patterns
-    exclude: ["node_modules", "dist", ".next", "build"],
+    exclude: ["node_modules", "dist"],
 
     // Coverage configuration
     coverage: {
@@ -31,15 +35,17 @@ export default defineConfig({
       reporter: ["text", "json", "html", "lcov"],
 
       // Files to include in coverage
-      include: ["src/**/*.ts", "src/**/*.tsx"],
+      include: ["apps/**/src/**/*.ts"],
 
       // Files to exclude from coverage
       exclude: [
-        "src/**/*.test.ts",
-        "src/**/*.spec.ts",
-        "src/**/*.d.ts",
-        "src/test/**",
-        "src/**/__mocks__/**",
+        "**/*.spec.ts",
+        "**/*.test.ts",
+        "**/*.d.ts",
+        "**/main.ts",
+        "**/index.ts",
+        "**/generated/**",
+        "**/*.module.ts",
       ],
 
       // Coverage thresholds - fail if below these
@@ -51,22 +57,8 @@ export default defineConfig({
       },
     },
 
-    // Setup files to run before tests
-    setupFiles: ["./src/test/setup.ts"],
-
     // Reset mocks between tests
     mockReset: true,
     restoreMocks: true,
-
-    // Timeout for tests (ms)
-    testTimeout: 10000,
-
-    // Path aliases (match tsconfig)
-    alias: {
-      "@collections": path.resolve(__dirname, "./src/collections"),
-      "@services": path.resolve(__dirname, "./src/services"),
-      "@guards": path.resolve(__dirname, "./src/guards"),
-      "@helpers": path.resolve(__dirname, "./src/helpers"),
-    },
   },
 });
