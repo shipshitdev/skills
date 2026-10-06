@@ -45,8 +45,7 @@ class BundleArtifactTest(unittest.TestCase):
             "-d",
             "vite-plugin-singlefile",
             "parse5@8.0.1",
-            "postcss@8.5.29",
-            "postcss-value-parser@4.2.0",
+            "css-tree@3.2.1",
             cwd=cls.template,
         )
         if installed.returncode != 0:
@@ -140,6 +139,36 @@ class BundleArtifactTest(unittest.TestCase):
         self.assertIn("<title>fixture</title>", (project / "bundle.html").read_text())
         self.assertFalse((project / "dist-bundle").exists())
         self.assertIn("dist-bundle", (project / "vite.singlefile.config.ts").read_text())
+
+
+    def test_bun_installs_are_exact_and_cold_start_runs_do_not_race(self) -> None:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        project = Path(tmp.name) / "app"
+        project.mkdir()
+        # no node_modules at all: both runs have to install (from the warm cache) at the same time
+        (project / "package.json").write_text(
+            '{"name":"fixture","private":true,"type":"module","devDependencies":{"vite":"^8.3.0"}}\n'
+        )
+        (project / "vite.config.js").write_text('import { defineConfig } from "vite"\nexport default defineConfig({})\n')
+        (project / "index.html").write_text(INDEX_HTML.format(head="", body=""))
+        (project / "main.js").write_text('document.title = "x"\n')
+        procs = [
+            subprocess.Popen(
+                ["bash", str(BUNDLE)], cwd=project, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            )
+            for _ in range(3)
+        ]
+        outputs = [p.communicate()[0] for p in procs]
+        self.assertEqual([p.returncode for p in procs], [0, 0, 0], "\n".join(outputs))
+        manifest = (project / "package.json").read_text()
+        self.assertIn('"parse5": "8.0.1"', manifest)
+        self.assertIn('"css-tree": "3.2.1"', manifest)
+        self.assertRegex(manifest, r'"vite-plugin-singlefile": "\d')  # exact, no caret
+
+    def test_cleanup_trap_is_installed_before_any_temp_file_is_created(self) -> None:
+        script = BUNDLE.read_text()
+        self.assertLess(script.index("trap "), script.index("mktemp"))
 
     def test_public_symlink_escape_is_rejected_end_to_end(self) -> None:
         project = self.project(body='<img alt="x" src="/secret.png" />')

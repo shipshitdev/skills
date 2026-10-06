@@ -4,6 +4,17 @@
 
 set -euo pipefail
 
+# Installed first, before any temp file or directory exists, so every exit path cleans up
+WORK_DIR=""
+CONFIG_TMP=""
+LOCK_DIR=""
+cleanup() {
+  [ -z "$WORK_DIR" ] || rm -rf "$WORK_DIR"
+  [ -z "$CONFIG_TMP" ] || rm -f "$CONFIG_TMP"
+  [ -z "$LOCK_DIR" ] || rmdir "$LOCK_DIR" 2>/dev/null || true
+}
+trap cleanup EXIT
+
 echo "Bundling React app to a single HTML artifact..."
 
 if ! command -v bun &> /dev/null; then
@@ -37,9 +48,9 @@ if [ -z "$BASE_CONFIG" ]; then
   exit 1
 fi
 
-# The asset inliner parses HTML with parse5 and CSS with postcss (versions
-# checked 2026-10-06); they are installed into the project because the inliner runs from there.
-BUNDLE_DEPS=(vite-plugin-singlefile parse5@8.0.1 postcss@8.5.29 postcss-value-parser@4.2.0)
+# The asset inliner parses HTML with parse5 and CSS with css-tree (versions checked 2026-10-06);
+# they are installed into the project because the inliner runs from there.
+BUNDLE_DEPS=(vite-plugin-singlefile parse5@8.0.1 css-tree@3.2.1)
 
 # True when node_modules already holds the dependency (at the pinned version, if one is given)
 dep_installed() {
@@ -50,14 +61,32 @@ dep_installed() {
   [ -z "$version" ] || grep -q "\"version\": \"$version\"" "$manifest"
 }
 
+# Concurrent runs in one project must not install at the same time: serialize with a lock
+# directory (mkdir is atomic) and re-check what is missing once the lock is held.
+acquire_lock() {
+  local tries=0
+  while ! mkdir ".bundle-install.lock" 2>/dev/null; do
+    tries=$((tries + 1))
+    if [ "$tries" -gt 600 ]; then
+      echo "Error: another bundle run holds .bundle-install.lock; remove it if it is stale."
+      exit 1
+    fi
+    sleep 0.2
+  done
+  LOCK_DIR=".bundle-install.lock"
+}
+
+acquire_lock
 MISSING_DEPS=()
 for dep in "${BUNDLE_DEPS[@]}"; do
   dep_installed "$dep" || MISSING_DEPS+=("$dep")
 done
 if [ "${#MISSING_DEPS[@]}" -gt 0 ]; then
   echo "Installing bundling dependencies: ${MISSING_DEPS[*]}"
-  bun add -d "${MISSING_DEPS[@]}"
+  bun add -d --exact "${MISSING_DEPS[@]}"
 fi
+rmdir "$LOCK_DIR"
+LOCK_DIR=""
 
 # A separate config keeps the normal dev and build setup untouched: it extends the
 # project's Vite config (object, promise or function form) and inlines all JS, CSS and assets
@@ -83,15 +112,12 @@ export default defineConfig(async (env) => {
 EOF
   chmod 644 "$CONFIG_TMP"
   mv -f "$CONFIG_TMP" "$SINGLEFILE_CONFIG"
+  CONFIG_TMP=""
 fi
 
 # Every run builds inside its own private work directory (created exclusively), so concurrent
 # runs never share output. bundle.html is only replaced after every step succeeded.
 WORK_DIR="$(mktemp -d ".bundle-work.XXXXXX")"
-cleanup() {
-  rm -rf "$WORK_DIR"
-}
-trap cleanup EXIT
 
 echo "Building with Vite..."
 # --outDir overrides any build.outDir in a retained custom config
