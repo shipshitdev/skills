@@ -2,7 +2,7 @@
 name: test-dispatch
 description: Router behind /test. Parses run, qa, tdd, e2e, coverage, init, or regression and delegates to the matching testing engine without adding testing logic of its own.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "testing, dispatcher, tdd, e2e, coverage, ci, orchestration"
   author: Ship Shit Dev
 when_to_use: "/test, run tests, qa review, tdd, e2e setup, coverage gate, testing setup, ai regression tests"

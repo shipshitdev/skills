@@ -1,6 +1,6 @@
 {
   "name": "vercel-deploy",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Deploy a Next.js app to Vercel: preview, production, rollback, and env vars, safely gated.",
   "author": {
     "name": "Ship Shit Dev",

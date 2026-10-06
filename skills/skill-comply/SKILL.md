@@ -2,7 +2,7 @@
 name: skill-comply
 description: Measures whether agents follow a skill, rule or agent definition by running scenarios and comparing action timelines to it. Use before publishing skills or when rules get ignored.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "skills, evaluation, compliance, agents, quality"
 when_to_use: "instructions ignored, compliance test"
 ---

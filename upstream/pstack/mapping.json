@@ -5,7 +5,7 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "6fc249b505fb87d150ceda154abb8a3fc089293e70fb9f6b8963c0f22c57923b"
+          "sha256": "d8523b12ef669e2e69e4bea7064faa413b2de280969c395b748eb014c80baeae"
         }
       ],
       "disposition": "superseded",
@@ -670,7 +670,7 @@
         {
           "executable": false,
           "path": "skills/rules-capture/SKILL.md",
-          "sha256": "5cf239a126de4136436708905c852cf336bf73b277e5bd7738b505798bb2f936"
+          "sha256": "b8d2974c192586bc831e0859f4169bf9ea0bd9c4868704543a17996a15825859"
         }
       ],
       "disposition": "adapted",
@@ -922,7 +922,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "superseded",
@@ -942,7 +942,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -957,7 +957,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "superseded",
@@ -1635,7 +1635,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "superseded",
@@ -1729,7 +1729,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -1973,7 +1973,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "superseded",
@@ -2451,7 +2451,7 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "6fc249b505fb87d150ceda154abb8a3fc089293e70fb9f6b8963c0f22c57923b"
+          "sha256": "d8523b12ef669e2e69e4bea7064faa413b2de280969c395b748eb014c80baeae"
         }
       ],
       "disposition": "superseded",
@@ -2466,7 +2466,7 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "6fc249b505fb87d150ceda154abb8a3fc089293e70fb9f6b8963c0f22c57923b"
+          "sha256": "d8523b12ef669e2e69e4bea7064faa413b2de280969c395b748eb014c80baeae"
         }
       ],
       "disposition": "superseded",
@@ -2763,7 +2763,7 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "6fc249b505fb87d150ceda154abb8a3fc089293e70fb9f6b8963c0f22c57923b"
+          "sha256": "d8523b12ef669e2e69e4bea7064faa413b2de280969c395b748eb014c80baeae"
         }
       ],
       "disposition": "superseded",
@@ -2778,7 +2778,7 @@
         {
           "executable": false,
           "path": "skills/pstack/plugin.json",
-          "sha256": "6fc249b505fb87d150ceda154abb8a3fc089293e70fb9f6b8963c0f22c57923b"
+          "sha256": "d8523b12ef669e2e69e4bea7064faa413b2de280969c395b748eb014c80baeae"
         }
       ],
       "disposition": "superseded",
@@ -3038,7 +3038,7 @@
         {
           "executable": false,
           "path": "skills/architect/SKILL.md",
-          "sha256": "74e6eae596652467e2ef9f0c038d9538493cfd8fc7b8a4650602c846c61e425f"
+          "sha256": "ddba9f9260f61c069e302755779bd58f1a761afcc17c93f94a409f425c6d5753"
         }
       ],
       "disposition": "adapted",
@@ -3103,7 +3103,7 @@
         {
           "executable": false,
           "path": "skills/arena/SKILL.md",
-          "sha256": "89b5f13de5730ee0709af4ad048f8c5d2668a7152dfcd97c262f6f0396682a7e"
+          "sha256": "94d2e9244c1d3a40fd1647900f7a66bdded74e3367b148ce4385db3fcdfab29e"
         }
       ],
       "disposition": "adapted",
@@ -3123,7 +3123,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -3143,7 +3143,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -3163,7 +3163,7 @@
         {
           "executable": false,
           "path": "skills/blast-radius/SKILL.md",
-          "sha256": "335a0f88dd0e182a3e388df845d9c5bdcb53fd8c01e518b51d49ae874c24a82a"
+          "sha256": "eb93b5b5b708e92ce89c492c42bc1c1e18e2a3ef43418e792dc2407610e26f8f"
         }
       ],
       "disposition": "adapted",
@@ -3183,7 +3183,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -3203,7 +3203,7 @@
         {
           "executable": false,
           "path": "skills/create-verification-skill/SKILL.md",
-          "sha256": "22316ce8339163aceff0379cdc5bab8c9a01da27ac46541a4e3f55fd82480c03"
+          "sha256": "d74364b951f6e7d80a5688ac26ebaa8b95809ea707e3147f6c992fc88c330df5"
         }
       ],
       "disposition": "adapted",
@@ -3266,7 +3266,7 @@
         {
           "executable": false,
           "path": "skills/deslop/SKILL.md",
-          "sha256": "eb1dca5e1e179060d99e025ee2bb504841b491cb63b6ba235d80324ee2ea4da6"
+          "sha256": "0d41d820a996107e974baa72c630484626e601849633add9d7920a2a77dd764a"
         }
       ],
       "disposition": "adapted",
@@ -3286,7 +3286,7 @@
         {
           "executable": false,
           "path": "skills/figure-it-out/SKILL.md",
-          "sha256": "166bfa766fb914bd291ac598129d9e201e71a3d0477a62fd592fdd35513dbf94"
+          "sha256": "bf8d60e8c5f2549d96693f2aa6a9fa16c00b95b8e711aa88b486ab6512996a74"
         }
       ],
       "disposition": "adapted",
@@ -3306,7 +3306,7 @@
         {
           "executable": false,
           "path": "skills/github-fix-ci/SKILL.md",
-          "sha256": "20fc3ce6a2a7758372b6383168e3b9fe1af71de88aa5cf3210bfadb0e03646bc"
+          "sha256": "6ad07a4d6267c4cd9d87a3000af125597e9f77fe23db2361ebce0444d3ebd37c"
         }
       ],
       "disposition": "adapted",
@@ -3326,7 +3326,7 @@
         {
           "executable": false,
           "path": "skills/fix-merge-conflicts/SKILL.md",
-          "sha256": "21602b9aa1d1cbf69d9cb3ccfc66181ed515a4db7e1c62a8757e560b388ba634"
+          "sha256": "8abffa285ed103abb4d3eb5f25aa82ac37986ed51089799ead48b4a3bcec28cb"
         }
       ],
       "disposition": "adapted",
@@ -3346,7 +3346,7 @@
         {
           "executable": false,
           "path": "skills/pr-comments/SKILL.md",
-          "sha256": "8f0ca060b71dd0ab1537bc8fd7a1fe26297ab474c55dbff2a8cbc0800c4e99d9"
+          "sha256": "03279d7648110eaf1c043b70cf570b74a4860a572dde8646c593cdb07afa051a"
         }
       ],
       "disposition": "adapted",
@@ -3366,7 +3366,7 @@
         {
           "executable": false,
           "path": "skills/how/SKILL.md",
-          "sha256": "b0d14a35fd5d63fe7f7e4c37aefdc28b8f54593d7668027e187417053b7fead6"
+          "sha256": "d91f769d32ddfff0c9628496c7db105803aa2d24b1b1e41d832f38954d742ff0"
         }
       ],
       "disposition": "adapted",
@@ -3416,7 +3416,7 @@
         {
           "executable": false,
           "path": "skills/interrogate/SKILL.md",
-          "sha256": "d6c59da10b7c1833ae951d4e4909338f676f57238a157dcbc8f9bb1ae3a62aa6"
+          "sha256": "a039663ea8e45eaf1892a0512ae65bff839ca37abd845ccfdd0c70ba624e632d"
         }
       ],
       "disposition": "adapted",
@@ -3496,7 +3496,7 @@
         {
           "executable": false,
           "path": "skills/maintain-verification-skill/SKILL.md",
-          "sha256": "3ca9c4f90077dea397adffb05abe637e6343b9f2ac60ded3cd1533b1e56a01b0"
+          "sha256": "9688840e9650edda450789f4e678f427868b3aa593917b26472c31721ce0572b"
         }
       ],
       "disposition": "adapted",
@@ -3516,7 +3516,7 @@
         {
           "executable": false,
           "path": "skills/github-pr-publish/SKILL.md",
-          "sha256": "59ea7f10e064115f13fd6b2688ee2b1b6bb7d3236f3f309d1c27d8ecb960edec"
+          "sha256": "0e5c3ee1f703fb34ff29764432e1365ecf44014d4ad6fee92cd8a1b71812060f"
         }
       ],
       "disposition": "adapted",
@@ -3536,7 +3536,7 @@
         {
           "executable": false,
           "path": "skills/no-comments/SKILL.md",
-          "sha256": "c9e514ed09de6e4fba32778c4be3a062b7b25dc4f390365142159c770b7c720c"
+          "sha256": "713ba1a5214358105c8fd94045e6ac54f79668c314672bb46c0c3a4438c6b8af"
         }
       ],
       "disposition": "adapted",
@@ -3556,7 +3556,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4498,7 +4498,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4518,7 +4518,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4538,7 +4538,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4558,7 +4558,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4578,7 +4578,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4598,7 +4598,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4618,7 +4618,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4638,7 +4638,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4658,7 +4658,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4678,7 +4678,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4698,7 +4698,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4718,7 +4718,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4738,7 +4738,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4758,7 +4758,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4778,7 +4778,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4798,7 +4798,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4818,7 +4818,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4838,7 +4838,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4858,7 +4858,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4878,7 +4878,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4898,7 +4898,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4918,7 +4918,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4938,7 +4938,7 @@
         {
           "executable": false,
           "path": "skills/pstack/SKILL.md",
-          "sha256": "48167f5c582c6b7eb98d830bda963355d03af7e4bf899cd9967100df6f9bef30"
+          "sha256": "57b8800822541dff54aa938f6fdb42dd4bcf790fec146d830fe2a856f54cfbe7"
         }
       ],
       "disposition": "adapted",
@@ -4958,7 +4958,7 @@
         {
           "executable": false,
           "path": "skills/recall/SKILL.md",
-          "sha256": "cc7548e6c277538a95be8b17f0fe318bd1dbe6675b13922e7fd2bd3423262970"
+          "sha256": "be23d970bd55b760ab852b0b3e42dc8c93d07db06f51b8fecff00784b81690ad"
         }
       ],
       "disposition": "adapted",
@@ -4978,7 +4978,7 @@
         {
           "executable": false,
           "path": "skills/retro/SKILL.md",
-          "sha256": "919519942eb1d27d72da3b1f37d4c2145875b5e4d084162074bdc59143f2b629"
+          "sha256": "d98bc440626433a1cc1c37ffb69b91cb098da22dcdbb986553074a8cc5ae43c2"
         }
       ],
       "disposition": "adapted",
@@ -5058,7 +5058,7 @@
         {
           "executable": false,
           "path": "skills/setup-pstack/SKILL.md",
-          "sha256": "6b7fa98a86305af5106430d4658a5bf9e0425d00a7ac1983a2c4d292fdf1a968"
+          "sha256": "19cee5c6465e5645383529fe7290c4f82e3ea5e299553db38510a4f35f16ebde"
         }
       ],
       "disposition": "adapted",
@@ -5078,7 +5078,7 @@
         {
           "executable": false,
           "path": "skills/show-me-your-work/SKILL.md",
-          "sha256": "ce8e425c0d954aedf013d29fbb6a58d2cf5410409d452550941b7032ea5d778b"
+          "sha256": "f54bfd13a3cb2714b520f992ca45d23f5a2d19094f8dd2f7ce5b39f1b97d013f"
         }
       ],
       "disposition": "adapted",
@@ -5127,7 +5127,7 @@
         {
           "executable": false,
           "path": "skills/swarm/SKILL.md",
-          "sha256": "61112bcee91578cf5fec8a6b0c7ef4b182ee06840368a9275691d3d9558e2b3c"
+          "sha256": "1c369077be791bce2424e45c903973e6933e873954484630e4ba6d2fc67277ad"
         }
       ],
       "disposition": "adapted",
@@ -5147,7 +5147,7 @@
         {
           "executable": false,
           "path": "skills/tdd/SKILL.md",
-          "sha256": "d9c2a0c9a955a1016402c27cf878be66215cd1e586803fa2a6a7d209a908e561"
+          "sha256": "9082f94404c6b87433aca72eefb7d66b6c7516a273c7547e8390e6024d9b11f6"
         }
       ],
       "disposition": "adapted",
@@ -5167,7 +5167,7 @@
         {
           "executable": false,
           "path": "skills/teach/SKILL.md",
-          "sha256": "f35105f053b37f41b3756d14fe0ea7f7931605ecc77cb4dd835ee2d4df56b01d"
+          "sha256": "d311300c377686589f1f1f08f19c301c45a5ac02aab367a4d3fb3d11f750f713"
         }
       ],
       "disposition": "adapted",
@@ -5187,7 +5187,7 @@
         {
           "executable": false,
           "path": "skills/technical-writing/SKILL.md",
-          "sha256": "7fc3d8d3c8872c01d87616e10db235ee2936748483885869c900d555bc8305d8"
+          "sha256": "d537b975f933934cb8f97ea8dae7df5b02bae9f29d552fe5810eb048bdbe9a34"
         }
       ],
       "disposition": "adapted",
@@ -5202,12 +5202,12 @@
         {
           "executable": false,
           "path": "skills/full-code-review/SKILL.md",
-          "sha256": "062697a9bc2e404d852b3defdbba87eb7e84ed2e8bae748c30585b107b8d1eef"
+          "sha256": "974e1e8d726b2e8f39bf0d5021d7c050f459afb8b674c0d6d3fb2e0872caf772"
         },
         {
           "executable": false,
           "path": "skills/structural-review/SKILL.md",
-          "sha256": "4ca0a18350ae6ddfa9b7ba909c1bdcb655bc3dfa0b925fce7195f7014631db78"
+          "sha256": "df325c2da41bf7107d4b16f28d041d6b3eede8b38ad128f21a4041b9cdf0e993"
         }
       ],
       "disposition": "superseded",
@@ -5227,7 +5227,7 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/SKILL.md",
-          "sha256": "cccb3ba1a9202ee89a97aac480a6b3dc06871dc2e3a5c09169a9f8d57bbeb2a4"
+          "sha256": "d7c9233547df623140fb9a7e4477b2b0dcb65469982576f02ac2b9186afeb974"
         }
       ],
       "disposition": "adapted",
@@ -5262,7 +5262,7 @@
         {
           "executable": false,
           "path": "skills/deslop/SKILL.md",
-          "sha256": "eb1dca5e1e179060d99e025ee2bb504841b491cb63b6ba235d80324ee2ea4da6"
+          "sha256": "0d41d820a996107e974baa72c630484626e601849633add9d7920a2a77dd764a"
         }
       ],
       "disposition": "adapted",
@@ -5277,7 +5277,7 @@
         {
           "executable": false,
           "path": "skills/standup/SKILL.md",
-          "sha256": "01a8af700002517eb05291bf17b8c8005a6fd85dc4d8ddf6baad5b35aae9c05c"
+          "sha256": "ab664c6d77c83f7692b27cffeb7f504c3c38b87e47691f3f7741595e13a2ae24"
         }
       ],
       "disposition": "superseded",
@@ -5297,7 +5297,7 @@
         {
           "executable": false,
           "path": "skills/why/SKILL.md",
-          "sha256": "3140e6c203979adbf8a00d5a2cccf6d4bcee17ad32149bb6533af4d4cc074ae8"
+          "sha256": "43998af6f7d46d74b4a9c0197d7445eda30d24e7691690ff79ba8b263b7ae01a"
         }
       ],
       "disposition": "adapted",

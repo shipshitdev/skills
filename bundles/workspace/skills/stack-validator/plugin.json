@@ -1,6 +1,6 @@
 {
   "name": "stack-validator",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Validate Biome, Bun, Next.js 16 and Tailwind v4 config and flag deprecated patterns",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "expo-architect",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Scaffold an Expo React Native app with screens, Expo Router navigation, and optional Better Auth",
   "author": {
     "name": "Ship Shit Dev",

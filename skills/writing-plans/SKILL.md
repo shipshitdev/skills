@@ -2,7 +2,7 @@
 name: writing-plans
 description: Resolves implementation decisions into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   source: https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main

@@ -2,7 +2,7 @@
 name: api-design-expert
 description: "Designs RESTful APIs for NestJS: endpoints, OpenAPI/Swagger docs, versioning, error responses, DTOs, and pagination. Use when designing or documenting API endpoints."
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "api, rest, design"
 when_to_use: "filtering, sorting"
 ---

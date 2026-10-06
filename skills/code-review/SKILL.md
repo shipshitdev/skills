@@ -2,7 +2,7 @@
 name: code-review
 description: Reviews a PR or diff for correctness, security, and spec fidelity, including TypeScript, database safety, tests, and flag leaks. Use for /code-review or is this safe to merge.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "code-review, correctness, security, testing, devex, feature-flags, spec"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)

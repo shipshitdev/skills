@@ -1,6 +1,6 @@
 {
   "name": "standup",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Recap what you shipped over a time window from git history - an engineer standup, not a changelog.",
   "author": {
     "name": "Ship Shit Dev",

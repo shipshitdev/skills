@@ -2,7 +2,7 @@
 name: ai-loading-ux
 description: "Designs AI waiting-state UX: thinking indicators, reasoning display, progress steps, and streaming states. Use when asked to improve loading or perceived wait in AI interfaces."
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "ai, loading, ux"
 when_to_use: "chain-of-thought display"
 ---

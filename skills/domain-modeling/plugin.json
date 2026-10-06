@@ -1,6 +1,6 @@
 {
   "name": "domain-modeling",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Sharpen a project's domain glossary in CONTEXT.md and record sparse ADRs.",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: refactor-code
 description: Refactors code safely behind tests without changing behavior. Use when asked to refactor, clean up, simplify, reduce complexity, or pay down technical debt in specific code.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "refactoring, code-quality, testing, maintenance, clean-code"
 when_to_use: "long function, duplicate code, mixed responsibilities"
 ---

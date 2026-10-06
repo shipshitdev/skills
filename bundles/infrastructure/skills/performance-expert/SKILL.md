@@ -2,7 +2,7 @@
 name: performance-expert
 description: Optimizes backend, database, and delivery performance — API latency, queries and indexes, N+1, caching, queues, profiling, bundles, CDN. Not for React render issues.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "performance, optimization, backend, database, infrastructure"
 when_to_use: "slow endpoint, p95 latency, missing index, load testing"
 ---

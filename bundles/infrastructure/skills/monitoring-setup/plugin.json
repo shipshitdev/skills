@@ -1,6 +1,6 @@
 {
   "name": "monitoring-setup",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Expert in setting up Sentry error tracking and Google Analytics for NestJS and Next.js applications.",
   "author": {
     "name": "Ship Shit Dev",

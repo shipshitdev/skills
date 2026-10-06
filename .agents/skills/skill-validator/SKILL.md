@@ -5,7 +5,7 @@ description: |
   Run on new or modified skills before committing.
 metadata:
   internal: true
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "validation, skills, spec-compliance, quality"
 ---
 

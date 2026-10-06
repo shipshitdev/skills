@@ -1,6 +1,6 @@
 {
   "name": "testing-expert",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Framework-agnostic testing strategy: level choice, coverage, test design, data, and flakes.",
   "author": {
     "name": "Ship Shit Dev",

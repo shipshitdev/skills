@@ -2,7 +2,7 @@
 name: package-architect
 description: Designs TypeScript monorepo packages — package.json exports, tsconfig references, build config. Use when creating or restructuring workspace packages.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "packages, monorepo, typescript"
 when_to_use: "workspace package, exports map, tsconfig references"
 ---

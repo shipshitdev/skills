@@ -3,7 +3,7 @@ name: nestjs-expert
 description: Guides NestJS 12 APIs with Prisma and Postgres — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues.
 license: MIT
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "nestjs, typescript, backend, api, prisma, postgres, rest"
 when_to_use: "nest controller, nest service, dependency injection"
 ---

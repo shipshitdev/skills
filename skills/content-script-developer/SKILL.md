@@ -2,7 +2,7 @@
 name: content-script-developer
 description: "Builds browser-extension content scripts: DOM integration, injecting UI into third-party pages, SPA navigation, dynamic DOM changes. Use when writing or updating a content script."
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "browser-extension, content-script, dom"
 when_to_use: "isolated world, page scraping"
 ---

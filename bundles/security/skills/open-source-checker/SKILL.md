@@ -2,7 +2,7 @@
 name: open-source-checker
 description: "Audits a private repo once before it goes public: license, secrets in git history, private references, publish readiness. Returns a publish or block verdict."
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "open-source, publishing, license, audit"
 when_to_use: "open source this repo, make repo public, is this safe to publish"
 ---

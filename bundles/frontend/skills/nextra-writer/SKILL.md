@@ -2,7 +2,7 @@
 name: nextra-writer
 description: Writes Nextra documentation sites with MDX — config, navigation, search, API docs. Use when creating or updating Nextra docs on Next.js.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "documentation, nextra, nextjs, mdx, technical-writing, api-docs, react, typescript"
 when_to_use: "theme.config, next.config.mjs, .mdx docs"
 ---

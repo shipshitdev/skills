@@ -1,6 +1,6 @@
 {
   "name": "nestjs-testing-expert",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "NestJS Vitest mechanics: testing modules, provider mocks, controller specs, HTTP e2e.",
   "author": {
     "name": "Ship Shit Dev",

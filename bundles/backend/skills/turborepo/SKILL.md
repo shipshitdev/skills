@@ -2,7 +2,7 @@
 name: turborepo
 description: "Guides Turborepo monorepos: turbo.json tasks, dependsOn, caching and remote cache, --filter/--affected, internal packages. Use when configuring tasks or debugging cache."
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "turborepo, monorepo, build, caching, ci"
 when_to_use: "monorepo, package boundaries"
 ---

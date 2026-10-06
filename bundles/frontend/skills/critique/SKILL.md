@@ -4,7 +4,7 @@ description: "Critiques design from a UX view: hierarchy, IA, cognitive load, wi
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "critique, ux, design"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/critique.md
   upstream_version: skill-v4.5.0

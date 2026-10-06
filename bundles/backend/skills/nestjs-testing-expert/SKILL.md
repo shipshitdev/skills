@@ -2,7 +2,7 @@
 name: nestjs-testing-expert
 description: Writes NestJS Vitest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint.
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "nestjs, testing, vitest, supertest, backend"
   author: Ship Shit Dev
 when_to_use: "Test.createTestingModule, override provider, supertest"

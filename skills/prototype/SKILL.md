@@ -3,7 +3,7 @@ name: prototype
 description: Builds a throwaway prototype to answer one design question about state logic or UI look. Use when sanity-checking a state model or exploring what a UI should look like.
 license: MIT
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   tags: "prototype, design, ui, state-machine, throwaway"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md

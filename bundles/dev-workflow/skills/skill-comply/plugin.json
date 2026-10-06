@@ -1,6 +1,6 @@
 {
   "name": "skill-comply",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Measure whether agents follow skills, rules, commands, and agent definitions.",
   "author": {
     "name": "Ship Shit Dev",

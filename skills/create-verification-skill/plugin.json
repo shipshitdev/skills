@@ -1,6 +1,6 @@
 {
   "name": "create-verification-skill",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Generate a project-local verify skill and feature map.",
   "author": {
     "name": "Ship Shit Dev",

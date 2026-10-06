@@ -1,6 +1,6 @@
 {
   "name": "mcp-builder",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact wi",
   "author": {
     "name": "Ship Shit Dev",
