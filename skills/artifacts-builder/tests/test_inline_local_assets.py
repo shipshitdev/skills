@@ -21,7 +21,7 @@ def page(body: str = "", head: str = "") -> str:
     return f'<!doctype html><html><head><meta charset="UTF-8">{head}</head><body>{body}</body></html>'
 
 
-DEPENDENCIES = ["parse5@8.0.1", "postcss@8.5.29", "postcss-value-parser@4.2.0"]
+DEPENDENCIES = ["parse5@8.0.1", "css-tree@3.2.1"]
 
 
 @unittest.skipUnless(shutil.which("bun"), "bun is required")
@@ -57,6 +57,7 @@ class InlineLocalAssetsTest(unittest.TestCase):
         # Run a copy next to a node_modules symlink, as the bundle script does inside the project
         self.script = self.base / "inline-local-assets.mjs"
         shutil.copy(INLINER, self.script)
+        shutil.copy(INLINER.parent.parent / "tests" / "dump-dom.mjs", self.base / "dump-dom.mjs")
         (self.base / "node_modules").symlink_to(Path(self.deps_tmp.name) / "node_modules")
 
     def write_page(self, body: str = "", head: str = "") -> None:
@@ -243,8 +244,14 @@ class InlineLocalAssetsTest(unittest.TestCase):
         self.write_page('<img src="/lin&#107;.png">')
         self.fails_naming("/link.png")
 
-    def test_unknown_named_references_are_rejected_not_guessed(self) -> None:
+    def test_unknown_named_references_stay_literal_like_in_browsers(self) -> None:
+        # parse5 follows the HTML spec: an unknown `&name;` is literal text, so the file that
+        # really has that name is the one inlined (and a missing one fails as a missing file)
+        (self.dist / "x&notarealentity;.png").write_bytes(b"LITERAL-UNKNOWN-ENTITY")
         self.write_page('<img src="/x&notarealentity;.png">')
+        self.assertEqual(self.inlined(self.ok()), [b"LITERAL-UNKNOWN-ENTITY"])
+        (self.dist / "x&notarealentity;.png").unlink()
+        self.out.unlink()
         self.fails_naming("&notarealentity;")
 
     def test_ambiguous_ampersand_rules_follow_the_html_spec_in_attributes(self) -> None:
@@ -384,6 +391,173 @@ class InlineLocalAssetsTest(unittest.TestCase):
                 values = re.findall(rf'{attr}="([^"]*)"', html)
                 self.assertEqual(len(values), 2)
                 self.assertEqual(values[0].count("data:"), 1, "one candidate, not split on the comma")
+
+    # --- stylesheet context, CSS identifiers and escapes -----------------------------------
+
+    def css_uris(self, html: str) -> list[str]:
+        return [b.decode() for b in self.inlined(html) if b.startswith(b".") or b.startswith(b"@")]
+
+    def test_stylesheet_links_and_imports_are_css_regardless_of_extension(self) -> None:
+        (self.dist / "i.png").write_bytes(PNG)
+        (self.dist / "theme").write_text(".a{background:url(i.png)}")
+        (self.dist / "other").write_text(".b{background:url(/i.png)}")
+        self.write_page("", '<link rel="stylesheet" href="/theme"><style>@import "/other";</style>')
+        html = self.ok()
+        self.assertEqual(html.count("data:text/css;base64,"), 2)
+        for css in self.css_uris(html):
+            self.assertIn("data:image/png;base64,", css)
+
+    def test_css_identifiers_are_case_insensitive_and_escape_decoded(self) -> None:
+        (self.dist / "x.png").write_bytes(b"IMG-X")
+        (self.dist / "s.css").write_text(".z{color:red}")
+        values = [
+            "URL(/x.png)",
+            "UrL( /x.png )",
+            "u\\72l(/x.png)",
+            'u\\72l("/x.png")',
+            "\\75rl(/x.png)",
+            'url( "/x.png" )',
+        ]
+        css = "".join(f".c{i}{{background:{v}}}" for i, v in enumerate(values))
+        css += '@IMPORT "/s.css";@im\\70ort url(/s.css);'
+        self.write_page("", f"<style>{css}</style>")
+        html = self.ok()
+        self.assertEqual(self.inlined(html).count(b"IMG-X"), len(values))
+        self.assertEqual(html.count("data:text/css;base64,"), 2)
+        self.assertNotIn("/x.png", html)
+        self.assertNotIn("/s.css", html)
+
+    def test_malformed_url_tokens_fail_loudly(self) -> None:
+        self.write_page("", "<style>.a{background:url(/a b.png)}</style>")
+        self.fails_naming("url(/a b.png)")
+
+    def test_css_escapes_follow_css_syntax_3(self) -> None:
+        cases = {
+            "\\61\u00a0.png": "a\u00a0.png",  # NBSP is not CSS whitespace: it is kept
+            "\\61 b.png": "ab.png",  # one whitespace after a hex escape is consumed
+            "\\000061.png": "a.png",
+            "\\0q.png": "\ufffdq.png",  # zero
+            "\\d800r.png": "\ufffdr.png",  # surrogate
+            "\\110000s.png": "\ufffds.png",  # out of range
+            "x\\\n.png": "x.png",  # string continuation
+            "\\2f x.png": "/x.png".replace("/", "%2F"),  # placeholder, replaced below
+        }
+        cases.pop("\\2f x.png")
+        for i, (written, name) in enumerate(cases.items()):
+            (self.dist / name).write_bytes(f"BYTES-{i}".encode())
+        css = "".join(f'.c{i}{{background:url("/{w}")}}' for i, w in enumerate(cases))
+        self.write_page("", f"<style>{css}</style>")
+        html = self.ok()
+        self.assertEqual(self.inlined(html), [f"BYTES-{i}".encode() for i in range(len(cases))])
+
+    # --- srcset descriptors -------------------------------------------------------------
+
+    def test_invalid_srcset_candidates_are_discarded_without_failing(self) -> None:
+        (self.dist / "ok.png").write_bytes(b"OK-FILE")
+        (self.dist / "v.png").write_bytes(b"V-FILE")
+        invalid = [
+            "/dup.png 1x 2x",
+            "/zero.png 0w",
+            "/mixed.png 100w 2x",
+            "/nan.png abcx",
+            "/dots.png 1.2.3x",
+            "/neg.png -1x",
+            "/frac.png 1.5w",
+            "/hw.png 5h 1x",
+            "/unknown.png 3q",
+        ]
+        valid = ["/ok.png 100w", "/v.png 1.5x"]
+        self.write_page(f'<img srcset="{", ".join(invalid + valid)}">')
+        html = self.ok()
+        self.assertEqual(self.inlined(html), [b"OK-FILE", b"V-FILE"])
+        self.assertNotIn("dup.png", html)
+        self.assertNotIn("zero.png", html)
+
+    def test_a_valid_but_missing_srcset_candidate_still_fails(self) -> None:
+        self.write_page('<img srcset="/zero.png 0w, /gone.png 2x">')
+        self.fails_naming("/gone.png")
+
+    # --- serialization keeps the DOM ----------------------------------------------------
+
+    def dump(self, path: Path) -> str:
+        result = subprocess.run(
+            ["bun", str(self.base / "dump-dom.mjs"), str(path)], cwd=self.base, capture_output=True, text=True
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return result.stdout
+
+    def test_output_parses_to_the_same_dom(self) -> None:
+        html = (
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+            "<!-- lead --><html><head><title>t</title></head><body>"
+            "<pre>\n\nfirst line is blank</pre><pre>\nx</pre><pre>plain</pre>"
+            "<textarea>\n\nbox</textarea><listing>\n\nlisting</listing>"
+            '<p title="a&amp;b &quot;q&quot;">&lt;tag&gt; &amp; &nbsp;</p></body></html>'
+        )
+        (self.dist / "index.html").write_text(html)
+        self.ok()
+        self.assertEqual(self.dump(self.out), self.dump(self.dist / "index.html"))
+
+    def test_doctype_identifiers_are_kept(self) -> None:
+        (self.dist / "index.html").write_text(
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
+            "<html><body>x</body></html>"
+        )
+        out = self.ok()
+        self.assertIn('PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"', out)
+        self.assertIn('"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"', out)
+
+    # --- hard links and check-to-read swaps ---------------------------------------------
+
+    def test_hard_linked_files_are_rejected(self) -> None:
+        import os
+
+        os.link(self.outside / "secret.png", self.dist / "hard.png")
+        self.write_page('<img src="/hard.png">')
+        self.fails_naming("/hard.png", "hard link")
+
+    def test_hard_linked_public_sources_are_rejected(self) -> None:
+        import os
+
+        os.link(self.outside / "secret.png", self.project / "public" / "hard.png")
+        (self.dist / "hard.png").write_bytes(b"TOP-SECRET")  # Vite's copy has a single link
+        self.write_page('<img src="/hard.png">')
+        self.fails_naming("/hard.png", "hard link")
+
+    def swap_script(self, how: str) -> dict:
+        script = self.base / "swap.mjs"
+        script.write_text(
+            'import { renameSync, symlinkSync, writeFileSync, rmSync } from "node:fs"\n'
+            'import { createInliner } from "./inline-local-assets.mjs"\n'
+            f"const inliner = createInliner({{ buildDir: {str(self.dist)!r}, projectRoot: {str(self.project)!r} }})\n"
+            'const record = inliner.resolveRef("/a.png", inliner.root)\n'
+            f"const target = {str(self.dist / 'a.png')!r}\n"
+            f"const how = {how!r}\n"
+            'if (how === "inode") { writeFileSync(target + ".new", "SWAPPED"); renameSync(target + ".new", target) }\n'
+            f'if (how === "symlink") {{ rmSync(target); symlinkSync({str(self.outside / "secret.png")!r}, target) }}\n'
+            "const bytes = inliner.readChecked(record)\n"
+            "console.log(JSON.stringify({ bytes: bytes === null ? null : bytes.toString(), problems: inliner.problems }))\n"
+        )
+        result = subprocess.run(["bun", str(script)], cwd=self.base, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        import json
+
+        return json.loads(result.stdout)
+
+    def test_a_file_swapped_after_the_check_is_detected(self) -> None:
+        for how in ("inode", "symlink"):
+            with self.subTest(how=how):
+                (self.dist / "a.png").unlink(missing_ok=True)
+                (self.dist / "a.png").write_bytes(b"ORIGINAL")
+                outcome = self.swap_script(how)
+                self.assertIsNone(outcome["bytes"], outcome)
+                self.assertTrue(any("changed" in p for p in outcome["problems"]), outcome)
+
+    def test_an_unswapped_file_is_read_through_the_checked_descriptor(self) -> None:
+        (self.dist / "a.png").write_bytes(b"ORIGINAL")
+        outcome = self.swap_script("none")
+        self.assertEqual(outcome["bytes"], "ORIGINAL")
+        self.assertEqual(outcome["problems"], [])
 
 
 if __name__ == "__main__":
