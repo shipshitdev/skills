@@ -2,7 +2,7 @@
 name: codebase-design
 description: Supplies deep-module vocabulary and runs read-only codebase surveys (plans, report, deepen). Use to design an interface or place a seam, or when asked to audit, deepen, or write handoff plans.
 license: MIT
-allowed-tools: Read, Grep, Glob, Write(plans/**), Edit(plans/**), Write(.agents/memory/**), Edit(.agents/memory/**), Write(.tmp/**), Task, Bash(git log:*), Bash(git diff:*), Bash(git status:*), Bash(git show:*), Bash(git rev-parse:*), Bash(git merge-base:*), Bash(git branch --list:*), Bash(git branch --show-current), Bash(find:*), Bash(grep:*), Bash(rg:*), Bash(tree:*), Bash(npm audit), Bash(pnpm audit), Bash(pip-audit), Bash(cargo audit), Bash(tsc --noEmit:*), Bash(command -v gh), Bash(gh auth status:*), Bash(gh repo view --json visibility:*)
+allowed-tools: Read, Grep, Glob, Write(plans/**), Edit(plans/**), Write(advisor-plans/**), Edit(advisor-plans/**), Write(.agents/memory/**), Edit(.agents/memory/**), Write(.tmp/**), Task, Bash(git log:*), Bash(git diff:*), Bash(git status:*), Bash(git show:*), Bash(git rev-parse:*), Bash(git merge-base:*), Bash(git branch --list:*), Bash(git branch --show-current), Bash(find:*), Bash(grep:*), Bash(rg:*), Bash(tree:*), Bash(npm audit), Bash(pnpm audit), Bash(pip-audit), Bash(cargo audit), Bash(tsc --noEmit:*), Bash(command -v gh), Bash(gh auth status:*), Bash(gh repo view --json visibility:*)
 metadata:
   version: "2.2.2"
   tags: "architecture, modules, seams, design, testability, audit, analysis, handoff-plans, read-only"
@@ -10,8 +10,8 @@ metadata:
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/SKILL.md
   upstream_repo: mattpocock/skills
   upstream_ref: main
-  upstream_commit: 8b78b531ab96
-  last_synced: "2026-08-14"
+  upstream_commit: 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d
+  last_synced: "2026-10-06"
   license: MIT
 when_to_use: "deepening opportunities, shallow modules, audit this codebase, architecture review, handoff plan for another agent"
 ---
@@ -49,9 +49,18 @@ Alternative interfaces for a chosen design come from
 [references/DESIGN-IT-TWICE.md](references/DESIGN-IT-TWICE.md); how to deepen a cluster
 given its dependencies is in [references/DEEPENING.md](references/DEEPENING.md).
 
+## Survey plan directory
+
+Use `plans/` for a new survey or resume its existing survey index. If it already
+serves an unrelated purpose, use `advisor-plans/` and record that choice in the
+index and handoff. If both directories belong to unrelated work, ask before
+writing. Every `plans/` path in the mode table, contract and references means
+this selected directory. Preserve it through plan, execute and reconcile;
+never overwrite another workflow's artifacts.
+
 ## Survey hard rules
 
-1. **Never modify source code yourself.** No edits, no fixes, no "quick wins while you're in there." The ONLY files you may create or modify are your own artifacts: anything under `plans/` in the repo root (create it if absent), plus the analysis document the `report` mode writes (`.agents/memory/codebase-analysis.md`, or a path the user names) and the optional HTML report the `deepen` mode writes under `.tmp/`. The `execute` mode dispatches a _separate executor subagent_ that edits code in an isolated git worktree — you review its diff and render a verdict; you still never edit code directly, and you never merge, push, or commit to the user's branch.
+1. **Never modify source code yourself.** No edits, no fixes, no "quick wins while you're in there." The ONLY files you may create or modify are your own artifacts: anything under the selected survey plan directory in the repo root (`plans/`, or `advisor-plans/` when `plans/` serves an unrelated purpose), plus the analysis document the `report` mode writes (`.agents/memory/codebase-analysis.md`, or a path the user names) and the optional HTML report the `deepen` mode writes under `.tmp/`. The `execute` mode dispatches a _separate executor subagent_ that edits code in an isolated git worktree — you review its diff and render a verdict; you still never edit code directly, and you never merge, push, or commit to the user's branch.
 2. **Never run commands that mutate the user's working tree** — no installs, no builds that write artifacts outside standard ignored dirs, no git commits, no formatters. Read, search, and run read-only analysis only (e.g. `tsc --noEmit`, lint in check mode, `npm audit` / `pnpm audit`, test suite if cheap and side-effect free). Two scoped exceptions: verification commands inside an executor's disposable worktree during `execute` review, and `gh issue create` under an explicit `--issues` flag.
 3. **Every plan must be fully self-contained.** The executor has not seen this conversation, this codebase survey, or any other plan. If a plan references "the pattern discussed above," it is broken.
 4. **Never reproduce secret values.** If the audit finds credentials, tokens, or `.env` contents, findings and plans reference the `file:line` and credential type only, and recommend rotation. The value itself must never appear in anything you write.

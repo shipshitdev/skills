@@ -6,8 +6,8 @@ metadata:
   source: https://github.com/obra/superpowers/blob/main/skills/receiving-code-review/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main
-  upstream_commit: 1455ac0631e2
-  last_synced: "2026-06-12"
+  upstream_commit: 8ca22dba9a94f28898bbce59f2537ff4d87c747d
+  last_synced: "2026-10-06"
   license: MIT
   tags: "code-review, feedback, review-response, pushback, verification"
 allowed-tools: Bash(git *) Bash(gh *)
@@ -171,6 +171,7 @@ Push back when the suggestion:
 - Ask specific questions that surface the gap
 - Reference existing tests or working code
 - Escalate to the codebase owner if the disagreement is architectural
+- If pushback feels uncomfortable, name the tension and explain the concrete issue
 
 ## Acknowledging Correct Feedback
 

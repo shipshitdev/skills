@@ -30,7 +30,7 @@ verify local adaptations before updating this distribution.
 | Source | Pinned commit | Reviewed |
 |---|---|---|
 | [Open Pstack](https://github.com/ericlitman/open-pstack) | `1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43` | 2026-10-05 |
-| [Original Pstack](https://github.com/cursor/plugins/tree/93b00b89ef425a9c1bac0d0b317dfc49c930ac99/pstack) | `93b00b89ef425a9c1bac0d0b317dfc49c930ac99` | 2026-09-05 |
+| [Original Pstack](https://github.com/cursor/plugins/tree/df581122cde17e6e27686b5a448bde23e4ad4318/pstack) | `df581122cde17e6e27686b5a448bde23e4ad4318` | 2026-10-06 |
 
 Detailed procedures and resources are adapted to canonical skill names and the
 harness-owned execution boundary. Existing Shipshit mode and authorization

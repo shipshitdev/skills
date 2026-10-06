@@ -7,14 +7,20 @@ metadata:
   version: "2.2.2"
   tags: "visual-design, refinement, ui"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/quieter.md
-  upstream_version: skill-v3.1.1
+  upstream_version: skill-v4.5.0
   upstream_latest: skill-v4.5.0
-  last_synced: "2026-06-12"
+  last_synced: "2026-10-06"
   license: Apache-2.0
 when_to_use: "too much, calmer, refined, less intense"
 ---
 
 Reduce visual intensity in designs that are too bold, aggressive, or overstimulating, creating a more refined and approachable aesthetic without losing effectiveness.
+
+## Visitor Task
+
+For persuasion or experience, restrain the palette and drama while preserving
+the visual identity. For operating or reading, reduce noise so the task leads.
+Infer this from the product context; ask only when the intent is unclear.
 
 ## Assess Current State
 

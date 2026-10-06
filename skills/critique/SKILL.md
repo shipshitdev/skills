@@ -7,9 +7,9 @@ metadata:
   version: "2.2.2"
   tags: "critique, ux, design"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/critique.md
-  upstream_version: skill-v3.1.1
+  upstream_version: skill-v4.5.0
   upstream_latest: skill-v4.5.0
-  last_synced: "2026-06-12"
+  last_synced: "2026-10-06"
   license: Apache-2.0
 when_to_use: "give feedback on a component"
 ---
@@ -24,9 +24,13 @@ Gather context about the interface under review: what it is trying to accomplish
 
 Launch two independent assessments. **Neither must see the other's output** to avoid bias.
 
-You SHOULD delegate each assessment to a separate sub-agent for independence. Use the current environment's sub-agent or delegation mechanism when available. Sub-agents should return their findings as structured text. Do NOT output findings to the user yet.
+Delegate each assessment to a separate sub-agent only when authorized and available. Use the current environment's sub-agent or delegation mechanism when available. Sub-agents should return their findings as structured text. Do NOT output findings to the user yet.
 
-If sub-agents are not available in the current environment, complete each assessment sequentially, writing findings to internal notes before proceeding.
+Otherwise complete each assessment sequentially, recording the design review
+before reading scan output. Declare whether the report used isolated agents or
+a sequential single-context review; never imply independence that did not occur.
+Stop any server started solely for this review before reporting, unless the user
+asks to keep it running.
 
 **Tab isolation**: When browser automation is available, each assessment MUST create its own new tab. Never reuse an existing tab, even if one is already open at the correct URL. This prevents the two assessments from interfering with each other's page state.
 
@@ -40,7 +44,9 @@ document.title = '[LLM] ' + document.title;
 
 Evaluate these dimensions:
 
-**AI Slop Detection (CRITICAL)**: Does this look like every other AI-generated interface? Check for the generic indigo/violet palette, gradient text, dark glows, glassmorphism, hero-metric layouts, identical card grids, and generic geometric fonts. **The test**: If someone said "AI made this," would you believe them immediately?
+**Design specificity**: Is the composition, interaction and visual language
+grounded in this product, or could an unrelated product use it unchanged?
+Make this judgment before seeing scan output; a visual pattern alone is not a defect.
 
 **Holistic Design Review**: visual hierarchy (eye flow, primary action clarity), information architecture (structure, grouping, cognitive load), emotional resonance (does it match brand and audience?), discoverability (are interactive elements obvious?), composition (balance, whitespace, rhythm), typography (hierarchy, readability, font choices), color (purposeful use, cohesion, accessibility), states & edge cases (empty, loading, error, success), microcopy (clarity, tone, helpfulness).
 
@@ -57,9 +63,11 @@ Evaluate these dimensions:
 - **Emotional valleys**: Check for anxiety spikes at high-stakes moments (payment, delete, commit). Are there design interventions (progress indicators, reassurance copy, undo options)?
 
 **Nielsen's Heuristics** (consult [heuristics-scoring](references/heuristics-scoring.md)):
-Score each of the 10 heuristics 0-4. This scoring will be presented in the report.
+Score applicable heuristics 0-4. Mark genuinely inapplicable ones `n/a` with
+a reason, such as expert accelerators on a simple marketing page. The maximum
+is four times the number scored; never treat `n/a` as a zero or a perfect score.
 
-Return structured findings covering: AI slop verdict, heuristic scores, cognitive load assessment, what's working (2-3 items), priority issues (3-5 with what/why/fix), minor observations, and provocative questions.
+Return structured findings covering: design-specificity verdict, heuristic scores, cognitive load assessment, what's working (2-3 items), priority issues (3-5 with what/why/fix), minor observations, and provocative questions.
 
 #### Assessment B: Automated Pattern Scan
 
@@ -113,21 +121,25 @@ Present the Nielsen's 10 heuristics scores as a table:
 | 8 | Aesthetic and Minimalist Design | ? | |
 | 9 | Error Recovery | ? | |
 | 10 | Help and Documentation | ? | |
-| **Total** | | **??/40** | **[Rating band]** |
+| **Total** | | **??/[applicable maximum]** | **[Rating band]** |
 
 Assign a score of 4 only when the interface has no material issue for that
 heuristic. Use 20-32 as the normal range for production interfaces with
 ordinary gaps.
 
-#### Anti-Patterns Verdict
+#### Design Specificity Verdict
 
-**Start here.** Does this look AI-generated?
+**Start here.** Does the result feel authored for this product?
 
-**LLM assessment**: Your own evaluation of AI slop tells. Cover overall aesthetic feel, layout sameness, generic composition, missed opportunities for personality.
+**Design assessment**: Your evaluation before scan output. Cover coherence,
+category-interchangeable structure and missed opportunities for product character.
 
 **Deterministic scan**: Summarize what the automated detector found, with counts and file locations. Note any additional issues the detector caught that you missed, and flag any false positives.
 
-**Visual overlays** (if browser was used): Tell the user that overlays are now visible in the **[Human]** tab in their browser, highlighting the detected issues. Summarize what the console output reported.
+**Browser evidence**: Describe the inspected pages and actual results. Claim
+a visible overlay only if injection succeeded and the detector ran in the page.
+If no overlay was created, report ordinary screenshots or manual inspection
+instead, with any unavailable or untested steps.
 
 #### Overall Impression
 
@@ -195,7 +207,8 @@ Ask questions along these lines (adapt to the specific findings; do NOT ask gene
 **Rules for questions**:
 
 - Every question must reference specific findings from the report. Never ask generic "who is your audience?" questions.
-- Keep it to 2-4 questions maximum. Respect the user's time.
+- Keep it to 1-3 questions maximum, using the harness's structured question mechanism when available. Ask only about consequential unresolved scope or intent; preserve existing authorization.
+- Deliver the report before the questions so the user can assess the findings.
 - Offer concrete options, not open-ended prompts.
 - If findings are straightforward (e.g., only 1-2 clear issues), skip questions and go directly to Step 5.
 

@@ -3,8 +3,8 @@ metadata:
   source: https://github.com/shadcn/improve/blob/main/skills/improve/SKILL.md
   upstream_repo: shadcn/improve
   upstream_ref: main
-  upstream_commit: 5428507e7116
-  last_synced: "2026-06-12"
+  upstream_commit: cac56e1ebd3c279aa9153616cfeac7b174ab90f9
+  last_synced: "2026-10-06"
   license: MIT
 ---
 # Codebase Survey
@@ -91,7 +91,7 @@ plans/
 
 **Excerpts come from your own reads, never from a subagent's report.** Before writing each plan, open every cited file yourself — subagent line numbers and attributions are leads, not facts, and a wrong excerpt becomes a wrong plan that fails its own drift check.
 
-Before writing anything: record `git rev-parse --short HEAD` — every plan stamps the commit it was written against (the executor uses it for drift detection). If `plans/` already exists from a previous run, **reconcile, don't duplicate**: read `plans/README.md`, keep numbering monotonic, skip findings already planned or listed as rejected, and mark superseded plans stale in the index. If `plans/` exists for some unrelated purpose, stop and ask for the canonical plan directory before writing.
+Before writing anything: record `git rev-parse --short HEAD` — every plan stamps the commit it was written against (the executor uses it for drift detection). If `plans/` already exists from a previous run, **reconcile, don't duplicate**: read `plans/README.md`, keep numbering monotonic, skip findings already planned or listed as rejected, and mark superseded plans stale in the index. If `plans/` exists for an unrelated purpose, use `advisor-plans/` instead. Resolve the selected directory under the entry point's Survey plan directory rules before writing; all plan paths below refer to that directory.
 
 Write each plan **for the weakest plausible executor**. That means:
 

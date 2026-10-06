@@ -10,7 +10,7 @@ Derived from **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT)
 |-------|-------|
 | Source | [`skills/engineering/tdd/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md) |
 | Upstream ref | `main` |
-| Original adaptation commit | `8b78b531ab96` |
+| Original adaptation commit | `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d` |
 | Original adaptation date | 2026-08-26 |
 | License | MIT |
 

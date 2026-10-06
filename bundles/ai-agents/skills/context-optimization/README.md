@@ -10,13 +10,13 @@ Derived from **[muratcankoylan/Agent-Skills-for-Context-Engineering](https://git
 |-------|-------|
 | Source | [`skills/context-optimization/SKILL.md`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md) |
 | Upstream ref | `main` |
-| Synced at commit | `cbc2c978133d` |
-| Last synced | 2026-06-12 |
+| Synced at commit | `58b55a8921758d13453b440704fb1b5b208c0b0e` |
+| Last synced | 2026-10-06 |
 | License | MIT |
 
-**Local modifications:** Ported to upstream v2.1.0 (2026-05-15 corpus, commit cbc2c978133d) on 2026-06-12 — body and references match upstream. Cross-references to upstream sibling skills not vendored here (context-compression, filesystem-context, project-development, latent-briefing) were removed so routing only names skills present in this marketplace. scripts/compaction.py carries two local hardening fixes over upstream (CodeRabbit-flagged, candidates to push back): ContextBudget now rejects total_limit<=0 and scales the reserved buffer so reservation_limit stays non-negative; calculate_cache_metrics now debits the unhit remainder of a partial cache hit from misses, where upstream counted only the hit fraction and so inflated hit_rate.
+**Local modifications:** Ported to upstream v2.1.0 (2026-05-15 corpus, commit 58b55a8921758d13453b440704fb1b5b208c0b0e) on 2026-06-12 — body and references match upstream. Cross-references to upstream sibling skills not vendored here (context-compression, filesystem-context, project-development, latent-briefing) were removed so routing only names skills present in this marketplace. scripts/compaction.py carries two local hardening fixes over upstream (CodeRabbit-flagged, candidates to push back): ContextBudget now rejects total_limit<=0 and scales the reserved buffer so reservation_limit stays non-negative; calculate_cache_metrics now debits the unhit remainder of a partial cache hit from misses, where upstream counted only the hit fraction and so inflated hit_rate.
 
-**Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/context-optimization/SKILL.md`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md) on `main` since commit `cbc2c978133d`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.
+**Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/context-optimization/SKILL.md`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md) on `main` since commit `58b55a8921758d13453b440704fb1b5b208c0b0e`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.
 
 ## Absorbed upstream: context-degradation
 
@@ -31,10 +31,10 @@ The `npx skills add --skill context-degradation` name no longer installs. The ea
 |-------|-------|
 | Source | [`skills/context-degradation/SKILL.md`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-degradation/SKILL.md) |
 | Upstream ref | `main` |
-| Synced at commit | `25e1fa79a33f` |
-| Last synced | 2026-06-13 |
+| Synced at commit | `58b55a8921758d13453b440704fb1b5b208c0b0e` |
+| Last synced | 2026-10-06 |
 | License | MIT |
 
-**Local modifications:** Imported 2026-01-20 (commit ef42a98) at v1.0.0-era content, ported forward 2026-06-13 to upstream commit 25e1fa79a33f (v2.1.0 content: 7-entry Gotchas, claim-* evidence IDs, Examples 3-4, Model-Specific Degradation Thresholds). References to siblings not vendored here (context-compression, filesystem-context) were stripped. `scripts/degradation_detector.py` adopts the upstream numpy-to-stdlib rewrite and carries two hardening fixes (CodeRabbit on PR #21): `detect_lost_in_middle` excludes negative or out-of-range critical indices from the score denominator, and `analyze_context_structure` measures middle-band content by line-span overlap. `references/degradation-patterns.md` is byte-identical to upstream `patterns.md`. Folded into this skill 2026-10-06: "When to Activate", "Do not activate" and "Integration" were replaced by this skill's Modes table and routing; the "Architectural Patterns for Resilience" paragraph and the compaction-trigger guideline duplicated this skill's techniques and were dropped.
+**Local modifications:** Imported 2026-01-20 (commit ef42a98) at v1.0.0-era content, ported forward 2026-06-13 to upstream commit 58b55a8921758d13453b440704fb1b5b208c0b0e (v2.1.0 content: 7-entry Gotchas, claim-* evidence IDs, Examples 3-4, Model-Specific Degradation Thresholds). References to siblings not vendored here (context-compression, filesystem-context) were stripped. `scripts/degradation_detector.py` adopts the upstream numpy-to-stdlib rewrite and carries two hardening fixes (CodeRabbit on PR #21): `detect_lost_in_middle` excludes negative or out-of-range critical indices from the score denominator, and `analyze_context_structure` measures middle-band content by line-span overlap. `references/degradation-patterns.md` is byte-identical to upstream `patterns.md`. Folded into this skill 2026-10-06: "When to Activate", "Do not activate" and "Integration" were replaced by this skill's Modes table and routing; the "Architectural Patterns for Resilience" paragraph and the compaction-trigger guideline duplicated this skill's techniques and were dropped.
 
-**Checking for upstream changes:** diff [`skills/context-degradation/SKILL.md`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-degradation/SKILL.md) on `main` since commit `25e1fa79a33f`, port anything worth bringing home into `references/degradation.md`, then bump `upstream_commit` and `last_synced` in that file's frontmatter and the table above.
+**Checking for upstream changes:** diff [`skills/context-degradation/SKILL.md`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-degradation/SKILL.md) on `main` since commit `58b55a8921758d13453b440704fb1b5b208c0b0e`, port anything worth bringing home into `references/degradation.md`, then bump `upstream_commit` and `last_synced` in that file's frontmatter and the table above.

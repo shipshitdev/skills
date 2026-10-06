@@ -11,8 +11,8 @@ metadata:
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md
   upstream_repo: mattpocock/skills
   upstream_ref: main
-  upstream_commit: 8b78b531ab96
-  last_synced: "2026-09-05"
+  upstream_commit: 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d
+  last_synced: "2026-10-06"
   license: MIT
 when_to_use: "failing test first"
 ---
@@ -89,6 +89,9 @@ internal refactor. If a test fails because a private helper was renamed while
 the behavior still works, the test is too coupled to implementation.
 
 ## Before Writing Tests
+
+Read `GLOSSARY.md` and `CONTEXT.md` when present, plus relevant ADRs, so test
+names and interface terms follow the project domain.
 
 1. Find at least 3 existing tests or implementations that match the local pattern.
 2. Identify the highest useful test boundary: user flow, route, service API, CLI, or pure function.

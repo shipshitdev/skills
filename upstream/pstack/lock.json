@@ -791,11 +791,11 @@
     },
     {
       "archive": "upstream/pstack/cursor-pstack.tar.gz",
-      "commit": "807c031086fcf71c88c863b4a4e6938b6785c58f",
+      "commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
       "files": {
         "pstack/.cursor-plugin/plugin.json": {
           "mode": 420,
-          "sha256": "ed64372490869e29873f7d644ea1210b4ded2ef4eea878af2cea49e45ff40937"
+          "sha256": "7bc736c60985805f70465e044e5adc7028663f72a73deea7fa3e95e52d70dc8e"
         },
         "pstack/.gitignore": {
           "mode": 420,
@@ -807,7 +807,7 @@
         },
         "pstack/README.md": {
           "mode": 420,
-          "sha256": "c16e2c9ec18d35effa03dc3c6ee559578c5e9644f2a0f7994647335b1bfebf59"
+          "sha256": "7f39feae81103e18b567e1fa5075cba86425cf4697a01be66a7422ef93c2c855"
         },
         "pstack/agents/comment-sicko.md": {
           "mode": 420,
@@ -871,47 +871,47 @@
         },
         "pstack/docs/guide/01-setup.md": {
           "mode": 420,
-          "sha256": "e0f346fc79ce615f50bb735fc048a5f13ef674f00890c3af162e9e43acd8217a"
+          "sha256": "86d0330f245d16254a2069955f993c15d96cf29cd1a73690a0164074b7ac1190"
         },
         "pstack/docs/guide/02-poteto-mode.md": {
           "mode": 420,
-          "sha256": "032de2e18a1ca0cc72b7239d1ed76d390203794e9f12cbc6d69c4189ddd1968d"
+          "sha256": "979f61ca3d44cb8e68affda40327d32797e93fa9cc53ced7444c15e2600897e1"
         },
         "pstack/docs/guide/03-understand.md": {
           "mode": 420,
-          "sha256": "16f3fe0f7df092a5c69dac90971ef57e63a8a9ae926eed851285c7bfddc0f3fd"
+          "sha256": "0090afa9b8670adf175466a2a973ff4349e95ed67d2aa8cebdfc55ff4b7382c9"
         },
         "pstack/docs/guide/04-design.md": {
           "mode": 420,
-          "sha256": "21e820ff73c0b70682aa570a967ede446b4d7caf62e8f391d0dd733ccb74874c"
+          "sha256": "31f2abe6e9b29feafd1a9eece8f4fe21992f86b8c19ab2e9b5c11a20f36587e7"
         },
         "pstack/docs/guide/05-build-and-clean.md": {
           "mode": 420,
-          "sha256": "07182a1961e7fe430276e7d767b4dc506e7612767e82eb092baa35c8a7e083df"
+          "sha256": "a93cc7771f7b35c7b54d0120b6f66e8367794ce6791237e889a30e7585c190fa"
         },
         "pstack/docs/guide/06-verify-and-ship.md": {
           "mode": 420,
-          "sha256": "c93cd50c0359ce875a82b3f7d64eab102a4b0815dbbecdb8e0e5e910bd2d18e9"
+          "sha256": "3ef0eed5ea084dfbbaf1b1ae9e08d84f2c8a2b536ffb3ef5226710bf105f70e6"
         },
         "pstack/docs/guide/07-overnight.md": {
           "mode": 420,
-          "sha256": "5033d61e8b4b6fb0b2304b2132f26bf0b6aee685aa4ed53a76a73cf0ac1c3557"
+          "sha256": "d7bd33a3d880768688dff4c1c2b5481ca9f0f194f5d97e44b65c9f96624d3ff0"
         },
         "pstack/docs/guide/08-principles.md": {
           "mode": 420,
-          "sha256": "a103e293dd6d9513f425feac39547f0c2c049300f36704d80b6d49c958e5a4bb"
+          "sha256": "73c3db659d356d4aa6d7674d30d0db46fab2bdd60152fca717c2d1772a042bdc"
         },
         "pstack/docs/guide/09-make-it-yours.md": {
           "mode": 420,
-          "sha256": "b98588a232a38ca7acebbeecb95ac771df1981aed662dcb45c96b4b66ed20ec0"
+          "sha256": "157e0c20ad3c657857c2fbbea3afd26895b71b8f68475bc56f4c382dcdd0e118"
         },
         "pstack/docs/guide/10-recipes-and-pitfalls.md": {
           "mode": 420,
-          "sha256": "a4662cd98870f08c6abe117a832abe37670ee84f8ed25dcbe7e99ef4eb8e05e0"
+          "sha256": "c652474764b08da4a6364d85f5d03cf1fc1cf35e9d7c549348fb66e2d09f7b1f"
         },
         "pstack/docs/guide/README.md": {
           "mode": 420,
-          "sha256": "af1408b3d46ed71f199937e250b8acb90e0e43305a0799e4acbd3461880ace11"
+          "sha256": "49d92cfe91e01c04bd1150e5b000ee4fd4dfda8ce789b66a9dda98f7e5456e00"
         },
         "pstack/docs/guide/images/design.jpg": {
           "mode": 420,
@@ -939,7 +939,7 @@
         },
         "pstack/skills/architect/SKILL.md": {
           "mode": 420,
-          "sha256": "741901140ee382ebf93263a7ed03c6ee3719e578416d81afcd195876fa16c496"
+          "sha256": "922238947195f2fb825e90688bb6cfa520b81a35a7bee12223c73a6cf96ae64b"
         },
         "pstack/skills/architect/references/design-red-flags.md": {
           "mode": 420,
@@ -951,11 +951,11 @@
         },
         "pstack/skills/architect/references/runner-prompt.md": {
           "mode": 420,
-          "sha256": "983bf2820cc14ed8ecab6e448e1033e5cfe6031967d0a9287b48c7fa9c33d925"
+          "sha256": "21dd5314aab778c5007228027a4591d97693fbec6ab86524037772b63f40948e"
         },
         "pstack/skills/arena/SKILL.md": {
           "mode": 420,
-          "sha256": "e3a1f6c49a08b7e0b92134e53300d146f1f22ba83386d2019926e736df421851"
+          "sha256": "6e17736b5228b661569c3af054f8302c55cf9bf1649447652d53705cce38bed6"
         },
         "pstack/skills/automate-me/SKILL.md": {
           "mode": 420,
@@ -967,7 +967,7 @@
         },
         "pstack/skills/blast-radius/SKILL.md": {
           "mode": 420,
-          "sha256": "5f02db9101ccf26c20254718f0fcd5c2c7ac5d4292b0e0923d0944ac47237aff"
+          "sha256": "2e10745b97f5862323dcda3b29ca60d56b5c3c98e37020085d26b48efbe0a436"
         },
         "pstack/skills/bro/SKILL.md": {
           "mode": 420,
@@ -999,7 +999,7 @@
         },
         "pstack/skills/how/SKILL.md": {
           "mode": 420,
-          "sha256": "d31805589c7f6a63a6db6c9fadebbd79fb9660682cf1654e9b2e5e1e7cd30bc0"
+          "sha256": "7e0d902484a90eba73dcf518bff478dc5b962b456d23c3d0a188c2ce36b236d8"
         },
         "pstack/skills/how/references/explainer-prompt.md": {
           "mode": 420,
@@ -1011,7 +1011,7 @@
         },
         "pstack/skills/interrogate/SKILL.md": {
           "mode": 420,
-          "sha256": "59d498c3e9848a24b2d105eb3f05b808aa4152adf4cb1de7bbb6aff4f4cd9b68"
+          "sha256": "2f7e570ec23791ed2e485a09c98ed0597c46035e2050b351b84d3dc760ddd71f"
         },
         "pstack/skills/interrogate/references/code-quality-review.md": {
           "mode": 420,
@@ -1043,7 +1043,7 @@
         },
         "pstack/skills/poteto-help/SKILL.md": {
           "mode": 420,
-          "sha256": "5fc65e4c30c52edcde690d18904e3a8cf6ba6c2424c672d1a5cb6d29ab28645c"
+          "sha256": "ea71bcb15c023a5d9cc70686e4812144687ffe03bf80d85cc480af3e0b181d1e"
         },
         "pstack/skills/poteto-help/references/prompting.md": {
           "mode": 420,
@@ -1055,7 +1055,7 @@
         },
         "pstack/skills/poteto-mode/SKILL.md": {
           "mode": 420,
-          "sha256": "404c0ef4a78e93451b2ab555ca532e7197b5cf87de29205b6f7109dbee5d9c4d"
+          "sha256": "31cd02290360ce63564ef22b74d69fc6d90e62181d05a644cbed8f6c47cc9412"
         },
         "pstack/skills/poteto-mode/playbooks/authoring-a-skill.md": {
           "mode": 420,
@@ -1167,7 +1167,7 @@
         },
         "pstack/skills/poteto-mode/scripts/orch/orch.test.ts": {
           "mode": 420,
-          "sha256": "174b86d21ff51ccd28d1a8c938cb2e0c6fa287b209d4ca6c03932fcb1b53372e"
+          "sha256": "773153ac74de6eb15f58d2682f487f5f30672d7efe3ef1d24a131aa9129d279b"
         },
         "pstack/skills/poteto-mode/scripts/orch/orch.ts": {
           "mode": 493,
@@ -1335,7 +1335,7 @@
         },
         "pstack/skills/reflect/SKILL.md": {
           "mode": 420,
-          "sha256": "36efa48cc4ec2ba6f8131651aae24c6321682b098ed47a1069a7509462bf4a84"
+          "sha256": "31b8fb866ebe084e7fb7f16dc0ea46ab84ffdc838d54f948edc78556f301a497"
         },
         "pstack/skills/reflect/references/divergent-reviewer.md": {
           "mode": 420,
@@ -1355,7 +1355,7 @@
         },
         "pstack/skills/setup-pstack/SKILL.md": {
           "mode": 420,
-          "sha256": "125dd0c8f588782cfb271efae8f97a0719e43e79f56b3495c095f460bcee6389"
+          "sha256": "d61b47256a18155a81c8e5ef95e3cc6569ce8c18317c35c4dd9c8015cf68cb59"
         },
         "pstack/skills/show-me-your-work/SKILL.md": {
           "mode": 420,
@@ -1399,7 +1399,7 @@
         },
         "pstack/skills/why/SKILL.md": {
           "mode": 420,
-          "sha256": "2a852ec8680920109d2b56538b027c52867896a597250ac5d18a13e0b42e5b06"
+          "sha256": "442215bf70e491d4d31bd200c197f2ec447445df38e074c40880fc4bf30a1f9e"
         },
         "pstack/skills/why/references/epistemics.md": {
           "mode": 420,
@@ -1455,7 +1455,7 @@
         "pstack"
       ],
       "repository": "https://github.com/cursor/plugins",
-      "sha256": "74e030ddf239a722e03a53dd17f144e303e7100e279945c078164ff293e7cec1"
+      "sha256": "f272f723c804a027f36b9aaa9df2cb74dba051fb54babd02f3ed72d3516b4e59"
     }
   ]
 }

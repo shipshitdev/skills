@@ -6,8 +6,8 @@ metadata:
   source: https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main
-  upstream_commit: 48410c7f1973
-  last_synced: "2026-06-12"
+  upstream_commit: 8ca22dba9a94f28898bbce59f2537ff4d87c747d
+  last_synced: "2026-10-06"
   license: MIT
   tags: "verification, completion, evidence, quality-gate, testing, ci-cd"
 when_to_use: "tests passing, build succeeds, linter clean"

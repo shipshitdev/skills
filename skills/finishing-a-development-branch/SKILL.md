@@ -6,8 +6,8 @@ metadata:
   source: https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main
-  upstream_commit: f2cbfbefebbf
-  last_synced: "2026-06-12"
+  upstream_commit: 8ca22dba9a94f28898bbce59f2537ff4d87c747d
+  last_synced: "2026-10-06"
   license: MIT
   tags: "git, branch, merge, pull-request, workflow, worktree, cleanup"
 allowed-tools: Bash(git *) Bash(gh *)
@@ -90,6 +90,10 @@ the user explicitly asks for cleanup. Directory location is not deletion authori
 For an explicit discard, first show the exact branch, unmerged commits, dirty files,
 and worktree that would be lost; require confirmation covering that exact scope.
 Use the cleanup workflow only after its provenance and loss checks pass.
+A refused worktree removal means files may exist only there. Inspect tracked,
+untracked, and ignored files and preserve them before retrying; never add
+`--force` to bypass a refusal. Capture paths before leaving the worktree and
+run removal from outside it.
 
 ## Report
 

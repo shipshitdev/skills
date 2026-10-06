@@ -228,7 +228,10 @@ Even if the system is usable without docs, help should be easy to find, task-foc
 
 ## Score Summary
 
-**Total possible**: 40 points (10 heuristics × 4 max)
+**Total possible**: 4 times the number of applicable heuristics (40 when all ten
+apply). Mark inapplicable items `n/a` with reasons. Use the score divided by its
+applicable maximum for the rating: Excellent ≥90%, Good ≥70%, Acceptable ≥50%,
+Poor ≥30%, otherwise Critical. The ranges below show the full 40-point case.
 
 | Score Range | Rating | What It Means |
 |-------------|--------|---------------|

@@ -8,9 +8,9 @@ metadata:
   version: "2.2.2"
   tags: "ux, planning, design-brief"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/shape.md
-  upstream_version: skill-v3.1.1
+  upstream_version: skill-v4.5.0
   upstream_latest: skill-v4.5.0
-  last_synced: "2026-06-12"
+  last_synced: "2026-10-06"
   license: Apache-2.0
 when_to_use: "shape this, design brief, plan the UX, plan the UI, before writing UI code, /shape"
 ---
@@ -40,6 +40,7 @@ Run the `grill-me` skill. Seed the design tree with these branches so the **fron
 - **Purpose and context** — what this is for, who specifically uses it, success, user state of mind
 - **Content and data** — what is shown or collected, realistic ranges, empty/error/first-time/power-user cases, what is dynamic
 - **Design goals** — the single most important user action, how it should feel, existing product patterns, reference examples
+- **Scope** — fidelity, breadth, interactivity, named target and what remains untouched
 - **Constraints** — technical, content, mobile, accessibility beyond WCAG AA
 - **Anti-goals** — wrong directions and the biggest risk of getting this wrong
 
@@ -48,6 +49,11 @@ Facts that the repo already answers stay off the frontier. `grill-me` asks the r
 ## Phase 2: Design Brief
 
 After the interview, synthesize everything into a structured design brief. Present it to the user for confirmation before considering this skill complete.
+
+Use three to five bullets when the task is settled; use the full structure for
+ambiguous or multi-screen work. Include scope, realistic ranges, required media
+roles, and decisions a builder must not invent. Resolve consequential open
+decisions before handoff; do not leave them for implementation.
 
 ### Brief Structure
 
@@ -76,7 +82,8 @@ What copy, labels, empty state messages, error messages, and microcopy are neede
 Based on the brief, list which reference files or documentation would be most valuable during implementation (e.g., spatial design guidance for complex layouts, motion design for animated features, interaction design for form-heavy features).
 
 **9. Open Questions**
-Anything unresolved that the implementer should resolve during build.
+Anything unresolved that blocks handoff. Resolve it with the user before
+implementation; a confirmed brief does not silently delegate design decisions.
 
 ---
 
