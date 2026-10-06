@@ -81,6 +81,13 @@ python3 scripts/scaffold.py \
   --name "My Startup" \
   --theme-mode light
 
+# Custom colors (#rgb, #rgba, #rrggbb or #rrggbbaa); text colors are picked for contrast
+python3 scripts/scaffold.py \
+  --slug mystartup \
+  --name "My Startup" \
+  --primary "#00ff00" \
+  --background "#f4f4f5"
+
 # Allow outside current directory
 python3 scripts/scaffold.py \
   --root ~/www/landings \
@@ -280,7 +287,7 @@ To add custom sections:
 2. Import it in `app/page.tsx`
 3. Register it in the `sectionComponents` map under its `type`
 
-Change colors in `app.json` `theme` (`primary`, `accent`, `background`, `foreground`, `mode`): `app/layout.tsx` applies them inline through `lib/theme.ts`, so they override the matching variables in `app/globals.css`. When `mode` is omitted it follows the `background` brightness (a light background gives the full light token set); an explicit `mode` always wins. Edit `app/globals.css` for the tokens `app.json` does not set (for example `--radius`, `--secondary`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
+Change colors in `app.json` `theme` (`primary`, `accent`, `background`, `foreground`, `mode`): `app/layout.tsx` applies them inline through `lib/theme.ts`, which accepts `#rgb`, `#rgba`, `#rrggbb` and `#rrggbbaa` (anything else fails the build; alpha is treated as opaque for contrast and warns) and picks each text color (`--foreground`, `--primary-foreground`, `--brand-foreground`) as near-black or near-white by WCAG contrast, so they override the matching variables in `app/globals.css`. When `mode` is omitted it follows the `background` brightness (a light background gives the full light token set); an explicit `mode` always wins. Edit `app/globals.css` for the tokens `app.json` does not set (for example `--radius`, `--secondary`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
 
 ## References
 
