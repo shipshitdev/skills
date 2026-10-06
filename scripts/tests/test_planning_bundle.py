@@ -32,7 +32,8 @@ class PlanningBundleTests(unittest.TestCase):
 
     def test_planning_only_install_runs_digest_and_check(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            # Resolve symlinks (macOS /var): plan-header.mjs only runs as a CLI on its real path.
+            root = Path(directory).resolve()
             installed = root / "installed"
             shutil.copytree(BUNDLE, installed)  # the planning bundle and nothing else
             helper = installed / HELPER
