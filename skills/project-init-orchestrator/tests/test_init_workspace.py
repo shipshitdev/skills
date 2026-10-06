@@ -366,6 +366,28 @@ class ScaffoldSecurityTest(unittest.TestCase):
         self.assertEqual(added.returncode, 0, added.stdout + added.stderr)
         self.assertIn("-p 3002", added.stdout)
         self.assertNotIn("-p 3001", added.stdout)
+        # A new app's origin is a one-line env change
+        self.assertIn("FRONTEND_URLS=http://localhost:3000,http://localhost:3002", added.stdout)
+
+    # Follow-up: several frontend origins for CORS and trustedOrigins
+    def test_cors_and_trusted_origins_share_a_comma_separated_origin_list(self) -> None:
+        origins = self.read("api/apps/api/src/config/origins.ts")
+        self.assertIn("process.env", origins)
+        self.assertIn("env.FRONTEND_URLS", origins)
+        self.assertIn("env.FRONTEND_URL ||", origins)
+        self.assertIn('.split(",")', origins)
+        self.assertTrue((self.src / "config" / "origins.spec.ts").exists())
+        main = self.read("api/apps/api/src/main.ts")
+        self.assertIn("origin: allowedOrigins()", main)
+        self.assertNotIn("process.env.FRONTEND_URL", main)
+        service = self.read("api/apps/api/src/auth/auth.service.ts")
+        template = (SKILL_DIR / "references/templates/auth-service.template.ts").read_text()
+        for text in (service, template):
+            self.assertIn("trustedOrigins: allowedOrigins()", text)
+            self.assertNotIn("process.env.FRONTEND_URL", text)
+        self.assertIn("FRONTEND_URLS=", self.read(".env.example"))
+        guide = (SKILL_DIR / "references" / "deployment-guide.md").read_text()
+        self.assertIn("FRONTEND_URLS", guide)
 
 
 if __name__ == "__main__":

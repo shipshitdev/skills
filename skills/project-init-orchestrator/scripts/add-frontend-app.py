@@ -126,6 +126,9 @@ def add_frontend_app(root: Path, name: str) -> None:
     print("\nNext steps:")
     print("1. Run `bun install` at the workspace root (frontend/apps/* is already a workspace glob)")
     print(f"2. cd {app_root.relative_to(root)} && bun run dev -- -p 3002 (the dashboard uses 3000 and the API 3001)")
+    print("3. Allow the new origin in api/.env so CORS and Better Auth accept it:")
+    print("   FRONTEND_URLS=http://localhost:3000,http://localhost:3002")
+    print("   (production: add the app's https origin the same way, then restart the API)")
 
 
 def main() -> None:
