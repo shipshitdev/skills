@@ -39,7 +39,7 @@ bun --version  # 1.2.x
 
 ### 3. Workspace Structure
 
-**GOOD:** See the Full guide section below (§ Workspace Structure Example) for the full tree — root `package.json` + `bun.lockb`, each app/package owns its own `package.json`.
+**GOOD:** See the Full guide section below (§ Workspace Structure Example) for the full tree — root `package.json` + `bun.lock`, each app/package owns its own `package.json`.
 
 **BAD:**
 
@@ -49,7 +49,7 @@ my-monorepo/
 ├── apps/
 │   └── web/
 │       ├── package.json
-│       └── bun.lockb     # BAD: Lockfile in workspace
+│       └── bun.lock      # BAD: Lockfile in workspace
 ```
 
 ### 4. Workspace Dependencies
@@ -116,7 +116,13 @@ Packages can only access dependencies they explicitly declare.
 }
 ```
 
-Both lockfile formats are recognised: `bun.lock` (the text lockfile, default since Bun 1.2) and the legacy binary `bun.lockb`. Keep exactly one at the root and none inside workspaces.
+`bun.lock` (the text lockfile, default since Bun 1.2) is the canonical lockfile: keep exactly one at the root and none inside workspaces. A lone legacy binary `bun.lockb` is still accepted but reported as a warning with a migration command; `bun.lock` and `bun.lockb` together is an error.
+
+```bash
+# Migrate a legacy binary lockfile
+bun install --save-text-lockfile --frozen-lockfile --lockfile-only
+rm bun.lockb
+```
 
 ## Bun 1.3+ Features
 
@@ -168,7 +174,7 @@ bun add <package> --cwd <workspace>
 **Fix:**
 
 ```bash
-rm apps/*/bun.lockb packages/*/bun.lockb
+rm apps/*/bun.lock packages/*/bun.lock
 bun install  # From root only
 ```
 
@@ -205,7 +211,7 @@ See the Full guide section below (§ Validation Output Example) for a sample rep
 ```
 my-monorepo/
 ├── package.json          # Root with workspaces, private: true
-├── bun.lockb             # Single lockfile at root
+├── bun.lock              # Single lockfile at root
 ├── apps/
 │   ├── web/
 │   │   └── package.json  # Own dependencies
@@ -234,7 +240,7 @@ Workspace Structure:
   ✓ apps/web - valid workspace
   ✓ apps/api - valid workspace
   ✓ packages/ui - valid workspace
-  ✗ apps/web/bun.lockb - lockfile should only be at root
+  ✗ apps/web/bun.lock - lockfile should only be at root
 
 Dependencies:
   ✓ Using workspace:* protocol

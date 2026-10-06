@@ -1,9 +1,9 @@
 ---
 name: expo-architect
-description: Scaffolds a runnable Expo React Native app with screens, Expo Router navigation, and optional Clerk auth. Use when starting a new Expo or mobile app.
+description: Scaffolds a runnable Expo React Native app with screens, Expo Router navigation, and optional Better Auth. Use when starting a new Expo or mobile app.
 metadata:
   version: "2.2.2"
-  tags: "expo, react-native, mobile, scaffold, clerk"
+  tags: "expo, react-native, mobile, scaffold, better-auth"
 when_to_use: "NativeWind, mobile app scaffold"
 ---
 
@@ -11,11 +11,11 @@ when_to_use: "NativeWind, mobile app scaffold"
 
 Create Expo React Native apps with:
 
-- **Framework:** Expo SDK 54 + React Native 0.83 + TypeScript
+- **Framework:** Expo SDK 57 + React Native 0.86 + React 19 + TypeScript
 - **Navigation:** Expo Router (file-based routing)
-- **Auth:** Clerk authentication (optional)
+- **Auth:** Better Auth with the Expo client (optional; session in SecureStore, backed by your API)
 - **UI:** NativeWind (Tailwind for RN) or StyleSheet
-- **Quality:** Biome linting + TypeScript strict mode
+- **Quality:** Biome 2.5 linting + TypeScript strict mode
 - **Package Manager:** bun
 
 ## Contract
@@ -51,7 +51,7 @@ Delegates To:
 Generates **working mobile apps**, not empty scaffolds:
 
 - Complete navigation structure with working screens
-- Optional Clerk authentication flow
+- Optional Better Auth sign-in/sign-up flow
 - Real UI components with proper styling
 - API client integration ready
 - Runs immediately with `bun start`
@@ -59,7 +59,7 @@ Generates **working mobile apps**, not empty scaffolds:
 ## Workflow Summary
 
 1. **PRD Brief Intake** - Extract app type, screens, features, auth needs
-2. **Auth Setup** (if requested) - Clerk provider, sign-in/sign-up screens
+2. **Auth Setup** (if requested) - `lib/auth-client.ts` (Better Auth Expo client), session-guarded root layout, sign-in/sign-up screens
 3. **Screen Generation** - Tab or stack-based navigation
 4. **Component Generation** - UI components, entity components, layouts
 5. **Quality Setup** - Biome, TypeScript strict, path aliases
@@ -99,8 +99,7 @@ myapp/
 │   └── layout/              # Layout components
 ├── lib/
 │   ├── api.ts               # API client
-│   └── auth.ts              # Auth utilities
-├── providers/               # Context providers
+│   └── auth-client.ts       # Better Auth Expo client (if auth enabled)
 ├── types/                   # TypeScript types
 ├── app.json                 # Expo config
 ├── package.json
@@ -121,9 +120,12 @@ bun run typecheck  # Type checking
 ## Environment Variables
 
 ```
-EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 EXPO_PUBLIC_API_URL=http://localhost:3001
 ```
+
+Better Auth runs inside the API (default `/api/auth`). The API needs the `@better-auth/expo`
+plugin and the app scheme (the app slug, e.g. `my-app://`) in `trustedOrigins`; the scaffold
+prints the exact scheme when auth is enabled.
 
 ---
 

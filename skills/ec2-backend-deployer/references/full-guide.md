@@ -263,7 +263,7 @@ WORKDIR /app
 # ============================================
 FROM base AS deps
 
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 # ============================================
@@ -1673,8 +1673,8 @@ DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB?schema=public
 REDIS_URL=redis://localhost:6379
 
 # Auth
-JWT_SECRET=your-secret-here
-CLERK_SECRET_KEY=sk_live_...
+BETTER_AUTH_SECRET=your-secret-here
+BETTER_AUTH_URL=https://api.example.com
 
 # Monitoring
 SENTRY_DSN=https://...@sentry.io/...

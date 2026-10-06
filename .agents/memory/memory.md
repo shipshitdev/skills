@@ -302,6 +302,19 @@ document-database skills were retired (see the Retired skills table in
 `docs/skills/catalog-naming.md`); `postgres-ops` is the destination. The only allowed
 residual is the `@testing-library/jest-dom` package path.
 
+### House stack sweep: Clerk dropped, `bun.lock` canonical (2026-10-06, #223)
+
+Clerk is no longer part of the catalog: `stack-validator` lost its `clerk` stack
+(`references/clerk.md`, detection, CLI choice and fixture tests), `expo-architect`
+scaffolds Better Auth through `@better-auth/expo`, and the Stripe and queue guides use
+Better Auth sessions. `bun.lock` is the canonical Bun lockfile everywhere (the validator
+still accepts a lone legacy `bun.lockb` as a migrate warning; both together stay an
+error). Scaffolds and guides emit Tailwind v4 CSS-first config (`@theme`, no
+`tailwind.config.*`), no Sass, and NestJS 12. The vendored `shadcn` and `tailwind`
+skills keep their upstream v3 and Sass examples as before/after material. Rejected:
+keeping a Clerk reference "for existing apps", because the catalog writes toward the
+house stack and the removed stack remains in git history.
+
 ## Known Issues
 
 None currently tracked.

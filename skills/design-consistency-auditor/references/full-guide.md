@@ -4,8 +4,8 @@
 
 ### Technology Stack
 
-**Frontend Framework**: Next.js 15.3.4 with App Router
-**Styling**: Tailwind CSS + @agenticindiedev/ui + SCSS
+**Frontend Framework**: Next.js 16 with App Router
+**Styling**: Tailwind CSS v4 (CSS-first, tokens in `@theme`) + @agenticindiedev/ui
 **Typography**: Inter font family
 **Themes**: Light and Dark mode support
 **State**: React Context API
@@ -14,28 +14,28 @@
 
 #### Light Theme
 
-```scss
---color-primary: #000000          // Black
---color-primary-content: #ffffff  // White
---color-base-100: #fafafa         // Cards/menu background
---color-base-200: #ffffff         // App background
---color-base-300: #e5e7eb         // Borders
---color-base-content: #111111     // Dark gray text
---color-muted: #9ca3af            // Muted text
---color-muted-content: #f9fafb    // Muted background
+```css
+--color-primary: #000000; /* Black */
+--color-primary-content: #ffffff; /* White */
+--color-base-100: #fafafa; /* Cards/menu background */
+--color-base-200: #ffffff; /* App background */
+--color-base-300: #e5e7eb; /* Borders */
+--color-base-content: #111111; /* Dark gray text */
+--color-muted: #9ca3af; /* Muted text */
+--color-muted-content: #f9fafb; /* Muted background */
 ```
 
 #### Dark Theme
 
-```scss
---color-primary: #ffffff          // White
---color-primary-content: #000000  // Black
---color-base-100: #0f0f0f         // Cards/menu background
---color-base-200: #020202         // App background
---color-base-300: #1a1a1a         // Dividers
---color-base-content: #e5e7eb     // Off-white text
---color-muted: #6b7280            // Muted text
---color-muted-content: #f3f4f6    // Muted background
+```css
+--color-primary: #ffffff; /* White */
+--color-primary-content: #000000; /* Black */
+--color-base-100: #0f0f0f; /* Cards/menu background */
+--color-base-200: #020202; /* App background */
+--color-base-300: #1a1a1a; /* Dividers */
+--color-base-content: #e5e7eb; /* Off-white text */
+--color-muted: #6b7280; /* Muted text */
+--color-muted-content: #f3f4f6; /* Muted background */
 ```
 
 ### Custom Theme Classes
@@ -91,7 +91,7 @@
 **DO:**
 
 - Use Tailwind typography utilities: `text-sm`, `text-lg`, `font-bold`
-- Apply Inter font family (auto-applied via globals.scss)
+- Apply Inter font family (applied in the base layer of `globals.css`)
 - Use consistent heading hierarchy: `text-3xl sm:text-4xl` for h2
 - Apply consistent line heights and letter spacing
 
@@ -639,10 +639,9 @@ When reviewing frontend code, ask:
 
 #### Design System Files
 
-- `[frontend-project]/packages/styles/globals.scss` - Global styles (discover from project)
-- `[frontend-project]/packages/styles/theme.scss` - Theme definitions
-- `[frontend-project]/packages/styles/animate.scss` - Animations
-- `[frontend-project]/tailwind.config.ts` - Tailwind configuration
+- `[frontend-project]/apps/[app]/app/globals.css` - Tailwind v4 entry: `@import "tailwindcss"`, `@theme` tokens, base layer (discover from project)
+- Theme tokens live in `@theme` / `@theme inline` blocks in the CSS, not in a JS Tailwind config file
+- Keyframes and animations are `@keyframes` rules plus `--animate-*` entries in `@theme`
 
 #### Frontend Apps
 

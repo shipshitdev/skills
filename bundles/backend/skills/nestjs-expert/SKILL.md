@@ -1,6 +1,6 @@
 ---
 name: nestjs-expert
-description: Guides NestJS 11 APIs with Prisma and Postgres — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues.
+description: Guides NestJS 12 APIs with Prisma and Postgres — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues.
 license: MIT
 metadata:
   version: "2.2.2"
@@ -10,7 +10,9 @@ when_to_use: "nest controller, nest service, dependency injection"
 
 # NestJS Expert
 
-Stack: NestJS 11 + Prisma + Postgres + TypeScript strict mode.
+Stack: NestJS 12 + Prisma 7 + Postgres + TypeScript strict mode.
+
+NestJS 12 and Better Auth ship ESM-only packages. A CommonJS build (`module: commonjs` with `moduleResolution: bundler`) still works because Node 22.12+ loads ESM through `require(esm)`, so run the API on Node >= 22.12; older Node fails at startup with `ERR_REQUIRE_ESM`. Version 11 is the legacy line (`legacy` dist-tag): do not mix 11 and 12 packages.
 
 ## Module architecture
 
