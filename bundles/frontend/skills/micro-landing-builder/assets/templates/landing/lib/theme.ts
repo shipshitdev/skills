@@ -1,6 +1,6 @@
 export type Theme = {
   primary: string
-  accent: string
+  accent?: string
   background: string
   foreground?: string
   mode?: string
@@ -35,7 +35,11 @@ function contrast(a: Rgba, b: Rgba): number {
   return (hi + 0.05) / (lo + 0.05)
 }
 
-const DEFAULTS = { primary: "#6366f1", accent: "#f59e0b", background: "#0a0a0a" }
+// Defaults are chosen to pass WCAG AA (4.5:1): primary has AA text on it, and the accent
+// default has AA contrast against the background it lands on.
+const DEFAULTS = { primary: "#4f46e5", background: "#0a0a0a" }
+const ACCENT_ON_DARK = "#f59e0b"
+const ACCENT_ON_LIGHT = "#b45309"
 
 // Returns a color that is safe to serialize into the style attribute. React escapes HTML
 // but not CSS separators, so anything that is not an anchored hex color (for example
@@ -83,8 +87,12 @@ export function isLight(color: string): boolean {
 // brightness, so a light background alone gives the full light token set.
 export function resolveTheme(theme: Theme) {
   const primary = safeColor("primary", theme.primary, DEFAULTS.primary)!
-  const accent = safeColor("accent", theme.accent, DEFAULTS.accent)!
   const background = safeColor("background", theme.background, DEFAULTS.background)!
+  const accent = safeColor(
+    "accent",
+    theme.accent,
+    bestForeground(background.rgba) === NEAR_BLACK ? ACCENT_ON_LIGHT : ACCENT_ON_DARK,
+  )!
   const explicitForeground = safeColor("foreground", theme.foreground, undefined)
 
   const mode: "dark" | "light" =

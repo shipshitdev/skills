@@ -137,7 +137,7 @@ The landing is entirely driven by `app.json`. See `references/config-schema.md` 
     "description": "SEO description"
   },
   "theme": {
-    "primary": "#6366f1",
+    "primary": "#4f46e5",
     "accent": "#f59e0b",
     "background": "#0a0a0a",
     "foreground": "#fafafa",
