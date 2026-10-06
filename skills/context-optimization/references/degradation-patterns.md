@@ -199,9 +199,11 @@ Implement continuous monitoring of context health:
 
 ```python
 class ContextHealthMonitor:
-    def __init__(self, model, context_window_limit):
+    def __init__(self, model, context_window_limit, degradation_onset_tokens):
         self.model = model
         self.limit = context_window_limit
+        # Measured for this model and task; usually well below the raw window.
+        self.onset = degradation_onset_tokens
         self.metrics = []
     
     def assess_health(self, context, task):
@@ -213,6 +215,8 @@ class ContextHealthMonitor:
         metrics = {
             "token_count": len(context),
             "utilization_ratio": len(context) / self.limit,
+            # Alerts compare against the measured onset, not the raw window.
+            "onset_utilization": len(context) / self.onset,
             "attention_distribution": measure_attention_distribution(self.model, context, task),
             "relevance_scores": score_context_relevance(context, task),
             "age_tokens": count_recent_tokens(context)
@@ -234,7 +238,7 @@ class ContextHealthMonitor:
     def _calculate_composite(self, metrics):
         """Calculate composite health score from components."""
         # Weighted combination of metrics
-        utilization_penalty = min(metrics["utilization_ratio"] * 0.5, 0.3)
+        utilization_penalty = min(metrics["onset_utilization"] * 0.5, 0.3)
         attention_penalty = self._calculate_attention_penalty(metrics["attention_distribution"])
         relevance_penalty = self._calculate_relevance_penalty(metrics["relevance_scores"])
         
@@ -260,8 +264,9 @@ Configure appropriate alert thresholds:
 
 ```python
 CONTEXT_ALERTS = {
-    "utilization_warning": 0.7,      # 70% of the measured degradation onset, not the raw window
-    "utilization_critical": 0.9,     # 90% of the measured degradation onset
+    # Compared against metrics["onset_utilization"] (tokens / measured onset).
+    "onset_utilization_warning": 0.7,   # compact here
+    "onset_utilization_critical": 0.9,  # degradation is imminent
     "attention_degraded_ratio": 0.3, # 30% in middle region
     "relevance_threshold": 0.3,      # Below 30% relevance
     "consecutive_warnings": 3        # Three warnings triggers alert

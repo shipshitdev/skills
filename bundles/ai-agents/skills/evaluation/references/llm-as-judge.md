@@ -190,6 +190,7 @@ Three worked examples — direct scoring for factual accuracy, pairwise comparis
 Files in this mode:
 
 The judge references listed in the evaluation skill's Modes section hold the patterns, bias mitigation, metrics, pipeline diagram and prompt templates.
+
 - `scripts/llm_judge_example.py` - runnable sketch of direct scoring, position-swapped pairwise comparison, and rubric generation
 
 Related skills: `context-optimization` (`references/fundamentals.md`) for judge-prompt context structure and token cost at volume; `tool-design` for schemas and error handling of evaluation tools.
