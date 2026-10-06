@@ -95,14 +95,14 @@ def create_tsconfig() -> str:
             "moduleResolution": "bundler",
             "resolveJsonModule": True,
             "isolatedModules": True,
-            "jsx": "preserve",
+            "jsx": "react-jsx",
             "incremental": True,
             "plugins": [{"name": "next"}],
             "paths": {
                 "@/*": ["./*"]
             }
         },
-        "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+        "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts"],
         "exclude": ["node_modules"]
     }, indent=2)
 

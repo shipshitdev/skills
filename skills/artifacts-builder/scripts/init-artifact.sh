@@ -15,12 +15,14 @@ if [ "$NODE_VERSION" -lt 20 ]; then
   exit 1
 fi
 
-# Detect OS and set sed syntax
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  SED_INPLACE="sed -i ''"
-else
-  SED_INPLACE="sed -i"
-fi
+# In-place sed that works on both macOS (BSD) and Linux (GNU)
+sed_inplace() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' "$@"
+  else
+    sed -i "$@"
+  fi
+}
 
 # Check if pnpm is installed
 if ! command -v pnpm &> /dev/null; then
@@ -45,8 +47,8 @@ pnpm create vite "$PROJECT_NAME" --template react-ts
 cd "$PROJECT_NAME"
 
 echo "🧹 Cleaning up Vite template..."
-$SED_INPLACE '/<link rel="icon".*vite\.svg/d' index.html
-$SED_INPLACE 's/<title>.*<\/title>/<title>'"$PROJECT_NAME"'<\/title>/' index.html
+sed_inplace '/<link rel="icon".*vite\.svg/d' index.html
+sed_inplace 's/<title>.*<\/title>/<title>'"$PROJECT_NAME"'<\/title>/' index.html
 
 echo "📦 Installing base dependencies..."
 pnpm install

@@ -969,7 +969,7 @@ def scaffold_expo_app(
     print(f"\n✅ Expo app created at: {root}")
     print(f"\nNext steps:")
     print(f"1. cd {root}")
-    print(f"2. bun install")
+    print(f"2. bun install && bun run lint:fix  (formats the generated files once)")
     if with_auth:
         print(f"3. Copy .env.example to .env and point EXPO_PUBLIC_API_URL at your API")
         print(f"4. Add the @better-auth/expo plugin and the '{slugify(name)}://' scheme to the API's")
