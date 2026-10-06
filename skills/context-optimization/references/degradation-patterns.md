@@ -260,8 +260,8 @@ Configure appropriate alert thresholds:
 
 ```python
 CONTEXT_ALERTS = {
-    "utilization_warning": 0.7,      # 70% of context limit
-    "utilization_critical": 0.9,     # 90% of context limit
+    "utilization_warning": 0.7,      # 70% of the measured degradation onset, not the raw window
+    "utilization_critical": 0.9,     # 90% of the measured degradation onset
     "attention_degraded_ratio": 0.3, # 30% in middle region
     "relevance_threshold": 0.3,      # Below 30% relevance
     "consecutive_warnings": 3        # Three warnings triggers alert

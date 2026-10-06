@@ -37,9 +37,17 @@ Do not activate this skill for adjacent work owned by other skills:
 | Mode | Use when | Read |
 |------|----------|------|
 | Default | Outcome measurement, rubrics, test sets, deterministic gates, continuous monitoring | This file, then [references/metrics.md](./references/metrics.md) |
-| LLM-as-judge | Designing or debugging a model-based judge: direct scoring vs pairwise, rubric generation, confidence calibration, human agreement, bias mitigation, panel or hierarchical judging | [references/llm-as-judge.md](./references/llm-as-judge.md) first, then the `judge-*` references it lists |
+| LLM-as-judge | Designing or debugging a model-based judge: direct scoring vs pairwise, rubric generation, confidence calibration, human agreement, bias mitigation, panel or hierarchical judging | [references/llm-as-judge.md](./references/llm-as-judge.md) first, then the judge references below that match the task |
 
 Run default mode first. Move to LLM-as-judge mode only after deterministic checks and rubrics are stable and the open question is how a model should judge.
+
+LLM-as-judge references:
+
+- [Implementation Patterns](./references/judge-patterns.md) - Read when: building an evaluation pipeline from scratch or integrating LLM judges into CI/CD
+- [Bias Mitigation Techniques](./references/judge-bias-mitigation.md) - Read when: evaluation results show inconsistent or suspicious scoring patterns
+- [Judge Metric Selection](./references/judge-metrics.md) - Read when: choosing statistical metrics to validate judge reliability (rubric and outcome metrics live in [references/metrics.md](./references/metrics.md))
+- [Pipeline Diagram](./references/judge-pipeline.md) - Read when: designing the architecture of a multi-stage evaluation system
+- [Prompt Templates & Worked Examples](./references/judge-prompts.md) - Read when: writing direct scoring or pairwise comparison prompts, or reviewing full worked examples
 
 ## Core Concepts
 

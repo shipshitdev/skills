@@ -55,7 +55,7 @@ Apply four primary strategies in this priority order:
 
 2. **Observation masking** — Replace verbose tool outputs with compact references once their purpose has been served. Tool outputs can dominate agent trajectories (claim-context-optimization-tool-output-dominance), so masking often yields the largest capacity gains. The original content remains retrievable if needed downstream.
 
-3. **Compaction** — Summarize accumulated context when utilization exceeds 70%, then reinitialize with the summary. This distills the window's contents while preserving task-critical state. Compaction is lossy — apply it after masking has already removed the low-value bulk.
+3. **Compaction** — Summarize accumulated context at about 70% of the model's measured degradation onset (not 70% of the full window), then reinitialize with the summary. This distills the window's contents while preserving task-critical state. Compaction is lossy — apply it after masking has already removed the low-value bulk.
 
 4. **Context partitioning** — Split work across sub-agents with isolated contexts when a single window cannot hold the full problem. Each sub-agent operates in a clean context focused on its subtask. Reserve this for tasks where estimated context exceeds 60% of the window limit, because coordination overhead is real.
 
@@ -65,7 +65,7 @@ The governing principle: context quality matters more than quantity. Every optim
 
 ### Compaction Strategies
 
-Trigger compaction when context utilization exceeds 70%: summarize the current context, then reinitialize with the summary. This distills the window's contents in a high-fidelity manner, enabling continuation with minimal performance degradation. Prioritize compressing tool outputs first (they consume 80%+ of tokens), then old conversation turns, then retrieved documents. Never compress the system prompt — it anchors model behavior and its removal causes unpredictable degradation.
+Trigger compaction at about 70% of the measured degradation onset (with onset at 60% of the window, that is about 42% utilization): summarize the current context, then reinitialize with the summary. This distills the window's contents in a high-fidelity manner, enabling continuation with minimal performance degradation. Prioritize compressing tool outputs first (they consume 80%+ of tokens), then old conversation turns, then retrieved documents. Never compress the system prompt — it anchors model behavior and its removal causes unpredictable degradation.
 
 Preserve different elements by message type:
 

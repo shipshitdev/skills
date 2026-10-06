@@ -74,7 +74,7 @@ Weight: [Relative importance, 0-1]
 - 1-5: Standard Likert, best balance of granularity and reliability
 - 1-10: Use only with detailed per-level rubrics because calibration is harder
 
-Require evidence before the score in scoring prompts so the judge must anchor its decision in observable output features before emitting a number. See [judge-prompts.md](./judge-prompts.md) (§ Direct Scoring Prompt Template) for the full prompt.
+Require evidence before the score in scoring prompts so the judge must anchor its decision in observable output features before emitting a number. See the judge-prompts.md reference (§ Direct Scoring Prompt Template) for the full prompt.
 
 ### Pairwise Comparison Implementation
 
@@ -86,7 +86,7 @@ Apply position bias mitigation in every pairwise evaluation:
 4. Consistency check: If passes disagree, return TIE with reduced confidence.
 5. Final verdict: Consistent winner with averaged confidence and explicit tie-breaker rationale.
 
-**Confidence Calibration** — map confidence to position consistency: both passes agree → confidence = average of individual confidences; passes disagree → confidence = 0.5, verdict = TIE. See [judge-prompts.md](./judge-prompts.md) (§ Pairwise Comparison Prompt Template) for the full prompt.
+**Confidence Calibration** — map confidence to position consistency: both passes agree → confidence = average of individual confidences; passes disagree → confidence = 0.5, verdict = TIE. See the judge-prompts.md reference (§ Pairwise Comparison Prompt Template) for the full prompt.
 
 ### Rubric Generation
 
@@ -112,7 +112,7 @@ Adapt rubrics to the domain — use domain-specific terminology. A code readabil
 
 ### Evaluation Pipeline Design
 
-Build production evaluation systems with these layers: Criteria Loader (rubrics + weights) -> Primary Scorer (direct or pairwise) -> Bias Mitigation (position swap, etc.) -> Confidence Scoring (calibration) -> Output (scores + justifications + confidence). See [Pipeline Diagram](./judge-pipeline.md) for the full visual layout.
+Build production evaluation systems with these layers: Criteria Loader (rubrics + weights) -> Primary Scorer (direct or pairwise) -> Bias Mitigation (position swap, etc.) -> Confidence Scoring (calibration) -> Output (scores + justifications + confidence). See Pipeline Diagram for the full visual layout.
 
 ### Decision Framework: Direct vs. Pairwise
 
@@ -143,7 +143,7 @@ For high-volume evaluation, apply one of these strategies:
 
 ## Examples
 
-Three worked examples — direct scoring for factual accuracy, pairwise comparison with position swap, and rubric generation — are in [judge-prompts.md](./judge-prompts.md) (§ Example 1-3).
+Three worked examples — direct scoring for factual accuracy, pairwise comparison with position swap, and rubric generation — are in judge-prompts.md (§ Example 1-3).
 
 ## Guidelines
 
@@ -189,11 +189,7 @@ Three worked examples — direct scoring for factual accuracy, pairwise comparis
 
 Files in this mode:
 
-- [Implementation Patterns](./judge-patterns.md) - Read when: building an evaluation pipeline from scratch or integrating LLM judges into CI/CD
-- [Bias Mitigation Techniques](./judge-bias-mitigation.md) - Read when: evaluation results show inconsistent or suspicious scoring patterns
-- [Judge Metric Selection](./judge-metrics.md) - Read when: choosing statistical metrics to validate judge reliability (rubric and outcome metrics live in [metrics.md](./metrics.md))
-- [Pipeline Diagram](./judge-pipeline.md) - Read when: designing the architecture of a multi-stage evaluation system
-- [Prompt Templates & Worked Examples](./judge-prompts.md) - Read when: writing direct scoring or pairwise comparison prompts, or reviewing full worked examples
+The judge references listed in the evaluation skill's Modes section hold the patterns, bias mitigation, metrics, pipeline diagram and prompt templates.
 - `scripts/llm_judge_example.py` - runnable sketch of direct scoring, position-swapped pairwise comparison, and rubric generation
 
 Related skills: `context-optimization` (`references/fundamentals.md`) for judge-prompt context structure and token cost at volume; `tool-design` for schemas and error handling of evaluation tools.
