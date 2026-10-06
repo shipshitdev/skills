@@ -543,8 +543,37 @@ def create_api_origins_spec() -> str:
 
           it("splits a comma-separated FRONTEND_URLS and trims entries", () => {
             expect(
-              allowedOrigins({ FRONTEND_URLS: "http://localhost:3000, http://localhost:3002/ ," }),
-            ).toEqual(["http://localhost:3000", "http://localhost:3002"]);
+              allowedOrigins({ FRONTEND_URLS: "http://localhost:3000, https://app.example.com:8443 ," }),
+            ).toEqual(["http://localhost:3000", "https://app.example.com:8443"]);
+          });
+
+          it.each([
+            "https://*.example.com",
+            "*",
+            "http://localhost:*",
+          ])("rejects the wildcard origin %s and names it", (entry) => {
+            expect(() => allowedOrigins({ FRONTEND_URLS: `http://localhost:3000,${entry}` })).toThrow(
+              `Invalid origin "${entry}" in FRONTEND_URLS:`,
+            );
+          });
+
+          it.each([
+            "app.example.com",
+            "ftp://app.example.com",
+            "https://app.example.com/",
+            "https://app.example.com/dashboard",
+            "https://app.example.com?x=1",
+            "https://user@app.example.com",
+            "https://APP.example.com",
+            "https://app.example.com:443",
+          ])("rejects %s because it is not an exact http(s) origin", (entry) => {
+            expect(() => allowedOrigins({ FRONTEND_URLS: entry })).toThrow(/exact/);
+          });
+
+          it("validates the single FRONTEND_URL fallback too", () => {
+            expect(() => allowedOrigins({ FRONTEND_URL: "https://*.example.com" })).toThrow(
+              'Invalid origin "https://*.example.com" in FRONTEND_URL:',
+            );
           });
 
           it("falls back to the single FRONTEND_URL", () => {

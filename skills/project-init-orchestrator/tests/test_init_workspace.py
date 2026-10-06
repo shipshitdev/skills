@@ -389,6 +389,39 @@ class ScaffoldSecurityTest(unittest.TestCase):
         guide = (SKILL_DIR / "references" / "deployment-guide.md").read_text()
         self.assertIn("FRONTEND_URLS", guide)
 
+    # Review follow-up: only exact http(s) origins, validated at startup
+    def test_origin_list_rejects_wildcards_and_non_origins_at_startup(self) -> None:
+        origins = self.read("api/apps/api/src/config/origins.ts")
+        self.assertIn("Invalid origin", origins)
+        self.assertIn('includes("*")', origins)
+        self.assertIn("new URL(", origins)
+        self.assertIn(".origin !==", origins)
+        self.assertIn("throw new Error", origins)
+        self.assertNotIn(".replace(", origins)  # no silent normalisation
+        spec = self.read("api/apps/api/src/config/origins.spec.ts")
+        self.assertIn("https://*.example.com", spec)
+        self.assertIn("rejects the wildcard origin", spec)
+        # Both consumers take the validated list; nothing parses the env var on its own
+        for relative in ("api/apps/api/src/main.ts", "api/apps/api/src/auth/auth.service.ts"):
+            text = self.read(relative)
+            self.assertIn("allowedOrigins()", text)
+            self.assertNotIn("FRONTEND_URL", text)
+        template = (SKILL_DIR / "references/templates/auth-service.template.ts").read_text()
+        self.assertNotIn("FRONTEND_URL", template)
+        for text in (
+            self.read(".env.example"),
+            (SKILL_DIR / "references" / "deployment-guide.md").read_text(),
+        ):
+            self.assertIn("wildcard", text.lower())
+            self.assertIn("exact", text.lower())
+
+    def test_docker_workflow_inspects_the_builder_stage_too(self) -> None:
+        workflow = (SKILL_DIR.parents[1] / ".github/workflows/project-init-docker.yml").read_text()
+        self.assertIn("docker build --target builder", workflow)
+        builder_check = workflow.split("docker build --target builder", 1)[1]
+        self.assertIn("test ! -e /app/api/.env", builder_check)
+        self.assertIn("api/.env", workflow.split("docker build --target builder", 1)[0])
+
 
 if __name__ == "__main__":
     unittest.main()
