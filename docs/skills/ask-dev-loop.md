@@ -27,7 +27,7 @@ works as a map if setup has not run; it will send you there first.
   work (`wayfinder`), a decision for someone else (`interview send`), outside
   issues (`github-inbox` triage), facts (`research`)
 - Phase boundaries: continue, `/clear`, `handoff`, subagent, `/compact`, in that order
-- Upkeep: `codebase-advisor`, `tech-debt`, `codebase-design`
+- Upkeep: `codebase-design` (survey modes), `tech-debt`
 - Review: `/review`, and `/retro` after a hard session or a `debug`
 - Standalone: `/wait-what`, `/handoff`, `wizard`, `prototype`
 

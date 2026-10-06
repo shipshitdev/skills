@@ -30,7 +30,7 @@ that satisfies retrieval, durability, and reasoning requirements.
 Do not activate this skill for adjacent work owned by other skills:
 
 - Token budgets, retrieval scoping, or prefix caching inside one trajectory: `context-optimization`.
-- Stale or conflicting memories as context poisoning: `context-degradation`.
+- Stale or conflicting memories as context poisoning: `context-optimization` (diagnose mode, `references/degradation.md`).
 
 ## Core Concepts
 
@@ -208,8 +208,7 @@ results = await cognee.search(
 
 This skill owns persistent semantic memory. Adjacent skills own scratch storage, compaction, and context tactics:
 
-- `context-optimization`: just-in-time memory loading and retrieval scoping inside active context budgets.
-- `context-degradation`: stale or conflicting memories as context poisoning or clash.
+- `context-optimization`: just-in-time memory loading and retrieval scoping inside active context budgets; its diagnose mode (`references/degradation.md`) covers stale or conflicting memories as context poisoning or clash.
 - `multi-agent-patterns`: shared memory across agents.
 - `evaluation`: memory quality, retrieval correctness, and benchmark selection.
 

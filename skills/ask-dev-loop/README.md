@@ -9,7 +9,7 @@ Keep this map in sync when a user-reachable Dev Loop skill is added, renamed, re
 - Main flow: `interview` → `prd-writer` / `feature-intake` → `writing-plans` → `executing-plans`
 - On-ramps: bugs (`debug`), intake, large/foggy work (`wayfinder`), a decision for someone else (`interview send`), outside issues (`github-inbox triage`), facts (`research`)
 - Phase boundaries: continue / `/clear` / `handoff` / subagent / `/compact`
-- Upkeep: `codebase-advisor`, `tech-debt`, `codebase-design`
+- Upkeep: `codebase-design` (survey modes), `tech-debt`
 - Review: `review-dispatch` / `code-review`, `retro` for session friction
 - Session: `handoff`, `wait-what`
 - Setup: `setup-agent-routing`

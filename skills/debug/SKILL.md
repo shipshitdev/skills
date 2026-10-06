@@ -102,8 +102,8 @@ until the loop is debuggable. A 50% flake is workable; 1% is not.
 
 **No correct seam.** A regression test earns its place only at a seam that
 reproduces the real bug pattern at the call site. When no such seam exists, that
-absence is itself a finding: record it and recommend `codebase-design` (or the
-`deepen` variant of `codebase-advisor`), because the architecture is blocking the
+absence is itself a finding: record it and recommend `codebase-design` (or its
+`deepen` mode), because the architecture is blocking the
 bug from being locked down.
 
 ## Escalation — Four-Phase Root-Cause Loop

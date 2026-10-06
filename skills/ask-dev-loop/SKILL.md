@@ -116,8 +116,9 @@ yes wins:
 
 Not feature work — upkeep.
 
-- **`/codebase-advisor`** — survey, produce plans for another agent. Read-only on
-  source.
+- **`codebase-design survey`** — survey, produce plans for another agent. Read-only
+  on source. `report` writes an analysis for humans; `deepen` ranks deepening
+  candidates.
 - **`/tech-debt`** — ranked debt register (interest over principal).
 - **`codebase-design`** — deep-module vocabulary when the question is the *shape*
   of a module, not an inventory.

@@ -1,6 +1,6 @@
 ---
 name: context-optimization
-description: "Improves context efficiency: budgets, observation masking, KV-cache strategy, partitioning, retrieval scoping. Use when token cost or context budget constrains a task."
+description: "Improves context efficiency and diagnoses context degradation: budgets, masking, KV-cache, partitioning, lost-in-middle, poisoning. Use when token cost or context quality constrains a task."
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md
@@ -9,8 +9,8 @@ metadata:
   upstream_commit: cbc2c978133d
   last_synced: "2026-06-12"
   license: MIT
-  tags: "context, optimization, agents"
-when_to_use: "context window anatomy, attention"
+  tags: "context, optimization, degradation, agents"
+when_to_use: "context window anatomy, attention, long-context failures, quality drops as context grows"
 user-invocable: false
 ---
 # Context Optimization Techniques
@@ -25,10 +25,27 @@ Context optimization extends the effective capacity of limited context windows t
 - Retrieval scoping can reduce irrelevant loaded context
 - Context partitioning can extend effective capacity across agents
 - Budget triggers are needed for masking, compaction, or partitioning
+- Agent quality drops as context grows, or output is wrong or irrelevant for no obvious reason (diagnose mode)
 
-Do not activate this skill for adjacent work owned by other skills:
+## Modes
 
-- Diagnosing active lost-in-middle, poisoning, distraction, confusion, or clash: `context-degradation`.
+| Mode | Use when | Read |
+|------|----------|------|
+| Optimize (default) | Token cost or budget limits the task and the context is behaving | This file, then [references/optimization_techniques.md](./references/optimization_techniques.md) |
+| Diagnose | Quality has already dropped: lost-in-middle, poisoning, distraction, confusion, or clash | [references/degradation.md](./references/degradation.md), then [references/degradation-patterns.md](./references/degradation-patterns.md) for detection code and recovery |
+| Explain | Onboarding to context mechanics with no active failure | [references/fundamentals.md](./references/fundamentals.md) |
+
+Diagnose before optimizing a failing agent: compaction or masking applied to a poisoned or clashing context carries the error forward. First confirm the prompt works at low context length (if it fails at 2K tokens, the prompt is the problem), then match the symptom to a pattern and apply its first move:
+
+| Pattern | Typical symptom | First move | Optimization tactic |
+|---------|-----------------|------------|---------------------|
+| Lost-in-middle | Correct fact in context is ignored; early instructions forgotten | Move critical content to the start or end; prepend a summary | Compaction that keeps key findings at the edges |
+| Poisoning | A wrong claim persists after correction; tools misused | Truncate to before the bad claim and reload verified sources only | Restart with a clean partition |
+| Distraction | Quality falls after loading extra documents | Filter retrieval before loading; put reference material behind tool calls | Retrieval scoping, observation masking |
+| Confusion | Constraints or tools from another task leak in | Split tasks into separate contexts | Context partitioning |
+| Clash | Contradictory sources give unpredictable answers | Set source precedence and drop outdated versions before loading | Retrieval scoping |
+
+Trigger compaction well before the model-specific onset of degradation (about 70% of the known onset), not after symptoms appear.
 
 ## Core Concepts
 
@@ -196,9 +213,8 @@ triggers:
 
 ## Integration
 
-This skill owns token-efficiency tactics and budget policy. Adjacent skills own diagnosis, storage, and architecture:
+This skill owns token-efficiency tactics, budget policy, and degradation diagnosis. Adjacent skills own storage and architecture:
 
-- `context-degradation`: diagnosis when output quality has already dropped.
 - `multi-agent-patterns`: partitioning work across isolated agent contexts.
 - `evaluation`: measuring whether the optimization improved quality, cost, or latency.
 - `memory-systems`: persistent retrieval layers that feed context just in time.
@@ -211,9 +227,10 @@ Internal references:
 
 - [Optimization Techniques Reference](./references/optimization_techniques.md) - Read when: implementing a specific optimization technique and needing detailed code patterns, threshold tables, or integration examples beyond what the skill body provides
 
+- [Context Degradation](./references/degradation.md) - Read when: diagnosing why agent performance has dropped and needing to identify which degradation pattern is occurring before selecting an optimization; [degradation-patterns.md](./references/degradation-patterns.md) holds the detection code and recovery procedures, and `scripts/degradation_detector.py` runs the checks
+
 Related skills in this collection:
 
-- context-degradation - Read when: diagnosing why agent performance has dropped and needing to identify which degradation pattern is occurring before selecting an optimization
 - evaluation - Read when: setting up metrics and benchmarks to measure whether an optimization technique actually improved outcomes
 
 External resources:

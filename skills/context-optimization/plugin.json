@@ -1,7 +1,7 @@
 {
   "name": "context-optimization",
   "version": "2.2.2",
-  "description": "Apply optimization techniques to extend effective context capacity. Use when context limits constrai",
+  "description": "Improves context efficiency and diagnoses context degradation: budgets, masking, KV-cache, partition",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

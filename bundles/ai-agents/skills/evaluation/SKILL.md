@@ -1,6 +1,6 @@
 ---
 name: evaluation
-description: Builds evaluation frameworks for agent systems. Use when testing agent performance, validating context engineering choices, or measuring improvements over time.
+description: Builds evaluation frameworks for agent systems, including LLM-as-judge design. Use when testing agent performance, comparing model outputs, or debugging inconsistent evals.
 metadata:
   version: "2.2.2"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/evaluation/SKILL.md
@@ -9,8 +9,8 @@ metadata:
   upstream_commit: 25e1fa79a33f
   last_synced: "2026-06-13"
   license: MIT
-  tags: "evaluation, agents, testing"
-when_to_use: "regression tests for agents, rubrics"
+  tags: "evaluation, agents, testing, llm-as-judge, bias-mitigation"
+when_to_use: "regression tests for agents, rubrics, LLM judge, pairwise, bias mitigation, A/B test prompts"
 ---
 # Evaluation Methods for Agent Systems
 
@@ -25,11 +25,21 @@ Evaluate agent systems differently from traditional software because agents make
 - Building quality gates for agent pipelines
 - Comparing different agent configurations
 - Evaluating production systems continuously
+- Building an LLM judge: direct scoring, pairwise comparison, rubric generation, calibration against human ratings, bias mitigation
 
 Do not activate this skill for adjacent work owned by other skills:
 
-- Designing the LLM judge itself, pairwise comparison, judge calibration, or bias mitigation: `advanced-evaluation`.
-- Debugging a specific context failure mode before measuring it: `context-degradation`.
+- Debugging a specific context failure mode before measuring it: `context-optimization` (diagnose mode, `references/degradation.md`).
+- Tool API contracts for evaluation tools: `tool-design`.
+
+## Modes
+
+| Mode | Use when | Read |
+|------|----------|------|
+| Default | Outcome measurement, rubrics, test sets, deterministic gates, continuous monitoring | This file, then [references/metrics.md](./references/metrics.md) |
+| LLM-as-judge | Designing or debugging a model-based judge: direct scoring vs pairwise, rubric generation, confidence calibration, human agreement, bias mitigation, panel or hierarchical judging | [references/llm-as-judge.md](./references/llm-as-judge.md) first, then the `judge-*` references it lists |
+
+Run default mode first. Move to LLM-as-judge mode only after deterministic checks and rubrics are stable and the open question is how a model should judge.
 
 ## Core Concepts
 
@@ -37,7 +47,7 @@ Focus evaluation on outcomes rather than execution paths, because agents may fin
 
 Use multi-dimensional rubrics instead of single scores because one number hides critical failures in specific dimensions. Capture factual accuracy, completeness, citation accuracy, source quality, and tool efficiency as separate dimensions, then weight them for the use case.
 
-Use model-judged evaluation only after deterministic checks and rubrics are stable. When the work centers on judge prompts, pairwise comparison, calibration, or bias mitigation, switch to Advanced Evaluation.
+Use model-judged evaluation only after deterministic checks and rubrics are stable. When the work centers on judge prompts, pairwise comparison, calibration, or bias mitigation, switch to LLM-as-judge mode.
 
 Run deterministic validation before LLM judgment whenever the artifact has machine-checkable structure. Schema validity, duplicate keys, rubric math, manifest sync, retrieval status, and required evidence paths should fail fast before an evaluator spends tokens or returns a subjective score.
 
@@ -93,7 +103,7 @@ Map dimension assessments to numeric scores (0.0 to 1.0), apply per-dimension we
 
 **Use LLM-as-Judge for Scale**
 
-Build LLM-based evaluation prompts that include: clear task description, the agent output under test, ground truth when available, an evaluation scale with explicit level descriptions, and a request for structured judgment with reasoning. LLM judges provide consistent, scalable evaluation across large test sets. Use a different model family than the agent being evaluated to avoid self-enhancement bias.
+Build LLM-based evaluation prompts that include: clear task description, the agent output under test, ground truth when available, an evaluation scale with explicit level descriptions, and a request for structured judgment with reasoning. LLM judges provide consistent, scalable evaluation across large test sets. Use a different model family than the agent being evaluated to avoid self-enhancement bias. Choose direct scoring when objective criteria or ground truth exist and pairwise comparison for subjective preference; in pairwise runs always evaluate both orderings and treat disagreement as a tie. Require evidence before the score, and validate the judge against a human-rated sample before trusting it (details in LLM-as-judge mode).
 
 **Supplement with Human Evaluation**
 
@@ -264,11 +274,10 @@ gate:
 
 ## Integration
 
-This skill owns outcome measurement and quality gates. Adjacent skills own specialized evaluator design and control-loop governance:
+This skill owns outcome measurement, quality gates, and judge design. Adjacent skills own control-loop governance and the systems being measured:
 
-- `advanced-evaluation`: LLM-as-judge prompt design, pairwise comparison, calibration, and bias mitigation.
-- `context-degradation`: detecting and measuring degradation patterns.
-- `context-optimization`: measuring token, cost, latency, and quality effects of optimizations.
+- `context-optimization`: measuring token, cost, latency, and quality effects of optimizations; diagnosing and measuring degradation patterns (`references/degradation.md`).
+- `tool-design`: schemas and error handling for evaluation tools.
 - `multi-agent-patterns`: evaluating coordination quality and parallelization trade-offs.
 - `tool-design`: evaluating tool selection and recovery effectiveness.
 - `memory-systems`: evaluating memory retrieval and retention quality.
@@ -276,9 +285,10 @@ This skill owns outcome measurement and quality gates. Adjacent skills own speci
 
 ## References
 
-Internal reference:
+Internal references:
 
 - [Metrics Reference](./references/metrics.md) - Read when: designing specific evaluation metrics, choosing scoring scales, or implementing weighted rubric calculations
+- [LLM-as-Judge](./references/llm-as-judge.md) - Read when: designing a model-based judge; it lists the `judge-*` references (prompt templates, implementation patterns, bias mitigation, judge metrics, pipeline diagram) and `scripts/llm_judge_example.py`
 
 Internal skills:
 

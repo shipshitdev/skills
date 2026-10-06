@@ -41,7 +41,7 @@ Confirmation Required:
 Delegates To:
 
 - `debug` for ordinary software defects
-- `evaluation` or `advanced-evaluation` for benchmark design
+- `evaluation` (including its LLM-as-judge mode) for benchmark design
 - `security-audit` for prompt injection, secrets, auth, or privileged tool risk
 
 ## When to Use
