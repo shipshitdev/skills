@@ -1,9 +1,19 @@
 // Inline the local files that a built index.html still references (public/ images, fonts,
 // icons, stylesheets and the url() assets inside them) as data: URIs, and fail when any local
 // reference cannot be inlined or escapes the project.
+//
+// HTML is parsed and serialized with parse5 (browser-grade tokenizing, comment recovery and
+// character-reference decoding), srcset with the WHATWG candidate algorithm (ASCII whitespace only,
+// so NBSP stays inside a URL and data URIs with commas survive), and CSS with postcss and
+// postcss-value-parser. bundle-artifact.sh installs these into the project and runs
+// a copy of this file from there.
+//
 // Usage: bun inline-local-assets.mjs <build-dir> <output-html> [project-root]
 import { mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs"
 import { dirname, extname, join, relative, resolve, sep } from "node:path"
+import { parse, serialize } from "parse5"
+import postcss from "postcss"
+import valueParser from "postcss-value-parser"
 
 const [buildDirArg, outFile, projectArg] = process.argv.slice(2)
 if (!buildDirArg || !outFile) {
@@ -42,14 +52,20 @@ const problem = (ref, why) => problems.push(`${ref}  (${why})`)
 
 const within = (path, base) => path === base || path.startsWith(base + sep)
 
+// Browsers strip tabs and newlines inside URLs and trim control characters and spaces around them
+// biome-ignore lint/suspicious/noControlCharactersInRegex: matching URL-stripped control characters
+const cleanUrl = (text) => text.replace(/[\t\n\r]/g, "").replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, "")
+
 // Absolute URLs, fragments, data/blob URIs and other schemes are not local files
 const isLocal = (ref) => ref !== "" && !/^(#|\/\/|[a-zA-Z][a-zA-Z0-9+.-]*:)/.test(ref)
 
 /**
  * Resolve a reference to a real file inside the build directory.
- * Returns { real, fragment } or null (after recording why it failed).
- * Confinement is checked on canonical (realpath) paths, so a symlinked file or symlinked parent
- * directory cannot pull in content from outside the build or the project.
+ * Returns { real, lexical, fragment } or null (after recording why it failed).
+ * `lexical` is the URL-style path (symlinks not followed); relative references inside a
+ * stylesheet resolve against its directory. Confinement is checked on canonical (realpath)
+ * paths, so a symlinked file or symlinked parent directory cannot pull in content from outside
+ * the build or the project.
  */
 function resolveRef(ref, baseDir) {
   const hash = ref.indexOf("#")
@@ -110,7 +126,7 @@ function resolveRef(ref, baseDir) {
     return null
   }
 
-  return { real, fragment }
+  return { real, lexical, fragment }
 }
 
 const mimeOf = (file) => MIME[extname(file).toLowerCase()] ?? "application/octet-stream"
@@ -118,29 +134,9 @@ const toDataUri = (bytes, mime, fragment) => `data:${mime};base64,${Buffer.from(
 
 const activeCss = new Set()
 
-/** Inline url() and @import references of CSS text; refs resolve relative to baseDir. */
-function processCss(css, baseDir) {
-  // Leave comments untouched so a commented-out url() cannot fail the build
-  return css
-    .split(/(\/\*[\s\S]*?\*\/)/)
-    .map((part, index) => {
-      if (index % 2 === 1) return part
-      return part
-        .replace(/@import\s+(["'])([^"']*)\1/gi, (match, quote, ref) => {
-          const uri = inlineCssFile(ref, baseDir)
-          return uri === null ? match : `@import ${quote}${uri}${quote}`
-        })
-        .replace(/url\(\s*(["']?)([^)"']*)\1\s*\)/gi, (match, quote, ref) => {
-          const trimmed = ref.trim()
-          const uri = inlineRefAsUri(trimmed, baseDir)
-          return uri === null ? match : `url(${quote}${uri}${quote})`
-        })
-    })
-    .join("")
-}
-
-/** A CSS reference: stylesheets are processed recursively, everything else is encoded as is. */
-function inlineRefAsUri(ref, baseDir) {
+/** Resolve and encode one reference; stylesheets are processed recursively. Null = left as is. */
+function inlineRef(rawRef, baseDir) {
+  const ref = cleanUrl(rawRef)
   if (!isLocal(ref)) return null
   const found = resolveRef(ref, baseDir)
   if (found === null) return null
@@ -148,233 +144,174 @@ function inlineRefAsUri(ref, baseDir) {
   return toDataUri(readFileSync(found.real), mimeOf(found.real), found.fragment)
 }
 
-function inlineCssFile(ref, baseDir) {
-  if (!isLocal(ref)) return null
-  const found = resolveRef(ref, baseDir)
-  return found === null ? null : stylesheetUri(found)
-}
-
-function stylesheetUri({ real, fragment }) {
+function stylesheetUri({ real, lexical, fragment }) {
   if (activeCss.has(real)) {
     problem(real, "stylesheet imports itself (cycle)")
     return null
   }
   activeCss.add(real)
   try {
-    const css = processCss(readFileSync(real, "utf8"), dirname(real))
+    // References inside resolve against the stylesheet's URL directory, not its symlink target
+    const css = processCss(readFileSync(real, "utf8"), dirname(lexical))
     return toDataUri(css, "text/css", fragment)
   } finally {
     activeCss.delete(real)
   }
 }
 
-// --- HTML character references -------------------------------------------------------
+// --- CSS ---------------------------------------------------------------------------------
 
-// Named references that can occur in URLs and CSS (the full HTML table has 2,231 entries; any
-// other `&name;` is reported instead of guessed).
-const NAMED = {
-  amp: "&", AMP: "&", lt: "<", LT: "<", gt: ">", GT: ">", quot: '"', QUOT: '"', apos: "'",
-  nbsp: "\u00a0", num: "#", sol: "/", bsol: "\\", colon: ":", semi: ";", comma: ",",
-  period: ".", excl: "!", quest: "?", equals: "=", percnt: "%", lpar: "(", rpar: ")",
-  lsqb: "[", lbrack: "[", rsqb: "]", rbrack: "]", lcub: "{", lbrace: "{", rcub: "}", rbrace: "}",
-  lowbar: "_", UnderBar: "_", plus: "+", ast: "*", midast: "*", commat: "@", dollar: "$",
-  grave: "`", Hat: "^", vert: "|", verbar: "|", VerticalLine: "|", Tab: "\t", NewLine: "\n",
-}
-// Legacy names the HTML parser also accepts without a trailing semicolon
-const LEGACY = new Set(["amp", "AMP", "lt", "LT", "gt", "GT", "quot", "QUOT", "nbsp"])
+const cssUnescape = (text) =>
+  text.replace(/\\(?:([0-9a-fA-F]{1,6})\s?|([^\n]))/g, (_, hex, ch) =>
+    hex ? String.fromCodePoint(Math.min(Number.parseInt(hex, 16), 0x10ffff)) : ch,
+  )
+const cssString = (value) => ({
+  type: "string",
+  quote: '"',
+  value: value.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("\n", "\\a "),
+})
 
-function codePoint(value) {
-  if (value === 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) return "\ufffd"
-  return String.fromCodePoint(value)
-}
-
-/**
- * Decode character references the way the HTML tokenizer does inside an attribute value.
- * Returns { text, unknown } where `unknown` lists `&name;` references this table cannot decide.
- */
-function decodeAttribute(value) {
-  const unknown = []
-  const text = value.replace(/&(?:#([xX][0-9a-fA-F]+|[0-9]+);?|([A-Za-z][A-Za-z0-9]*)(;?))/g, (match, num, name, semi, offset) => {
-    if (num !== undefined) {
-      const parsed = /^[xX]/.test(num) ? Number.parseInt(num.slice(1), 16) : Number.parseInt(num, 10)
-      return codePoint(parsed)
+/** Rewrite the url() / image-set() / @import references of a parsed CSS value. */
+function processValue(value, baseDir) {
+  const parsed = valueParser(value)
+  let changed = false
+  const rewriteNode = (holder, index) => {
+    const node = holder[index]
+    const uri = inlineRef(cssUnescape(node.value), baseDir)
+    if (uri !== null) {
+      holder[index] = { ...cssString(uri), sourceIndex: node.sourceIndex }
+      changed = true
     }
-    if (semi === ";") {
-      if (Object.hasOwn(NAMED, name)) return NAMED[name]
-      unknown.push(match)
-      return match
-    }
-    // No semicolon: only legacy names, and in attributes not when followed by "=" or alphanumerics
-    if (LEGACY.has(name) && value[offset + match.length] !== "=") return NAMED[name]
-    // anything else (including a legacy prefix followed by more name characters) is literal
-    return match
-  })
-  return { text, unknown }
-}
-
-const encodeAttribute = (value, quote) => {
-  const escaped = value.replaceAll("&", "&amp;")
-  return quote === "'" ? escaped.replaceAll("'", "&#39;") : escaped.replaceAll('"', "&quot;")
-}
-
-// Browsers strip tabs and newlines inside URLs and trim control characters and spaces around them
-// eslint-disable-next-line no-control-regex
-const cleanUrl = (text) => text.replace(/[\t\n\r]/g, "").replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, "")
-
-// --- HTML tokenizer -------------------------------------------------------------------
-
-const RAW_TEXT = new Set(["script", "style", "textarea", "title"])
-const WS = /\s/
-
-/** Parse one start tag beginning at `start` ("<name ..."). Returns { end, name, attrs }. */
-function parseTag(html, start) {
-  let i = start + 1
-  const nameStart = i
-  while (i < html.length && !WS.test(html[i]) && html[i] !== "/" && html[i] !== ">") i++
-  const name = html.slice(nameStart, i).toLowerCase()
-  const attrs = []
-
-  while (i < html.length) {
-    while (i < html.length && (WS.test(html[i]) || html[i] === "/")) i++
-    if (html[i] === ">") return { end: i + 1, name, attrs }
-    if (i >= html.length) break
-
-    const attrStart = i
-    while (i < html.length && !WS.test(html[i]) && html[i] !== "/" && html[i] !== ">" && html[i] !== "=") i++
-    if (i === attrStart) {
-      i++ // stray "=" at the start of a name
-      continue
-    }
-    const attr = { name: html.slice(attrStart, i).toLowerCase(), value: null, start: -1, end: -1, quote: "" }
-
-    let j = i
-    while (j < html.length && WS.test(html[j])) j++
-    if (html[j] === "=") {
-      j++
-      while (j < html.length && WS.test(html[j])) j++
-      const q = html[j]
-      if (q === '"' || q === "'") {
-        const close = html.indexOf(q, j + 1)
-        const valueEnd = close === -1 ? html.length : close
-        Object.assign(attr, { value: html.slice(j + 1, valueEnd), start: j + 1, end: valueEnd, quote: q })
-        i = close === -1 ? html.length : close + 1
-      } else {
-        const valueStart = j
-        while (j < html.length && !WS.test(html[j]) && html[j] !== ">") j++
-        Object.assign(attr, { value: html.slice(valueStart, j), start: valueStart, end: j, quote: "" })
-        i = j
-      }
-    }
-    attrs.push(attr)
   }
-  return { end: html.length, name, attrs }
-}
-
-/** Rewrite the asset-bearing attributes of a start tag; returns the new tag text. */
-function rewriteTag(html, start, tag) {
-  const edits = []
-  // Attribute values are character-reference decoded before anything is resolved, and a changed
-  // value is encoded again when written back. Untouched attributes keep their original text.
-  const read = (a) => {
-    const { text, unknown } = decodeAttribute(a.value)
-    if (unknown.length > 0) {
-      problem(unknown.join(" "), `unrecognized character reference in ${a.name}="${a.value}"`)
-      return null
+  parsed.walk((node) => {
+    if (node.type !== "function") return
+    const name = node.value.toLowerCase()
+    if (name === "url") {
+      const index = node.nodes.findIndex((n) => n.type === "word" || n.type === "string")
+      if (index >= 0 && node.nodes.length === 1) rewriteNode(node.nodes, index)
+      return false
     }
-    return text
-  }
-  const write = (a, decodedBefore, decodedAfter) => {
-    if (decodedAfter === decodedBefore) return
-    // An unquoted value becomes a quoted one so any data URI is safe in the attribute
-    const quote = a.quote || '"'
-    const encoded = encodeAttribute(decodedAfter, quote)
-    edits.push({ from: a.start, to: a.end, text: a.quote ? encoded : `${quote}${encoded}${quote}` })
-  }
-  const relAttr = tag.attrs.find((a) => a.name === "rel" && a.value !== null)
-  const rel = (relAttr ? decodeAttribute(relAttr.value).text : "").toLowerCase().split(/\s+/)
-
-  for (const a of tag.attrs) {
-    if (a.value === null) continue
-    if (a.name === "src" || a.name === "poster" || (a.name === "href" && tag.name === "link")) {
-      const before = read(a)
-      if (before === null) continue
-      const ref = cleanUrl(before)
-      if (!isLocal(ref)) continue
-      const found = resolveRef(ref, root)
-      if (found === null) continue
-      if (tag.name === "link" && a.name === "href" && rel.includes("stylesheet")) {
-        const uri = stylesheetUri(found)
-        if (uri !== null) write(a, before, uri)
-      } else {
-        write(a, before, toDataUri(readFileSync(found.real), mimeOf(found.real), found.fragment))
-      }
-    } else if (a.name === "srcset" || a.name === "imagesrcset") {
-      const before = read(a)
-      if (before === null) continue
-      const candidates = before.split(",").map((candidate) => {
-        const [url, ...descriptor] = candidate.trim().split(/\s+/)
-        const ref = cleanUrl(url ?? "")
-        if (!ref || !isLocal(ref)) return candidate.trim()
-        const found = resolveRef(ref, root)
-        if (found === null) return candidate.trim()
-        return [toDataUri(readFileSync(found.real), mimeOf(found.real), found.fragment), ...descriptor].join(" ")
+    if (name === "image-set" || name === "-webkit-image-set") {
+      node.nodes.forEach((child, index) => {
+        if (child.type === "string") rewriteNode(node.nodes, index)
+        else if (child.type === "function" && child.value.toLowerCase() === "url" && child.nodes.length === 1) {
+          rewriteNode(child.nodes, 0)
+        }
       })
-      write(a, before, candidates.join(", "))
-    } else if (a.name === "style") {
-      const before = read(a)
-      if (before === null) continue
-      write(a, before, processCss(before, root))
+      return false
     }
-  }
-
-  let text = html.slice(start, tag.end)
-  for (const { from, to, text: value } of edits.sort((x, y) => y.from - x.from)) {
-    text = text.slice(0, from - start) + value + text.slice(to - start)
-  }
-  return text
+    return undefined
+  })
+  return changed ? parsed.toString() : value
 }
 
-/** Walk the document; only tags (and <style> text) are rewritten, never prose, comments or scripts. */
-function processHtml(html) {
-  let out = ""
-  let i = 0
-  while (i < html.length) {
-    const lt = html.indexOf("<", i)
-    if (lt === -1) {
-      out += html.slice(i)
-      break
-    }
-    out += html.slice(i, lt)
-
-    if (html.startsWith("<!--", lt)) {
-      const close = html.indexOf("-->", lt + 4)
-      const end = close === -1 ? html.length : close + 3
-      out += html.slice(lt, end)
-      i = end
-    } else if (/^<[!?]/.test(html.slice(lt, lt + 2)) || /^<\//.test(html.slice(lt, lt + 2))) {
-      const close = html.indexOf(">", lt)
-      const end = close === -1 ? html.length : close + 1
-      out += html.slice(lt, end)
-      i = end
-    } else if (/^<[a-zA-Z]/.test(html.slice(lt, lt + 2))) {
-      const tag = parseTag(html, lt)
-      out += rewriteTag(html, lt, tag)
-      i = tag.end
-      if (RAW_TEXT.has(tag.name)) {
-        const closeRe = new RegExp(`</${tag.name}(?=[\\s/>])`, "i")
-        const rest = html.slice(i)
-        const found = closeRe.exec(rest)
-        const contentEnd = found ? i + found.index : html.length
-        const content = html.slice(i, contentEnd)
-        out += tag.name === "style" ? processCss(content, root) : content
-        i = contentEnd
+/** Inline references in CSS text. Only url(), image-set() and @import tokens count. */
+function processCss(css, baseDir) {
+  let tree
+  try {
+    tree = postcss.parse(css)
+  } catch (error) {
+    problem("CSS", `cannot parse stylesheet: ${error.message}`)
+    return css
+  }
+  tree.walkDecls((decl) => {
+    decl.value = processValue(decl.value, baseDir)
+  })
+  tree.walkAtRules("import", (rule) => {
+    rule.params = processValue(rule.params, baseDir)
+    // @import "file.css": the first token is a bare string
+    const nodes = valueParser(rule.params).nodes
+    if (nodes[0]?.type === "string") {
+      const uri = inlineRef(cssUnescape(nodes[0].value), baseDir)
+      if (uri !== null) {
+        nodes[0] = cssString(uri)
+        rule.params = valueParser.stringify(nodes)
       }
+    }
+  })
+  return tree.toString()
+}
+
+// --- srcset ------------------------------------------------------------------------------
+
+const ASCII_WS = /[ \t\n\f\r]/
+const trimAscii = (text) => text.replace(/^[ \t\n\f\r]+|[ \t\n\f\r]+$/g, "")
+
+/** WHATWG "parse a srcset attribute": candidates are { url, descriptors }. */
+function parseSrcset(input) {
+  const candidates = []
+  let i = 0
+  while (i < input.length) {
+    while (i < input.length && (ASCII_WS.test(input[i]) || input[i] === ",")) i++
+    if (i >= input.length) break
+    const start = i
+    while (i < input.length && !ASCII_WS.test(input[i])) i++
+    let url = input.slice(start, i)
+    let descriptors = ""
+    if (url.endsWith(",")) {
+      url = url.replace(/,+$/, "")
     } else {
-      out += "<"
-      i = lt + 1
+      const descriptorStart = i
+      let inParens = false
+      while (i < input.length) {
+        const c = input[i]
+        if (!inParens && c === ",") break
+        if (c === "(") inParens = true
+        else if (c === ")") inParens = false
+        i++
+      }
+      descriptors = trimAscii(input.slice(descriptorStart, i))
+      if (i < input.length) i++ // the comma
+    }
+    if (url !== "") candidates.push({ url, descriptors })
+  }
+  return candidates
+}
+
+const stringifySrcset = (candidates) =>
+  candidates.map((c) => (c.descriptors ? `${c.url} ${c.descriptors}` : c.url)).join(", ")
+
+// --- HTML --------------------------------------------------------------------------------
+
+function walk(node, visit) {
+  visit(node)
+  for (const child of node.childNodes ?? []) walk(child, visit)
+  if (node.content) walk(node.content, visit)
+}
+
+function processElement(node) {
+  for (const a of node.attrs) {
+    if (a.name === "src" || a.name === "poster" || (a.name === "href" && node.tagName === "link")) {
+      const uri = inlineRef(a.value, root)
+      if (uri !== null) a.value = uri
+    } else if (a.name === "srcset" || a.name === "imagesrcset") {
+      const candidates = parseSrcset(a.value)
+      let changed = false
+      for (const candidate of candidates) {
+        const uri = inlineRef(candidate.url, root)
+        if (uri !== null) {
+          candidate.url = uri
+          changed = true
+        }
+      }
+      if (changed) a.value = stringifySrcset(candidates)
+    } else if (a.name === "style") {
+      a.value = processCss(a.value, root)
     }
   }
-  return out
+}
+
+function processHtml(html) {
+  const document = parse(html)
+  walk(document, (node) => {
+    if (node.attrs) processElement(node)
+    if (node.tagName === "style") {
+      for (const child of node.childNodes) {
+        if (child.nodeName === "#text") child.value = processCss(child.value, root)
+      }
+    }
+  })
+  return serialize(document)
 }
 
 const output = processHtml(readFileSync(join(root, "index.html"), "utf8"))

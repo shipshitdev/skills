@@ -39,7 +39,16 @@ class BundleArtifactTest(unittest.TestCase):
         (cls.template / "package.json").write_text(
             '{"name":"fixture","private":true,"type":"module","devDependencies":{"vite":"^8.3.0"}}\n'
         )
-        installed = run("bun", "add", "-d", "vite-plugin-singlefile", cwd=cls.template)
+        installed = run(
+            "bun",
+            "add",
+            "-d",
+            "vite-plugin-singlefile",
+            "parse5@8.0.1",
+            "postcss@8.5.29",
+            "postcss-value-parser@4.2.0",
+            cwd=cls.template,
+        )
         if installed.returncode != 0:
             raise unittest.SkipTest(f"cannot install fixture dependencies: {installed.stderr[-300:]}")
         (cls.template / "vite.config.js").write_text(
@@ -112,6 +121,26 @@ class BundleArtifactTest(unittest.TestCase):
         leftovers = sorted(p.name for p in project.iterdir() if p.name not in before)
         self.assertEqual(leftovers, ["vite.singlefile.config.ts"])
 
+    def test_retained_custom_singlefile_config_still_builds_into_the_run_directory(self) -> None:
+        project = self.project()
+        # No marker line: the script must keep this file and its hard-coded outDir
+        (project / "vite.singlefile.config.ts").write_text(
+            'import { defineConfig, mergeConfig } from "vite"\n'
+            'import { viteSingleFile } from "vite-plugin-singlefile"\n'
+            'import baseConfig from "./vite.config.js"\n'
+            "export default mergeConfig(baseConfig, defineConfig({\n"
+            "  plugins: [viteSingleFile()],\n"
+            '  build: { outDir: "dist-bundle", emptyOutDir: true },\n'
+            "}))\n"
+        )
+
+        result = self.bundle(project)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("<title>fixture</title>", (project / "bundle.html").read_text())
+        self.assertFalse((project / "dist-bundle").exists())
+        self.assertIn("dist-bundle", (project / "vite.singlefile.config.ts").read_text())
+
     def test_public_symlink_escape_is_rejected_end_to_end(self) -> None:
         project = self.project(body='<img alt="x" src="/secret.png" />')
         outside = project.parent / "outside"
@@ -137,7 +166,7 @@ class BundleArtifactTest(unittest.TestCase):
         outputs = [p.communicate()[0] for p in procs]
         self.assertEqual([p.returncode for p in procs], [0, 0], "\n".join(outputs))
         self.assertIn("<title>fixture</title>", (project / "bundle.html").read_text())
-        leftovers = [p.name for p in project.iterdir() if p.name.startswith((".bundle-", "bundle.html."))]
+        leftovers = [p.name for p in project.iterdir() if p.name.startswith((".bundle-", "bundle.html.", "vite.singlefile.config.ts."))]
         self.assertEqual(leftovers, [])
 
 
