@@ -16,6 +16,10 @@ when_to_use: "shadcn components, dark mode"
 
 58 rules across 10 categories for shadcn/ui, prioritized by impact to guide automated refactoring and code generation.
 
+## Stack baseline
+
+Rules target current shadcn/ui: Tailwind CSS v4 (CSS-first, no `tailwind.config.*`, tokens in `@theme inline`), React 19 (`ref` as a prop, `data-slot` attributes), the unified `radix-ui` package, OKLCH color tokens, `tw-animate-css`, `Field` + React Hook Form `Controller` forms, and Bun (`bunx --bun shadcn@latest ...`). Examples use the Radix base (`--base radix`); the CLI also supports a Base UI base (`--base base`), where triggers take a `render` prop instead of `asChild`. For a Tailwind v3 project, keep the existing config and follow the shadcn upgrade guide first.
+
 ## When to Apply
 
 - Installing and configuring shadcn/ui in a project
@@ -44,9 +48,9 @@ when_to_use: "shadcn components, dark mode"
 
 ### 1. CLI & Project Setup (CRITICAL)
 
-- [`setup-components-json`](references/setup-components-json.md) - Configure components.json before adding components
+- [`setup-components-json`](references/setup-components-json.md) - Configure components.json (empty tailwind.config for v4) before adding components
 - [`setup-path-aliases`](references/setup-path-aliases.md) - Configure TypeScript path aliases to match components.json
-- [`setup-cn-utility`](references/setup-cn-utility.md) - Create the cn utility before using components
+- [`setup-cn-utility`](references/setup-cn-utility.md) - Create the cn utility (re-export from `cn`) before using components
 - [`setup-use-cli-not-copy`](references/setup-use-cli-not-copy.md) - Use CLI to add components instead of copy-paste
 - [`setup-css-variables-theme`](references/setup-css-variables-theme.md) - Enable CSS variables for consistent theming
 - [`setup-rsc-configuration`](references/setup-rsc-configuration.md) - Set RSC flag based on framework support
@@ -57,7 +61,7 @@ when_to_use: "shadcn components, dark mode"
 - [`arch-preserve-radix-primitive-structure`](references/arch-preserve-radix-primitive-structure.md) - Maintain Radix compound component hierarchy
 - [`arch-extend-variants-with-cva`](references/arch-extend-variants-with-cva.md) - Use Class Variance Authority for type-safe variants
 - [`arch-use-cn-for-class-merging`](references/arch-use-cn-for-class-merging.md) - Use cn() utility for safe Tailwind class merging
-- [`arch-forward-refs-for-composable-components`](references/arch-forward-refs-for-composable-components.md) - Forward refs for form and focus integration
+- [`arch-forward-refs-for-composable-components`](references/arch-forward-refs-for-composable-components.md) - Pass refs through to the underlying element (React 19 ref prop)
 - [`arch-isolate-component-variants`](references/arch-isolate-component-variants.md) - Separate base styles from variant-specific styles
 
 ### 3. Accessibility Preservation (CRITICAL)
@@ -77,14 +81,14 @@ when_to_use: "shadcn components, dark mode"
 
 - [`style-use-css-variables-for-theming`](references/style-use-css-variables-for-theming.md) - Use CSS variables for theme colors
 - [`style-avoid-important-overrides`](references/style-avoid-important-overrides.md) - Never use !important for style overrides
-- [`style-use-tailwind-theme-extend`](references/style-use-tailwind-theme-extend.md) - Extend Tailwind theme for design tokens
+- [`style-use-tailwind-theme-extend`](references/style-use-tailwind-theme-extend.md) - Define design tokens in CSS with @theme inline
 - [`style-consistent-spacing-scale`](references/style-consistent-spacing-scale.md) - Use consistent Tailwind spacing scale
 - [`style-responsive-design-patterns`](references/style-responsive-design-patterns.md) - Apply mobile-first responsive design
 - [`style-dark-mode-support`](references/style-dark-mode-support.md) - Support dark mode with CSS variables
 
 ### 5. Form Patterns (HIGH)
 
-- [`form-use-react-hook-form-integration`](references/form-use-react-hook-form-integration.md) - Integrate with React Hook Form
+- [`form-use-react-hook-form-integration`](references/form-use-react-hook-form-integration.md) - Integrate React Hook Form with Field and Controller
 - [`form-use-zod-for-schema-validation`](references/form-use-zod-for-schema-validation.md) - Use Zod for type-safe validation
 - [`form-show-validation-errors-correctly`](references/form-show-validation-errors-correctly.md) - Show errors at appropriate times
 - [`form-handle-async-validation`](references/form-handle-async-validation.md) - Debounce async validation calls

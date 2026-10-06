@@ -13,7 +13,7 @@ Tailwind CSS v4 uses a separate CLI package. Using the old CLI command with v4 w
 
 ```bash
 # Old CLI - incompatible with v4
-npx tailwindcss -i input.css -o output.css
+bunx tailwindcss -i input.css -o output.css
 
 # Results in missing utilities or errors
 ```
@@ -22,16 +22,17 @@ npx tailwindcss -i input.css -o output.css
 
 ```bash
 # New CLI package for v4
-npx @tailwindcss/cli -i input.css -o output.css
+bunx @tailwindcss/cli -i input.css -o output.css
+```
+
+```bash
+bun add -d tailwindcss @tailwindcss/cli
 ```
 
 ```json
 {
   "scripts": {
-    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css"
-  },
-  "devDependencies": {
-    "@tailwindcss/cli": "^4.0.0"
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify"
   }
 }
 ```

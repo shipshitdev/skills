@@ -28,7 +28,7 @@ Comprehensive best practices guide for shadcn/ui applications, designed for AI a
    - 1.6 [Set RSC Flag Based on Framework Support](references/setup-rsc-configuration.md) — HIGH (prevents client/server component mismatch errors)
 2. [Component Architecture](references/_sections.md#2-component-architecture) — **CRITICAL**
    - 2.1 [Extend Variants with Class Variance Authority](references/arch-extend-variants-with-cva.md) — CRITICAL (maintains type safety and design consistency)
-   - 2.2 [Forward Refs for Composable Components](references/arch-forward-refs-for-composable-components.md) — CRITICAL (enables integration with form libraries and focus management)
+   - 2.2 [Pass Refs Through to the Underlying Element](references/arch-forward-refs-for-composable-components.md) — CRITICAL (enables integration with form libraries and focus management)
    - 2.3 [Isolate Component Variants from Base Styles](references/arch-isolate-component-variants.md) — CRITICAL (prevents style bleeding and maintains component reusability)
    - 2.4 [Preserve Radix Primitive Structure](references/arch-preserve-radix-primitive-structure.md) — CRITICAL (maintains keyboard navigation and focus management)
    - 2.5 [Use asChild for Custom Trigger Elements](references/arch-use-asChild-for-custom-triggers.md) — CRITICAL (preserves accessibility and event handling)
@@ -47,7 +47,7 @@ Comprehensive best practices guide for shadcn/ui applications, designed for AI a
 4. [Styling & Theming](references/_sections.md#4-styling--theming) — **HIGH**
    - 4.1 [Apply Mobile-First Responsive Design](references/style-responsive-design-patterns.md) — HIGH (prevents mobile usability failures on 50%+ of traffic)
    - 4.2 [Avoid !important Overrides](references/style-avoid-important-overrides.md) — HIGH (maintains style specificity and component customization)
-   - 4.3 [Extend Tailwind Theme for Custom Design Tokens](references/style-use-tailwind-theme-extend.md) — HIGH (maintains design system consistency)
+   - 4.3 [Define Custom Design Tokens in CSS with @theme inline](references/style-use-tailwind-theme-extend.md) — HIGH (maintains design system consistency)
    - 4.4 [Support Dark Mode with CSS Variables](references/style-dark-mode-support.md) — HIGH (provides user preference compliance and reduces eye strain)
    - 4.5 [Use Consistent Spacing Scale](references/style-consistent-spacing-scale.md) — HIGH (creates visual rhythm and reduces design inconsistency)
    - 4.6 [Use CSS Variables for Theme Colors](references/style-use-css-variables-for-theming.md) — HIGH (enables runtime theme switching and consistency)

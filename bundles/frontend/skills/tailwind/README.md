@@ -14,6 +14,6 @@ Derived from **[pproenca/dot-skills](https://github.com/pproenca/dot-skills)** (
 | Last synced | 2026-06-12 |
 | License | MIT |
 
-**Local modifications:** Vendored from pproenca/dot-skills `.curated/tailwind` (formerly `tailwindcss-v4-style` upstream). No behavioral changes beyond provenance metadata.
+**Local modifications:** Vendored from pproenca/dot-skills `.curated/tailwind` (formerly `tailwindcss-v4-style` upstream); now owned here. Verified and corrected against Tailwind CSS v4 (`@custom-variant` dark mode, `@theme inline` for variable-backed tokens, `tw-animate-css`), with Bun commands (`bun add`, `bunx`) and the current Vite Node floor.
 
 **Checking for upstream changes:** when upstream has moved ahead of the synced marker above, diff [`skills/.curated/tailwind/SKILL.md`](https://github.com/pproenca/dot-skills/blob/master/skills/.curated/tailwind/SKILL.md) on `master` since commit `91a64a6e7d49`, port anything worth bringing home, then bump `metadata.upstream_commit` (or `metadata.upstream_version`) and `metadata.last_synced` in `SKILL.md` and this table.

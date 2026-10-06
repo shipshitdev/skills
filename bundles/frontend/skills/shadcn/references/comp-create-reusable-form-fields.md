@@ -18,35 +18,31 @@ function UserForm() {
   })
 
   return (
-    <Form {...form}>
-      <FormField
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <Controller
         control={form.control}
         name="firstName"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>First Name</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter first name" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+            <Input id="firstName" placeholder="Enter first name" aria-invalid={fieldState.invalid} {...field} />
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
         )}
       />
-      <FormField
+      <Controller
         control={form.control}
         name="lastName"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Last Name</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter last name" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+            <Input id="lastName" placeholder="Enter last name" aria-invalid={fieldState.invalid} {...field} />
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
         )}
       />
       {/* 10 more fields with identical structure... */}
-    </Form>
+    </form>
   )
 }
 ```
@@ -73,18 +69,22 @@ function TextField<T extends FieldValues>({
   type = "text",
 }: TextFieldProps<T>) {
   return (
-    <FormField
+    <Controller
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input type={type} placeholder={placeholder} {...field} />
-          </FormControl>
-          {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
-        </FormItem>
+      render={({ field, fieldState }) => (
+        <Field data-invalid={fieldState.invalid}>
+          <FieldLabel htmlFor={name}>{label}</FieldLabel>
+          <Input
+            {...field}
+            id={name}
+            type={type}
+            placeholder={placeholder}
+            aria-invalid={fieldState.invalid}
+          />
+          {description && <FieldDescription>{description}</FieldDescription>}
+          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+        </Field>
       )}
     />
   )
@@ -107,18 +107,16 @@ function SelectField<T extends FieldValues>({
   options,
 }: SelectFieldProps<T>) {
   return (
-    <FormField
+    <Controller
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder={placeholder} />
-              </SelectTrigger>
-            </FormControl>
+      render={({ field, fieldState }) => (
+        <Field data-invalid={fieldState.invalid}>
+          <FieldLabel htmlFor={name}>{label}</FieldLabel>
+          <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+            <SelectTrigger id={name} aria-invalid={fieldState.invalid}>
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
             <SelectContent>
               {options.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
@@ -127,8 +125,8 @@ function SelectField<T extends FieldValues>({
               ))}
             </SelectContent>
           </Select>
-          <FormMessage />
-        </FormItem>
+          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+        </Field>
       )}
     />
   )
@@ -139,17 +137,19 @@ function UserForm() {
   const form = useForm<UserFormValues>({ resolver: zodResolver(userSchema) })
 
   return (
-    <Form {...form}>
-      <TextField control={form.control} name="firstName" label="First Name" />
-      <TextField control={form.control} name="lastName" label="Last Name" />
-      <TextField control={form.control} name="email" label="Email" type="email" />
-      <SelectField
-        control={form.control}
-        name="role"
-        label="Role"
-        options={roleOptions}
-      />
-    </Form>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <FieldGroup>
+        <TextField control={form.control} name="firstName" label="First Name" />
+        <TextField control={form.control} name="lastName" label="Last Name" />
+        <TextField control={form.control} name="email" label="Email" type="email" />
+        <SelectField
+          control={form.control}
+          name="role"
+          label="Role"
+          options={roleOptions}
+        />
+      </FieldGroup>
+    </form>
   )
 }
 ```

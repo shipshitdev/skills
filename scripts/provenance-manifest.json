@@ -106,7 +106,7 @@
       "last_synced": "2026-06-12",
       "license": "Apache-2.0",
       "mode": "rolling",
-      "modifications": "Vendored from Anthropic's `web-artifacts-builder` (renamed locally to `artifacts-builder`); the shared-UI import was repointed to `@agenticindiedev/ui` for this marketplace. Otherwise tracks upstream."
+      "modifications": "Vendored from Anthropic's `web-artifacts-builder` (renamed locally to `artifacts-builder`). Moved the scaffold to Bun, Vite and Tailwind CSS v4 (CSS-first); the shared UI is now the shadcn/ui components added with `bunx shadcn@latest` (replacing the bundled v3-era component archive and an unpublished package); bundling uses `vite-plugin-singlefile` instead of Parcel and html-inline; Node 20.19+ or 22.12+ is enforced. Otherwise tracks upstream."
     },
     {
       "skill": "theme-factory",
@@ -249,7 +249,7 @@
       "last_synced": "2026-06-12",
       "license": "MIT",
       "mode": "rolling",
-      "modifications": "Vendored from pproenca/dot-skills `.curated/shadcn`. No behavioral changes beyond provenance metadata."
+      "modifications": "Vendored from pproenca/dot-skills `.curated/shadcn`; now owned here. Rewritten for Tailwind CSS v4 (CSS-first `@theme inline`, empty `tailwind.config` in components.json, `tw-animate-css`, OKLCH tokens) and current shadcn/ui (React 19 ref props, unified `radix-ui`, `cn` package, `Field` plus `Controller` forms, Zod 4, `bunx shadcn@latest`)."
     },
     {
       "skill": "tailwind",
@@ -262,7 +262,7 @@
       "last_synced": "2026-06-12",
       "license": "MIT",
       "mode": "rolling",
-      "modifications": "Vendored from pproenca/dot-skills `.curated/tailwind` (formerly `tailwindcss-v4-style` upstream). No behavioral changes beyond provenance metadata."
+      "modifications": "Vendored from pproenca/dot-skills `.curated/tailwind` (formerly `tailwindcss-v4-style` upstream); now owned here. Verified and corrected against Tailwind CSS v4 (`@custom-variant` dark mode, `@theme inline` for variable-backed tokens, `tw-animate-css`), with Bun commands (`bun add`, `bunx`) and the current Vite Node floor."
     }
   ]
 }

@@ -24,7 +24,7 @@ function ContactForm() {
     // User might accidentally resubmit
   }
 
-  return <Form {...form}>{/* ... */}</Form>
+  return <form onSubmit={form.handleSubmit(onSubmit)}>{/* ... */}</form>
 }
 ```
 
@@ -44,7 +44,7 @@ function ContactForm() {
   const onSubmit = async (data: ContactFormValues) => {
     try {
       await submitContact(data)
-      toast.success("Message sent!")
+      toast.success("Message sent!") // toast from "sonner"
       form.reset() // Resets to defaultValues and clears errors
     } catch (error) {
       toast.error("Failed to send message")
@@ -53,14 +53,12 @@ function ContactForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        {/* Form fields */}
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Sending..." : "Send Message"}
-        </Button>
-      </form>
-    </Form>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      {/* Form fields */}
+      <Button type="submit" disabled={form.formState.isSubmitting}>
+        {form.formState.isSubmitting ? "Sending..." : "Send Message"}
+      </Button>
+    </form>
   )
 }
 ```

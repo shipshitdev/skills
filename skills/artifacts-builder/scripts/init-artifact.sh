@@ -17,15 +17,20 @@ if ! command -v bun &> /dev/null; then
   exit 1
 fi
 
-# Vite 8 and Tailwind CSS v4 run on Node (the Vite CLI, build and bunx shebangs)
+# Vite 8 and Tailwind CSS v4 run on Node: Vite requires 20.19+ or 22.12+ (see node-version-check.sh)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=node-version-check.sh disable=SC1091
+source "$SCRIPT_DIR/node-version-check.sh"
+
 if ! command -v node &> /dev/null; then
-  echo "Error: Node.js 20.19+ or 22.12+ is required (Vite runs on it)."
+  echo "Error: Node.js $NODE_MIN_DISPLAY is required (Vite runs on it)."
   exit 1
 fi
-NODE_MAJOR=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-echo "Detected Node.js $(node -v), Bun $(bun -v)"
-if [ "$NODE_MAJOR" -lt 20 ]; then
-  echo "Error: Node.js 20.19+ or 22.12+ is required (current: $(node -v))"
+NODE_VERSION="$(node -v)"
+echo "Detected Node.js $NODE_VERSION, Bun $(bun -v)"
+if ! node_version_supported "$NODE_VERSION"; then
+  echo "Error: Node.js $NODE_MIN_DISPLAY is required by Vite (current: $NODE_VERSION)."
+  echo "       Upgrade Node and re-run."
   exit 1
 fi
 
@@ -64,6 +69,7 @@ EOF
 # shadcn/ui needs the @/* alias in both tsconfig files and in Vite.
 # paths resolves relative to the tsconfig, so no baseUrl (deprecated in TypeScript 6).
 echo "Adding the @/* path alias to tsconfig.json and tsconfig.app.json..."
+# shellcheck disable=SC2016  # the JS below is single-quoted on purpose
 bun -e '
 const fs = require("fs");
 const addAlias = (file) => {

@@ -56,8 +56,8 @@ function Card({ className, variant }: CardProps) {
 
 **How cn() works:**
 
-1. `clsx` handles conditional classes and arrays
-2. `tailwind-merge` resolves conflicts (last wins for same property)
+1. Conditional classes and arrays are flattened (clsx behavior)
+2. Conflicting utilities are resolved (tailwind-merge behavior, last wins for the same property)
 3. User's `className` prop always takes precedence (passed last)
 
 Reference: [shadcn/ui Utilities](https://ui.shadcn.com/docs/installation/manual)

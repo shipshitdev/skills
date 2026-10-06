@@ -21,8 +21,8 @@ function ThemeToggle() {
       size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
-      <SunIcon className="h-4 w-4 dark:hidden" />
-      <MoonIcon className="h-4 w-4 hidden dark:block" />
+      <SunIcon className="size-4 dark:hidden" />
+      <MoonIcon className="size-4 hidden dark:block" />
       {/* Screen reader announces: "button" - no context */}
     </Button>
   )
@@ -41,8 +41,8 @@ function ThemeToggle() {
       size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
-      <SunIcon className="h-4 w-4 dark:hidden" />
-      <MoonIcon className="h-4 w-4 hidden dark:block" />
+      <SunIcon className="size-4 dark:hidden" />
+      <MoonIcon className="size-4 hidden dark:block" />
       <span className="sr-only">Toggle theme</span>
       {/* Screen reader announces: "Toggle theme, button" */}
     </Button>
@@ -61,7 +61,7 @@ function CloseButton({ onClose }: { onClose: () => void }) {
       onClick={onClose}
       aria-label="Close dialog"
     >
-      <XIcon className="h-4 w-4" />
+      <XIcon className="size-4" />
     </Button>
   )
 }

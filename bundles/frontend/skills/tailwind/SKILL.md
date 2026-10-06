@@ -24,6 +24,24 @@ when_to_use: "utility classes, Vite plugin"
 - Implementing responsive designs with breakpoints or container queries
 - Setting up theming with @theme directive and design tokens
 
+## Baseline setup (Bun, Vite)
+
+```bash
+bun add tailwindcss @tailwindcss/vite   # PostCSS projects: @tailwindcss/postcss
+```
+
+```css
+/* src/index.css */
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand: oklch(0.55 0.21 260);
+}
+```
+
+No `tailwind.config.*`, no `theme.extend`: configuration, tokens, plugins and variants live in CSS. For shadcn/ui token wiring (`@theme inline`) see the `shadcn` skill.
+
 ## Rule Categories by Priority
 
 | Priority | Category | Impact | Prefix |

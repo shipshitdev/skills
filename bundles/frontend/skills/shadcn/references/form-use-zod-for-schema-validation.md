@@ -35,11 +35,11 @@ function RegistrationForm() {
 **Correct (Zod schema with type inference):**
 
 ```tsx
-import { z } from "zod"
+import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 const registrationSchema = z.object({
-  email: z.string().email("Please enter a valid email"),
+  email: z.email("Please enter a valid email"),
   username: z
     .string()
     .min(3, "Username must be at least 3 characters")
@@ -49,7 +49,7 @@ const registrationSchema = z.object({
     .number()
     .min(18, "You must be at least 18 years old")
     .max(120, "Please enter a valid age"),
-  website: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
+  website: z.url("Please enter a valid URL").optional().or(z.literal("")),
 })
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>
@@ -71,12 +71,13 @@ function RegistrationForm() {
     console.log(data.email) // TypeScript knows this is a valid email string
   }
 
-  return <Form {...form}>{/* ... */}</Form>
+  return <form onSubmit={form.handleSubmit(onSubmit)}>{/* ... */}</form>
 }
 ```
 
 **Common Zod patterns:**
 
+- `z.email()`, `z.url()`, `z.uuid()` - Zod 4 top-level string formats (the `z.string().email()` form is deprecated)
 - `z.coerce.number()` - Converts string input to number
 - `.optional().or(z.literal(""))` - Allow empty string for optional fields
 - `.refine()` - Custom validation logic
