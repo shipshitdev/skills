@@ -276,6 +276,11 @@ class SkillDriftTests(unittest.TestCase):
         folder.mkdir(parents=True)
         (folder / "SKILL.md").write_text(SKILL_TEMPLATE.format(name=name, source=source, pins=text))
 
+    def add_reference(self, skill: str, name: str, text: str) -> None:
+        folder = self.root / "skills" / skill / "references"
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / f"{name}.md").write_text(text)
+
     def blob(self, path: str, repo: str = UP, ref: str = "main") -> str:
         return f"https://github.com/{repo}/blob/{ref}/{path}"
 
@@ -303,6 +308,25 @@ class SkillDriftTests(unittest.TestCase):
         self.assertIn(f"https://github.com/u/up/compare/{PIN_R}...{HEAD_A}", body)
         self.assertNotIn("quiet", body)
         self.assertIn("bump `metadata.upstream_commit`", body)
+
+    def test_absorbed_reference_pin_reports_its_own_file(self) -> None:
+        self.add_skill("host", self.blob("skills/host/SKILL.md", repo="o/other"), upstream_commit=PIN_R)
+        self.add_reference("host", "absorbed", SKILL_TEMPLATE.format(
+            name="absorbed", source=self.blob("skills/absorbed/SKILL.md"), pins=f"  upstream_commit: {PIN_R}\n"))
+        gh = self.fake(compares={UP: (HEAD_A, ahead("skills/absorbed/SKILL.md")),
+                                 "o/other": (PIN_R, identical())})
+        reports = self.reports(gh)
+        self.assertEqual(reports["host/absorbed"]["pin_file"], "skills/host/references/absorbed.md")
+        self.assertEqual(reports["host"]["pin_file"], "skills/host/SKILL.md")
+        self.assertEqual(drift.state(reports["host/absorbed"]), "drifted")
+        self.assertIn("`host/absorbed` pin lives in `skills/host/references/absorbed.md`",
+                      drift.render([reports["host/absorbed"]]))
+
+    def test_reference_without_upstream_metadata_is_ignored(self) -> None:
+        self.add_skill("host", self.blob("skills/host/SKILL.md"), upstream_commit=PIN_R)
+        self.add_reference("host", "notes", "# Plain notes\n\nNo frontmatter here.\n")
+        gh = self.fake(compares={UP: (PIN_R, identical())})
+        self.assertNotIn("host/notes", self.reports(gh))
 
     def test_one_compare_serves_every_skill_sharing_a_pin(self) -> None:
         for name in ("a", "b", "c"):
