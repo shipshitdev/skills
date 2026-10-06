@@ -57,33 +57,33 @@ export default defineConfig(async (env) => {
   const base = typeof baseConfig === "function" ? await baseConfig(env) : await baseConfig
   return mergeConfig(base, {
     plugins: [viteSingleFile()],
-    build: { outDir: "dist-bundle", emptyOutDir: true },
+    build: { outDir: process.env.ARTIFACT_BUNDLE_OUT ?? "dist-bundle", emptyOutDir: true },
   })
 })
 EOF
 fi
 
-# Build into temporary output; bundle.html is only replaced after everything succeeded
-TMP_BUNDLE="bundle.html.tmp.$$"
+# Every run builds inside its own private work directory (created exclusively), so concurrent
+# runs never share output. bundle.html is only replaced after every step succeeded.
+WORK_DIR="$(mktemp -d ".bundle-work.XXXXXX")"
 cleanup() {
-  rm -rf dist-bundle "$TMP_BUNDLE"
+  rm -rf "$WORK_DIR"
 }
 trap cleanup EXIT
 
-rm -rf dist-bundle
-
 echo "Building with Vite..."
-bunx vite build --config "$SINGLEFILE_CONFIG"
+ARTIFACT_BUNDLE_OUT="$PWD/$WORK_DIR/dist" bunx vite build --config "$SINGLEFILE_CONFIG"
 
-if [ ! -f "dist-bundle/index.html" ]; then
-  echo "Error: the build produced no dist-bundle/index.html"
+if [ ! -f "$WORK_DIR/dist/index.html" ]; then
+  echo "Error: the build produced no index.html"
   exit 1
 fi
 
 echo "Inlining public assets..."
-bun "$SCRIPT_DIR/inline-local-assets.mjs" dist-bundle "$TMP_BUNDLE"
+bun "$SCRIPT_DIR/inline-local-assets.mjs" "$WORK_DIR/dist" "$WORK_DIR/bundle.html" "$PWD"
 
-mv -f "$TMP_BUNDLE" bundle.html
+mv -f "$WORK_DIR/bundle.html" bundle.html
+chmod 644 bundle.html
 
 FILE_SIZE=$(du -h bundle.html | cut -f1)
 
