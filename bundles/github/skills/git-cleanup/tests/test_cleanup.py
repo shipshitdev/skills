@@ -1379,6 +1379,38 @@ class GitFixtureTests(unittest.TestCase):
         (worktree / "plain.link").symlink_to(self.root / "shared/target.txt")
         self.assertFalse(Repository.duplicate(worktree / "plain.link", self.root / "plain.link", worktree))
 
+    def test_main_link_routed_through_removed_worktree_is_not_a_duplicate(self):
+        worktree = self.ignored_link_fixture()
+        (worktree / ".tmp").mkdir()
+        (worktree / ".tmp/env-link").symlink_to(self.root / "shared/target.txt")
+        (self.root / "app.link").symlink_to(worktree / ".tmp/env-link")
+        (worktree / "app.link").symlink_to(self.root / "shared/target.txt")
+        self.assertEqual(os.path.realpath(worktree / "app.link"), os.path.realpath(self.root / "app.link"))
+        self.assertFalse(Repository.duplicate(worktree / "app.link", self.root / "app.link", worktree))
+        plan = self.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertIn("app.link", plan["skipped"][0]["reason"])
+
+    def test_link_loop_is_not_a_duplicate(self):
+        worktree = self.ignored_link_fixture()
+        (self.root / "a.link").symlink_to("b.link")
+        (self.root / "b.link").symlink_to("a.link")
+        (worktree / "a.link").symlink_to(self.root / "a.link")
+        self.assertFalse(Repository.duplicate(worktree / "a.link", self.root / "a.link", worktree))
+
+    def test_deleted_upstream_triage_agrees_with_the_live_check(self):
+        oid = self.push_remote_only()
+        stale = self.repo.remote_heads()
+        self.assertIn("refs/heads/remote-only", stale)
+        self.command("git", "--git-dir", str(self.remote), "update-ref", "-d", "refs/heads/remote-only")
+        with patch.object(self.repo, "remote_heads", side_effect=[stale, stale, {}, {}, {}]):
+            with patch.object(self.repo, "has_commit", return_value=False):
+                plan = self.repo.plan("remote-branches")
+        item = next(item for item in plan["skipped"] if item["ref"] == "refs/heads/remote-only")
+        self.assertEqual(item["reason"], Repository.DELETED_UPSTREAM)
+        self.assertEqual(item["triage"]["remote_ref_exists"], False)
+        self.assertEqual(item["oid"], oid)
+
     def push_remote_only(self, name="remote-only"):
         clone = self.directory / f"clone-{name}"
         self.command("git", "clone", "-q", "--branch", "main", str(self.remote), str(clone))

@@ -208,22 +208,35 @@ class Repository:
         def inside(path: Path) -> bool:
             return path == removed or removed in path.parents
 
-        original = Path(os.path.realpath(original.parent)) / original.name
-        if inside(original.parent):
+        def chain(path: Path) -> list[Path] | None:
+            """Every path a lookup of `path` visits, parents and link hops included."""
+            hops, current = [], path
+            for _ in range(40):
+                parent = Path(os.path.realpath(current.parent))
+                hops.append(parent)
+                current = parent / current.name
+                hops.append(current)
+                if not current.is_symlink():
+                    return hops
+                current = Path(os.path.join(parent, os.readlink(current)))
+            return None  # a link loop never reaches a surviving file
+
+        hops = chain(original)
+        # A main-checkout link routed through this worktree breaks when it goes,
+        # even if its final target lies elsewhere.
+        if hops is None or any(inside(hop) for hop in hops):
             return False
+        target = Path(os.path.realpath(original))
         if file.is_symlink():
             # Compare where both links end up, not their text; a link whose
             # target is broken or lies in the removed worktree keeps nothing alive.
             if not original.is_symlink():
                 return False
-            mine, theirs = Path(os.path.realpath(file)), Path(os.path.realpath(original))
-            return not inside(mine) and not inside(theirs) and mine == theirs and mine.exists()
+            mine = Path(os.path.realpath(file))
+            return not inside(mine) and mine == target and mine.exists()
         # A main-checkout link (apps/workers/.env.local -> ../api/.env.local)
         # keeps its target, so a copy of that target survives unless the link
         # resolves into this worktree.
-        target = Path(os.path.realpath(original))
-        if inside(target):
-            return False
         return file.is_file() and target.is_file() and filecmp.cmp(file, target, shallow=False)
 
     def unmoved_since_creation(self, ref: str, oid: str, worktree: str | None = None) -> bool:
@@ -662,14 +675,15 @@ class Repository:
             self.git("check-ref-format", ref)
             heads = self.remote_heads() if heads is None else heads
             if ref not in heads:
-                raise Refused(self.DELETED_UPSTREAM)
+                raise Refused(self.DELETED_UPSTREAM, triage={"remote_ref_exists": False})
             if heads[ref] != oid:
                 raise Refused("remote ref changed since discovery")
         if not self.has_commit(oid):
             # Neither a missing ref nor a missing object is a proof failure.
             if kind == "remote":
                 if ref not in self.remote_heads():
-                    raise Refused(self.DELETED_UPSTREAM)
+                    # The live check supersedes the planning snapshot in triage.
+                    raise Refused(self.DELETED_UPSTREAM, triage={"remote_ref_exists": False})
                 self.fetch_objects(ref)
             if not self.has_commit(oid):
                 raise Refused(f"objects-missing-locally: {oid[:12]} is not local; fetch it and replan")
