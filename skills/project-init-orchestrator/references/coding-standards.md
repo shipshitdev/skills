@@ -126,13 +126,12 @@ try {
 ### Soft Deletes
 
 ```typescript
-// ❌ Wrong
-@Prop({ type: Date })
-deletedAt?: Date;
+// ❌ Wrong - hard delete or nullable timestamp nobody indexes
+await this.prisma.user.delete({ where: { id } });
 
-// ✅ Correct
-@Prop({ default: false, index: true })
-isDeleted: boolean;
+// ✅ Correct - boolean flag, indexed together with the tenant column
+// schema: isDeleted Boolean @default(false)  @@index([organizationId, isDeleted])
+await this.prisma.user.update({ where: { id }, data: { isDeleted: true } });
 ```
 
 ### Queries
@@ -140,27 +139,25 @@ isDeleted: boolean;
 ```typescript
 // ❌ Wrong - missing filters
 async findAll() {
-  return this.model.find();
+  return this.prisma.user.findMany();
 }
 
 // ✅ Correct - always filter
 async findAll(organizationId: string) {
-  return this.model.find({
-    organization: organizationId,
-    isDeleted: false,
+  return this.prisma.user.findMany({
+    where: { organizationId, isDeleted: false },
   });
 }
 ```
 
 ### Indexes
 
-```typescript
-// Simple indexes - in schema
-@Prop({ index: true })
-email: string;
+```prisma
+// Simple index - in the model
+email String @unique
 
-// Compound indexes - in module
-schema.index({ organization: 1, isDeleted: 1 });
+// Compound index - in the model
+@@index([organizationId, isDeleted])
 ```
 
 ---

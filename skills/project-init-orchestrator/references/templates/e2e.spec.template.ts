@@ -5,7 +5,9 @@
  * Replace {{entity}} with camelCase entity name (e.g., task)
  * Replace {{entities}} with plural camelCase (e.g., tasks)
  *
- * Requires: npm install -D supertest @types/supertest
+ * Requires: bun add -D supertest @types/supertest unplugin-swc @swc/core
+ * Requires a disposable Postgres database in DATABASE_URL (CI service container or
+ * local docker compose); migrations are applied before the suite runs.
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
@@ -13,30 +15,24 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { AppModule } from "../app.module";
-import { MongoMemoryServer } from "mongodb-memory-server";
-import { MongooseModule } from "@nestjs/mongoose";
+import { PrismaService } from "../prisma/prisma.service";
 
 describe("{{Entity}}s E2E", () => {
   let app: INestApplication;
-  let mongod: MongoMemoryServer;
+  let prisma: PrismaService;
   let authToken: string;
 
   // Mock auth token for testing
   const mockAuthToken = "Bearer test-token";
 
   beforeAll(async () => {
-    // Start in-memory MongoDB
-    mongod = await MongoMemoryServer.create();
-    const mongoUri = mongod.getUri();
-
+    // Apply migrations first: `bunx prisma migrate deploy` against DATABASE_URL
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    })
-      .overrideProvider("MONGODB_URI")
-      .useValue(mongoUri)
-      .compile();
+    }).compile();
 
     app = moduleFixture.createNestApplication();
+    prisma = moduleFixture.get(PrismaService);
 
     // Apply same configuration as main.ts
     app.useGlobalPipes(
@@ -51,8 +47,9 @@ describe("{{Entity}}s E2E", () => {
   });
 
   afterAll(async () => {
+    // Remove rows created by this suite, then release the connection pool
+    await prisma.{{entity}}.deleteMany({});
     await app.close();
-    await mongod.stop();
   });
 
   describe("POST /{{entities}}", () => {
@@ -68,7 +65,7 @@ describe("{{Entity}}s E2E", () => {
         .send(create{{Entity}}Dto)
         .expect(201);
 
-      expect(response.body).toHaveProperty("_id");
+      expect(response.body).toHaveProperty("id");
       expect(response.body.title).toBe(create{{Entity}}Dto.title);
     });
 
@@ -115,7 +112,7 @@ describe("{{Entity}}s E2E", () => {
         .set("Authorization", mockAuthToken)
         .send({ title: "Test {{Entity}}" });
 
-      created{{Entity}}Id = response.body._id;
+      created{{Entity}}Id = response.body.id;
     });
 
     it("should return a {{entity}} by id", async () => {
@@ -124,7 +121,7 @@ describe("{{Entity}}s E2E", () => {
         .set("Authorization", mockAuthToken)
         .expect(200);
 
-      expect(response.body._id).toBe(created{{Entity}}Id);
+      expect(response.body.id).toBe(created{{Entity}}Id);
     });
 
     it("should return 404 for non-existent {{entity}}", async () => {
@@ -144,7 +141,7 @@ describe("{{Entity}}s E2E", () => {
         .set("Authorization", mockAuthToken)
         .send({ title: "Test {{Entity}}" });
 
-      created{{Entity}}Id = response.body._id;
+      created{{Entity}}Id = response.body.id;
     });
 
     it("should update a {{entity}}", async () => {
@@ -177,7 +174,7 @@ describe("{{Entity}}s E2E", () => {
         .set("Authorization", mockAuthToken)
         .send({ title: "Test {{Entity}}" });
 
-      created{{Entity}}Id = response.body._id;
+      created{{Entity}}Id = response.body.id;
     });
 
     it("should delete a {{entity}}", async () => {

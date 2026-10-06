@@ -42,7 +42,7 @@ jobs:
         run: bunx tsc --noEmit
 
       - name: Run tests with coverage
-        run: bun test --coverage
+        run: bunx vitest run --coverage
 
       - name: Build
         run: bun run build

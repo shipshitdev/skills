@@ -2,19 +2,19 @@
 title: Mock Modules at Module Level
 impact: MEDIUM
 impactDescription: prevents intermittent mock timing failures
-tags: setup, mock, jest, modules
+tags: setup, mock, vitest, modules
 ---
 
 ## Mock Modules at Module Level
 
-Call `jest.mock()` at the top level of your test file, not inside tests. Jest hoists mock calls, but placing them inside tests can cause timing issues.
+Call `vi.mock()` at the top level of your test file, not inside tests. Vitest hoists `vi.mock` calls to the top of the file, but placing them inside tests is misleading and can cause timing issues. The factory must return the module shape (for example `{ fetchUser: vi.fn() }`); use `vi.importActual` to keep the real exports you do not mock.
 
 **Incorrect (mock inside test):**
 
 ```tsx
 test('fetches user data', async () => {
-  jest.mock('./api', () => ({
-    fetchUser: jest.fn().mockResolvedValue({ name: 'John' })
+  vi.mock('./api', () => ({
+    fetchUser: vi.fn().mockResolvedValue({ name: 'John' })
   }))
 
   render(<UserProfile />)
@@ -25,11 +25,14 @@ test('fetches user data', async () => {
 **Correct (mock at module level):**
 
 ```tsx
+import { beforeEach, expect, test, vi } from 'vitest'
 import { fetchUser } from './api'
 
-jest.mock('./api')
+vi.mock('./api', () => ({
+  fetchUser: vi.fn(),
+}))
 
-const mockFetchUser = fetchUser as jest.MockedFunction<typeof fetchUser>
+const mockFetchUser = vi.mocked(fetchUser)
 
 test('fetches user data', async () => {
   mockFetchUser.mockResolvedValue({ name: 'John' })
@@ -50,8 +53,8 @@ test('handles error', async () => {
 
 ```tsx
 beforeEach(() => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 })
 ```
 
-Reference: [Jest - Manual Mocks](https://jestjs.io/docs/manual-mocks)
+Reference: [Vitest - Mocking](https://vitest.dev/guide/mocking)

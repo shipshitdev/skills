@@ -1,16 +1,16 @@
 ---
 name: nestjs-testing-expert
-description: Writes NestJS Jest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint.
+description: Writes NestJS Vitest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint.
 metadata:
   version: "2.2.2"
-  tags: "nestjs, testing, jest, supertest, backend"
+  tags: "nestjs, testing, vitest, supertest, backend"
   author: Ship Shit Dev
 when_to_use: "Test.createTestingModule, override provider, supertest"
 ---
 
 # NestJS Testing Expert
 
-Build reliable Jest suites for NestJS modules, services, controllers, and HTTP
+Build reliable Vitest suites for NestJS modules, services, controllers, and HTTP
 endpoints.
 
 ## Scope
@@ -36,6 +36,83 @@ survives refactoring, how to kill a flake — use `testing-expert`.
 - **End-to-end** — a booted application driven over HTTP. Proves the full request
   path: pipes, guards, controller, service, persistence.
 
+## Vitest Setup for NestJS
+
+Nest's dependency injection reads decorator metadata (`emitDecoratorMetadata`).
+Vitest transforms with esbuild, which does not emit it, so constructor
+injection silently resolves to `undefined`. Compile with `unplugin-swc`, which
+does emit decorator metadata.
+
+```bash
+bun add -D vitest unplugin-swc @swc/core @golevelup/ts-vitest supertest @types/supertest
+```
+
+```typescript
+// vitest.config.ts — unit and integration specs
+import swc from 'unplugin-swc';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    globals: true,
+    root: './',
+    environment: 'node',
+    include: ['src/**/*.spec.ts'],
+    testTimeout: 10_000,
+  },
+  plugins: [
+    swc.vite({
+      module: { type: 'es6' },
+    }),
+  ],
+});
+```
+
+Keep end-to-end specs in a separate config so `bun run test` stays fast and
+`bun run test:e2e` boots the application:
+
+```typescript
+// vitest.config.e2e.ts
+import swc from 'unplugin-swc';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    globals: true,
+    root: './',
+    environment: 'node',
+    include: ['test/**/*.e2e-spec.ts'],
+    testTimeout: 30_000,
+  },
+  plugins: [swc.vite({ module: { type: 'es6' } })],
+});
+```
+
+```json
+{
+  "scripts": {
+    "test": "vitest run",
+    "test:e2e": "vitest run --config vitest.config.e2e.ts",
+    "test:cov": "vitest run --coverage"
+  }
+}
+```
+
+Options from older runner configs map to Vitest one to one: path aliases move from
+`moduleNameMapper` to `resolve.alias` (or the `vite-tsconfig-paths` plugin),
+`testEnvironment` becomes `test.environment`, `transform` is replaced by the SWC
+plugin, and per-suite timeouts use `test.testTimeout` or `vi.setConfig({ testTimeout })`.
+Import `describe`, `it`, `expect`, `vi`, and the lifecycle hooks from `vitest`
+explicitly when `globals` is off. Browser-driven end-to-end flows belong to
+Playwright; Supertest here covers HTTP against a booted Nest app.
+
+For auto-mocking whole providers, `createMock` from `@golevelup/ts-vitest`
+returns a deep mock typed to the class:
+
+```typescript
+import { createMock, DeepMocked } from '@golevelup/ts-vitest';
+```
+
 ## Service Specs
 
 Compile a testing module with the subject real and every collaborator supplied
@@ -43,9 +120,12 @@ explicitly. Injection tokens come from whatever integration provides them — an
 ORM's token helper, a class reference, or a custom token constant.
 
 ```typescript
+import { Test, TestingModule } from '@nestjs/testing';
+import { afterEach, beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
+
 describe('UsersService', () => {
   let service: UsersService;
-  let repository: jest.Mocked<UsersRepository>;
+  let repository: Mocked<UsersRepository>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -60,7 +140,7 @@ describe('UsersService', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   it('returns only the active users of the requested organization', async () => {
@@ -91,7 +171,7 @@ to the service spec.
 ```typescript
 describe('UsersController', () => {
   let controller: UsersController;
-  let service: jest.Mocked<UsersService>;
+  let service: Mocked<UsersService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -177,7 +257,7 @@ describe('Users (integration)', () => {
 ```
 
 Close the application in `afterAll`. A leaked Nest application holds its
-connection pool open and hangs the Jest run.
+connection pool open and hangs the Vitest run.
 
 ## End-to-End Tests
 
@@ -237,8 +317,10 @@ recreating the schema — schema rebuilds dominate suite runtime.
 - Reset mocks in `afterEach` so a stub set in one test cannot satisfy the next.
 - Boot the application once per describe block and reset data per test — booting
   per test is the usual cause of a slow Nest suite.
-- Keep tests deterministic: freeze the clock and pin the timezone rather than
-  asserting on the real one.
+- Keep tests deterministic: freeze the clock (`vi.useFakeTimers()` with
+  `vi.setSystemTime`) and pin the timezone rather than asserting on the real one.
+- Restore spies with `vi.restoreAllMocks()` in `afterEach` when a spec uses
+  `vi.spyOn` on shared objects.
 
 ## Checklist
 

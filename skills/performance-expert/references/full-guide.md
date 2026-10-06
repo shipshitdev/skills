@@ -50,19 +50,19 @@ re-render churn, memoization, and Profiler-driven component work, use the
 
 **Query Optimization:**
 
-- Early filtering (`$match` early in aggregation)
-- Projection before expensive operations
-- Limit and skip for pagination
+- Filter in the `where` clause, not in application code
+- `select` only the columns needed
+- `take`/`skip` or cursor pagination
 - Sort with indexes
-- Avoid full collection scans
+- Avoid sequential scans on large tables (check `EXPLAIN (ANALYZE, BUFFERS)`)
 
-**Aggregation Pipeline:**
+**Relations and Aggregation:**
 
-- `$match` early in pipeline
-- `$project` before expensive operations
-- Index usage in aggregations
-- Pipeline stages optimized
-- Use `$lookup` efficiently
+- `include`/`select` relations in one query instead of looping
+- Aggregate in the database (`groupBy`, `_count`, `_sum`) rather than in memory
+- Index usage verified in the query plan
+- Use `$queryRaw` (tagged template) for hand-tuned SQL
+- Batch lookups with `where: { id: { in: ids } }`
 
 **Connection Management:**
 
@@ -158,25 +158,18 @@ re-render churn, memoization, and Profiler-driven component work, use the
 ```typescript
 // BAD: N+1 queries
 async findAll() {
-  const users = await this.userModel.find({});
+  const users = await this.prisma.user.findMany();
   for (const user of users) {
-    user.posts = await this.postModel.find({ userId: user._id });
+    user.posts = await this.prisma.post.findMany({ where: { userId: user.id } });
   }
   return users;
 }
 
-// GOOD: Aggregation pipeline
+// GOOD: one query with the relation included
 async findAll() {
-  return this.userModel.aggregate([
-    {
-      $lookup: {
-        from: 'posts',
-        localField: '_id',
-        foreignField: 'userId',
-        as: 'posts'
-      }
-    }
-  ]);
+  return this.prisma.user.findMany({
+    include: { posts: true },
+  });
 }
 ```
 
@@ -198,12 +191,20 @@ async findAll() {
 
 **Solution:**
 
-```typescript
-// Create indexes
-await db.collection('users').createIndex({ email: 1 });
-await db.collection('posts').createIndex(
-  { organization: 1, createdAt: -1 }
-);
+```prisma
+// Declare indexes in the model, then ship them as a migration
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+}
+
+model Post {
+  id             String   @id @default(cuid())
+  organizationId String
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, createdAt(sort: Desc)])
+}
 ```
 
 ### 4. Blocking Operations

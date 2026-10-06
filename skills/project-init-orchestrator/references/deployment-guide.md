@@ -50,7 +50,7 @@ CMD ["bun", "run", "start:prod"]
 # Required
 NODE_ENV=production
 PORT=3001
-MONGODB_URI=mongodb+srv://...
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE
 REDIS_URL=redis://...
 
 # Auth (Clerk)
@@ -221,36 +221,32 @@ health() {
 
 ## Database
 
-### MongoDB Atlas (Recommended)
+### Postgres (managed, recommended)
 
-1. **Create Account & Cluster**
-   - Go to [MongoDB Atlas](https://cloud.mongodb.com)
-   - Create free M0 cluster (or paid tier for production)
-   - Select region closest to your deployment
+Use a managed Postgres provider (Neon, Supabase, RDS, or a self-hosted instance).
+
+1. **Create the database**
+   - Create a project or instance in the region closest to your deployment
+   - Create an application role with least privilege (no superuser)
 
 2. **Network Access**
-   - Go to Security → Network Access
-   - Add IP: `0.0.0.0/0` (allows all - for serverless/dynamic IPs)
-   - Or add specific IPs for better security
+   - Restrict inbound connections to the API's IP range or security group
+   - Require TLS (`sslmode=require`)
 
-3. **Database User**
-   - Go to Security → Database Access
-   - Create user with "Read and write to any database"
-   - Save username and password securely
+3. **Get the Connection String**
+   - Use the pooled connection string for serverless runtimes, the direct one for migrations
 
-4. **Get Connection String**
-   - Go to Database → Connect
-   - Choose "Connect your application"
-   - Select Node.js driver
-   - Copy connection string (mongodb+srv://...)
-
-5. **Configure Environment**
+4. **Configure Environment**
 
    ```env
-   MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/DATABASE?retryWrites=true&w=majority
+   DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:5432/DATABASE?sslmode=require
    ```
 
-   Replace `<username>`, `<password>`, `<cluster>`, and `<database>` with your values
+   Replace `USERNAME`, `PASSWORD`, `HOST`, and `DATABASE` with your values
+
+5. **Apply Migrations**
+
+   Run `bunx prisma migrate deploy` in the deploy pipeline before the new API version starts. Never run `prisma migrate dev` against a shared or production database.
 
 ### Redis (Upstash)
 

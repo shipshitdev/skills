@@ -24,25 +24,11 @@ def create_module_ts(name: str) -> str:
     pascal = to_pascal_case(name)
     return dedent(f"""\
         import {{ Module }} from "@nestjs/common";
-        import {{ MongooseModule }} from "@nestjs/mongoose";
-        import {{ {pascal}, {pascal}Schema }} from "./schemas/{name}.schema";
         import {{ {pascal}Controller }} from "./controllers/{name}.controller";
         import {{ {pascal}Service }} from "./services/{name}.service";
 
+        // PrismaModule is global, so PrismaService is injectable without an import here.
         @Module({{
-          imports: [
-            MongooseModule.forFeatureAsync([
-              {{
-                name: {pascal}.name,
-                useFactory: () => {{
-                  const schema = {pascal}Schema;
-                  // Add compound indexes here
-                  // schema.index({{ organization: 1, isDeleted: 1 }});
-                  return schema;
-                }},
-              }},
-            ]),
-          ],
           controllers: [{pascal}Controller],
           providers: [{pascal}Service],
           exports: [{pascal}Service],
@@ -51,27 +37,25 @@ def create_module_ts(name: str) -> str:
     """)
 
 
-def create_schema_ts(name: str) -> str:
+def create_prisma_model(name: str) -> str:
     pascal = to_pascal_case(name)
-    return dedent(f"""\
-        import {{ Prop, Schema, SchemaFactory }} from "@nestjs/mongoose";
-        import {{ Document, Types }} from "mongoose";
-
-        @Schema({{ timestamps: true }})
-        export class {pascal} {{
-          @Prop({{ type: Types.ObjectId, ref: "Organization", required: true, index: true }})
-          organization: Types.ObjectId;
-
-          @Prop({{ required: true }})
-          name: string;
-
-          @Prop({{ default: false, index: true }})
-          isDeleted: boolean;
-        }}
-
-        export type {pascal}Document = {pascal} & Document;
-        export const {pascal}Schema = SchemaFactory.createForClass({pascal});
-    """)
+    table = name.replace("-", "_")
+    return (
+        f"model {pascal} {{\n"
+        f"  id             String   @id @default(cuid())\n"
+        f"  organizationId String\n"
+        f"  name           String\n"
+        f"  isDeleted      Boolean  @default(false)\n"
+        f"  createdAt      DateTime @default(now())\n"
+        f"  updatedAt      DateTime @updatedAt\n"
+        f"\n"
+        f"  // Add the relation to Organization here once that model exists:\n"
+        f"  // organization Organization @relation(fields: [organizationId], references: [id])\n"
+        f"\n"
+        f"  @@index([organizationId, isDeleted])\n"
+        f'  @@map("{table}")\n'
+        f"}}\n"
+    )
 
 
 def create_controller_ts(name: str) -> str:
@@ -147,59 +131,55 @@ def create_service_ts(name: str) -> str:
     camel = to_camel_case(name)
     return dedent(f"""\
         import {{ Injectable, NotFoundException }} from "@nestjs/common";
-        import {{ InjectModel }} from "@nestjs/mongoose";
-        import {{ Model }} from "mongoose";
-        import {{ {pascal}, {pascal}Document }} from "../schemas/{name}.schema";
+        import type {{ {pascal} }} from "../../../generated/prisma/client";
+        import {{ PrismaService }} from "../../../prisma/prisma.service";
         import {{ Create{pascal}Dto }} from "../dto/create-{name}.dto";
         import {{ Update{pascal}Dto }} from "../dto/update-{name}.dto";
 
         @Injectable()
         export class {pascal}Service {{
-          constructor(
-            @InjectModel({pascal}.name)
-            private {camel}Model: Model<{pascal}Document>,
-          ) {{}}
+          constructor(private readonly prisma: PrismaService) {{}}
 
-          async create(dto: Create{pascal}Dto): Promise<{pascal}Document> {{
-            const created = new this.{camel}Model(dto);
-            return created.save();
+          async create(dto: Create{pascal}Dto): Promise<{pascal}> {{
+            return this.prisma.{camel}.create({{ data: dto }});
           }}
 
-          async findAll(organizationId: string): Promise<{pascal}Document[]> {{
-            return this.{camel}Model.find({{
-              organization: organizationId,
-              isDeleted: false,
+          async findAll(organizationId: string): Promise<{pascal}[]> {{
+            return this.prisma.{camel}.findMany({{
+              where: {{ organizationId, isDeleted: false }},
+              orderBy: {{ createdAt: "desc" }},
             }});
           }}
 
-          async findOne(id: string, organizationId: string): Promise<{pascal}Document> {{
-            const doc = await this.{camel}Model.findOne({{
-              _id: id,
-              organization: organizationId,
-              isDeleted: false,
+          async findOne(id: string, organizationId: string): Promise<{pascal}> {{
+            const row = await this.prisma.{camel}.findFirst({{
+              where: {{ id, organizationId, isDeleted: false }},
             }});
 
-            if (!doc) {{
+            if (!row) {{
               throw new NotFoundException("{pascal} not found");
             }}
 
-            return doc;
+            return row;
           }}
 
           async update(
             id: string,
             organizationId: string,
             dto: Update{pascal}Dto,
-          ): Promise<{pascal}Document> {{
-            const doc = await this.findOne(id, organizationId);
-            Object.assign(doc, dto);
-            return doc.save();
+          ): Promise<{pascal}> {{
+            await this.findOne(id, organizationId);
+            // Never let the caller move a row to another organization
+            const {{ organizationId: _ignored, ...data }} = dto;
+            return this.prisma.{camel}.update({{ where: {{ id }}, data }});
           }}
 
-          async remove(id: string, organizationId: string): Promise<{pascal}Document> {{
-            const doc = await this.findOne(id, organizationId);
-            doc.isDeleted = true;
-            return doc.save();
+          async remove(id: string, organizationId: string): Promise<{pascal}> {{
+            await this.findOne(id, organizationId);
+            return this.prisma.{camel}.update({{
+              where: {{ id }},
+              data: {{ isDeleted: true }},
+            }});
           }}
         }}
     """)
@@ -209,13 +189,13 @@ def create_create_dto_ts(name: str) -> str:
     pascal = to_pascal_case(name)
     return dedent(f"""\
         import {{ ApiProperty }} from "@nestjs/swagger";
-        import {{ IsString, IsNotEmpty, IsMongoId }} from "class-validator";
+        import {{ IsString, IsNotEmpty }} from "class-validator";
 
         export class Create{pascal}Dto {{
           @ApiProperty()
-          @IsMongoId()
+          @IsString()
           @IsNotEmpty()
-          organization: string;
+          organizationId: string;
 
           @ApiProperty()
           @IsString()
@@ -251,7 +231,7 @@ def create_http_file(name: str) -> str:
         Content-Type: application/json
 
         {{
-          "organization": "{{{{organizationId}}}}",
+          "organizationId": "{{{{organizationId}}}}",
           "name": "Test {name}"
         }}
 
@@ -285,7 +265,6 @@ def add_api_collection(root: Path, name: str) -> None:
     dirs = [
         collection_dir / "controllers",
         collection_dir / "services",
-        collection_dir / "schemas",
         collection_dir / "dto",
     ]
 
@@ -295,13 +274,17 @@ def add_api_collection(root: Path, name: str) -> None:
     # Create files
     files = {
         collection_dir / f"{name}.module.ts": create_module_ts(name),
-        collection_dir / "schemas" / f"{name}.schema.ts": create_schema_ts(name),
         collection_dir / "controllers" / f"{name}.controller.ts": create_controller_ts(name),
         collection_dir / "services" / f"{name}.service.ts": create_service_ts(name),
         collection_dir / "dto" / f"create-{name}.dto.ts": create_create_dto_ts(name),
         collection_dir / "dto" / f"update-{name}.dto.ts": create_update_dto_ts(name),
         collection_dir / f"{name}.http": create_http_file(name),
     }
+
+    # Prisma models live in the multi-file schema folder at the API project root
+    prisma_schema_dir = root / "prisma" / "schema"
+    prisma_schema_dir.mkdir(parents=True, exist_ok=True)
+    files[prisma_schema_dir / f"{name}.prisma"] = create_prisma_model(name)
 
     for filepath, content in files.items():
         filepath.write_text(content)
@@ -311,7 +294,7 @@ def add_api_collection(root: Path, name: str) -> None:
     print(f"\n✅ Collection '{name}' created at: {collection_dir}")
     print(f"\nDon't forget to:")
     print(f"1. Import {pascal}Module in app.module.ts")
-    print(f"2. Add compound indexes in the module if needed")
+    print(f"2. Run `bun run prisma:migrate` to create the migration for prisma/schema/{name}.prisma")
     print(f"3. Create serializer in packages/common/serializers/")
 
 

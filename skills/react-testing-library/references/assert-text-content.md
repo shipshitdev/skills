@@ -19,7 +19,7 @@ expect(badge.textContent).toBe('Premium User')
 // Fails due to whitespace differences
 ```
 
-**Correct (jest-dom matcher):**
+**Correct (DOM matcher):**
 
 ```tsx
 render(<Badge>  Premium User  </Badge>)
@@ -50,4 +50,4 @@ expect(emptyElement).toHaveTextContent('')
 expect(emptyElement).toBeEmptyDOMElement()
 ```
 
-Reference: [jest-dom - toHaveTextContent](https://github.com/testing-library/jest-dom#tohavetextcontent)
+Reference: `@testing-library/jest-dom` toHaveTextContent

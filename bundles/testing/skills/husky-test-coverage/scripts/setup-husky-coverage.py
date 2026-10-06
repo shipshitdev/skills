@@ -36,17 +36,6 @@ PRE_COMMIT_HOOK_TEMPLATE = """#!/usr/bin/env sh
 {test_command}
 """
 
-JEST_COVERAGE_CONFIG = {
-    "coverageThreshold": {
-        "global": {
-            "lines": 80,
-            "branches": 75,
-            "functions": 80,
-            "statements": 80
-        }
-    }
-}
-
 VITEST_COVERAGE_CONFIG = """import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -85,7 +74,7 @@ def detect_package_manager(root: Path) -> str:
         return "pnpm"
     elif (root / "yarn.lock").exists():
         return "yarn"
-    elif (root / "bun.lockb").exists():
+    elif (root / "bun.lockb").exists() or (root / "bun.lock").exists():
         return "bun"
     else:
         return "npm"
@@ -107,11 +96,11 @@ def detect_test_runner(root: Path) -> dict:
             "test_script": pkg.get("scripts", {}).get("test", None)
         }
         
+        result["has_v8_provider"] = "@vitest/coverage-v8" in deps
+
         # Detect test runner
         if "vitest" in deps:
             result["runner"] = "vitest"
-        elif "jest" in deps:
-            result["runner"] = "jest"
         elif "mocha" in deps:
             result["runner"] = "mocha"
         
@@ -120,7 +109,7 @@ def detect_test_runner(root: Path) -> dict:
             result["coverage"] = "nyc"
         elif "c8" in deps:
             result["coverage"] = "c8"
-        elif result["runner"] in ["jest", "vitest"]:
+        elif result["runner"] == "vitest":
             result["coverage"] = "builtin"
         
         return result
@@ -317,31 +306,18 @@ def configure_coverage(root: Path, test_info: dict, threshold: int, dry_run: boo
     runner = test_info.get("runner")
     coverage = test_info.get("coverage")
     
-    if runner == "jest":
-        # Update jest.config.js or create jest.config.json
-        jest_config_js = root / "jest.config.js"
-        jest_config_json = root / "jest.config.json"
-        
-        config_data = JEST_COVERAGE_CONFIG.copy()
-        config_data["coverageThreshold"]["global"]["lines"] = threshold
-        config_data["coverageThreshold"]["global"]["branches"] = max(75, threshold - 5)
-        config_data["coverageThreshold"]["global"]["functions"] = threshold
-        config_data["coverageThreshold"]["global"]["statements"] = threshold
-        
-        if jest_config_js.exists():
-            print("  ℹ️  jest.config.js exists - manual update may be needed")
-            print(f"     Add coverageThreshold: {json.dumps(config_data['coverageThreshold'], indent=6)}")
-        elif jest_config_json.exists():
-            try:
-                existing = json.loads(jest_config_json.read_text())
-                existing["coverageThreshold"] = config_data["coverageThreshold"]
-                write_json(jest_config_json, existing, dry_run)
-            except:
-                write_json(jest_config_json, config_data, dry_run)
-        else:
-            write_json(jest_config_json, config_data, dry_run)
-    
-    elif runner == "vitest":
+    if runner == "vitest":
+        # Install the v8 coverage provider when missing
+        if not test_info.get("has_v8_provider"):
+            pm = detect_package_manager(root)
+            add_cmd = {
+                "npm": ["npm", "install", "-D"],
+                "pnpm": ["pnpm", "add", "-D"],
+                "yarn": ["yarn", "add", "-D"],
+                "bun": ["bun", "add", "-D"]
+            }[pm]
+            run_command(add_cmd + ["@vitest/coverage-v8"], root, dry_run)
+
         # Update vitest.config.ts or vitest.config.js
         vitest_config_ts = root / "vitest.config.ts"
         vitest_config_js = root / "vitest.config.js"
@@ -353,7 +329,8 @@ def configure_coverage(root: Path, test_info: dict, threshold: int, dry_run: boo
         
         if vitest_config_ts.exists() or vitest_config_js.exists():
             print("  ℹ️  Vitest config exists - manual update may be needed")
-            print(f"     Add coverage.thresholds to your config")
+            print("     Add test.coverage with provider 'v8' and thresholds to your config:")
+            print(config_content)
         else:
             write_text(vitest_config_ts if (root / "tsconfig.json").exists() else vitest_config_js, config_content, dry_run)
     
@@ -394,10 +371,14 @@ def create_pre_commit_hook(root: Path, test_info: dict, threshold: int, fail_on_
     }[pm]
     
     # Build test command based on runner
-    if runner == "jest":
-        test_cmd = f"{pm_run} {test_script} -- --coverage --watchAll=false"
-    elif runner == "vitest":
-        test_cmd = f"{pm_run} {test_script} -- --coverage --run"
+    pm_exec = {
+        "npm": "npx",
+        "pnpm": "pnpm exec",
+        "yarn": "yarn",
+        "bun": "bunx"
+    }[pm]
+    if runner == "vitest":
+        test_cmd = f"{pm_exec} vitest run --coverage"
     elif runner == "mocha":
         if coverage == "nyc":
             test_cmd = f"nyc --reporter=text --reporter=html {pm_run} {test_script}"
@@ -502,11 +483,10 @@ def main():
     # Detect test runner
     test_info = detect_test_runner(root)
     if not test_info.get("runner"):
-        print("\n⚠️  Warning: No test runner detected (Jest, Vitest, or Mocha)")
+        print("\n⚠️  Warning: No supported test runner detected (Vitest or Mocha)")
         print("   Install a test runner first:")
-        print("   - npm install -D jest")
-        print("   - npm install -D vitest")
-        print("   - npm install -D mocha")
+        print("   - bun add -D vitest @vitest/coverage-v8")
+        print("   - bun add -D mocha nyc")
         sys.exit(1)
     
     print(f"   Test runner: {test_info['runner']}")

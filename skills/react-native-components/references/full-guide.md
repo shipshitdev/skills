@@ -3471,18 +3471,19 @@ export const Button: React.FC<ButtonProps> = ({
 // Test: Button.test.tsx
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react-native';
+import { describe, it, expect, vi } from 'vitest';
 import { Button } from './Button';
 
 describe('Button', () => {
   it('renders correctly with title', () => {
-    render(<Button title="Click me" onPress={jest.fn()} testID="button" />);
+    render(<Button title="Click me" onPress={vi.fn()} testID="button" />);
 
     expect(screen.getByTestId('button')).toBeTruthy();
     expect(screen.getByTestId('button-text')).toHaveTextContent('Click me');
   });
 
   it('calls onPress when pressed', () => {
-    const onPress = jest.fn();
+    const onPress = vi.fn();
     render(<Button title="Click me" onPress={onPress} testID="button" />);
 
     fireEvent.press(screen.getByTestId('button'));
@@ -3491,14 +3492,14 @@ describe('Button', () => {
   });
 
   it('shows loader when loading', () => {
-    render(<Button title="Click me" onPress={jest.fn()} loading testID="button" />);
+    render(<Button title="Click me" onPress={vi.fn()} loading testID="button" />);
 
     expect(screen.getByTestId('button-loader')).toBeTruthy();
     expect(screen.queryByTestId('button-text')).toBeNull();
   });
 
   it('is disabled when disabled prop is true', () => {
-    const onPress = jest.fn();
+    const onPress = vi.fn();
     render(<Button title="Click me" onPress={onPress} disabled testID="button" />);
 
     fireEvent.press(screen.getByTestId('button'));
@@ -3507,7 +3508,7 @@ describe('Button', () => {
   });
 
   it('has correct accessibility props', () => {
-    render(<Button title="Submit form" onPress={jest.fn()} testID="button" />);
+    render(<Button title="Submit form" onPress={vi.fn()} testID="button" />);
 
     const button = screen.getByTestId('button');
 

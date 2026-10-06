@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "175 AI agent skills for development workflows",
+  "description": "173 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -507,7 +507,7 @@
       "name": "husky-test-coverage",
       "source": "./skills/husky-test-coverage",
       "version": "2.2.2",
-      "description": "Sets up or verifies Husky pre-commit hooks that enforce test coverage above 80% (configurable) for Node/TypeScript projects using Jest, Vitest, or Mocha."
+      "description": "Sets up or verifies Husky pre-commit hooks that enforce test coverage above 80% (configurable) for Node/TypeScript projects using Vitest (or Mocha with nyc/c8)."
     },
     {
       "name": "icp",
@@ -588,18 +588,6 @@
       "description": "Scaffolds, clones, and deploys config-driven NextJS landing pages that use a shared UI components package. Use when creating single or multiple startup landing pages with email capture, analytics, and modern design. Supports batch creation from templates or CSV/JSON files and Vercel deployment with custom domains. Each landing is a standalone NextJS app driven by an app.json config file."
     },
     {
-      "name": "mongodb-atlas-checker",
-      "source": "./skills/mongodb-atlas-checker",
-      "version": "2.2.2",
-      "description": "Verifies MongoDB Atlas setup for Next.js and NestJS backends: connection strings, env vars, and pooling. Use before deployment or when troubleshooting database connections."
-    },
-    {
-      "name": "mongodb-migration-expert",
-      "source": "./skills/mongodb-migration-expert",
-      "version": "2.2.2",
-      "description": "Guides MongoDB schema design, indexing, and forward-only migrations. Use when adding or changing collections, indexes, or fields, or designing multi-tenant or large-dataset schema."
-    },
-    {
       "name": "monitoring-setup",
       "source": "./skills/monitoring-setup",
       "version": "2.2.2",
@@ -615,7 +603,7 @@
       "name": "nestjs-expert",
       "source": "./skills/nestjs-expert",
       "version": "2.2.2",
-      "description": "Guides NestJS APIs with MongoDB/Mongoose — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues."
+      "description": "Guides NestJS 11 APIs with Prisma and Postgres — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues."
     },
     {
       "name": "nestjs-queue-architect",
@@ -627,7 +615,7 @@
       "name": "nestjs-testing-expert",
       "source": "./skills/nestjs-testing-expert",
       "version": "2.2.2",
-      "description": "Writes NestJS Jest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint."
+      "description": "Writes NestJS Vitest tests — testing modules, provider mocks, service/controller specs, Supertest e2e. Use for any test touching a NestJS service, controller, guard, or endpoint."
     },
     {
       "name": "nextra-writer",
@@ -873,7 +861,7 @@
       "name": "scaffold",
       "source": "./skills/scaffold",
       "version": "2.2.2",
-      "description": "Generates incremental code modules inside an existing repo following local patterns — endpoints, components, packages, collections. Not for new full-project scaffolds."
+      "description": "Generates incremental code modules inside an existing repo following local patterns — endpoints, components, packages, database models. Not for new full-project scaffolds."
     },
     {
       "name": "security-audit",
@@ -1041,7 +1029,7 @@
       "name": "testing-cicd-init",
       "source": "./skills/testing-cicd-init",
       "version": "2.2.2",
-      "description": "Installs Vitest and GitHub Actions CI with Bun and 80% coverage for Next.js, NestJS, or React. Use for new test infrastructure, Jest migration, or first CI setup."
+      "description": "Installs Vitest and GitHub Actions CI with Bun and 80% coverage for Next.js, NestJS, or React. Use for new test infrastructure or first CI setup."
     },
     {
       "name": "testing-expert",

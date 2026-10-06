@@ -349,6 +349,7 @@ export interface JobResult {
 ```typescript
 import { getQueueToken } from '@nestjs/bullmq';
 import { Test, TestingModule } from '@nestjs/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('VideoQueueService', () => {
   let service: VideoQueueService;
@@ -356,10 +357,10 @@ describe('VideoQueueService', () => {
 
   beforeEach(async () => {
     mockQueue = {
-      add: jest.fn().mockResolvedValue({ id: 'test-job-id' }),
-      getJob: jest.fn(),
-      getJobCounts: jest.fn(),
-      clean: jest.fn(),
+      add: vi.fn().mockResolvedValue({ id: 'test-job-id' }),
+      getJob: vi.fn(),
+      getJobCounts: vi.fn(),
+      clean: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

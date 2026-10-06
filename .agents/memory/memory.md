@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **175 skills · 24 commands · 13 bundles · 188 plugins**.
+Generated catalog: **173 skills · 24 commands · 13 bundles · 186 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 175 | `skills/*/SKILL.md` |
+| Skills | 173 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 188 | skills + bundles |
+| Plugins | 186 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -284,6 +284,16 @@ independent review from a different contributor lab, current-head evidence, and
 green required CI before merge-ready. Done additionally verifies merge and required
 deployment. Harnesses own model/effort/capacity configuration. Static validation
 proves contract consistency, not guaranteed model behavior or cost savings.
+
+### House stack: Prisma/Postgres and Vitest (2026-10-06, #207)
+
+The house stack is Postgres only (no document database or ODM) and uses Vitest for unit
+and integration tests (Playwright for E2E). Skills write toward Prisma + Postgres (service
+layer over `PrismaService`, string ids and explicit relations, `$queryRaw` tagged template
+only) and Vitest (`vi.*`, `unplugin-swc` for NestJS decorator metadata). The two
+document-database skills were retired (see the Retired skills table in
+`docs/skills/catalog-naming.md`); `postgres-ops` is the destination. The only allowed
+residual is the `@testing-library/jest-dom` package path.
 
 ## Known Issues
 
