@@ -34,6 +34,10 @@ class SkillValidatorFixtureTests(unittest.TestCase):
             (fixture_dir / "plugin.json").write_text(json.dumps(manifest))
             environment = os.environ.copy()
             environment["SKILLS_DIR_OVERRIDE"] = str(skills_dir)
+            # Isolate from the repo's real commands, which route to real skills.
+            commands_dir = Path(directory) / "commands"
+            commands_dir.mkdir()
+            environment["COMMANDS_DIR_OVERRIDE"] = str(commands_dir)
             return subprocess.run(
                 ["bash", str(VALIDATOR), name],
                 cwd=REPO_ROOT,
@@ -126,6 +130,113 @@ class SkillValidatorFixtureTests(unittest.TestCase):
             1,
             manifest_overrides={"description": "|"},
         )
+
+
+COMMAND_TEMPLATE = """---
+description: "Fixture command."
+disable-model-invocation: true
+---
+
+# {name}
+
+## Usage
+
+`/{name} help` prints this Usage block and stops without running anything.
+
+## Workflow
+
+{body}
+"""
+
+
+class CommandRouteTests(unittest.TestCase):
+    def run_commands(
+        self,
+        commands: dict[str, str],
+        skills: dict[str, bool],
+    ) -> subprocess.CompletedProcess[str]:
+        """Validate fixture commands against fixture skills.
+
+        `skills` maps skill name to whether it is user-only.
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            skills_dir = Path(directory) / "skills"
+            commands_dir = Path(directory) / "commands"
+            fixture_dir = skills_dir / "valid-portable"
+            shutil.copytree(FIXTURES_DIR / "valid-portable", fixture_dir)
+            (fixture_dir / "plugin.json").write_text(
+                json.dumps(
+                    {
+                        "name": "valid-portable",
+                        "version": "1.0.0",
+                        "description": "Validation fixture for valid-portable.",
+                        "author": {"name": "Fixture"},
+                        "license": "MIT",
+                        "skills": ".",
+                    }
+                )
+            )
+            for skill, user_only in skills.items():
+                (skills_dir / skill).mkdir()
+                invocation = "disable-model-invocation: true\n" if user_only else ""
+                (skills_dir / skill / "SKILL.md").write_text(
+                    f"---\nname: {skill}\ndescription: Fixture target.\n"
+                    f"{invocation}---\n\n# {skill}\n"
+                )
+            commands_dir.mkdir()
+            for name, body in commands.items():
+                (commands_dir / f"{name}.md").write_text(
+                    COMMAND_TEMPLATE.format(name=name, body=body)
+                )
+            environment = os.environ.copy()
+            environment["SKILLS_DIR_OVERRIDE"] = str(skills_dir)
+            environment["COMMANDS_DIR_OVERRIDE"] = str(commands_dir)
+            return subprocess.run(
+                ["bash", str(VALIDATOR), "valid-portable"],
+                cwd=REPO_ROOT,
+                env=environment,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+    def test_valid_target_passes(self) -> None:
+        result = self.run_commands(
+            {"go": "Use the `real-skill` skill."}, {"real-skill": False}
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotIn("commands/go.md", result.stdout)
+
+    def test_missing_target_names_command_and_target(self) -> None:
+        result = self.run_commands({"go": "Use the `ghost-skill` skill."}, {})
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn(
+            "commands/go.md: routes to missing skill ghost-skill", result.stdout
+        )
+
+    def test_missing_target_does_not_stop_later_targets(self) -> None:
+        # `a-ghost` sorts before `z-user-only`, so a skipped scan would miss the latter.
+        result = self.run_commands(
+            {"go": "Use the `a-ghost` skill.\nRun the `z-user-only` skill."},
+            {"z-user-only": True},
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("routes to missing skill a-ghost", result.stdout)
+        self.assertIn("routes to user-only skill z-user-only", result.stdout)
+
+    def test_user_only_route_exception_is_preserved(self) -> None:
+        result = self.run_commands(
+            {"go": "Use the `merge-open-prs` skill."}, {"merge-open-prs": True}
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotIn("commands/go.md", result.stdout)
+
+    def test_user_only_route_without_exception_still_fails(self) -> None:
+        result = self.run_commands(
+            {"go": "Use the `private-skill` skill."}, {"private-skill": True}
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("routes to user-only skill private-skill", result.stdout)
 
 
 if __name__ == "__main__":

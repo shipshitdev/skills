@@ -225,6 +225,13 @@ Adapted selected patterns from [mattpocock/skills](https://github.com/mattpocock
 - New user-invoked router: `ask-dev-loop`. `interview` / `shape` invoke `grilling`; they hint at other user-invoked skills rather than firing them.
 - `tdd` provenance completed; `code-review` gained a Spec axis; flagship human docs live in `docs/skills/`.
 
+### grill-me is the interview primitive's name (2026-10-06)
+
+Vincent kept typing `/grill-me` after #195 deleted it as an alias, so the
+`grilling` primitive was renamed to `grill-me` instead of keeping two names.
+`interview`, `shape`, `wayfinder` and `domain-modeling` route to `grill-me`;
+"grilling" stays only as plain English and as wayfinder's ticket type.
+
 ### One session retrospective (2026-10-05)
 
 `retro` (adapted from mattpocock/skills `retro`) is the single session

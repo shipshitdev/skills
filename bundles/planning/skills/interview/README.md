@@ -1,7 +1,7 @@
 # interview
 
 User-invoked, repo-grounded discovery interview. Reads the repo first, runs
-`grilling` (and `domain-modeling`) on the decisions that cannot be inferred, and
+`grill-me` (and `domain-modeling`) on the decisions that cannot be inferred, and
 ends in an interview brief for `prd-writer`, `feature-intake` or planning.
 
 `/interview send` is the other direction: when someone else holds the missing

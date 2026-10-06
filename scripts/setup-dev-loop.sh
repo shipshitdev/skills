@@ -23,9 +23,10 @@ set -euo pipefail
 #      for Codex, openrouter-dispatch.yml for OpenRouter).
 #   4. Arms the auth secrets — CLAUDE_CODE_OAUTH_TOKEN (subscription OAuth, never
 #      an API key), OPENAI_API_KEY (Codex lane), and PROJECTS_TOKEN (a PAT for
-#      repository access plus Projects board writes, scoped to the target
-#      repository/project with short expiry; the default GITHUB_TOKEN cannot
-#      touch an org-owned Projects v2 board).
+#      repository access plus Projects board writes; the default GITHUB_TOKEN
+#      cannot touch an org-owned Projects v2 board). A classic PAT (repo +
+#      project) reaches every repository and project its owner can access, so
+#      prefer a fine-grained PAT with short expiry. See setup_secrets below.
 #   5. Prints explicit planner/executor model and effort variables; no fallback.
 #   6. Points you at /setup-agent-routing for the per-repo routing block.
 #
@@ -415,14 +416,18 @@ setup_secrets() {
   # OpenRouter lane (dispatch:openrouter). Skip if you only run Claude/Codex.
   setup_one_secret "OPENROUTER_API_KEY" \
     "OpenRouter lane — an OpenRouter API key from https://openrouter.ai/keys (skip if you don't use the OpenRouter lane)"
-  # Repository access plus Projects board writes. Scope the PAT to the target
-  # repository/project with short expiry; the default GITHUB_TOKEN cannot
-  # read/write an org-owned Projects v2 board. The planner gets a separate
-  # short-lived GITHUB_TOKEN with code read and issue write; it cannot push
-  # implementation code. YOU paste the PAT at the hidden gh prompt; it is never
-  # generated, echoed, or stored by this script.
+  # Repository access plus Projects board writes. The default GITHUB_TOKEN cannot
+  # read/write an org-owned Projects v2 board. A classic PAT (repo + project)
+  # reaches every repository and project its owner can access; GitHub offers no
+  # single-project isolation. A fine-grained PAT can select the target
+  # repository but needs Organization Projects read/write (organization-level)
+  # plus repository Contents, Issues, and Pull requests read/write (Metadata
+  # read is automatic). Use least privilege and short expiry. The planning
+  # lane's repository permissions come from its separate GITHUB_TOKEN (code
+  # read, issue write); it cannot push implementation code. YOU paste the PAT at
+  # the hidden gh prompt; it is never generated, echoed, or stored by this script.
   setup_one_secret "PROJECTS_TOKEN" \
-    "Repository access plus Projects board writes — a PAT (classic: project + repo; or fine-grained: org Projects read/write + repo write). Limit scope to the target repository/project and use short expiry. Create at https://github.com/settings/tokens"
+    "Repository access plus Projects board writes — a PAT. Classic (repo + project) reaches every repo and project you can access; prefer fine-grained: select the target repo, Organization Projects read/write, plus Contents, Issues, Pull requests read/write (Metadata read is automatic). Use least privilege and short expiry. Create at https://github.com/settings/tokens"
 }
 
 # ============================================================================
@@ -457,7 +462,7 @@ print_summary() {
   $DO_LABELS   && echo "  • Labels:    dispatch:plan / dispatch:claude / dispatch:codex / claim:active / loop:* (AI-loop phases) / type:feature / priority:* / rejection:*"
   $DO_BOARD    && echo "  • Board:     Status normalized to Backlog/In Progress/Human Review/Done/Deferred; ids in .github/agent-loop.env"
   $DO_WORKFLOW && echo "  • Workflows: plan-dispatch (dispatch:plan) + agent-dispatch (dispatch:claude) + codex-dispatch (dispatch:codex) + openrouter-dispatch (dispatch:openrouter)"
-  $DO_SECRETS  && echo "  • Secrets:   CLAUDE_CODE_OAUTH_TOKEN + OPENAI_API_KEY + OPENROUTER_API_KEY + PROJECTS_TOKEN (repository access plus Projects board writes)"
+  $DO_SECRETS  && echo "  • Secrets:   CLAUDE_CODE_OAUTH_TOKEN + OPENAI_API_KEY + OPENROUTER_API_KEY + PROJECTS_TOKEN (repository access plus Projects board writes; prefer a fine-grained PAT with short expiry)"
   echo "  • Variables: explicit planner + per-provider executor model/effort (see above)"
   echo "  • Routing:   run /setup-agent-routing in Claude Code"
   echo ""
@@ -512,10 +517,13 @@ What it does:
   4. Arms the auth secrets: CLAUDE_CODE_OAUTH_TOKEN (subscription OAuth),
      OPENAI_API_KEY (Codex lane), OPENROUTER_API_KEY (OpenRouter lane), and
      PROJECTS_TOKEN (PAT for repository access plus Projects board writes).
-     Limit scope to the target repository/project and use short expiry; the
-     default GITHUB_TOKEN cannot touch an org board. The planner gets a separate
-     short-lived GITHUB_TOKEN with code read and issue write; it cannot push
-     implementation code.
+     A classic PAT (repo + project) reaches every repository and project its
+     owner can access. Prefer a fine-grained PAT with short expiry: select the
+     target repository, Organization Projects read/write, and repository
+     Contents, Issues, and Pull requests read/write (Metadata read is
+     automatic). The default GITHUB_TOKEN cannot touch an org board. The
+     planning lane's repository permissions come from its separate
+     GITHUB_TOKEN (code read, issue write); it cannot push implementation code.
   5. Prints explicit planner and executor runtime variables; no automatic fallback.
      Reviewer automation and protected-branch gates require separate provisioning.
   6. Points you at /setup-agent-routing for the per-repo routing block.

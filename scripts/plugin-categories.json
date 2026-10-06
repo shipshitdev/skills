@@ -125,7 +125,7 @@
         "feature-intake",
         "icp",
         "interview",
-        "grilling",
+        "grill-me",
         "domain-modeling",
         "prototype",
         "prd-dispatch",
@@ -231,7 +231,7 @@
       "description": "Autonomous GitHub issue-to-PR loop with PRDs, plans, board dispatch, QA, and review",
       "skills": [
         "interview",
-        "grilling",
+        "grill-me",
         "domain-modeling",
         "ask-dev-loop",
         "wait-what",

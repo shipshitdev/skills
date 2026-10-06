@@ -21,7 +21,7 @@ Shape the UX and UI for a feature before any code is written. This skill produce
 
 **Output**: A design brief that can be handed off to any implementation skill.
 
-Delegates To: `grilling` for Phase 1. Recommend an implementation skill after the brief is confirmed; do not invoke another user-invoked skill.
+Delegates To: `grill-me` for Phase 1. Recommend an implementation skill after the brief is confirmed; do not invoke another user-invoked skill.
 
 ## Context Gathering
 
@@ -35,7 +35,7 @@ Before the interview, ground yourself in the project so the brief reflects what 
 
 Write no code and make no design decisions in this phase. Understand the feature deeply enough to make excellent design decisions later.
 
-Run the `grilling` skill. Seed the design tree with these branches so the **frontier** covers them:
+Run the `grill-me` skill. Seed the design tree with these branches so the **frontier** covers them:
 
 - **Purpose and context** — what this is for, who specifically uses it, success, user state of mind
 - **Content and data** — what is shown or collected, realistic ranges, empty/error/first-time/power-user cases, what is dynamic
@@ -43,7 +43,7 @@ Run the `grilling` skill. Seed the design tree with these branches so the **fron
 - **Constraints** — technical, content, mobile, accessibility beyond WCAG AA
 - **Anti-goals** — wrong directions and the biggest risk of getting this wrong
 
-Facts that the repo already answers stay off the frontier. `grilling` asks the rest in rounds with recommended answers.
+Facts that the repo already answers stay off the frontier. `grill-me` asks the rest in rounds with recommended answers.
 
 ## Phase 2: Design Brief
 

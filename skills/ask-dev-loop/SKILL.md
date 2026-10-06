@@ -16,7 +16,7 @@ The human does not remember every skill. Ask.
 
 This is an **advisory router**: name the skill to type next and why, then stop.
 Execution routers can invoke reusable engines within an authorized task, but
-this skill only recommends. `grilling`, `domain-modeling`, `tdd`, and `debug`
+this skill only recommends. `grill-me`, `domain-modeling`, `tdd`, and `debug`
 may be named as what the chosen workflow will run.
 
 ## Contract
@@ -56,7 +56,7 @@ first. The other engineering skills read that routing block.
 
 The route most work travels.
 
-1. **`/interview`** — sharpen the idea. Repo-grounded; runs `grilling` and
+1. **`/interview`** — sharpen the idea. Repo-grounded; runs `grill-me` and
    `domain-modeling`; leaves an interview brief. Start here whenever the working
    directory is a real repo.
 2. **Branch — does a design question need a runnable answer?** Detour through
@@ -137,7 +137,7 @@ Not feature work — upkeep.
   colleague's hands; writes one file a fresh agent can pick up. Narrow branch of
   Phase boundaries, not a default.
 - **`/wait-what`** — the last message did not land; re-pitch it.
-- **`grilling`** — the interview primitive with no wrapper. Reach for it only when
+- **`grill-me`** — the interview primitive with no wrapper. Reach for it only when
   the interview itself is the whole ask.
 - **`domain-modeling`** — the words are the problem (fuzzy term, overloaded
   "account", missing ADR).
