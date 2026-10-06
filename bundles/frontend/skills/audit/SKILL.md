@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Sweeps frontend code across accessibility, performance, theming, responsive design, and implementation integrity, scoring each 0-4 in one P0-P3 report. Report only. Use as a broad first pass.
+description: Sweeps frontend accessibility, performance, theming, responsive design and implementation integrity in one scored P0-P3 report. Use for a broad audit without code changes.
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
