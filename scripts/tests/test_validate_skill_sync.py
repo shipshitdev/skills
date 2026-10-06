@@ -217,7 +217,7 @@ class CommandRouteTests(unittest.TestCase):
     def test_missing_target_does_not_stop_later_targets(self) -> None:
         # `a-ghost` sorts before `z-user-only`, so a skipped scan would miss the latter.
         result = self.run_commands(
-            {"go": "Use the `a-ghost` skill, then run the `z-user-only` skill."},
+            {"go": "Use the `a-ghost` skill.\nRun the `z-user-only` skill."},
             {"z-user-only": True},
         )
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
