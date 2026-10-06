@@ -186,7 +186,10 @@ still equals `SHA`. If the trunk moved, re-run Phase 2 and get a new approval.
 - **release-please** — the release PR must change only release-managed files
   (the manifest, changelogs, and version files named in the config); anything
   else goes through the `executing-plans` skill's `references/delivery-gate.md`.
-  Require `git merge-base --is-ancestor "$SHA" <pr-head-sha>` and a green
+  Require the PR's base repository and branch to equal the gated repository and
+  `TRUNK`: `gh api "repos/{owner}/{repo}/pulls/<n>" --jq '[.base.repo.full_name,
+  .base.ref] | @tsv'` must print `<gated owner/repo>` and `$TRUNK`; reject
+  anything else before merging. Require `git merge-base --is-ancestor "$SHA" <pr-head-sha>` and a green
   Phase 2 verdict for the release PR's head commit (same queries, same
   success-only rule), then
   `gh pr merge <n> --squash --match-head-commit <pr-head-sha>` (use the repo's
@@ -194,12 +197,17 @@ still equals `SHA`. If the trunk moved, re-run Phase 2 and get a new approval.
 - **dispatch** — read the workflow's `workflow_dispatch.inputs` at `SHA` and map
   the version to the declared input name and format (e.g. `tag=vX.Y.Z` vs
   `version=X.Y.Z`); pass an expected-SHA input when one is declared. Note the time,
-  run `gh workflow run <file> --ref "$TRUNK" -f <input>=<value>`, then select the
-  run with `event == workflow_dispatch`, `createdAt` after that time, and
-  `headSha == SHA` (`gh run list --workflow <file> --json
-  databaseId,url,headSha,createdAt,event`). No such run, or a different
-  `headSha`: report it at once and ask before anything else. Never tag or publish
-  locally in this mode: that bypasses the workflow's own gates.
+  run `gh workflow run <file> --ref "$TRUNK" -f <input>=<value>`, then list
+  candidate runs with `event == workflow_dispatch`, `createdAt` after that time,
+  and `headSha == SHA` (`gh run list --workflow <file> --json
+  databaseId,url,headSha,createdAt,event,displayTitle`). Attribute the run only
+  when exactly one candidate remains. If the workflow declares a correlation
+  input, pass a unique value and match it in the run's display title. Two or
+  more candidates (a concurrent dispatch at the same `SHA`), none, or a
+  different `headSha`: report attribution as unproven and stop. Never report
+  another run's result or version as this release, and never claim success.
+  Never tag or publish locally in this mode: that bypasses the workflow's own
+  gates.
 - **tag** —
 
   ```bash
