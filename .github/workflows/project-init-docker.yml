@@ -61,9 +61,9 @@ jobs:
         working-directory: ${{ env.WORKSPACE }}
         run: echo "BETTER_AUTH_SECRET=must-not-ship" > api/.env
 
-      - name: THROWAWAY prove the job can fail (delete the generated .dockerignore)
+      - name: THROWAWAY prove the job can fail (generated .dockerignore without the env rules)
         working-directory: ${{ env.WORKSPACE }}
-        run: rm .dockerignore
+        run: printf '**/node_modules\n**/dist\n' > .dockerignore
 
       - name: Build the builder stage
         # The builder stage copies the api folder, so a leaked api/.env would land here first
