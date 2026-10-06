@@ -29,7 +29,7 @@ function UsernameForm() {
     mode: "onChange", // Triggers validation constantly
   })
 
-  return <Form {...form}>{/* ... */}</Form>
+  return <form onSubmit={form.handleSubmit(onSubmit)}>{/* ... */}</form>
 }
 ```
 
@@ -71,32 +71,32 @@ function UsernameForm() {
   }, 500) // 500ms debounce
 
   return (
-    <Form {...form}>
-      <FormField
-        control={form.control}
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <Controller
         name="username"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Username</FormLabel>
-            <FormControl>
-              <div className="relative">
-                <Input
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e)
-                    checkUsername(e.target.value)
-                  }}
-                />
-                {isChecking && (
-                  <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin" />
-                )}
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor="username">Username</FieldLabel>
+            <div className="relative">
+              <Input
+                {...field}
+                id="username"
+                aria-invalid={fieldState.invalid}
+                onChange={(e) => {
+                  field.onChange(e)
+                  checkUsername(e.target.value)
+                }}
+              />
+              {isChecking && (
+                <Loader2 className="absolute right-3 top-3 size-4 animate-spin" />
+              )}
+            </div>
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
         )}
       />
-    </Form>
+    </form>
   )
 }
 ```

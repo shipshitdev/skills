@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **173 skills · 24 commands · 13 bundles · 186 plugins**.
+Generated catalog: **172 skills · 24 commands · 13 bundles · 185 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 173 | `skills/*/SKILL.md` |
+| Skills | 172 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 186 | skills + bundles |
+| Plugins | 185 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -311,9 +311,23 @@ Better Auth sessions. `bun.lock` is the canonical Bun lockfile everywhere (the v
 still accepts a lone legacy `bun.lockb` as a migrate warning; both together stay an
 error). Scaffolds and guides emit Tailwind v4 CSS-first config (`@theme`, no
 `tailwind.config.*`), no Sass, and NestJS 12. The vendored `shadcn` and `tailwind`
-skills keep their upstream v3 and Sass examples as before/after material. Rejected:
+skills keep v3 and Sass examples only as before/after migration material. Rejected:
 keeping a Clerk reference "for existing apps", because the catalog writes toward the
 house stack and the removed stack remains in git history.
+
+### Last mile: artifacts-builder on Bun, shadcn and tailwind owned on v4 (2026-10-06, #232, #235)
+
+`artifacts-builder` scaffolds with `bun create vite` plus `bunx shadcn@latest` (Radix, Nova
+preset, all components) and bundles with `vite-plugin-singlefile` (no Parcel); the dead
+UI package and the bundled v3-era component archive are gone, and `node-version-check.sh`
+enforces Vite's Node floor (20.19+ or 22.12+). `shadcn` and `tailwind` are rewritten to
+Tailwind v4 CSS-first and current shadcn (`cn` package, `Field` + `Controller` forms,
+React 19 refs); provenance stays as attribution and `scripts/upstream-drift.py` still
+tracks pproenca/dot-skills. `shadcn-setup` was folded into `shadcn` as setup mode
+(`references/_setup-mode.md`); its HSL token generator `setup.py` was dropped because the
+CLI (`init --base radix --preset nova`) is the source of truth and the generator emitted
+v3-era tokens. Rejected: keeping a second shadcn skill, because install and usage rules
+share one trigger.
 
 ## Known Issues
 

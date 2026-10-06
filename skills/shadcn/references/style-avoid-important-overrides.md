@@ -14,8 +14,8 @@ Never use `!important` to override shadcn/ui styles. It breaks the cascade and p
 ```tsx
 function BrandButton({ children }: { children: React.ReactNode }) {
   return (
-    <Button className="!bg-brand-500 !text-white !hover:bg-brand-600">
-      {/* !important prevents any further customization */}
+    <Button className="bg-brand-500! text-white! hover:bg-brand-600!">
+      {/* The trailing ! (v4 important modifier) prevents any further customization */}
       {children}
     </Button>
   )
@@ -71,7 +71,7 @@ function Page() {
 **If styles aren't applying:**
 
 1. Check class order in `cn()` - later classes win
-2. Verify Tailwind config includes your custom colors
+2. Verify the color token is defined in your CSS with `@theme` or `@theme inline`
 3. Use browser DevTools to inspect computed styles
 
-Reference: [Tailwind Important Modifier](https://tailwindcss.com/docs/configuration#important-modifier)
+Reference: [Tailwind Important Modifier](https://tailwindcss.com/docs/styling-with-utility-classes#using-the-important-modifier)

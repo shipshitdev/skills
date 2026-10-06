@@ -37,7 +37,7 @@ function SettingsCard({
   return (
     <Card>
       <CardHeader>
-        <Icon className="h-5 w-5" />
+        <Icon className="size-5" />
         <CardTitle>{title}</CardTitle>
         {badge && <Badge>{badge}</Badge>}
       </CardHeader>
@@ -69,7 +69,7 @@ function SettingsCardHeader({ children }: { children: React.ReactNode }) {
 }
 
 function SettingsCardIcon({ icon: Icon }: { icon: LucideIcon }) {
-  return <Icon className="h-5 w-5 text-muted-foreground" />
+  return <Icon className="size-5 text-muted-foreground" />
 }
 
 function SettingsCardTitle({ children }: { children: React.ReactNode }) {

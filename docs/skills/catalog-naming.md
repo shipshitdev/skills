@@ -4,7 +4,7 @@ Migration from the catalog after board correctness and composition repairs,
 2026-09-05, kept current through the 2026-10-05 catalog simplification (#190). This is
 a migration inventory, not a runtime registry.
 
-173 skills and 24 commands. Eight rows record a rename from an earlier name (one of
+172 skills and 24 commands. Eight rows record a rename from an earlier name (one of
 them, `gh-address-comments`, was later merged into `pr-comments`). Skills folded into
 another since the migration are listed under Retired skills. Owning surfaces describe
 contracts; they are not mandatory naming prefixes.
@@ -149,7 +149,6 @@ contracts; they are not mandatory naming prefixes.
 | `setup-agent-routing` | `setup-agent-routing` | retain | agent-configuration |
 | `setup-pstack` | `setup-pstack` | retain | agent-orchestration |
 | `shadcn` | `shadcn` | retain | shadcn |
-| `shadcn-setup` | `shadcn-setup` | retain | shadcn |
 | `shape` | `shape` | retain | design |
 | `show-me-your-work` | `show-me-your-work` | retain | work-evidence |
 | `skill-capture` | `skill-capture` | retain | skill-maintenance |
@@ -213,6 +212,7 @@ names no longer install through `npx skills add --skill <name>`.
 | `tailwind-validator` | `stack-validator` (`--stack tailwind`, `references/tailwind.md`) | #190 |
 | `refactor-dispatch` | deleted; `/refactor` routes to its engines directly | #190 |
 | `context-engineering` | removed: no consumers; execution skills read repo instructions themselves | #190 |
+| `shadcn-setup` | `shadcn` (setup mode, `references/_setup-mode.md`) | #235 |
 | `mongodb-atlas-checker` | removed: the house stack is Postgres only; use `postgres-ops` | #207 |
 | `mongodb-migration-expert` | removed: the house stack is Postgres only; use `postgres-ops` (Prisma migrations) | #207 |
 

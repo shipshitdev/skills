@@ -68,7 +68,7 @@ function ProductGallery({
             variant={index === selectedIndex ? "default" : "outline"}
             onClick={() => onSelectImage(index)}
           >
-            <img src={image.thumbnail} alt="" className="h-12 w-12" />
+            <img src={image.thumbnail} alt="" className="size-12" />
           </Button>
         ))}
       </div>

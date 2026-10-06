@@ -20,6 +20,10 @@ export default {
 
 **Correct (dedicated Vite plugin):**
 
+```bash
+bun add tailwindcss @tailwindcss/vite
+```
+
 ```typescript
 // vite.config.ts
 import { defineConfig } from "vite";

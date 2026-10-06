@@ -43,10 +43,10 @@ export default defineConfig({
 
 ```bash
 # Development (readable output)
-npx @tailwindcss/cli -i input.css -o output.css
+bunx @tailwindcss/cli -i input.css -o output.css
 
 # Production (minified)
-npx @tailwindcss/cli -i input.css -o output.css --minify
+bunx @tailwindcss/cli -i input.css -o output.css --minify
 ```
 
 **Benefits:**

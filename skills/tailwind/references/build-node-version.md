@@ -7,7 +7,7 @@ tags: build, node, runtime, compatibility, tooling
 
 ## Use Node.js 20+ for Optimal Performance
 
-Tailwind CSS v4 and its upgrade tool require Node.js 20 or higher. Older Node versions may cause build failures or suboptimal performance.
+Tailwind CSS v4 and its upgrade tool require Node.js 20 or higher, and the current Vite requires 20.19+ or 22.12+ (`npm view vite engines`). Older Node versions may cause build failures or suboptimal performance.
 
 **Incorrect (outdated Node version):**
 
@@ -21,7 +21,7 @@ Tailwind CSS v4 and its upgrade tool require Node.js 20 or higher. Older Node ve
 
 ```bash
 # Node 16/18 may cause issues
-npx @tailwindcss/upgrade
+bunx @tailwindcss/upgrade
 # Error: Requires Node.js 20+
 ```
 
@@ -30,14 +30,14 @@ npx @tailwindcss/upgrade
 ```json
 {
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^20.19.0 || >=22.12.0"
   }
 }
 ```
 
 ```bash
 # Node 20+ runs optimally
-npx @tailwindcss/upgrade
+bunx @tailwindcss/upgrade
 # Upgrade completes successfully
 ```
 
