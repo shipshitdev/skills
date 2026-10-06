@@ -363,7 +363,7 @@ class ThemeResolutionTest(unittest.TestCase):
     @staticmethod
     def channel(value: int) -> float:
         c = value / 255
-        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
 
     @classmethod
     def wcag_luminance(cls, color: str) -> float:
@@ -378,52 +378,13 @@ class ThemeResolutionTest(unittest.TestCase):
         hi, lo = sorted((cls.wcag_luminance(a), cls.wcag_luminance(b)), reverse=True)
         return (hi + 0.05) / (lo + 0.05)
 
-    @staticmethod
-    def _to_linear(value: float) -> float:
-        return value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
-
-    @staticmethod
-    def _from_linear(value: float) -> float:
-        value = min(max(value, 0.0), 1.0)
-        return value * 12.92 if value <= 0.0031308 else 1.055 * value ** (1 / 2.4) - 0.055
-
-    @classmethod
-    def _oklab(cls, color: str) -> tuple[float, float, float]:
-        hex_ = color.lstrip("#")
-        if len(hex_) in (3, 4):
-            hex_ = "".join(ch * 2 for ch in hex_)
-        r, g, b = (cls._to_linear(int(hex_[i : i + 2], 16) / 255) for i in (0, 2, 4))
-        l = (0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b) ** (1 / 3)
-        m = (0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b) ** (1 / 3)
-        s_ = (0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b) ** (1 / 3)
-        return (
-            0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s_,
-            1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s_,
-            0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s_,
-        )
-
-    @classmethod
-    def mix(cls, first: str, first_pct: float, second: str) -> str:
-        """CSS color-mix(in oklab, first pct%, second) back to an sRGB hex."""
-        a, b = cls._oklab(first), cls._oklab(second)
-        lab = [x * first_pct / 100 + y * (100 - first_pct) / 100 for x, y in zip(a, b)]
-        l = (lab[0] + 0.3963377774 * lab[1] + 0.2158037573 * lab[2]) ** 3
-        m = (lab[0] - 0.1055613458 * lab[1] - 0.0638541728 * lab[2]) ** 3
-        s_ = (lab[0] - 0.0894841775 * lab[1] - 1.2914855480 * lab[2]) ** 3
-        rgb = (
-            4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s_,
-            -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s_,
-            -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s_,
-        )
-        return "#" + "".join(f"{round(cls._from_linear(c) * 255):02x}" for c in rgb)
-
     def test_every_default_color_pair_meets_wcag_aa(self) -> None:
         for label, theme in (("dark", self.default_theme), ("light", self.light_theme)):
             vars_ = self.resolve(**{k: v for k, v in theme.items() if k != "font"})["vars"]
             background = vars_["--background"]
             foreground = vars_["--foreground"]
-            card = self.mix(background, 94, foreground)
-            muted = self.mix(foreground, 70, background)
+            card = vars_["--card"]
+            muted = vars_["--muted-foreground"]
             pairs = {
                 "primary / primary-foreground": (vars_["--primary"], vars_["--primary-foreground"]),
                 "brand / brand-foreground": (vars_["--brand"], vars_["--brand-foreground"]),
@@ -431,14 +392,95 @@ class ThemeResolutionTest(unittest.TestCase):
                 "card / card-foreground": (card, vars_["--card-foreground"]),
                 "background / muted-foreground": (background, muted),
                 "card / muted-foreground": (card, muted),
-                "background / brand (text-brand icons and badges)": (background, vars_["--brand"]),
+                "background / brand": (background, vars_["--brand"]),
+                "background / brand-text": (background, vars_["--brand-text"]),
+                "card / brand-text": (card, vars_["--brand-text"]),
+                "background / primary-text": (background, vars_["--primary-text"]),
+                "card / primary-text": (card, vars_["--primary-text"]),
+                "primary-hover / primary-hover-foreground": (
+                    vars_["--primary-hover"],
+                    vars_["--primary-hover-foreground"],
+                ),
             }
             for name, (first, second) in pairs.items():
                 self.assertGreaterEqual(
                     self.ratio(first, second), 4.5, f"{label}: {name} {first} on {second}"
                 )
-            # text-primary is only used for large stat figures and ring-primary for UI edges (3:1).
+            # ring-primary and the raw brand color on cards are non-text UI (icons, edges): 3:1.
             self.assertGreaterEqual(self.ratio(background, vars_["--primary"]), 3.0, label)
+            self.assertGreaterEqual(self.ratio(card, vars_["--brand"]), 3.0, f"{label}: card / brand")
+
+    HOVER_CASES = (
+        {},
+        {"background": "#ffffff", "mode": "light"},
+        {"primary": "#00ff00"},
+        {"primary": "#00ff00", "background": "#f4f4f5"},
+        {"primary": "#6366f1"},
+        {"primary": "#6366f1", "background": "#ffffff"},
+        {"primary": "#ffffff"},
+        {"primary": "#000000"},
+    )
+
+    def test_primary_hover_is_opaque_distinct_and_aa(self) -> None:
+        for case in self.HOVER_CASES:
+            vars_ = self.resolve(**case)["vars"]
+            hover = vars_["--primary-hover"]
+            self.assertRegex(hover, r"^#[0-9a-f]{6}$", f"{case}: hover must be opaque")
+            self.assertNotEqual(hover.lower(), vars_["--primary"].lower(), case)
+            self.assertGreaterEqual(
+                self.ratio(hover, vars_["--primary-hover-foreground"]), 4.5, f"{case}: {hover}"
+            )
+
+    def test_hover_state_is_independent_of_the_surface(self) -> None:
+        # The old hover:bg-primary/80 blended the button with whatever sat behind it.
+        for case in self.HOVER_CASES:
+            for background in ("#ffffff", "#0a0a0a", "#f4f4f5"):
+                vars_ = self.resolve(**{**case, "background": background})["vars"]
+                hover = vars_["--primary-hover"]
+                self.assertGreaterEqual(
+                    self.ratio(hover, vars_["--primary-hover-foreground"]), 4.5, f"{case} {background}"
+                )
+
+    def test_template_uses_opaque_hover_and_aa_text_tokens(self) -> None:
+        components = SKILL_DIR / "assets" / "templates" / "landing" / "components"
+        for path in components.rglob("*.tsx"):
+            text = path.read_text()
+            self.assertNotIn("bg-primary/80", text, path.name)
+            self.assertIsNone(re.search(r"(?<![\w-])text-primary(?![\w-])", text), path.name)
+        for name in ("button.tsx", "badge.tsx"):
+            ui = (components / "ui" / name).read_text()
+            self.assertIn("primary-hover", ui, name)
+            self.assertIn("text-primary-text", ui, name)
+        hero = (components / "sections" / "hero.tsx").read_text()
+        self.assertIn("text-brand-text", hero)
+        self.assertIsNone(re.search(r"(?<![\w-])text-brand(?![\w-])", hero))
+
+    def test_text_tokens_reach_aa_on_page_and_card_for_custom_colors(self) -> None:
+        cases = (
+            {"primary": "#00ff00", "background": "#ffffff", "accent": "#ffd700"},
+            {"primary": "#6366f1", "background": "#0a0a0a", "accent": "#6366f1"},
+            {"primary": "#4f46e5", "background": "#0a0a0a", "accent": "#b45309"},
+            {"primary": "#808080", "background": "#808080", "accent": "#808080"},
+            {"primary": "#ff0000", "background": "#f4f4f5", "accent": "#00ffff"},
+        )
+        for case in cases:
+            vars_ = self.resolve(**case)["vars"]
+            card = vars_["--card"]
+            for token in ("--primary-text", "--brand-text"):
+                for surface_name, surface in (("page", vars_["--background"]), ("card", card)):
+                    self.assertGreaterEqual(
+                        self.ratio(surface, vars_[token]), 4.5, f"{case} {token} on {surface_name}"
+                    )
+
+    def test_text_tokens_keep_a_color_that_already_passes(self) -> None:
+        vars_ = self.resolve(primary="#1e1b4b", accent="#7c2d12", background="#ffffff")["vars"]
+        self.assertEqual(vars_["--primary-text"], "#1e1b4b")
+        self.assertEqual(vars_["--brand-text"], "#7c2d12")
+
+    def test_linearization_uses_the_current_wcag_threshold(self) -> None:
+        theme_ts = (SKILL_DIR / "assets" / "templates" / "landing" / "lib" / "theme.ts").read_text()
+        self.assertIn("0.04045", theme_ts)
+        self.assertNotIn("0.03928", theme_ts)
 
     def test_default_primary_gets_a_foreground_that_passes_aa(self) -> None:
         vars_ = self.resolve(**{k: v for k, v in self.default_theme.items() if k != "font"})["vars"]
@@ -678,6 +720,66 @@ class BatchThemeTest(unittest.TestCase):
         theme = self.theme("light-one")
         self.assertEqual(theme["mode"], "light")
         self.assertEqual(theme["primary"], "#4f46e5")
+
+    def test_structured_theme_mode_does_not_abort_the_batch(self) -> None:
+        result = self.batch(
+            [
+                {"slug": "x1", "name": "X1", "theme_mode": ["light"]},
+                {"slug": "x2", "name": "X2", "theme_mode": {"a": 1}},
+                {"slug": "x3", "name": "X3", "primary": 5},
+                {"slug": "ok", "name": "OK", "primary": "#00ff00"},
+            ]
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn("Traceback", result.stderr)
+        for slug in ("x1", "x2", "x3"):
+            self.assertFalse((self.root / slug).exists(), slug)
+        self.assertEqual(self.theme("ok")["primary"], "#00ff00")
+
+    def test_non_object_and_non_string_fields_do_not_abort_the_batch(self) -> None:
+        result = self.batch(["just-a-string", {"slug": 7, "name": "N"}, {"slug": "ok2", "name": "OK"}])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertTrue((self.root / "ok2" / "app.json").is_file())
+
+    def csv_run(self, content: str | bytes, *extra: str) -> subprocess.CompletedProcess:
+        source = self.base / "headers.csv"
+        if isinstance(content, str):
+            content = content.encode("utf-8")
+        source.write_bytes(content)
+        return run(
+            "batch_create.py", "--root", str(self.root), "--csv", str(source),
+            "--allow-outside", *extra,
+        )
+
+    def test_csv_with_a_bom_keeps_its_theme_columns(self) -> None:
+        result = self.csv_run(b"\xef\xbb\xbfslug,name,primary\nbom,Bom,#00ff00\n")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.theme("bom")["primary"], "#00ff00")
+
+    def test_csv_headers_are_case_insensitive_and_trimmed(self) -> None:
+        result = self.csv_run(" Slug , NAME ,Primary, Theme_Mode \nhdr,Hdr,#00ff00,light\n")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        theme = self.theme("hdr")
+        self.assertEqual(theme["primary"], "#00ff00")
+        self.assertEqual(theme["mode"], "light")
+
+    def test_csv_unknown_headers_are_rejected_before_anything_is_written(self) -> None:
+        result = self.csv_run("slug,name,colour\nu,U,#00ff00\n")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("colour", result.stdout + result.stderr)
+        self.assertFalse(self.root.exists() and any(self.root.iterdir()))
+
+    def test_csv_duplicate_headers_are_rejected(self) -> None:
+        result = self.csv_run("slug,name,primary, PRIMARY\nd,D,#00ff00,#ff0000\n")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate", (result.stdout + result.stderr).lower())
+        self.assertFalse(self.root.exists() and any(self.root.iterdir()))
+
+    def test_csv_theme_values_stay_unstripped(self) -> None:
+        result = self.csv_run("slug,name,primary\npad,Pad, #00ff00\n")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((self.root / "pad").exists())
 
     def test_batch_rejects_invalid_theme_mode(self) -> None:
         result = self.batch([{"slug": "m", "name": "M", "theme_mode": "sepia"}])

@@ -25,9 +25,18 @@ export function parseColor(color: string): Rgba | null {
 function luminance({ r, g, b }: Rgba): number {
   const lin = (v: number) => {
     const c = v / 255
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
   }
   return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+}
+
+const hex2 = (v: number) => Math.round(Math.min(255, Math.max(0, v))).toString(16).padStart(2, "0")
+const toHex = ({ r, g, b }: Rgba) => `#${hex2(r)}${hex2(g)}${hex2(b)}`
+
+// sRGB mix: `amount` of `toward` blended into `from`, always opaque.
+function mixRgba(from: Rgba, toward: Rgba, amount: number): Rgba {
+  const lerp = (a: number, b: number) => a + (b - a) * amount
+  return { r: lerp(from.r, toward.r), g: lerp(from.g, toward.g), b: lerp(from.b, toward.b), a: 1 }
 }
 
 function contrast(a: Rgba, b: Rgba): number {
@@ -95,6 +104,36 @@ export function isLight(color: string): boolean {
   return parsed ? usesDarkText(parsed) : false
 }
 
+const WHITE: Rgba = { r: 255, g: 255, b: 255, a: 1 }
+const BLACK: Rgba = { r: 0, g: 0, b: 0, a: 1 }
+const TEXT_TARGET = 4.5
+
+// Opaque hover color for a filled primary: moves away from the text color so contrast with the
+// text improves. (hover:bg-primary/80 blended with the surface behind it and could drop below AA.)
+function hoverColor(primary: Rgba, textIsDark: boolean): Rgba {
+  const amount = 0.15
+  const first = mixRgba(primary, textIsDark ? WHITE : BLACK, amount)
+  if (toHex(first) !== toHex(primary)) return first
+  return mixRgba(primary, textIsDark ? BLACK : WHITE, amount)
+}
+
+// Text-safe variant of `color` for small text on every surface: the color itself when it
+// already reaches AA on all of them, otherwise the smallest step toward `toward` that does.
+function readableText(
+  value: string,
+  color: Rgba,
+  surfaces: Rgba[],
+  toward: Rgba,
+): string {
+  for (let step = 0; step <= 20; step++) {
+    const candidate = step === 0 ? color : mixRgba(color, toward, step / 20)
+    if (surfaces.every((surface) => contrast(candidate, surface) >= TEXT_TARGET)) {
+      return step === 0 ? value : toHex(candidate)
+    }
+  }
+  return toHex(toward)
+}
+
 // Turns app.json `theme` into the token set (mode) and CSS variable overrides.
 // An explicit mode ("dark" | "light") wins; otherwise it follows the background
 // brightness, so a light background alone gives the full light token set.
@@ -119,19 +158,29 @@ export function resolveTheme(theme: Theme) {
   // background never ends up with same-tone text.
   const foreground = explicitForeground?.value ?? bestForeground(background.rgba)
 
+  const foregroundRgba = explicitForeground?.rgba ?? (parseColor(foreground) as Rgba)
+  const card = mixRgba(background.rgba, foregroundRgba, 0.06)
+  const surfaces = [background.rgba, card]
+  const primaryText = bestForeground(primary.rgba)
+  const hover = hoverColor(primary.rgba, primaryText === NEAR_BLACK || primaryText === PURE_BLACK)
+
   const vars = {
     "--primary": primary.value,
-    "--primary-foreground": bestForeground(primary.rgba),
+    "--primary-foreground": primaryText,
+    "--primary-hover": toHex(hover),
+    "--primary-hover-foreground": bestForeground(hover),
+    "--primary-text": readableText(primary.value, primary.rgba, surfaces, foregroundRgba),
     "--ring": primary.value,
     "--brand": accent.value,
     "--brand-foreground": bestForeground(accent.rgba),
+    "--brand-text": readableText(accent.value, accent.rgba, surfaces, foregroundRgba),
     "--background": background.value,
     "--foreground": foreground,
-    "--card": `color-mix(in oklab, ${background.value} 94%, ${foreground})`,
+    "--card": toHex(card),
     "--card-foreground": foreground,
-    "--popover": `color-mix(in oklab, ${background.value} 94%, ${foreground})`,
+    "--popover": toHex(card),
     "--popover-foreground": foreground,
-    "--muted-foreground": `color-mix(in oklab, ${foreground} 70%, ${background.value})`,
+    "--muted-foreground": toHex(mixRgba(background.rgba, foregroundRgba, 0.7)),
   }
 
   return { mode, vars }
