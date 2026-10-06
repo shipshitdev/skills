@@ -34,7 +34,7 @@ cp examples/quick-audit-checklist.md my-audit.md
 
 ### 1. Color Palette (20%)
 
-- ✅ Theme token usage (bg-primary, bg-base-100, etc.)
+- ✅ Theme token usage (bg-background, bg-primary, text-muted-foreground, etc.)
 - ❌ Hardcoded hex colors
 - ❌ Arbitrary Tailwind values
 - ✅ Dark mode compatibility
@@ -55,9 +55,9 @@ cp examples/quick-audit-checklist.md my-audit.md
 
 ### 4. Component Patterns (15%)
 
-- ✅ `.gf-card` for cards
-- ✅ `.glass-modal` for modals
-- ✅ `.btn-secondary` for buttons
+- ✅ shadcn `Card` for cards
+- ✅ shadcn `Dialog` for modals
+- ✅ `Button` variants for actions
 - ❌ Duplicate component styles
 
 ### 5. Accessibility (25%)
@@ -152,7 +152,7 @@ grep -r "<div.*onClick" [frontend-project]/apps --include="*.tsx"  # Discover fr
 <div className="bg-[#fafafa]">
 
 // ✅ GOOD
-<div className="bg-base-100">
+<div className="bg-card">
 ```
 
 ### Issue: Non-Semantic HTML
@@ -172,7 +172,7 @@ grep -r "<div.*onClick" [frontend-project]/apps --include="*.tsx"  # Discover fr
 <div className="bg-white border border-gray-200 shadow rounded-lg">
 
 // ✅ GOOD
-<div className="gf-card">
+<Card>
 ```
 
 ### Issue: Missing Responsive Modifiers
@@ -189,30 +189,25 @@ grep -r "<div.*onClick" [frontend-project]/apps --include="*.tsx"  # Discover fr
 
 ### Color Tokens
 
-**Light Theme**
+shadcn/ui themes are CSS variables (`:root` and `.dark`) mapped to utilities by `@theme inline`. Read the project's `globals.css` for the real values.
 
-- Primary: `bg-primary` (#000000)
-- Background: `bg-base-200` (#ffffff)
-- Cards: `bg-base-100` (#fafafa)
-- Borders: `border-base-300` (#e5e7eb)
-- Text: `text-base-content` (#111111)
+| Intent | Utility |
+|--------|---------|
+| App background / body text | `bg-background` / `text-foreground` |
+| Card surface | `bg-card text-card-foreground` |
+| Primary action | `bg-primary text-primary-foreground` |
+| Quiet surface / secondary text | `bg-muted` / `text-muted-foreground` |
+| Hover or selected row | `bg-accent text-accent-foreground` |
+| Borders and focus ring | `border-border`, `ring-ring` |
 
-**Dark Theme**
+### Components
 
-- Primary: `bg-primary` (#ffffff)
-- Background: `bg-base-200` (#020202)
-- Cards: `bg-base-100` (#0f0f0f)
-- Borders: `border-base-300` (#1a1a1a)
-- Text: `text-base-content` (#e5e7eb)
+Add components with `bunx --bun shadcn@latest add <name>`; they live in `components/ui` and merge classes with `cn()`.
 
-### Custom Classes
-
-- `.gf-app` - Main app shell
-- `.gf-card` - Card component
-- `.glass-modal` - Glass morphism modal
-- `.glass-input` - Glass morphism input
-- `.btn-secondary` - Secondary button style
-- `.form-focus` - Form focus styling
+- `Card` for card surfaces
+- `Dialog` / `Sheet` for overlays
+- `Button` variants (`default`, `secondary`, `outline`, `ghost`) for actions
+- `Input` / `Textarea` / `Select` for form fields
 
 ### Typography Scale
 
@@ -297,7 +292,7 @@ This skill works well with:
 
 ### Documentation
 
-- @agenticindiedev/ui (check package README/docs)
+- [shadcn/ui](https://ui.shadcn.com/docs)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [WCAG Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [Material Design](https://material.io/design)

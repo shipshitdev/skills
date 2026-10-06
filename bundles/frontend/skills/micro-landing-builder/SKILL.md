@@ -1,6 +1,6 @@
 ---
 name: micro-landing-builder
-description: Scaffolds, clones, and deploys config-driven NextJS landing pages that use a shared UI components package. Use when creating single or multiple startup landing pages with email capture, analytics, and modern design. Supports batch creation from templates or CSV/JSON files and Vercel deployment with custom domains. Each landing is a standalone NextJS app driven by an app.json config file.
+description: Scaffolds, clones, and deploys config-driven NextJS landing pages built on shadcn/ui and Tailwind v4. Use when creating single or multiple startup landing pages with email capture, analytics, and modern design. Supports batch creation from templates or CSV/JSON files and Vercel deployment with custom domains. Each landing is a standalone NextJS app driven by an app.json config file.
 disable-model-invocation: true
 metadata:
   version: "2.2.2"
@@ -17,7 +17,7 @@ Inputs:
 
 - One or more landing definitions: slug, name, domain, concept, and config
 - Destination root
-- Optional shared UI package and domain mapping
+- Optional domain mapping
 
 Outputs:
 
@@ -53,15 +53,13 @@ Delegates To:
 Each landing page is a standalone NextJS app where:
 
 - Content is defined in `app.json` config file
-- UI comes from `@agenticindiedev/ui`
+- UI is shadcn/ui: `components.json`, `components/ui` (Button, Card, Badge, Accordion, Input) and the landing sections in `components/sections`, all copied into the app so it owns its code
+- Theme tokens are shadcn CSS variables in `app/globals.css` (`@theme inline`); `app.json` `theme` overrides `--primary`, `--background` and the extra `--brand` accent
 - Deploy independently to any domain via Vercel
 
 ## Prerequisites
 
-You need a published landing UI components package. The skill expects:
-
-- Package name (default: `@agenticindiedev/ui`)
-- Components: Hero, Features, Pricing, FAQ, CTA, Testimonials, Stats, EmailCapture, Header, Footer
+Nothing to publish or install first: the scaffold writes the shadcn/ui setup itself and depends only on live npm packages (Next.js 16, React 19, Tailwind v4, `shadcn`, `radix-ui`, `class-variance-authority`, `cn`, `lucide-react`, `tw-animate-css`). Versions are pinned in `scripts/scaffold.py`; re-check them with `npm view <pkg> version` before changing pins. Needs Bun and network access for `bun install`.
 
 ## Usage
 
@@ -76,12 +74,6 @@ python3 scripts/scaffold.py \
   --domain "mystartup.com" \
   --concept "AI-powered analytics"
 
-# With custom UI package
-python3 scripts/scaffold.py \
-  --slug mystartup \
-  --name "My Startup" \
-  --ui-package "@myorg/landing-kit"
-
 # Allow outside current directory
 python3 scripts/scaffold.py \
   --root ~/www/landings \
@@ -94,18 +86,27 @@ python3 scripts/scaffold.py \
 ```
 mystartup/
 ├── app.json              # All content/config here
-├── package.json          # Depends on UI package
+├── package.json          # Next 16, React 19, Tailwind v4, shadcn/ui runtime deps
+├── components.json       # shadcn config ("config": "" for Tailwind v4)
 ├── next.config.ts
 ├── postcss.config.mjs    # @tailwindcss/postcss (Tailwind v4)
 ├── tsconfig.json
 ├── vercel.json           # Vercel deployment config
 ├── public/
 │   └── (images go here)
+├── lib/
+│   └── utils.ts          # cn() helper
+├── components/
+│   ├── ui/               # shadcn: button, card, badge, accordion, input
+│   └── sections/         # header, hero, stats, features, pricing, testimonials, faq, cta, footer
 └── app/
-    ├── layout.tsx
+    ├── layout.tsx        # Applies app.json theme to the shadcn CSS variables
     ├── page.tsx          # Renders sections from app.json
-    └── globals.css       # CSS-first Tailwind v4: @import, @source, @theme
+    ├── globals.css       # Tailwind v4 + shadcn tokens: :root, .dark, @theme inline
+    └── api/subscribe/    # Waitlist endpoint stub (returns 501 until a provider is wired)
 ```
+
+The email capture form posts to `app/api/subscribe/route.ts`. It validates the address and answers 501 until you connect an email provider there, so the form never claims to have stored an email it did not.
 
 ## app.json Config
 
@@ -122,7 +123,8 @@ The landing is entirely driven by `app.json`. See `references/config-schema.md` 
   },
   "theme": {
     "primary": "#6366f1",
-    "accent": "#f59e0b"
+    "accent": "#f59e0b",
+    "background": "#0a0a0a"
   },
   "analytics": {
     "plausible": "mystartup.com"
@@ -260,11 +262,15 @@ python3 scripts/deploy_vercel.py \
 
 ## Customization
 
-To add custom sections or override components:
+Add more shadcn components with `bunx --bun shadcn@latest add <name>` (they land in `components/ui`).
 
-1. Add component to `app/components/`
-2. Import in `app/page.tsx`
-3. Add to section renderer
+To add custom sections:
+
+1. Add a component to `components/sections/`
+2. Import it in `app/page.tsx`
+3. Register it in the `sectionComponents` map under its `type`
+
+Restyle through the CSS variables in `app/globals.css` (for example `--primary`, `--radius`) instead of editing component classes. Use `bg-primary`, `text-muted-foreground` and the other token utilities rather than hex values.
 
 ## References
 

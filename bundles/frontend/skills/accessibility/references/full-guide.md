@@ -101,7 +101,7 @@ Projects should target **WCAG 2.1 Level AA** compliance for all public-facing ap
 
 ```typescript
 // ✅ Good: High contrast text
-<p className="text-base-content">
+<p className="text-foreground">
   This text has sufficient contrast
 </p>
 
@@ -110,9 +110,9 @@ Projects should target **WCAG 2.1 Level AA** compliance for all public-facing ap
   This text may not have enough contrast
 </p>
 
-// ✅ Good: Test with @agenticindiedev/ui theme tokens
-<p className="text-base-content/80">
-  Uses semantic color with opacity
+// ✅ Good: Test with the shadcn theme tokens (check both :root and .dark)
+<p className="text-muted-foreground">
+  Semantic token; still verify the ratio in both light and dark themes
 </p>
 ```
 

@@ -36,17 +36,21 @@ interface MetaConfig {
 
 ## Theme Config
 
+`app/layout.tsx` writes these values onto `<html>` as shadcn CSS variables, overriding the defaults in `app/globals.css`.
+
 ```typescript
 interface ThemeConfig {
-  primary: string;           // Primary color (hex)
-  accent: string;            // Accent color (hex)
-  background: string;        // Background color (hex)
+  primary: string;           // --primary and --ring (bg-primary, text-primary)
+  accent: string;            // --brand (text-brand), the extra brand accent
+  background: string;        // --background (bg-background)
   font: {
-    heading: string;         // Font for headings
-    body: string;            // Font for body text
+    heading: string;         // Informational: set in layout.tsx <link> and --font-heading in globals.css
+    body: string;            // Informational: set in layout.tsx <link> and --font-sans in globals.css
   };
 }
 ```
+
+Text on `bg-primary` uses `--primary-foreground`, which `layout.tsx` sets to white; change it there if your primary color is light.
 
 **Recommended fonts:**
 

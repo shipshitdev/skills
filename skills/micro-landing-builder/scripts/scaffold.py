@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 from textwrap import dedent
@@ -15,10 +16,9 @@ from textwrap import dedent
 SKILL_DIR = Path(__file__).parent.parent
 TEMPLATES_DIR = SKILL_DIR / "assets" / "templates" / "landing"
 
-DEFAULT_UI_PACKAGE = "@agenticindiedev/ui"
-
-
-# Looked up with `npm view <pkg> version` on 2026-10-06; same pins as project-init-orchestrator.
+# Looked up with `npm view <pkg> version` on 2026-10-06; the Next/React/TypeScript/Tailwind pins
+# match project-init-orchestrator. The shadcn runtime set (shadcn, radix-ui, cva, cn, lucide-react,
+# tw-animate-css) is what `bunx --bun shadcn@latest init` installs today.
 PINS = {
     "next": "16.3.8",
     "react": "19.3.0",
@@ -26,10 +26,16 @@ PINS = {
     "types-react": "19.3.0",
     "typescript": "6.0.3",
     "tailwindcss": "4.3.3",
+    "shadcn": "4.21.3",
+    "radix-ui": "1.7.0",
+    "class-variance-authority": "0.7.1",
+    "cn": "0.4.0",
+    "lucide-react": "1.52.0",
+    "tw-animate-css": "1.4.0",
 }
 
 
-def create_package_json(name: str, ui_package: str) -> str:
+def create_package_json(name: str) -> str:
     return json.dumps({
         "name": name.lower().replace(" ", "-"),
         "version": "0.1.0",
@@ -44,7 +50,12 @@ def create_package_json(name: str, ui_package: str) -> str:
             "next": PINS["next"],
             "react": PINS["react"],
             "react-dom": PINS["react"],
-            ui_package: "latest"
+            "shadcn": PINS["shadcn"],
+            "radix-ui": PINS["radix-ui"],
+            "class-variance-authority": PINS["class-variance-authority"],
+            "cn": PINS["cn"],
+            "lucide-react": PINS["lucide-react"],
+            "tw-animate-css": PINS["tw-animate-css"]
         },
         "devDependencies": {
             "@types/node": PINS["types-node"],
@@ -276,125 +287,6 @@ def create_app_json(name: str, slug: str, domain: str, concept: str) -> str:
     }, indent=2)
 
 
-def create_layout_tsx(name: str) -> str:
-    return dedent(f"""\
-        import type {{ Metadata }} from "next";
-        import config from "../app.json";
-        import "./globals.css";
-
-        export const metadata: Metadata = {{
-          title: config.meta.title,
-          description: config.meta.description,
-        }};
-
-        export default function RootLayout({{
-          children,
-        }}: Readonly<{{
-          children: React.ReactNode;
-        }}>) {{
-          return (
-            <html lang="en">
-              <head>
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link
-                  href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-                  rel="stylesheet"
-                />
-              </head>
-              <body>{{children}}</body>
-            </html>
-          );
-        }}
-    """)
-
-
-def create_page_tsx(ui_package: str) -> str:
-    return dedent(f"""\
-        import config from "../app.json";
-        import {{
-          Hero,
-          Stats,
-          Features,
-          Pricing,
-          Testimonials,
-          FAQ,
-          CTA,
-          Header,
-          Footer,
-        }} from "{ui_package}";
-
-        const sectionComponents: Record<string, React.ComponentType<any>> = {{
-          hero: Hero,
-          stats: Stats,
-          features: Features,
-          pricing: Pricing,
-          testimonials: Testimonials,
-          faq: FAQ,
-          cta: CTA,
-        }};
-
-        export default function Landing() {{
-          return (
-            <main
-              style={{{{
-                "--color-primary": config.theme.primary,
-                "--color-accent": config.theme.accent,
-                "--color-background": config.theme.background,
-              }} as React.CSSProperties}}
-            >
-              <Header
-                logo={{config.header.logo}}
-                nav={{config.header.nav}}
-                cta={{config.header.cta}}
-              />
-
-              {{config.sections.map((section, index) => {{
-                const Component = sectionComponents[section.type];
-                if (!Component) return null;
-                return <Component key={{index}} {{...section}} />;
-              }})}}
-
-              <Footer
-                links={{config.footer.links}}
-                social={{config.footer.social}}
-                copyright={{config.footer.copyright}}
-              />
-            </main>
-          );
-        }}
-    """)
-
-
-def create_globals_css(ui_package: str) -> str:
-    """Tailwind v4 CSS-first entry: @import, @source for the UI package and an @theme block."""
-    template = dedent("""\
-        @import "tailwindcss";
-
-        /* Packages in node_modules are not scanned automatically */
-        @source "../node_modules/__UI_PACKAGE__";
-
-        @theme {
-          --color-primary: #6366f1;
-          --color-accent: #f59e0b;
-          --color-background: #0a0a0a;
-          --font-sans: "Space Grotesk", sans-serif;
-          --font-heading: "Fraunces", serif;
-        }
-
-        @layer base {
-          body {
-            @apply bg-background font-sans text-white;
-          }
-
-          h1, h2, h3, h4, h5, h6 {
-            font-family: var(--font-heading);
-          }
-        }
-    """)
-    return template.replace("__UI_PACKAGE__", ui_package)
-
-
 def create_gitignore() -> str:
     return dedent("""\
         # Dependencies
@@ -434,7 +326,6 @@ def scaffold_landing(
     name: str,
     domain: str,
     concept: str,
-    ui_package: str,
     allow_outside: bool,
 ) -> None:
     """Create a new landing page project."""
@@ -454,21 +345,21 @@ def scaffold_landing(
 
     # Create directories
     project_dir.mkdir(parents=True)
-    (project_dir / "app").mkdir()
     (project_dir / "public").mkdir()
+
+    # shadcn/ui kit and section components (components.json, components/ui, components/sections,
+    # lib/utils.ts, app/*) are copied verbatim so the app has no private UI dependency.
+    shutil.copytree(TEMPLATES_DIR, project_dir, dirs_exist_ok=True)
 
     # Create files
     files = {
-        "package.json": create_package_json(name, ui_package),
+        "package.json": create_package_json(name),
         "next.config.ts": create_next_config(),
         "postcss.config.mjs": create_postcss_config(),
         "tsconfig.json": create_tsconfig(),
         "vercel.json": create_vercel_json(domain),
         "app.json": create_app_json(name, slug, domain, concept),
         ".gitignore": create_gitignore(),
-        "app/layout.tsx": create_layout_tsx(name),
-        "app/page.tsx": create_page_tsx(ui_package),
-        "app/globals.css": create_globals_css(ui_package),
     }
 
     for filename, content in files.items():
@@ -484,7 +375,7 @@ def scaffold_landing(
     print(f"3. Add images to public/")
     print(f"4. bun install")
     print(f"5. bun dev")
-    print(f"\nNote: Requires UI package '{ui_package}' to be published.")
+    print(f"\nAdd more shadcn/ui components with: bunx --bun shadcn@latest add <name>")
 
 
 def main() -> None:
@@ -522,12 +413,6 @@ def main() -> None:
         help="Product concept (e.g., 'AI-powered analytics')",
     )
     parser.add_argument(
-        "--ui-package",
-        type=str,
-        default=DEFAULT_UI_PACKAGE,
-        help=f"UI components package (default: {DEFAULT_UI_PACKAGE})",
-    )
-    parser.add_argument(
         "--allow-outside",
         action="store_true",
         help="Allow creating files outside current directory",
@@ -541,7 +426,6 @@ def main() -> None:
         name=args.name,
         domain=args.domain,
         concept=args.concept,
-        ui_package=args.ui_package,
         allow_outside=args.allow_outside,
     )
 

@@ -34,14 +34,14 @@ keyboard access, and contrast.
 
 ### Color Rules
 
-**DO:** Use semantic tokens (`bg-primary`, `text-base-content`, `bg-base-100`)
+**DO:** Use shadcn semantic tokens (`bg-background`, `bg-card`, `bg-primary`, `text-muted-foreground`, `border-border`)
 **DON'T:** Hardcode hex colors (`#000000`) or arbitrary values (`bg-[#123456]`)
 
 ### Component Patterns
 
 Discover the project's component class conventions from its design system or existing codebase. Common patterns to look for:
 
-- Cards: project-specific card class or component (e.g. `card`, `.card`, design-system Card component)
+- Cards: the shadcn `Card` or the project's own card component
 - App shells / layouts: project-specific shell wrapper class
 - Modals / dialogs: project dialog component pattern
 - Inputs: project form input class or component
