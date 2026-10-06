@@ -2,7 +2,7 @@
 """
 Stack Validator
 
-One validator for the Shipshit.dev stack: Biome 2.3+, Bun 1.3+ workspaces, Clerk,
+One validator for the Shipshit.dev stack: Biome 2.3+, Bun 1.3+ workspaces,
 Next.js 16 and Tailwind v4. Each stack keeps its own checks; the Issue and
 ValidationResult scaffolding, report format, flags and exit codes are shared.
 
@@ -21,7 +21,6 @@ import subprocess
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
-from itertools import chain
 from pathlib import Path
 from typing import NamedTuple
 
@@ -449,7 +448,8 @@ def check_bun_workspace_dependencies(root: Path, rel_path: Path, pkg: dict, resu
             result.add_passed(f'{rel_path}: {dep_name} uses catalog')
 
 
-BUN_LOCKFILES = ('bun.lock', 'bun.lockb')  # text lockfile (Bun 1.2+ default) and legacy binary
+# bun.lock (text, the default since Bun 1.2) is canonical; bun.lockb is the legacy binary lockfile
+BUN_LOCKFILES = ('bun.lock', 'bun.lockb')
 
 
 def check_bun_workspace_structure(root: Path, workspaces: list[Path], result: ValidationResult) -> None:
@@ -482,7 +482,7 @@ def check_bun_single_lockfile(root: Path, result: ValidationResult) -> None:
     root_lockfiles = [root / name for name in BUN_LOCKFILES if (root / name).exists()]
 
     if not root_lockfiles:
-        result.add_issue('warning', 'bun.lock', 'No bun.lock or bun.lockb at root (run bun install)',
+        result.add_issue('warning', 'bun.lock', 'No bun.lock at root (run bun install)',
                          fix='bun install')
         return
 
@@ -490,8 +490,12 @@ def check_bun_single_lockfile(root: Path, result: ValidationResult) -> None:
         result.add_issue('error', 'bun.lockb',
                          'Both bun.lock and bun.lockb at root - keep only bun.lock',
                          fix='rm bun.lockb && bun install')
+    elif root_lockfiles[0].name == 'bun.lockb':
+        result.add_issue('warning', 'bun.lockb',
+                         'Legacy binary bun.lockb at root - bun.lock is the canonical lockfile',
+                         fix='bun install --save-text-lockfile --frozen-lockfile --lockfile-only && rm bun.lockb')
     else:
-        result.add_passed('Single lockfile at root')
+        result.add_passed('Single bun.lock at root')
 
     for name in BUN_LOCKFILES:
         for lockfile in root.rglob(name):
@@ -513,13 +517,8 @@ def validate_bun(root: Path, result: ValidationResult) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# Clerk
+# Next.js
 # --------------------------------------------------------------------------- #
-
-CLERK_SOURCE_DIRS = ['app', 'src', 'pages', 'components', 'lib', 'server']
-# Templates only: real env files hold secret values and are never read.
-CLERK_ENV_FILES = ['.env.example', '.env.local.example', '.env.sample', '.env.template']
-CLERK_REQUIRED_ENV = ['NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', 'CLERK_SECRET_KEY']
 
 
 def major_version(spec: str) -> int | None:
@@ -527,177 +526,10 @@ def major_version(spec: str) -> int | None:
     return int(match.group(1)) if match else None
 
 
-def check_clerk_package_version(root: Path, result: ValidationResult) -> bool:
-    """Check that a current Clerk SDK is installed. Returns True when @clerk/nextjs is present."""
-    pkg = load_package_json(root, result)
-    if pkg is None:
-        return False
-
-    deps = all_dependencies(pkg)
-    clerk_packages = sorted(name for name in deps if name.startswith('@clerk/'))
-
-    if not clerk_packages:
-        result.add_issue('error', 'package.json', 'No @clerk/* package found in dependencies',
-                         fix='bun add @clerk/nextjs@latest')
-        return False
-
-    if '@clerk/nextjs' not in deps:
-        result.add_passed(f'Clerk packages: {", ".join(clerk_packages)} (Next.js checks skipped)')
-        return False
-
-    version = deps['@clerk/nextjs']
-    result.meta['clerk_version'] = version
-    major = major_version(version)
-
-    if major is None:
-        result.add_issue('warning', 'package.json', f'Could not parse @clerk/nextjs version: {version}')
-    elif major < 5:
-        result.add_issue('error', 'package.json',
-                         f'@clerk/nextjs {major}.x detected. Use the latest major',
-                         fix='bun add @clerk/nextjs@latest')
-    elif major == 5:
-        result.add_issue('warning', 'package.json',
-                         f'@clerk/nextjs {version} detected. Consider upgrading to the latest major',
-                         fix='bun add @clerk/nextjs@latest')
-    else:
-        result.add_passed(f'@clerk/nextjs version: {version}')
-    return True
-
-
 def next_major(root: Path) -> int | None:
     version = read_package_deps(root).get('next')
     return major_version(version) if version else None
 
-
-def check_clerk_proxy(root: Path, result: ValidationResult) -> None:
-    """middleware.ts is deprecated in Next.js 16; the Clerk handler belongs in proxy.ts."""
-    major = next_major(root)
-    locations = [root, root / 'src']
-    proxy_found = False
-
-    for loc in locations:
-        if (loc / 'proxy.ts').exists():
-            proxy_found = True
-            result.add_passed(f'Found proxy.ts in {loc.relative_to(root) if loc != root else "root"}')
-
-        for name in ('middleware.ts', 'middleware.js'):
-            path = loc / name
-            if not path.exists():
-                continue
-            content = read_text(path) or ''
-            if 'clerk' not in content.lower() and 'authMiddleware' not in content:
-                continue
-            if major is not None and major >= 16:
-                result.add_issue('error', str(path.relative_to(root)),
-                                 f'{name} with Clerk is deprecated in Next.js 16',
-                                 fix='Rename to proxy.ts and export clerkMiddleware()')
-            else:
-                result.add_issue('warning', str(path.relative_to(root)),
-                                 f'{name} with Clerk: move to proxy.ts when upgrading to Next.js 16',
-                                 fix='Rename to proxy.ts on Next.js 16')
-
-    if not proxy_found:
-        result.add_passed('No proxy.ts (add one to protect routes with clerkMiddleware)')
-
-
-def check_clerk_provider(root: Path, result: ValidationResult) -> None:
-    layouts = [root / 'app' / 'layout.tsx', root / 'src' / 'app' / 'layout.tsx']
-    existing = [layout for layout in layouts if layout.exists()]
-
-    for pages_app in (root / 'pages' / '_app.tsx', root / 'src' / 'pages' / '_app.tsx'):
-        content = read_text(pages_app) if pages_app.exists() else None
-        if content and 'ClerkProvider' in content:
-            result.add_issue('error', str(pages_app.relative_to(root)),
-                             'ClerkProvider in _app.tsx is a Pages Router pattern',
-                             fix='Move <ClerkProvider> into app/layout.tsx')
-
-    if not existing:
-        return
-
-    for layout in existing:
-        content = read_text(layout) or ''
-        if 'ClerkProvider' in content:
-            result.add_passed(f'ClerkProvider wraps the app in {layout.relative_to(root)}')
-            return
-
-    result.add_issue('warning', str(existing[0].relative_to(root)),
-                     'ClerkProvider not found in the root layout',
-                     fix='Wrap the app in <ClerkProvider> inside app/layout.tsx')
-
-
-CLERK_DEPRECATED = [
-    ('authMiddleware', 'error', 'authMiddleware() is deprecated', 'Use clerkMiddleware() in proxy.ts'),
-    ('withClerkMiddleware', 'error', 'withClerkMiddleware is deprecated', 'Use clerkMiddleware() in proxy.ts'),
-]
-
-
-CLERK_ENTRY_FILES = ['middleware.ts', 'middleware.js', 'proxy.ts', 'src/middleware.ts', 'src/middleware.js', 'src/proxy.ts']
-
-
-def check_clerk_deprecated_patterns(root: Path, result: ValidationResult) -> None:
-    entry_files = (root / name for name in CLERK_ENTRY_FILES if (root / name).exists())
-    for file_path in dict.fromkeys(chain(entry_files, source_files(root, CLERK_SOURCE_DIRS))):
-        content = read_text(file_path)
-        if content is None or 'clerk' not in content.lower():
-            continue
-        rel_path = str(file_path.relative_to(root))
-
-        for needle, severity, message, fix in CLERK_DEPRECATED:
-            if needle in content:
-                result.add_issue(severity, rel_path, message,
-                                 line=first_line_with(content, needle), fix=fix)
-
-        if re.search(r'import\s*\{[^}]*\bgetAuth\b[^}]*\}\s*from\s*[\'"]@clerk/nextjs/server[\'"]', content):
-            result.add_issue('warning', rel_path,
-                             'getAuth() is the Pages Router helper',
-                             line=first_line_with(content, 'getAuth'),
-                             fix='Use await auth() from @clerk/nextjs/server in the App Router')
-
-        if re.search(r'import\s*\{[^}]*\bcurrentUser\b[^}]*\}\s*from\s*[\'"]@clerk/nextjs[\'"]', content):
-            result.add_issue('warning', rel_path,
-                             'currentUser imported from @clerk/nextjs (server helper)',
-                             line=first_line_with(content, 'currentUser'),
-                             fix='Import currentUser from @clerk/nextjs/server')
-
-
-def env_variable_names(root: Path) -> set[str]:
-    """Names declared in the project's env template files."""
-    names: set[str] = set()
-    for file_name in CLERK_ENV_FILES:
-        path = root / file_name
-        if not path.exists():
-            continue
-        content = read_text(path) or ''
-        for line in content.split('\n'):
-            match = re.match(r'\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=', line)
-            if match:
-                names.add(match.group(1))
-    return names
-
-
-def check_clerk_env(root: Path, result: ValidationResult) -> None:
-    defined = env_variable_names(root)
-    for name in CLERK_REQUIRED_ENV:
-        if name in defined:
-            result.add_passed(f'{name} is declared in an env template')
-        else:
-            result.add_issue('warning', '.env.example',
-                             f'{name} not declared in an env template (fine if the platform injects it)',
-                             fix=f'Add {name}= to .env.example')
-
-
-def validate_clerk(root: Path, result: ValidationResult) -> None:
-    has_nextjs = check_clerk_package_version(root, result)
-    if has_nextjs:
-        check_clerk_proxy(root, result)
-        check_clerk_provider(root, result)
-        check_clerk_env(root, result)
-    check_clerk_deprecated_patterns(root, result)
-
-
-# --------------------------------------------------------------------------- #
-# Next.js
-# --------------------------------------------------------------------------- #
 
 def check_next_version(root: Path, result: ValidationResult) -> bool:
     """Check if Next.js v16+ is installed."""
@@ -1017,10 +849,6 @@ def _detect_bun(root: Path) -> bool:
     )
 
 
-def _detect_clerk(root: Path) -> bool:
-    return any(name.startswith('@clerk/') for name in read_package_deps(root))
-
-
 def _detect_nextjs(root: Path) -> bool:
     return 'next' in read_package_deps(root)
 
@@ -1050,13 +878,6 @@ STACKS: dict[str, Stack] = {
         validate_bun, _detect_bun,
         lambda result: f'Bun Version: {result.meta["bun_version"]}' if result.meta.get('bun_version') else None,
         ('bun_version',),
-    ),
-    'clerk': Stack(
-        'clerk', 'Clerk Validation Report',
-        'Result: All checks passed! Clerk configured correctly.',
-        validate_clerk, _detect_clerk,
-        _version_line('Package Version: @clerk/nextjs@', 'clerk_version'),
-        ('clerk_version',),
     ),
     'nextjs': Stack(
         'nextjs', 'Next.js 16 Validation Report',
@@ -1142,7 +963,7 @@ def result_to_dict(stack: Stack, result: ValidationResult) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description='Validate Biome, Bun, Clerk, Next.js 16 and Tailwind v4 configuration'
+        description='Validate Biome, Bun, Next.js 16 and Tailwind v4 configuration'
     )
     parser.add_argument('--root', '-r', type=str, default='.', help='Project root directory')
     parser.add_argument(
@@ -1170,7 +991,7 @@ def main() -> None:
     else:
         selected = detect_stacks(root)
         if not selected:
-            print('Error: no supported stack detected (Biome, Bun, Clerk, Next.js, Tailwind). '
+            print('Error: no supported stack detected (Biome, Bun, Next.js, Tailwind). '
                   'Pass --stack <name> to validate one explicitly.')
             sys.exit(1)
 

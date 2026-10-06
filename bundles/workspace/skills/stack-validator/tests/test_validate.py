@@ -102,12 +102,26 @@ class BunTests(FixtureCase):
         validate.check_bun_single_lockfile(self.root, result)
         return result
 
-    def test_clean_workspace_accepts_either_root_lockfile(self) -> None:
-        for lockfile in ("bun.lock", "bun.lockb"):
-            with self.subTest(lockfile=lockfile), tempfile.TemporaryDirectory() as directory:
-                self.root = Path(directory)
-                self.build_workspace(lockfile, "workspace:*")
-                self.assertEqual(self.run_structure().issues, [])
+    def test_clean_workspace_with_bun_lock_has_no_issues(self) -> None:
+        self.build_workspace("bun.lock", "workspace:*")
+        result = self.run_structure()
+        self.assertEqual(result.issues, [])
+        self.assertIn("Single bun.lock at root", result.passed)
+
+    def test_lone_legacy_lockfile_warns_with_migration(self) -> None:
+        self.build_workspace("bun.lockb", "workspace:*")
+        result = self.run_structure()
+        self.assertEqual(self.messages(result, "error"), [])
+        warnings = [issue for issue in result.issues if issue.severity == "warning"]
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("bun.lock is the canonical lockfile", warnings[0].message)
+        self.assertIn("--save-text-lockfile", warnings[0].fix)
+
+    def test_missing_lockfile_asks_for_bun_lock(self) -> None:
+        self.build_workspace("bun.lock", "workspace:*")
+        (self.root / "bun.lock").unlink()
+        warnings = self.messages(self.run_structure(), "warning")
+        self.assertEqual(warnings, ["No bun.lock at root (run bun install)"])
 
     def test_hardcoded_local_version_and_stray_lockfile_are_errors(self) -> None:
         self.build_workspace("bun.lock", "1.0.0")
@@ -131,52 +145,6 @@ class BunTests(FixtureCase):
         warnings = self.messages(result, "warning")
         self.assertTrue(any("has dependencies" in m for m in warnings))
         self.assertTrue(any("No dependency catalog" in m for m in warnings))
-
-
-class ClerkTests(FixtureCase):
-    def build_current(self) -> None:
-        write(self.root, "package.json", package(dependencies={"@clerk/nextjs": "^6.0.0", "next": "^16.0.0"}))
-        write(self.root, "proxy.ts", 'import { clerkMiddleware } from "@clerk/nextjs/server";\nexport default clerkMiddleware();\n')
-        write(self.root, "app/layout.tsx", "import { ClerkProvider } from '@clerk/nextjs';\nexport default function L() { return <ClerkProvider />; }\n")
-        write(self.root, ".env.example", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=\nCLERK_SECRET_KEY=\n")
-
-    def test_current_setup_is_clean(self) -> None:
-        self.build_current()
-        self.assertEqual(self.run_stack(validate.validate_clerk).issues, [])
-
-    def test_deprecated_patterns_are_flagged(self) -> None:
-        self.build_current()
-        (self.root / "proxy.ts").unlink()
-        write(self.root, "middleware.ts", 'import { authMiddleware } from "@clerk/nextjs";\nexport default authMiddleware();\n')
-        write(self.root, "pages/_app.tsx", "import { ClerkProvider } from '@clerk/nextjs';\nexport default function A() { return <ClerkProvider />; }\n")
-        result = self.run_stack(validate.validate_clerk)
-        errors = self.messages(result, "error")
-        self.assertTrue(any("middleware.ts with Clerk is deprecated" in m for m in errors))
-        self.assertTrue(any("authMiddleware() is deprecated" in m for m in errors))
-        self.assertTrue(any("_app.tsx is a Pages Router pattern" in m for m in errors))
-
-    def test_old_sdk_is_an_error_and_missing_sdk_is_reported(self) -> None:
-        write(self.root, "package.json", package(dependencies={"@clerk/nextjs": "^4.0.0"}))
-        self.assertTrue(any("4.x" in m for m in self.messages(self.run_stack(validate.validate_clerk), "error")))
-        write(self.root, "package.json", package(dependencies={"react": "^19.0.0"}))
-        self.assertTrue(any("No @clerk/*" in m for m in self.messages(self.run_stack(validate.validate_clerk), "error")))
-
-    def test_env_check_reads_only_template_files(self) -> None:
-        write(self.root, ".env.local", "CLERK_SECRET_KEY=FIXTURE_VALUE_NOT_READ\n")
-        write(self.root, ".env", "CLERK_SECRET_KEY=FIXTURE_VALUE_NOT_READ\n")
-        write(self.root, ".env.example", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=\n")
-        opened: list[str] = []
-        original = validate.read_text
-
-        def recording_read_text(path, *args, **kwargs):
-            opened.append(Path(path).name)
-            return original(path, *args, **kwargs)
-
-        validate.read_text = recording_read_text
-        self.addCleanup(setattr, validate, "read_text", original)
-        self.assertEqual(validate.env_variable_names(self.root), {"NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"})
-        self.assertNotIn(".env.local", opened)
-        self.assertNotIn(".env", opened)
 
 
 class NextjsTests(FixtureCase):
@@ -233,6 +201,17 @@ class CliTests(FixtureCase):
         write(self.root, "package.json", package(dependencies={"next": "^16.0.0", "tailwindcss": "^4.0.0"}))
         write(self.root, "biome.json", "{}")
         self.assertEqual(validate.detect_stacks(self.root), ["biome", "nextjs", "tailwind"])
+
+    def test_only_current_stacks_are_offered(self) -> None:
+        self.assertEqual(set(validate.STACKS), {"biome", "bun", "nextjs", "tailwind"})
+        self.assertNotEqual(self.cli("--stack", "legacy-auth").returncode, 0)
+
+    def test_bun_is_detected_from_either_lockfile(self) -> None:
+        write(self.root, "bun.lock", "")
+        self.assertEqual(validate.detect_stacks(self.root), ["bun"])
+        (self.root / "bun.lock").unlink()
+        write(self.root, "bun.lockb", "")
+        self.assertEqual(validate.detect_stacks(self.root), ["bun"])
 
     def test_no_detectable_stack_asks_for_one(self) -> None:
         write(self.root, "package.json", package())

@@ -29,18 +29,24 @@ Is this correct? Any adjustments?
 
 ## Phase 2: Auth Setup (If Requested)
 
-Generate Clerk authentication for mobile:
+Generate Better Auth authentication for mobile (Expo client plugin, email + password):
 
 **Files:**
 
-- `providers/clerk-provider.tsx` - ClerkProvider wrapper
-- `app/(auth)/sign-in.tsx` - Sign in screen
-- `app/(auth)/sign-up.tsx` - Sign up screen
-- `lib/auth.ts` - Auth utilities
+- `lib/auth-client.ts` - `createAuthClient` with `expoClient` (scheme, SecureStore storage)
+- `app/(auth)/sign-in.tsx` - Sign in screen (`authClient.signIn.email`)
+- `app/(auth)/sign-up.tsx` - Sign up screen (`authClient.signUp.email`)
+
+**Packages:** `better-auth`, `@better-auth/expo`, `expo-secure-store`, `expo-network`,
+`expo-web-browser` (`expo-linking` and `expo-constants` are already part of the base app).
 
 **Environment:**
 
-- `.env` with `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `.env` with `EXPO_PUBLIC_API_URL` (Better Auth runs inside the API at `/api/auth`)
+
+**API side:** add the `expo()` plugin from `@better-auth/expo` and the app scheme (for example
+`my-app://`) to `trustedOrigins` in the API's Better Auth config. In development, Expo Go uses
+the `exp://` scheme, which can be trusted only when `NODE_ENV` is `development`.
 
 ## Phase 3: Screen Generation
 
@@ -96,20 +102,29 @@ components/
 ```typescript
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { ClerkProvider } from "@/providers/clerk-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { authClient } from "@/lib/auth-client";
 
 export default function RootLayout() {
+  // Better Auth needs no provider; the Expo client plugin caches the session in SecureStore
+  const { data: session, isPending } = authClient.useSession();
+
+  if (isPending) {
+    return null;
+  }
+
   return (
-    <ClerkProvider>
-      <QueryProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        </Stack>
-        <StatusBar style="auto" />
-      </QueryProvider>
-    </ClerkProvider>
+    <QueryProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Protected guard={!!session}>
+          <Stack.Screen name="(tabs)" />
+        </Stack.Protected>
+        <Stack.Protected guard={!session}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+      </Stack>
+      <StatusBar style="auto" />
+    </QueryProvider>
   );
 }
 ```
@@ -206,26 +221,23 @@ const styles = StyleSheet.create({
 ### API Client Pattern
 
 ```typescript
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3001";
+import { authClient } from "@/lib/auth-client";
 
-async function getAuthToken(): Promise<string | null> {
-  // Get token from Clerk
-  const clerk = (global as any).Clerk;
-  if (!clerk?.session) return null;
-  return clerk.session.getToken();
-}
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3001";
 
 async function request<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const token = await getAuthToken();
+  // Better Auth keeps the session cookie in SecureStore; send it explicitly on native
+  const cookie = await authClient.getCookie();
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
+    credentials: "omit", // "include" would override the Cookie header
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(cookie ? { Cookie: cookie } : {}),
       ...options.headers,
     },
   });

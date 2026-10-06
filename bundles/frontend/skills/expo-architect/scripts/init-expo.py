@@ -4,7 +4,7 @@ Scaffold a production-ready Expo React Native app.
 
 This script creates a complete Expo mobile app with:
 - Expo Router for file-based navigation
-- Optional Clerk authentication
+- Optional Better Auth authentication (Expo client, tokens in SecureStore)
 - TypeScript with strict mode
 - Biome linting
 - Working screens and components
@@ -22,6 +22,35 @@ import sys
 from pathlib import Path
 from textwrap import dedent
 from dataclasses import dataclass
+
+
+# Pins follow Expo SDK 57 (bundledNativeModules.json of expo 57.0.26) so `expo install --check`
+# stays clean. Looked up with `npm view <pkg> version` on 2026-10-06.
+SDK_PINS = {
+    "expo": "57.0.26",
+    "expo-router": "57.0.24",
+    "expo-status-bar": "57.0.1",
+    "expo-constants": "57.0.20",
+    "expo-linking": "57.0.11",
+    "expo-secure-store": "57.0.4",
+    "expo-network": "57.0.2",
+    "expo-web-browser": "57.0.3",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "5.7.0",
+    "react-native-screens": "4.26.2",
+    "react-native-svg": "15.15.4",
+}
+
+# Not part of the Expo SDK bundle; newest stable releases.
+EXTRA_PINS = {
+    "lucide-react-native": "1.52.0",
+    "better-auth": "1.7.7",
+    "@better-auth/expo": "1.7.7",
+    "@types/react": "19.2.18",
+    "typescript": "6.0.3",
+    "@biomejs/biome": "2.5.15",
+}
 
 
 @dataclass
@@ -49,25 +78,34 @@ class ScreenConfig:
 # PACKAGE.JSON AND CONFIG TEMPLATES
 # =============================================================================
 
+def slugify(name: str) -> str:
+    return name.lower().replace(" ", "-")
+
+
 def create_package_json(name: str, with_auth: bool) -> str:
-    slug = name.lower().replace(" ", "-")
+    slug = slugify(name)
     deps = {
-        "expo": "~54.0.0",
-        "expo-router": "~6.0.0",
-        "expo-status-bar": "~3.0.0",
-        "expo-constants": "~18.0.0",
-        "expo-linking": "~7.0.0",
-        "react": "19.0.0",
-        "react-native": "0.83.0",
-        "react-native-safe-area-context": "~5.4.0",
-        "react-native-screens": "~4.10.0",
-        "lucide-react-native": "~0.470.0",
-        "react-native-svg": "~15.9.0",
+        **{key: SDK_PINS[key] for key in (
+            "expo",
+            "expo-router",
+            "expo-status-bar",
+            "expo-constants",
+            "expo-linking",
+            "react",
+            "react-native",
+            "react-native-safe-area-context",
+            "react-native-screens",
+            "react-native-svg",
+        )},
+        "lucide-react-native": EXTRA_PINS["lucide-react-native"],
     }
 
     if with_auth:
-        deps["@clerk/clerk-expo"] = "~4.0.0"
-        deps["expo-secure-store"] = "~15.0.0"
+        # expo-network and expo-web-browser are peers of @better-auth/expo
+        for key in ("expo-secure-store", "expo-network", "expo-web-browser"):
+            deps[key] = SDK_PINS[key]
+        deps["better-auth"] = EXTRA_PINS["better-auth"]
+        deps["@better-auth/expo"] = EXTRA_PINS["@better-auth/expo"]
 
     return json.dumps({
         "name": slug,
@@ -84,9 +122,9 @@ def create_package_json(name: str, with_auth: bool) -> str:
         },
         "dependencies": deps,
         "devDependencies": {
-            "@types/react": "~19.0.0",
-            "typescript": "~5.9.0",
-            "@biomejs/biome": "~2.3.0"
+            "@types/react": EXTRA_PINS["@types/react"],
+            "typescript": EXTRA_PINS["typescript"],
+            "@biomejs/biome": EXTRA_PINS["@biomejs/biome"]
         }
     }, indent=2)
 
@@ -119,13 +157,8 @@ def create_tsconfig() -> str:
         "extends": "expo/tsconfig.base",
         "compilerOptions": {
             "strict": True,
-            "baseUrl": ".",
             "paths": {
-                "@/*": ["./*"],
-                "@/components/*": ["components/*"],
-                "@/lib/*": ["lib/*"],
-                "@/providers/*": ["providers/*"],
-                "@/types/*": ["types/*"]
+                "@/*": ["./*"]
             }
         },
         "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
@@ -134,14 +167,15 @@ def create_tsconfig() -> str:
 
 def create_biome_config() -> str:
     return json.dumps({
-        "$schema": "https://biomejs.dev/schemas/2.3.0/schema.json",
+        "$schema": f"https://biomejs.dev/schemas/{EXTRA_PINS['@biomejs/biome']}/schema.json",
         "assist": {
             "actions": {
                 "source": {"organizeImports": "on"}
             }
         },
         "files": {
-            "ignore": ["node_modules", ".expo", "dist"]
+            "ignoreUnknown": True,
+            "includes": ["**", "!**/node_modules", "!**/.expo", "!**/dist", "!**/expo-env.d.ts", "!**/bun.lock"]
         },
         "formatter": {
             "enabled": True,
@@ -152,7 +186,7 @@ def create_biome_config() -> str:
         "linter": {
             "enabled": True,
             "rules": {
-                "recommended": True
+                "preset": "recommended"
             }
         },
         "javascript": {
@@ -168,7 +202,10 @@ def create_biome_config() -> str:
 def create_env_example(with_auth: bool) -> str:
     content = "# API\nEXPO_PUBLIC_API_URL=http://localhost:3001\n"
     if with_auth:
-        content += "\n# Clerk Authentication\nEXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxx\n"
+        content += (
+            "\n# Better Auth runs inside the API (default base path /api/auth).\n"
+            "# The API needs the @better-auth/expo plugin and this app's scheme in trustedOrigins.\n"
+        )
     return content
 
 
@@ -206,7 +243,7 @@ def create_gitignore() -> str:
 
 
 # =============================================================================
-# ROOT LAYOUT AND PROVIDERS
+# ROOT LAYOUT
 # =============================================================================
 
 def create_root_layout(with_auth: bool) -> str:
@@ -214,17 +251,28 @@ def create_root_layout(with_auth: bool) -> str:
         return dedent("""\
             import { Stack } from "expo-router";
             import { StatusBar } from "expo-status-bar";
-            import { ClerkProvider } from "@/providers/clerk-provider";
+            import { authClient } from "@/lib/auth-client";
 
             export default function RootLayout() {
+              const { data: session, isPending } = authClient.useSession();
+
+              // Wait for the cached session so signed-in users do not flash the sign-in screen
+              if (isPending) {
+                return null;
+              }
+
               return (
-                <ClerkProvider>
-                  <Stack>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <>
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Protected guard={!!session}>
+                      <Stack.Screen name="(tabs)" />
+                    </Stack.Protected>
+                    <Stack.Protected guard={!session}>
+                      <Stack.Screen name="(auth)" />
+                    </Stack.Protected>
                   </Stack>
                   <StatusBar style="auto" />
-                </ClerkProvider>
+                </>
               );
             }
         """)
@@ -246,42 +294,24 @@ def create_root_layout(with_auth: bool) -> str:
         """)
 
 
-def create_clerk_provider() -> str:
-    return dedent("""\
-        import { ClerkProvider as BaseClerkProvider } from "@clerk/clerk-expo";
+def create_auth_client(slug: str) -> str:
+    return dedent(f"""\
+        import {{ expoClient }} from "@better-auth/expo/client";
+        import {{ createAuthClient }} from "better-auth/react";
         import * as SecureStore from "expo-secure-store";
-        import { ReactNode } from "react";
 
-        const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
-
-        const tokenCache = {
-          async getToken(key: string) {
-            try {
-              return SecureStore.getItemAsync(key);
-            } catch {
-              return null;
-            }
-          },
-          async saveToken(key: string, value: string) {
-            try {
-              return SecureStore.setItemAsync(key, value);
-            } catch {
-              return;
-            }
-          },
-        };
-
-        interface Props {
-          children: ReactNode;
-        }
-
-        export function ClerkProvider({ children }: Props) {
-          return (
-            <BaseClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-              {children}
-            </BaseClerkProvider>
-          );
-        }
+        // Better Auth runs inside the API (default base path /api/auth). The session cookie is
+        // kept in SecureStore by the Expo client plugin, so there is no provider to mount.
+        export const authClient = createAuthClient({{
+          baseURL: process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3001",
+          plugins: [
+            expoClient({{
+              scheme: "{slug}",
+              storagePrefix: "{slug}",
+              storage: SecureStore,
+            }}),
+          ],
+        }});
     """)
 
 
@@ -391,33 +421,20 @@ def create_sign_in_screen() -> str:
     return dedent("""\
         import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
         import { useState } from "react";
-        import { useSignIn } from "@clerk/clerk-expo";
         import { useRouter } from "expo-router";
         import { SafeContainer } from "@/components/layout/SafeContainer";
+        import { authClient } from "@/lib/auth-client";
 
         export default function SignInScreen() {
-          const { signIn, setActive, isLoaded } = useSignIn();
           const router = useRouter();
           const [email, setEmail] = useState("");
           const [password, setPassword] = useState("");
           const [error, setError] = useState("");
 
+          // A successful sign-in updates the session, and the root layout swaps to the tabs.
           const handleSignIn = async () => {
-            if (!isLoaded) return;
-
-            try {
-              const result = await signIn.create({
-                identifier: email,
-                password,
-              });
-
-              if (result.status === "complete") {
-                await setActive({ session: result.createdSessionId });
-                router.replace("/(tabs)");
-              }
-            } catch (err: any) {
-              setError(err.errors?.[0]?.message || "Sign in failed");
-            }
+            const { error: signInError } = await authClient.signIn.email({ email, password });
+            setError(signInError?.message ?? "");
           };
 
           return (
@@ -425,7 +442,7 @@ def create_sign_in_screen() -> str:
               <View style={styles.container}>
                 <Text style={styles.title}>Welcome Back</Text>
 
-                {error && <Text style={styles.error}>{error}</Text>}
+                {error ? <Text style={styles.error}>{error}</Text> : null}
 
                 <TextInput
                   style={styles.input}
@@ -509,33 +526,21 @@ def create_sign_up_screen() -> str:
     return dedent("""\
         import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
         import { useState } from "react";
-        import { useSignUp } from "@clerk/clerk-expo";
         import { useRouter } from "expo-router";
         import { SafeContainer } from "@/components/layout/SafeContainer";
+        import { authClient } from "@/lib/auth-client";
 
         export default function SignUpScreen() {
-          const { signUp, setActive, isLoaded } = useSignUp();
           const router = useRouter();
+          const [name, setName] = useState("");
           const [email, setEmail] = useState("");
           const [password, setPassword] = useState("");
           const [error, setError] = useState("");
 
+          // A successful sign-up opens a session, and the root layout swaps to the tabs.
           const handleSignUp = async () => {
-            if (!isLoaded) return;
-
-            try {
-              const result = await signUp.create({
-                emailAddress: email,
-                password,
-              });
-
-              if (result.status === "complete") {
-                await setActive({ session: result.createdSessionId });
-                router.replace("/(tabs)");
-              }
-            } catch (err: any) {
-              setError(err.errors?.[0]?.message || "Sign up failed");
-            }
+            const { error: signUpError } = await authClient.signUp.email({ name, email, password });
+            setError(signUpError?.message ?? "");
           };
 
           return (
@@ -543,7 +548,15 @@ def create_sign_up_screen() -> str:
               <View style={styles.container}>
                 <Text style={styles.title}>Create Account</Text>
 
-                {error && <Text style={styles.error}>{error}</Text>}
+                {error ? <Text style={styles.error}>{error}</Text> : null}
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Name"
+                  placeholderTextColor="#9ca3af"
+                  value={name}
+                  onChangeText={setName}
+                />
 
                 <TextInput
                   style={styles.input}
@@ -768,64 +781,85 @@ def create_card_component() -> str:
 # LIB FILES
 # =============================================================================
 
-def create_api_client() -> str:
-    return dedent("""\
-        const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3001";
+API_CLIENT_BODY = """\
+export const api = {
+  get: <T>(endpoint: string) => request<T>(endpoint),
+  post: <T>(endpoint: string, data: unknown) =>
+    request<T>(endpoint, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  patch: <T>(endpoint: string, data: unknown) =>
+    request<T>(endpoint, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  delete: <T>(endpoint: string) => request<T>(endpoint, { method: "DELETE" }),
+};
+"""
 
-        async function getAuthToken(): Promise<string | null> {
-          const clerk = (global as any).Clerk;
-          if (!clerk?.session) return null;
-          return clerk.session.getToken();
-        }
 
-        async function request<T>(
-          endpoint: string,
-          options: RequestInit = {}
-        ): Promise<T> {
-          const token = await getAuthToken();
+def create_api_client(with_auth: bool) -> str:
+    if with_auth:
+        head = dedent("""\
+            import { authClient } from "@/lib/auth-client";
 
-          const response = await fetch(`${API_URL}${endpoint}`, {
-            ...options,
-            headers: {
-              "Content-Type": "application/json",
-              ...(token ? { Authorization: `Bearer ${token}` } : {}),
-              ...options.headers,
-            },
-          });
+            const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3001";
 
-          if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
-          }
+            async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+              // Better Auth keeps the session cookie in SecureStore; send it explicitly on native
+              const cookie = await authClient.getCookie();
 
-          return response.json();
-        }
+              const response = await fetch(`${API_URL}${endpoint}`, {
+                ...options,
+                // "include" would override the Cookie header set below
+                credentials: "omit",
+                headers: {
+                  "Content-Type": "application/json",
+                  ...(cookie ? { Cookie: cookie } : {}),
+                  ...options.headers,
+                },
+              });
 
-        export const api = {
-          get: <T>(endpoint: string) => request<T>(endpoint),
-          post: <T>(endpoint: string, data: unknown) =>
-            request<T>(endpoint, {
-              method: "POST",
-              body: JSON.stringify(data),
-            }),
-          patch: <T>(endpoint: string, data: unknown) =>
-            request<T>(endpoint, {
-              method: "PATCH",
-              body: JSON.stringify(data),
-            }),
-          delete: <T>(endpoint: string) =>
-            request<T>(endpoint, { method: "DELETE" }),
-        };
-    """)
+              if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+              }
+
+              return response.json();
+            }
+        """)
+    else:
+        head = dedent("""\
+            const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3001";
+
+            async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+              const response = await fetch(`${API_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                  "Content-Type": "application/json",
+                  ...options.headers,
+                },
+              });
+
+              if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+              }
+
+              return response.json();
+            }
+        """)
+    return f"{head}\n{API_CLIENT_BODY}"
 
 
 def create_types_index() -> str:
     return dedent("""\
         // Add your TypeScript types here
 
+        // Mirrors the Better Auth user returned by authClient.useSession()
         export interface User {
-          _id: string;
+          id: string;
           email: string;
-          name?: string;
+          name: string;
           createdAt: string;
           updatedAt: string;
         }
@@ -883,7 +917,6 @@ def scaffold_expo_app(
     if with_auth:
         dirs.extend([
             root / "app" / "(auth)",
-            root / "providers",
         ])
 
     for d in dirs:
@@ -911,7 +944,7 @@ def scaffold_expo_app(
         root / "components" / "ui" / "Card.tsx": create_card_component(),
 
         # Lib
-        root / "lib" / "api.ts": create_api_client(),
+        root / "lib" / "api.ts": create_api_client(with_auth),
 
         # Types
         root / "types" / "index.ts": create_types_index(),
@@ -923,7 +956,7 @@ def scaffold_expo_app(
 
     # Auth files
     if with_auth:
-        files[root / "providers" / "clerk-provider.tsx"] = create_clerk_provider()
+        files[root / "lib" / "auth-client.ts"] = create_auth_client(slugify(name))
         files[root / "app" / "(auth)" / "_layout.tsx"] = create_auth_layout()
         files[root / "app" / "(auth)" / "sign-in.tsx"] = create_sign_in_screen()
         files[root / "app" / "(auth)" / "sign-up.tsx"] = create_sign_up_screen()
@@ -936,10 +969,12 @@ def scaffold_expo_app(
     print(f"\n✅ Expo app created at: {root}")
     print(f"\nNext steps:")
     print(f"1. cd {root}")
-    print(f"2. bun install")
+    print(f"2. bun install && bun run lint:fix  (formats the generated files once)")
     if with_auth:
-        print(f"3. Copy .env.example to .env and add your Clerk key")
-        print(f"4. bun start")
+        print(f"3. Copy .env.example to .env and point EXPO_PUBLIC_API_URL at your API")
+        print(f"4. Add the @better-auth/expo plugin and the '{slugify(name)}://' scheme to the API's")
+        print(f"   Better Auth config (plugins + trustedOrigins)")
+        print(f"5. bun start")
     else:
         print(f"3. bun start")
 
@@ -969,7 +1004,7 @@ def main() -> None:
     parser.add_argument(
         "--auth",
         action="store_true",
-        help="Include Clerk authentication",
+        help="Include Better Auth authentication (Expo client)",
     )
     parser.add_argument(
         "--allow-outside",

@@ -387,7 +387,7 @@
       "name": "expo-architect",
       "source": "./skills/expo-architect",
       "version": "2.2.2",
-      "description": "Scaffolds a runnable Expo React Native app with screens, Expo Router navigation, and optional Clerk auth. Use when starting a new Expo or mobile app."
+      "description": "Scaffolds a runnable Expo React Native app with screens, Expo Router navigation, and optional Better Auth. Use when starting a new Expo or mobile app."
     },
     {
       "name": "feature-intake",
@@ -603,7 +603,7 @@
       "name": "nestjs-expert",
       "source": "./skills/nestjs-expert",
       "version": "2.2.2",
-      "description": "Guides NestJS 11 APIs with Prisma and Postgres — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues."
+      "description": "Guides NestJS 12 APIs with Prisma and Postgres — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues."
     },
     {
       "name": "nestjs-queue-architect",
@@ -951,7 +951,7 @@
       "name": "stack-validator",
       "source": "./skills/stack-validator",
       "version": "2.2.2",
-      "description": "Validates Biome 2.3+, Bun workspace, Clerk, Next.js 16 and Tailwind v4 config and flags deprecated patterns. Use before stack work or when AI-generated config may be outdated."
+      "description": "Validates Biome 2.3+, Bun workspace, Next.js 16 and Tailwind v4 config and flags deprecated patterns. Use before stack work or when AI-generated config may be outdated."
     },
     {
       "name": "standup",
