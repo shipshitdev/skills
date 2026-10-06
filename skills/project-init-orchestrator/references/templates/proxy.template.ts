@@ -1,31 +1,31 @@
 /**
- * Next.js proxy.ts Template for Clerk Auth (Next.js 16)
+ * Next.js proxy.ts Template for Better Auth (Next.js 16)
  *
  * Place this at: frontend/apps/dashboard/proxy.ts
+ *
+ * Next.js 16 renamed middleware.ts to proxy.ts. The check is optimistic: it only looks for
+ * the Better Auth session cookie. The API's AuthGuard is what actually enforces access.
  */
 
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { getSessionCookie } from "better-auth/cookies";
+import { type NextRequest, NextResponse } from "next/server";
 
-// Define public routes that don't require authentication
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/api/public(.*)",
-]);
+// Routes that do not require a session
+const PUBLIC_PATHS = ["/", "/sign-in", "/sign-up"];
 
-export default clerkMiddleware(async (auth, request) => {
-  // Protect all routes except public ones
-  if (!isPublicRoute(request)) {
-    await auth.protect();
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (PUBLIC_PATHS.includes(pathname) || getSessionCookie(request)) {
+    return NextResponse.next();
   }
-});
+
+  const signIn = new URL("/sign-in", request.url);
+  signIn.searchParams.set("next", pathname);
+  return NextResponse.redirect(signIn);
+}
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and static files
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
-  ],
+  // Skip Next.js internals, API routes and files with an extension
+  matcher: ["/((?!_next|api|.*\\..*).*)"],
 };

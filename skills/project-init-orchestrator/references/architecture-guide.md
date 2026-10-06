@@ -23,19 +23,21 @@ workspace/
 Each feature is a "collection" with consistent structure:
 
 ```
-collections/users/
-├── users.module.ts           # NestJS module
+collections/projects/
+├── projects.module.ts           # NestJS module
 ├── controllers/
-│   └── users.controller.ts   # HTTP endpoints
+│   └── projects.controller.ts   # HTTP endpoints
 ├── services/
-│   └── users.service.ts      # Business logic
+│   └── projects.service.ts      # Business logic
 ├── dto/
-│   ├── create-user.dto.ts
-│   └── update-user.dto.ts
-└── users.http                # REST Client tests
+│   ├── create-project.dto.ts
+│   └── update-project.dto.ts
+└── projects.http                # REST Client tests
 
 # Models live in the multi-file Prisma schema folder, one file per model:
-prisma/schema/users.prisma
+prisma/schema/projects.prisma
+# auth.prisma holds the Better Auth models (User, Session, Account, Verification);
+# do not reuse those model names for collections
 ```
 
 ### Database Patterns
@@ -53,7 +55,7 @@ isDeleted Boolean @default(false)
 ```typescript
 // Always filter by organization
 async findAll(organizationId: string) {
-  return this.prisma.user.findMany({
+  return this.prisma.project.findMany({
     where: { organizationId, isDeleted: false },
   });
 }
@@ -66,7 +68,7 @@ async findAll(organizationId: string) {
 - Every index change ships as a migration (`bun run prisma:migrate`)
 
 ```prisma
-model User {
+model Project {
   id             String  @id @default(cuid())
   organizationId String
   isDeleted      Boolean @default(false)
@@ -84,25 +86,30 @@ model User {
 ```
 frontend/
 ├── apps/
-│   ├── dashboard/        # Main app
-│   ├── admin/            # Admin app
+│   ├── dashboard/        # Main app: own package.json, next.config.ts, tsconfig, proxy.ts
+│   ├── admin/            # Admin app (python3 scripts/add-frontend-app.py)
 │   └── settings/         # Settings app
-└── packages/
+└── packages/             # Workspace package shared by every app
     ├── components/       # Reusable UI
     ├── services/         # API clients
     ├── hooks/            # Custom hooks
-    ├── interfaces/       # TypeScript types
-    └── props/            # Component props
+    └── interfaces/       # TypeScript types
 ```
+
+Every app is its own Bun workspace (`frontend/apps/*`), so `next dev` and `next build` run
+inside the app folder. Styling is Tailwind v4 CSS-first: `app/globals.css` starts with
+`@import "tailwindcss"` and an `@theme` block, PostCSS uses `@tailwindcss/postcss`, and
+there is no `tailwind.config.*`.
 
 ### Path Aliases
 
 ```typescript
-import { Button } from "@components/ui/Button";
-import { UserService } from "@services/user";
-import { useUser } from "@hooks/useUser";
-import type { IUser } from "@interfaces/user";
+import { TaskList } from "@components/tasks/task-list";
+import { TaskService } from "@services/task.service";
+import type { Task } from "@interfaces/task.interface";
 ```
+
+The aliases map to `frontend/packages/*` in each app's `tsconfig.json` and `vitest.config.mts`.
 
 ### Async Operations
 
@@ -204,12 +211,15 @@ Mobile  →
 
 ## Authentication
 
-- Use Clerk (or similar) for auth
-- JWT tokens in Authorization header
-- Guards validate tokens on protected routes
+- Better Auth runs inside the API at `/api/auth/*` (email + password; sessions and users in
+  Postgres through the Prisma adapter)
+- The session lives in an HTTP-only cookie; browsers call the API with `credentials: "include"`
+- `AuthGuard` resolves the session with `auth.api.getSession` and attaches the user
+- The dashboard's `proxy.ts` (Next.js 16's replacement for `middleware.ts`) redirects visitors
+  without a session cookie to `/sign-in`; that check is optimistic, the guard enforces access
 
 ```typescript
-@UseGuards(ClerkAuthGuard)
+@UseGuards(AuthGuard)
 @Controller("protected")
 export class ProtectedController {}
 ```
@@ -230,7 +240,7 @@ Each project has its own `.env`:
 
 ```
 api/.env
-frontend/.env
+frontend/apps/dashboard/.env.local
 mobile/.env
 ```
 

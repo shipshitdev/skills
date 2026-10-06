@@ -33,7 +33,7 @@ from pathlib import Path
 # ============================================================================
 
 BIOME_CONFIG = {
-    "$schema": "https://biomejs.dev/schemas/2.3.12/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
     "assist": {
         "actions": {
             "source": {
@@ -44,7 +44,7 @@ BIOME_CONFIG = {
     "linter": {
         "enabled": True,
         "rules": {
-            "recommended": True,
+            "preset": "recommended",
             "complexity": {
                 "noForEach": "off"
             },
@@ -71,17 +71,19 @@ BIOME_CONFIG = {
         }
     },
     "files": {
-        "ignore": [
-            "node_modules",
-            "dist",
-            "build",
-            ".next",
-            "out",
-            ".cache",
-            ".turbo",
-            "coverage",
-            "*.min.js",
-            "*.min.css"
+        # Biome 2 replaced files.ignore with files.includes plus "!" exclusions
+        "includes": [
+            "**",
+            "!**/node_modules",
+            "!**/dist",
+            "!**/build",
+            "!**/.next",
+            "!**/out",
+            "!**/.cache",
+            "!**/.turbo",
+            "!**/coverage",
+            "!**/*.min.js",
+            "!**/*.min.css"
         ]
     }
 }

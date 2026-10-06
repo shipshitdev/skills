@@ -1,46 +1,38 @@
 /**
- * Clerk Auth Guard Template
+ * Better Auth Session Guard Template
  *
- * Place this at: api/apps/api/src/auth/guards/clerk-auth.guard.ts
+ * Place this at: api/apps/api/src/auth/guards/auth.guard.ts
+ *
+ * Requires AuthService (auth-service.template.ts) from a global AuthModule, so feature
+ * modules can use @UseGuards(AuthGuard) without importing it.
  */
 
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
-} from "@nestjs/common";
-import { Clerk } from "@clerk/clerk-sdk-node";
+import type { IncomingHttpHeaders } from "node:http";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { fromNodeHeaders } from "better-auth/node";
+import { AuthService } from "../auth.service";
+import type { CurrentUserPayload } from "../decorators/current-user.decorator";
+
+interface AuthenticatedRequest {
+  headers: IncomingHttpHeaders;
+  user?: CurrentUserPayload;
+}
 
 @Injectable()
-export class ClerkAuthGuard implements CanActivate {
-  private clerk: Clerk;
-
-  constructor() {
-    this.clerk = new Clerk({
-      secretKey: process.env.CLERK_SECRET_KEY || "",
-    });
-  }
+export class AuthGuard implements CanActivate {
+  constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const session = await this.authService.auth.api.getSession({
+      headers: fromNodeHeaders(request.headers),
+    });
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new UnauthorizedException("No authorization token provided");
+    if (!session) {
+      throw new UnauthorizedException("Not signed in");
     }
 
-    const token = authHeader.replace("Bearer ", "");
-
-    try {
-      const session = await this.clerk.verifyToken(token);
-      request.user = {
-        userId: session.sub,
-        sessionId: session.sid,
-      };
-      return true;
-    } catch (error) {
-      throw new UnauthorizedException("Invalid or expired token");
-    }
+    request.user = { userId: session.user.id, sessionId: session.session.id };
+    return true;
   }
 }

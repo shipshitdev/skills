@@ -1,13 +1,17 @@
 /**
  * Vitest Configuration Template for Frontend (React/Next.js)
  *
- * Copy this to your frontend project and adjust paths as needed.
- * This configuration enforces 80% coverage thresholds.
+ * Copy this to your frontend project (rename to vitest.config.mts to avoid Vite's CommonJS
+ * config warning) and adjust paths as needed. This configuration enforces 80% coverage
+ * thresholds. Requires: bun add -D vitest @vitest/coverage-v8 vite @vitejs/plugin-react
+ * jsdom @testing-library/react @testing-library/dom @testing-library/jest-dom
  */
 
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import { fileURLToPath } from "node:url";
+
+const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
@@ -75,11 +79,11 @@ export default defineConfig({
 
     // Path aliases (match tsconfig/next.config)
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@components": path.resolve(__dirname, "./components"),
-      "@hooks": path.resolve(__dirname, "./hooks"),
-      "@lib": path.resolve(__dirname, "./lib"),
-      "@services": path.resolve(__dirname, "./services"),
+      "@": here("./src"),
+      "@components": here("./components"),
+      "@hooks": here("./hooks"),
+      "@lib": here("./lib"),
+      "@services": here("./services"),
     },
   },
 });

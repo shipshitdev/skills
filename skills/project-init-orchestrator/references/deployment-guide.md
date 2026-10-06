@@ -18,31 +18,47 @@ Deployment patterns for the full-stack workspace.
 
 ### Docker
 
-The API includes a Dockerfile:
+The API includes a Dockerfile. Build it from the workspace root so Bun can read the
+workspace lockfile (commit `bun.lock` first):
+
+```bash
+docker build -f api/Dockerfile -t api .
+```
 
 ```dockerfile
 FROM oven/bun:1 AS base
 WORKDIR /app
 
-# Install dependencies
+# Install only the API workspace's dependencies
 FROM base AS deps
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+COPY package.json bun.lock ./
+COPY api/package.json api/package.json
+COPY frontend/apps/dashboard/package.json frontend/apps/dashboard/package.json
+COPY frontend/packages/package.json frontend/packages/package.json
+COPY mobile/package.json mobile/package.json
+COPY packages/package.json packages/package.json
+RUN bun install --frozen-lockfile --filter "@myorg/api"
 
-# Build
+# Build. prisma generate needs no DATABASE_URL, so no .env is required here.
 FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY --from=deps /app/ ./
+COPY api ./api
+WORKDIR /app/api
 RUN bun run build
 
 # Production
-FROM base AS runner
+FROM node:24-slim AS runner
 ENV NODE_ENV=production
-COPY --from=builder /app/dist ./dist
+WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/api ./api
+WORKDIR /app/api
 EXPOSE 3001
-CMD ["bun", "run", "start:prod"]
+CMD ["node", "dist/main.js"]
 ```
+
+Replace `@myorg` with your `--org`. The runtime needs Node 22.12+ (the NestJS 12 and
+Better Auth packages are ESM and load through `require(esm)`).
 
 ### Environment Variables
 
@@ -53,27 +69,31 @@ PORT=3001
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE
 REDIS_URL=redis://...
 
-# Auth (Clerk)
-CLERK_SECRET_KEY=sk_...
+# Auth (Better Auth runs inside the API at /api/auth)
+BETTER_AUTH_SECRET=...        # openssl rand -base64 32
+BETTER_AUTH_URL=https://api.yourdomain.com
+FRONTEND_URL=https://yourdomain.com
 
 # Optional
 SENTRY_DSN=https://...
 ```
 
+Run `bun run prisma:deploy` (`prisma migrate deploy`) against the production database
+before the new API version takes traffic.
+
 ### Railway
 
 1. Connect GitHub repo
-2. Set root directory to `api/`
+2. Keep the root directory at the repo root and set the Dockerfile path to `api/Dockerfile`
 3. Add environment variables
 4. Deploy
 
 ### Render
 
-1. Create new Web Service
+1. Create new Web Service (Docker runtime)
 2. Connect GitHub repo
-3. Set root directory to `api/`
-4. Build command: `bun install && bun run build`
-5. Start command: `bun run start:prod`
+3. Keep the root directory at the repo root and set the Dockerfile path to `api/Dockerfile`
+4. Add environment variables
 
 ---
 
@@ -82,7 +102,8 @@ SENTRY_DSN=https://...
 ### Vercel
 
 1. Import project from GitHub
-2. Set root directory to `frontend/`
+2. Set root directory to `frontend/apps/dashboard` and allow source files outside the root
+   directory (the app imports `frontend/packages`)
 3. Framework: Next.js (auto-detected)
 4. Add environment variables
 5. Deploy
@@ -91,20 +112,18 @@ SENTRY_DSN=https://...
 
 ```bash
 NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
 ```
+
+The Better Auth session cookie is set by the API, so serve the dashboard and the API from
+the same parent domain (for example `yourdomain.com` and `api.yourdomain.com`) and enable
+`advanced.crossSubDomainCookies` in the Better Auth config, or proxy `/api/auth` through
+the dashboard.
 
 ### Multiple Apps
 
-For multiple NextJS apps, deploy each separately:
-
-```bash
-# Dashboard
-vercel --cwd frontend/apps/dashboard
-
-# Admin
-vercel --cwd frontend/apps/admin
-```
+For multiple Next.js apps, create one Vercel project per app and set each project's root
+directory to `frontend/apps/<app>` (for example `frontend/apps/dashboard` and
+`frontend/apps/admin`). Deploys run from CI, not from a local CLI.
 
 ---
 

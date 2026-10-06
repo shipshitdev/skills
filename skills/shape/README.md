@@ -14,6 +14,6 @@ Derived from **[pbakaus/impeccable](https://github.com/pbakaus/impeccable)** (Ap
 | Last synced | 2026-06-12 |
 | License | Apache-2.0 |
 
-**Local modifications:** removed the conditional `/impeccable` load (not part of this marketplace) and inlined a self-contained Context Gathering section. Phase 1 now runs the house `grilling` primitive instead of a local question list. Attribution for impeccable remains; grilling is a local composition change.
+**Local modifications:** removed the conditional `/impeccable` load (not part of this marketplace) and inlined a self-contained Context Gathering section. Phase 1 now runs the house `grill-me` primitive instead of a local question list. Attribution for impeccable remains; grill-me is a local composition change.
 
 **Checking for upstream changes:** when *Upstream latest* is ahead of *Forked at*, diff [`skill/reference/shape.md`](https://github.com/pbakaus/impeccable/blob/main/skill/reference/shape.md) against tag `skill-v2.1.1`, port anything worth bringing home, then bump `metadata.upstream_version` and `metadata.last_synced` in `SKILL.md` and this table.

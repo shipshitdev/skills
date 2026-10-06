@@ -17,16 +17,16 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiCookieAuth, ApiQuery } from "@nestjs/swagger";
 import { {{Entity}}sService } from "./{{entities}}.service";
 import { Create{{Entity}}Dto } from "./dto/create-{{entity}}.dto";
 import { Update{{Entity}}Dto } from "./dto/update-{{entity}}.dto";
-import { ClerkAuthGuard } from "../auth/guards/clerk-auth.guard";
+import { AuthGuard } from "../auth/guards/auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 
 @ApiTags("{{entities}}")
-@ApiBearerAuth()
-@UseGuards(ClerkAuthGuard)
+@ApiCookieAuth()
+@UseGuards(AuthGuard)
 @Controller("{{entities}}")
 export class {{Entity}}sController {
   constructor(private readonly {{entities}}Service: {{Entity}}sService) {}
