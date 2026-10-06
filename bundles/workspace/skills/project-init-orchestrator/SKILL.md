@@ -131,8 +131,11 @@ Load `references/legacy-manual-route.md` for the full step-by-step workflow,
 generated structure, key code patterns, and development commands. Helper scripts
 live in `scripts/` (`init-workspace.py`, `add-api-collection.py`,
 `add-frontend-app.py`). After generating, run `bun install`, copy `.env.example` to
-`api/.env`, run `bun run prisma:migrate` from `api/`, and run `bun run lint:fix` once so
-Biome formats the generated files.
+`api/.env`, run `bun run prisma:migrate` from `api/`, run `bun run prisma:generate`
+(Prisma 7 migrate no longer builds the client; repeat after every schema change), and run
+`bun run lint:fix` once so Biome formats the generated files. Collections added with
+`add-api-collection.py` are guarded by `AuthGuard` and scoped to the signed-in user from the
+session, never from request input.
 
 ## Usage
 

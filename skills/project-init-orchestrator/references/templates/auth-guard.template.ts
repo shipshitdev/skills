@@ -18,15 +18,28 @@ interface AuthenticatedRequest {
   user?: CurrentUserPayload;
 }
 
+interface CookieResponse {
+  append(name: string, value: string): unknown;
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    const session = await this.authService.auth.api.getSession({
+    const http = context.switchToHttp();
+    const request = http.getRequest<AuthenticatedRequest>();
+    const { headers, response: session } = await this.authService.auth.api.getSession({
       headers: fromNodeHeaders(request.headers),
+      returnHeaders: true,
     });
+
+    // Better Auth renews sessions close to expiry (and clears invalid cookies) through
+    // Set-Cookie headers. Forward them or the browser keeps the stale cookie.
+    const response = http.getResponse<CookieResponse>();
+    for (const cookie of headers.getSetCookie()) {
+      response.append("Set-Cookie", cookie);
+    }
 
     if (!session) {
       throw new UnauthorizedException("Not signed in");

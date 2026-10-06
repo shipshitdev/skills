@@ -21,8 +21,8 @@ import { ApiTags, ApiOperation, ApiCookieAuth, ApiQuery } from "@nestjs/swagger"
 import { {{Entity}}sService } from "./{{entities}}.service";
 import { Create{{Entity}}Dto } from "./dto/create-{{entity}}.dto";
 import { Update{{Entity}}Dto } from "./dto/update-{{entity}}.dto";
-import { AuthGuard } from "../auth/guards/auth.guard";
-import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { AuthGuard } from "../../auth/guards/auth.guard";
+import { CurrentUser } from "../../auth/decorators/current-user.decorator";
 
 @ApiTags("{{entities}}")
 @ApiCookieAuth()

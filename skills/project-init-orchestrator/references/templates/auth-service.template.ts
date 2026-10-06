@@ -17,12 +17,22 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaService } from "../prisma/prisma.service";
 
 function createAuth(prisma: PrismaService) {
+  // Host-only cookies set by api.example.com never reach example.com. Set COOKIE_DOMAIN
+  // (for example .example.com) in production so the dashboard's proxy.ts sees the session.
+  // Leave it unset locally: localhost:3000 and localhost:3001 already share cookies.
+  const cookieDomain = process.env.COOKIE_DOMAIN;
+
   return betterAuth({
     database: prismaAdapter(prisma, { provider: "postgresql" }),
     baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3001",
     secret: process.env.BETTER_AUTH_SECRET,
     trustedOrigins: [process.env.FRONTEND_URL ?? "http://localhost:3000"],
     emailAndPassword: { enabled: true },
+    advanced: {
+      crossSubDomainCookies: cookieDomain
+        ? { enabled: true, domain: cookieDomain }
+        : { enabled: false },
+    },
   });
 }
 

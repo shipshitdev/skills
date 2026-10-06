@@ -29,35 +29,51 @@ docker build -f api/Dockerfile -t api .
 FROM oven/bun:1 AS base
 WORKDIR /app
 
-# Install only the API workspace's dependencies
-FROM base AS deps
+# Workspace manifests only, so dependency layers cache until a manifest changes
+FROM base AS manifests
 COPY package.json bun.lock ./
 COPY api/package.json api/package.json
 COPY frontend/apps/dashboard/package.json frontend/apps/dashboard/package.json
 COPY frontend/packages/package.json frontend/packages/package.json
 COPY mobile/package.json mobile/package.json
 COPY packages/package.json packages/package.json
+
+# All dependencies of the API workspace, for the build
+FROM manifests AS deps
 RUN bun install --frozen-lockfile --filter "@myorg/api"
 
-# Build. prisma generate needs no DATABASE_URL, so no .env is required here.
+# Production dependencies only, for the runtime image
+FROM manifests AS prod-deps
+RUN bun install --frozen-lockfile --production --filter "@myorg/api"
+
+# Build. prisma generate needs no DATABASE_URL, so nothing secret is required here.
 FROM base AS builder
 COPY --from=deps /app/ ./
 COPY api ./api
 WORKDIR /app/api
 RUN bun run build
 
-# Production
+# Production: only the compiled output and production dependencies.
+# The generated Prisma client is compiled into dist/generated, so it ships inside dist.
 FROM node:24-slim AS runner
 ENV NODE_ENV=production
-WORKDIR /app
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/api ./api
 WORKDIR /app/api
+# Bun's isolated installs keep the packages in /app/node_modules and symlink the API's own
+# dependencies from /app/api/node_modules, so both folders are needed
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=prod-deps /app/api/node_modules ./node_modules
+COPY --from=builder /app/api/dist ./dist
+COPY --from=builder /app/api/package.json ./package.json
 EXPOSE 3001
 CMD ["node", "dist/main.js"]
 ```
 
-Replace `@myorg` with your `--org`. The runtime needs Node 22.12+ (the NestJS 12 and
+Replace `@myorg` with your `--org`.
+
+The Docker context is the workspace root, so the generated root `.dockerignore` is what
+keeps `api/.env` (and every other `.env*` file except `.env.example`), `node_modules`,
+`.git` and build output out of the image. Keep it when you edit the Dockerfile, and pass
+secrets as runtime environment variables, never as files in the image. The runtime needs Node 22.12+ (the NestJS 12 and
 Better Auth packages are ESM and load through `require(esm)`).
 
 ### Environment Variables
@@ -73,6 +89,7 @@ REDIS_URL=redis://...
 BETTER_AUTH_SECRET=...        # openssl rand -base64 32
 BETTER_AUTH_URL=https://api.yourdomain.com
 FRONTEND_URL=https://yourdomain.com
+COOKIE_DOMAIN=.yourdomain.com  # shares the session cookie with the dashboard (see Frontend)
 
 # Optional
 SENTRY_DSN=https://...
@@ -114,10 +131,31 @@ before the new API version takes traffic.
 NEXT_PUBLIC_API_URL=https://api.yourdomain.com
 ```
 
-The Better Auth session cookie is set by the API, so serve the dashboard and the API from
-the same parent domain (for example `yourdomain.com` and `api.yourdomain.com`) and enable
-`advanced.crossSubDomainCookies` in the Better Auth config, or proxy `/api/auth` through
-the dashboard.
+The Better Auth session cookie is set by the API (`api.yourdomain.com`). A host-only
+cookie is never sent to `yourdomain.com`, so the dashboard's `proxy.ts` would not see the
+session. The generated `auth.service.ts` enables Better Auth's
+`advanced.crossSubDomainCookies` whenever the API has a `COOKIE_DOMAIN` environment
+variable:
+
+```bash
+# API environment
+COOKIE_DOMAIN=.yourdomain.com
+FRONTEND_URL=https://yourdomain.com          # also the Better Auth trustedOrigins entry
+BETTER_AUTH_URL=https://api.yourdomain.com
+```
+
+Notes:
+
+- Set `domain` explicitly. When it is omitted Better Auth falls back to the host of
+  `BETTER_AUTH_URL` (`api.yourdomain.com`), which does not reach the dashboard.
+- Production URLs are https, so Better Auth adds the `__Secure-` cookie prefix;
+  `getSessionCookie` in `proxy.ts` accepts both names.
+- The browser sends the cookie to the API cross-origin because the client uses
+  `credentials: "include"` and the API's CORS allows `FRONTEND_URL` with credentials.
+- Locally leave `COOKIE_DOMAIN` unset: `localhost:3000` and `localhost:3001` already share
+  cookies (cookies are not isolated by port).
+- Alternative without cookie domains: rewrite `/api/auth/*` through the dashboard in
+  `next.config.ts` and point `NEXT_PUBLIC_API_URL` at the dashboard origin.
 
 ### Multiple Apps
 

@@ -130,7 +130,7 @@ try {
 await this.prisma.user.delete({ where: { id } });
 
 // ✅ Correct - boolean flag, indexed together with the tenant column
-// schema: isDeleted Boolean @default(false)  @@index([organizationId, isDeleted])
+// schema: isDeleted Boolean @default(false)  @@index([userId, isDeleted])
 await this.prisma.user.update({ where: { id }, data: { isDeleted: true } });
 ```
 
@@ -142,10 +142,10 @@ async findAll() {
   return this.prisma.user.findMany();
 }
 
-// ✅ Correct - always filter
-async findAll(organizationId: string) {
-  return this.prisma.user.findMany({
-    where: { organizationId, isDeleted: false },
+// ✅ Correct - always filter by the tenant (userId from the session) and isDeleted
+async findAll(userId: string) {
+  return this.prisma.project.findMany({
+    where: { userId, isDeleted: false },
   });
 }
 ```
@@ -157,7 +157,7 @@ async findAll(organizationId: string) {
 email String @unique
 
 // Compound index - in the model
-@@index([organizationId, isDeleted])
+@@index([userId, isDeleted])
 ```
 
 ---
@@ -170,8 +170,9 @@ email String @unique
 @Get()
 @ApiOperation({ summary: "Get all users" })
 @ApiResponse({ status: 200, description: "Returns users" })
-async findAll(@Query("organizationId") orgId: string) {
-  const users = await this.userService.findAll(orgId);
+async findAll(@CurrentUser() user: { userId: string }) {
+  // The tenant comes from the session (AuthGuard), never from @Query or @Body
+  const users = await this.userService.findAll(user.userId);
   return users.map(serializeUser); // Always serialize
 }
 ```

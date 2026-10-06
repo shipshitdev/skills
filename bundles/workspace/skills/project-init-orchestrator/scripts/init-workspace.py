@@ -171,6 +171,7 @@ def create_root_package_json(name: str) -> str:
             "dev:api": "cd api && bun run start:dev",
             "dev:frontend": "cd frontend && bun run dev",
             "dev:mobile": "cd mobile && bun run start",
+            "prisma:generate": "cd api && bun run prisma:generate",
             "lint": "biome check .",
             "lint:fix": "biome check --write .",
             "test": "bun run test:api && bun run test:frontend",
@@ -258,8 +259,11 @@ def create_readme(name: str) -> str:
         cp .env.example api/.env        # set DATABASE_URL and BETTER_AUTH_SECRET
         cp .env.example frontend/apps/dashboard/.env.local
         cd api && bun run prisma:migrate  # creates the first migration (auth tables + entities)
+        bun run prisma:generate           # builds the Prisma client; migrate no longer does (Prisma 7)
         cd .. && bun run lint:fix         # formats the generated files once; commit the result
         ```
+
+        Re-run `bun run prisma:generate` after every schema change (also from the workspace root).
 
         ## Development
 
@@ -279,8 +283,9 @@ def create_readme(name: str) -> str:
         Better Auth runs inside the API at `/api/auth/*` (email + password, sessions in Postgres).
         The dashboard signs in through `better-auth/react` and `frontend/apps/dashboard/proxy.ts`
         redirects visitors without a session cookie to `/sign-in`. That check is optimistic; the
-        API's `AuthGuard` is what enforces access. Serve the dashboard and API from the same
-        parent domain in production so the session cookie is shared.
+        API's `AuthGuard` is what enforces access. When the dashboard and API sit on sibling
+        subdomains in production (`example.com` and `api.example.com`), set `COOKIE_DOMAIN`
+        (for example `.example.com`) on the API so the session cookie is shared.
 
         ## Quality
 
@@ -526,37 +531,70 @@ def create_api_app_module_ts() -> str:
     """)
 
 
+def create_api_dockerignore() -> str:
+    """Docker context filter: secrets and local artifacts never enter an image layer."""
+    return dedent("""\
+        # The Docker context is the workspace root. Never send secrets or local build output.
+        .git
+        .env*
+        !.env.example
+        **/.env*
+        !**/.env.example
+        **/node_modules
+        **/dist
+        **/build
+        **/coverage
+        **/.next
+        **/.turbo
+        **/.expo
+        **/*.tsbuildinfo
+        **/*.log
+    """)
+
+
 def create_api_dockerfile(org: str) -> str:
     return dedent(f"""\
         # Build from the workspace root so Bun can resolve the workspace lockfile:
         #   docker build -f api/Dockerfile -t api .
+        # The root .dockerignore keeps every .env file out of the build context.
         FROM oven/bun:1 AS base
         WORKDIR /app
 
-        # Install only the API workspace's dependencies
-        FROM base AS deps
+        # Workspace manifests only, so dependency layers cache until a manifest changes
+        FROM base AS manifests
         COPY package.json bun.lock ./
         COPY api/package.json api/package.json
         COPY frontend/apps/dashboard/package.json frontend/apps/dashboard/package.json
         COPY frontend/packages/package.json frontend/packages/package.json
         COPY mobile/package.json mobile/package.json
         COPY packages/package.json packages/package.json
+
+        # All dependencies of the API workspace, for the build
+        FROM manifests AS deps
         RUN bun install --frozen-lockfile --filter "@{org}/api"
 
-        # Build. prisma generate needs no DATABASE_URL, so no .env is required here.
+        # Production dependencies only, for the runtime image
+        FROM manifests AS prod-deps
+        RUN bun install --frozen-lockfile --production --filter "@{org}/api"
+
+        # Build. prisma generate needs no DATABASE_URL, so nothing secret is required here.
         FROM base AS builder
         COPY --from=deps /app/ ./
         COPY api ./api
         WORKDIR /app/api
         RUN bun run build
 
-        # Production
+        # Production: only the compiled output and production dependencies.
+        # The generated Prisma client is compiled into dist/generated, so it ships inside dist.
         FROM node:24-slim AS runner
         ENV NODE_ENV=production
-        WORKDIR /app
-        COPY --from=builder /app/node_modules ./node_modules
-        COPY --from=builder /app/api ./api
         WORKDIR /app/api
+        # Bun's isolated installs keep the packages in /app/node_modules and symlink the API's own
+        # dependencies from /app/api/node_modules, so both folders are needed
+        COPY --from=prod-deps /app/node_modules /app/node_modules
+        COPY --from=prod-deps /app/api/node_modules ./node_modules
+        COPY --from=builder /app/api/dist ./dist
+        COPY --from=builder /app/api/package.json ./package.json
         EXPOSE 3001
         CMD ["node", "dist/main.js"]
     """)
@@ -798,6 +836,9 @@ def create_frontend_globals_css() -> str:
     """Tailwind v4 CSS-first entry: @import plus an @theme block, no tailwind.config.*."""
     return dedent("""\
         @import "tailwindcss";
+
+        /* Tailwind v4 only scans this app by default; the shared workspace package has classes too */
+        @source "../../../packages";
 
         :root {
           --background: oklch(0.99 0 0);
@@ -2235,15 +2276,28 @@ def generate_auth_guard() -> str:
           user?: CurrentUserPayload;
         }
 
+        interface CookieResponse {
+          append(name: string, value: string): unknown;
+        }
+
         @Injectable()
         export class AuthGuard implements CanActivate {
           constructor(private readonly authService: AuthService) {}
 
           async canActivate(context: ExecutionContext): Promise<boolean> {
-            const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-            const session = await this.authService.auth.api.getSession({
+            const http = context.switchToHttp();
+            const request = http.getRequest<AuthenticatedRequest>();
+            const { headers, response: session } = await this.authService.auth.api.getSession({
               headers: fromNodeHeaders(request.headers),
+              returnHeaders: true,
             });
+
+            // Better Auth renews sessions close to expiry (and clears invalid cookies) through
+            // Set-Cookie headers. Forward them or the browser keeps the stale cookie.
+            const response = http.getResponse<CookieResponse>();
+            for (const cookie of headers.getSetCookie()) {
+              response.append("Set-Cookie", cookie);
+            }
 
             if (!session) {
               throw new UnauthorizedException("Not signed in");
@@ -2264,17 +2318,28 @@ def generate_auth_guard_spec() -> str:
         import { AuthGuard } from "./auth.guard";
 
         const getSession = vi.fn();
+        const append = vi.fn();
         const guard = new AuthGuard({ auth: { api: { getSession } } } as unknown as AuthService);
 
         function contextFor(request: object): ExecutionContext {
           return {
-            switchToHttp: () => ({ getRequest: () => request }),
+            switchToHttp: () => ({ getRequest: () => request, getResponse: () => ({ append }) }),
           } as unknown as ExecutionContext;
+        }
+
+        function sessionResult(response: unknown, cookies: string[] = []) {
+          const headers = new Headers();
+          for (const cookie of cookies) {
+            headers.append("set-cookie", cookie);
+          }
+          return { headers, response };
         }
 
         describe("AuthGuard", () => {
           it("attaches the signed-in user to the request", async () => {
-            getSession.mockResolvedValue({ user: { id: "user-1" }, session: { id: "session-1" } });
+            getSession.mockResolvedValue(
+              sessionResult({ user: { id: "user-1" }, session: { id: "session-1" } }),
+            );
             const request: { headers: Record<string, string>; user?: unknown } = {
               headers: { cookie: "better-auth.session_token=abc" },
             };
@@ -2284,8 +2349,36 @@ def generate_auth_guard_spec() -> str:
             expect(request.user).toEqual({ userId: "user-1", sessionId: "session-1" });
           });
 
+          it("asks Better Auth for the response headers", async () => {
+            getSession.mockResolvedValue(sessionResult(null));
+
+            await expect(guard.canActivate(contextFor({ headers: {} }))).rejects.toThrow();
+
+            expect(getSession).toHaveBeenCalledWith(
+              expect.objectContaining({ returnHeaders: true }),
+            );
+          });
+
+          it("forwards refreshed session cookies to the client", async () => {
+            append.mockClear();
+            getSession.mockResolvedValue(
+              sessionResult({ user: { id: "user-1" }, session: { id: "session-1" } }, [
+                "better-auth.session_token=fresh; Path=/; HttpOnly",
+                "better-auth.session_data=data; Path=/; HttpOnly",
+              ]),
+            );
+
+            await guard.canActivate(contextFor({ headers: {} }));
+
+            expect(append).toHaveBeenCalledTimes(2);
+            expect(append).toHaveBeenCalledWith(
+              "Set-Cookie",
+              "better-auth.session_token=fresh; Path=/; HttpOnly",
+            );
+          });
+
           it("rejects requests without a session", async () => {
-            getSession.mockResolvedValue(null);
+            getSession.mockResolvedValue(sessionResult(null));
 
             await expect(guard.canActivate(contextFor({ headers: {} }))).rejects.toThrow(
               UnauthorizedException,
@@ -2304,12 +2397,22 @@ def generate_auth_service() -> str:
         import { PrismaService } from "../prisma/prisma.service";
 
         function createAuth(prisma: PrismaService) {
+          // Host-only cookies set by api.example.com never reach example.com. Set COOKIE_DOMAIN
+          // (for example .example.com) in production so the dashboard's proxy.ts sees the session.
+          // Leave it unset locally: localhost:3000 and localhost:3001 already share cookies.
+          const cookieDomain = process.env.COOKIE_DOMAIN;
+
           return betterAuth({
             database: prismaAdapter(prisma, { provider: "postgresql" }),
             baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3001",
             secret: process.env.BETTER_AUTH_SECRET,
             trustedOrigins: [process.env.FRONTEND_URL ?? "http://localhost:3000"],
             emailAndPassword: { enabled: true },
+            advanced: {
+              crossSubDomainCookies: cookieDomain
+                ? { enabled: true, domain: cookieDomain }
+                : { enabled: false },
+            },
           });
         }
 
@@ -2326,7 +2429,7 @@ def generate_auth_service() -> str:
 
 def generate_auth_service_spec() -> str:
     return dedent("""\
-        import { describe, expect, it } from "vitest";
+        import { describe, expect, it, vi } from "vitest";
         import type { PrismaService } from "../prisma/prisma.service";
         import { AuthService } from "./auth.service";
 
@@ -2336,6 +2439,20 @@ def generate_auth_service_spec() -> str:
 
             expect(service.auth.handler).toBeTypeOf("function");
             expect(service.auth.api.getSession).toBeTypeOf("function");
+          });
+
+          it("keeps cookies host-only unless COOKIE_DOMAIN is set", () => {
+            vi.stubEnv("COOKIE_DOMAIN", "");
+            const hostOnly = new AuthService({} as PrismaService);
+            vi.stubEnv("COOKIE_DOMAIN", ".example.com");
+            const shared = new AuthService({} as PrismaService);
+            vi.unstubAllEnvs();
+
+            expect(hostOnly.auth.options.advanced?.crossSubDomainCookies?.enabled).toBe(false);
+            expect(shared.auth.options.advanced?.crossSubDomainCookies).toEqual({
+              enabled: true,
+              domain: ".example.com",
+            });
           });
         });
     """)
@@ -2671,6 +2788,9 @@ def generate_env_example() -> str:
         # API
         PORT=3001
         FRONTEND_URL=http://localhost:3000
+        # Production with api.example.com + example.com: share the session cookie with the
+        # dashboard (leave unset locally)
+        # COOKIE_DOMAIN=.example.com
 
         # Dashboard (copy to frontend/apps/dashboard/.env.local)
         NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -2863,6 +2983,7 @@ def scaffold_workspace(
         root / "api" / "apps" / "api" / "src" / "prisma" / "prisma.service.spec.ts": create_prisma_service_spec(),
         root / "api" / "apps" / "api" / "src" / "prisma" / "prisma.module.ts": create_prisma_module_ts(),
         root / "api" / "Dockerfile": create_api_dockerfile(org),
+        root / ".dockerignore": create_api_dockerignore(),
         root / "api" / "apps" / "api" / "src" / "main.ts": create_api_main_ts(),
         root / "api" / "apps" / "api" / "src" / "app.module.ts": app_module_content,
         root / "api" / "AGENTS.md": create_agents_md(f"{name} API"),
@@ -2949,8 +3070,10 @@ def scaffold_workspace(
     print(f"2. bun install")
     print(f"3. cp .env.example api/.env  (set DATABASE_URL and BETTER_AUTH_SECRET)")
     print(f"4. cd api && bun run prisma:migrate")
-    print(f"5. bun run lint:fix  (formats the generated files once)")
-    print(f"6. Start developing!")
+    print(f"5. bun run prisma:generate  (Prisma 7 migrate no longer generates the client;")
+    print(f"   repeat after every schema change)")
+    print(f"6. cd .. && bun run lint:fix  (formats the generated files once)")
+    print(f"7. Start developing!")
 
 
 def main() -> None:
