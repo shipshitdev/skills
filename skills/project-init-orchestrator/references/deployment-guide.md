@@ -171,6 +171,12 @@ origin). Adding an app is a one-line change followed by an API restart:
 FRONTEND_URLS=https://yourdomain.com,https://admin.yourdomain.com
 ```
 
+Each entry must be an exact `http(s)` origin: `scheme://host[:port]`, with no path, query or
+trailing slash, and no default port (`https://app.example.com`, not `https://app.example.com/`
+or `https://app.example.com:443`). Wildcards such as `https://*.example.com` are rejected:
+the API stops at startup with an error naming the bad entry, so CORS and Better Auth
+`trustedOrigins` always receive the same exact list. List each subdomain explicitly.
+
 ---
 
 ## Mobile Deployment

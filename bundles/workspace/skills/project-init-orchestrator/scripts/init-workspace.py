@@ -514,17 +514,49 @@ def create_api_origins_ts() -> str:
     return dedent("""\
         const DEFAULT_ORIGIN = "http://localhost:3000";
 
+        function parseOrigin(entry: string, source: string): string {
+          const invalid = (reason: string) =>
+            new Error(`Invalid origin "${entry}" in ${source}: ${reason}`);
+
+          if (entry.includes("*")) {
+            throw invalid(
+              "wildcards are not allowed, list every origin exactly (for example https://app.example.com)",
+            );
+          }
+
+          let url: URL;
+          try {
+            url = new URL(entry);
+          } catch {
+            throw invalid("expected an exact http(s) origin such as https://app.example.com");
+          }
+
+          // url.origin drops any path, query, userinfo, trailing slash and default port, and
+          // lowercases the host, so only an exact, already normalised origin survives
+          if ((url.protocol !== "http:" && url.protocol !== "https:") || url.origin !== entry) {
+            throw invalid(
+              "expected an exact http(s) origin: scheme://host[:port] with no path, query, trailing slash or default port",
+            );
+          }
+
+          return entry;
+        }
+
         /**
          * Origins of the frontend apps allowed to call the API. Used for both CORS and Better
-         * Auth trustedOrigins. FRONTEND_URLS is a comma-separated list; FRONTEND_URL (a single
-         * origin) is still accepted as a fallback.
+         * Auth trustedOrigins, so both always get the same exact list. FRONTEND_URLS is a
+         * comma-separated list; FRONTEND_URL (a single origin) is still accepted as a fallback.
+         * Wildcards and anything that is not an exact http(s) origin throw, so a bad entry
+         * stops the API at startup instead of silently widening or breaking access.
          */
         export function allowedOrigins(env: NodeJS.ProcessEnv = process.env): string[] {
+          const source = env.FRONTEND_URLS ? "FRONTEND_URLS" : "FRONTEND_URL";
           const raw = env.FRONTEND_URLS || env.FRONTEND_URL || DEFAULT_ORIGIN;
           const origins = raw
             .split(",")
-            .map((origin) => origin.trim().replace(/\\/+$/, ""))
-            .filter(Boolean);
+            .map((origin) => origin.trim())
+            .filter(Boolean)
+            .map((origin) => parseOrigin(origin, source));
 
           return origins.length > 0 ? origins : [DEFAULT_ORIGIN];
         }
@@ -543,8 +575,37 @@ def create_api_origins_spec() -> str:
 
           it("splits a comma-separated FRONTEND_URLS and trims entries", () => {
             expect(
-              allowedOrigins({ FRONTEND_URLS: "http://localhost:3000, http://localhost:3002/ ," }),
-            ).toEqual(["http://localhost:3000", "http://localhost:3002"]);
+              allowedOrigins({ FRONTEND_URLS: "http://localhost:3000, https://app.example.com:8443 ," }),
+            ).toEqual(["http://localhost:3000", "https://app.example.com:8443"]);
+          });
+
+          it.each([
+            "https://*.example.com",
+            "*",
+            "http://localhost:*",
+          ])("rejects the wildcard origin %s and names it", (entry) => {
+            expect(() => allowedOrigins({ FRONTEND_URLS: `http://localhost:3000,${entry}` })).toThrow(
+              `Invalid origin "${entry}" in FRONTEND_URLS:`,
+            );
+          });
+
+          it.each([
+            "app.example.com",
+            "ftp://app.example.com",
+            "https://app.example.com/",
+            "https://app.example.com/dashboard",
+            "https://app.example.com?x=1",
+            "https://user@app.example.com",
+            "https://APP.example.com",
+            "https://app.example.com:443",
+          ])("rejects %s because it is not an exact http(s) origin", (entry) => {
+            expect(() => allowedOrigins({ FRONTEND_URLS: entry })).toThrow(/exact/);
+          });
+
+          it("validates the single FRONTEND_URL fallback too", () => {
+            expect(() => allowedOrigins({ FRONTEND_URL: "https://*.example.com" })).toThrow(
+              'Invalid origin "https://*.example.com" in FRONTEND_URL:',
+            );
           });
 
           it("falls back to the single FRONTEND_URL", () => {
@@ -2850,6 +2911,8 @@ def generate_env_example() -> str:
         # Comma-separated origins of every frontend app allowed to call the API (CORS and Better
         # Auth trustedOrigins). Add a new app's origin here, e.g.
         # FRONTEND_URLS=http://localhost:3000,http://localhost:3002
+        # Each entry must be an exact http(s) origin (scheme://host[:port], no path or trailing
+        # slash). Wildcards such as https://*.example.com are rejected and stop the API at startup.
         # FRONTEND_URL is still accepted as a single-origin fallback.
         FRONTEND_URLS=http://localhost:3000
         # Production with api.example.com + example.com: share the session cookie with the

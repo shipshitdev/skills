@@ -57,15 +57,26 @@ jobs:
         run: bun install
 
       - name: Plant a decoy api/.env
-        # The image must not contain it: the root .dockerignore has to keep it out of the context
+        # No image stage may contain it: the root .dockerignore has to keep it out of the context
         working-directory: ${{ env.WORKSPACE }}
         run: echo "BETTER_AUTH_SECRET=must-not-ship" > api/.env
+
+      - name: Build the builder stage
+        # The builder stage copies the api folder, so a leaked api/.env would land here first
+        working-directory: ${{ env.WORKSPACE }}
+        run: docker build --target builder -f api/Dockerfile -t "$IMAGE-builder" .
+
+      - name: Builder stage carries no env files
+        run: |
+          docker run --rm --entrypoint sh "$IMAGE-builder" -c 'test ! -e /app/api/.env'
+          docker run --rm --entrypoint sh "$IMAGE-builder" -c \
+            'test -z "$(find /app -name ".env*" -not -path "*/node_modules/*")"'
 
       - name: Build the API image
         working-directory: ${{ env.WORKSPACE }}
         run: docker build -f api/Dockerfile -t "$IMAGE" .
 
-      - name: Image carries no env files
+      - name: Runtime image carries no env files
         run: |
           docker run --rm --entrypoint sh "$IMAGE" -c 'test ! -e /app/api/.env'
           docker run --rm --entrypoint sh "$IMAGE" -c \
