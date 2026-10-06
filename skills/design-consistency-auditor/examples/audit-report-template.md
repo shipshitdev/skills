@@ -35,7 +35,7 @@
 - [ ] **apps/publisher/components/Card.tsx:15**
   - Issue: Arbitrary Tailwind value `bg-[#fafafa]`
   - Impact: Inconsistent with theme
-  - Fix: Use `bg-base-100`
+  - Fix: Use `bg-card`
   - Priority: Medium
 
 #### Minor
@@ -43,7 +43,7 @@
 - [ ] **apps/website/components/Hero.tsx:89**
   - Issue: Using `bg-gray-100` instead of theme token
   - Impact: Minor visual inconsistency
-  - Fix: Use `bg-base-100`
+  - Fix: Use `bg-card`
   - Priority: Low
 
 ### 📝 Typography (X issues)
@@ -93,15 +93,15 @@
 #### Major
 
 - [ ] **apps/dashboard/components/StatCard.tsx:12**
-  - Issue: Custom card styling instead of `.gf-card`
+  - Issue: Custom card styling instead of the shadcn `Card`
   - Impact: Duplicate patterns, harder maintenance
-  - Fix: Replace with `<div className="gf-card">`
+  - Fix: Replace with `<Card>`
   - Priority: Medium
 
 - [ ] **apps/studio/components/Modal.tsx:34**
-  - Issue: Missing `.glass-modal` class
+  - Issue: Modal not built on the shadcn `Dialog`
   - Impact: Inconsistent modal styling
-  - Fix: Add `glass-modal` class
+  - Fix: Rebuild on `Dialog`
   - Priority: Medium
 
 #### Minor
@@ -188,7 +188,7 @@
 
 ### Component Duplication
 
-- **5 card components** not using `.gf-card` class
+- **5 card components** not using the shadcn `Card`
   - `apps/dashboard/components/StatCard.tsx`
   - `apps/analytics/components/ReportCard.tsx`
   - `apps/manager/components/TeamCard.tsx`
@@ -232,7 +232,7 @@
 ### Medium Priority (Complete within 2 weeks)
 
 1. **Consolidate card components**
-   - Refactor 5 custom cards to use `.gf-card` (6 hours)
+   - Refactor 5 custom cards to use the shadcn `Card` (6 hours)
    - Update documentation (1 hour)
    - Test across apps (2 hours)
 
@@ -345,7 +345,7 @@ Overall Score:         █████████░  89/100
 
 ### This Month
 
-- [ ] Refactor card components to use `.gf-card`
+- [ ] Refactor card components to use the shadcn `Card`
 - [ ] Standardize button patterns across apps
 - [ ] Fix all color contrast issues
 

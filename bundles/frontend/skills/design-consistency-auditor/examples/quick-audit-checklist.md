@@ -16,7 +16,7 @@ Use this checklist for rapid design audits of new features or components.
 - [ ] No hardcoded hex colors (`#000000`, `#ffffff`, etc.)
 - [ ] No arbitrary Tailwind values (`bg-[#fafafa]`)
 - [ ] No inline color styles
-- [ ] All colors use theme tokens (`bg-primary`, `bg-base-100`, etc.)
+- [ ] All colors use theme tokens (`bg-primary`, `bg-card`, `text-muted-foreground`, etc.)
 - [ ] Dark mode works correctly
 
 ### Quick scan commands
@@ -74,10 +74,10 @@ grep -n "p-\[\|m-\[\|gap-\[" *.tsx
 
 ### Check for violations
 
-- [ ] Cards use `.gf-card` class
-- [ ] App shells use `.gf-app`
-- [ ] Modals use `.glass-modal`
-- [ ] Inputs use `.glass-input` or `.form-focus`
+- [ ] Cards use the shadcn `Card` component
+- [ ] App shells use `bg-background text-foreground` tokens
+- [ ] Modals use the shadcn `Dialog`
+- [ ] Inputs use the shadcn `Input` (shared focus ring)
 - [ ] Buttons use standard variants (`.btn-secondary`, etc.)
 
 ### Manual inspection
@@ -204,7 +204,7 @@ If score is below 75, prioritize these quick wins:
 
 ### 15-Minute Fixes
 
-1. Use `.gf-card` for custom cards
+1. Use the shadcn `Card` for custom cards
 2. Add responsive modifiers to fixed-width elements
 3. Fix semantic HTML (divs → buttons)
 4. Add focus states
