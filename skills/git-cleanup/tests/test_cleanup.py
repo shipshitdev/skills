@@ -1381,6 +1381,7 @@ class GitFixtureTests(unittest.TestCase):
 
     def test_main_link_routed_through_removed_worktree_is_not_a_duplicate(self):
         worktree = self.ignored_link_fixture()
+        (self.root / ".git/info/exclude").write_text("*.link\ntarget.txt\n.tmp/\n")
         (worktree / ".tmp").mkdir()
         (worktree / ".tmp/env-link").symlink_to(self.root / "shared/target.txt")
         (self.root / "app.link").symlink_to(worktree / ".tmp/env-link")
