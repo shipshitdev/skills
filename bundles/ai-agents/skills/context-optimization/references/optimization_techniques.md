@@ -137,7 +137,7 @@ def plan_partitioning(task: Dict, context_limit: int) -> Dict:
 
 ### When to Optimize
 
-Consider context optimization when context utilization exceeds 70%, when response quality degrades as conversations extend, when costs increase due to long contexts, or when latency increases with conversation length.
+Consider context optimization when utilization exceeds about 70% of the measured degradation onset, when response quality degrades as conversations extend, when costs increase due to long contexts, or when latency increases with conversation length.
 
 ### What Optimization to Apply
 

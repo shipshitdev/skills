@@ -301,11 +301,18 @@ def discover_skills(root: Path, covered: set[str]) -> list[dict]:
         pin, kind = (meta["upstream_commit"], "rolling") if meta.get("upstream_commit") else (
             (meta["upstream_version"], "tagged") if meta.get("upstream_version") else ("", "none"))
         skills.append({"id": skill_id, "group": repo, "repo": repo, "path": path,
-                       "pin": pin, "kind": kind, "latest": meta.get("upstream_latest", "")})
+                       "pin": pin, "kind": kind, "latest": meta.get("upstream_latest", ""),
+                       "pin_file": skill_file.relative_to(root).as_posix()})
     return skills
 
 
 def inspect_skill(skill: dict, ctx: Context) -> dict:
+    report = _inspect_skill(skill, ctx)
+    report["pin_file"] = skill["pin_file"]
+    return report
+
+
+def _inspect_skill(skill: dict, ctx: Context) -> dict:
     if skill["kind"] == "none":
         return {"id": skill["id"], "group": skill["group"], "repo": skill["repo"], "branch": "", "pinned": "",
                 "head": "", "paths": [skill["path"]], "status": "unknown", "ahead_by": 0, "files": [],
@@ -417,6 +424,10 @@ def render_repo(repo: str, reports: list[dict]) -> list[str]:
         pin = f"`{r['pinned']}`" if r["pinned"] else "none"
         head = f"`{r['head']}`" if r["head"] else "n/a"
         lines.append(f"| {r['id']} | `{r['paths'][0]}` | {pin} | {head} | {row_change(r)} | [compare]({r['compare_url']}) |")
+    absorbed = [r for r in reports if r.get("pin_file") and not r["pin_file"].endswith("/SKILL.md")]
+    if absorbed:
+        lines.append("")
+        lines += [f"- `{r['id']}` pin lives in `{r['pin_file']}`" for r in absorbed]
     return lines + [""]
 
 
@@ -445,8 +456,9 @@ def render(reports: list[dict]) -> str:
             lines += render_repo(repo, group)
         lines += [
             "Porting reminder: after porting what is worth bringing home, bump `metadata.upstream_commit`",
-            "(or `metadata.upstream_version`) and `metadata.last_synced` in the skill's `SKILL.md`, and the",
-            "same fields in the `## Upstream` table of its `README.md`.",
+            "(or `metadata.upstream_version`) and `metadata.last_synced` in the file holding that pin (the",
+            "skill's `SKILL.md`, or the reference file listed above for an absorbed skill), and the same",
+            "fields in the matching `## Upstream` or \"Absorbed upstream\" table of its `README.md`.",
             "",
         ]
     lines.append("Opened by `.github/workflows/upstream-drift.yml`; this issue updates in place each run.")
