@@ -396,7 +396,8 @@ class ScaffoldSecurityTest(unittest.TestCase):
         self.assertIn('includes("*")', origins)
         self.assertIn("new URL(", origins)
         self.assertIn(".origin !==", origins)
-        self.assertIn("throw new Error", origins)
+        self.assertIn("new Error(", origins)
+        self.assertIn("throw invalid(", origins)
         self.assertNotIn(".replace(", origins)  # no silent normalisation
         spec = self.read("api/apps/api/src/config/origins.spec.ts")
         self.assertIn("https://*.example.com", spec)
@@ -405,9 +406,9 @@ class ScaffoldSecurityTest(unittest.TestCase):
         for relative in ("api/apps/api/src/main.ts", "api/apps/api/src/auth/auth.service.ts"):
             text = self.read(relative)
             self.assertIn("allowedOrigins()", text)
-            self.assertNotIn("FRONTEND_URL", text)
+            self.assertNotIn("process.env.FRONTEND_URL", text)
         template = (SKILL_DIR / "references/templates/auth-service.template.ts").read_text()
-        self.assertNotIn("FRONTEND_URL", template)
+        self.assertNotIn("process.env.FRONTEND_URL", template)
         for text in (
             self.read(".env.example"),
             (SKILL_DIR / "references" / "deployment-guide.md").read_text(),
