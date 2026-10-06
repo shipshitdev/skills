@@ -34,7 +34,7 @@ After porting anything worth bringing home: bump `metadata.upstream_commit` (or 
 
 ## Automated drift check
 
-`.github/workflows/upstream-drift.yml` runs `scripts/upstream-drift.py` weekly (and on dispatch). It checks the Pstack imports from `upstream/pstack/lock.json` plus every `skills/*/SKILL.md` whose `metadata.source` is a GitHub blob URL in a repo the lock file does not cover. Rolling pins (`upstream_commit`) are compared with the default branch; tagged pins (`upstream_version`) with the newest tag of the same family, tolerating the prefix (`v2.1.1` vs `skill-v2.1.1`). A pin that resolves to no real tag or commit is reported as unresolvable and counts as inconclusive, never clean.
+`.github/workflows/upstream-drift.yml` runs `scripts/upstream-drift.py` weekly (and on dispatch). It checks the Pstack imports from `upstream/pstack/lock.json` plus every `skills/*/SKILL.md` whose `metadata.source` is a GitHub blob URL in a repo the lock file does not cover. Rolling pins (`upstream_commit`) are compared with the default branch; tagged pins (`upstream_version`) with the newest tag of the same family, tolerating a bare prefix (`v3.1.1` for `skill-v3.1.1`) only within the family named by `upstream_latest`, never across tag families. A pin that resolves to no real tag or commit is reported as unresolvable and counts as inconclusive, never clean.
 
 One aggregate issue (marker `<!-- pstack-drift-check -->`, found in any state) carries the report: edited in place, commented only when the drift set changes (the previous set is the hidden `drift-state` block in its body), reopened when drift returns, closed only when everything is clean and conclusive. Run `python3 scripts/upstream-drift.py --repo shipshitdev/skills --dry-run` to see the would-be action.
 
@@ -44,7 +44,9 @@ One aggregate issue (marker `<!-- pstack-drift-check -->`, found in any state) c
 
 These derive from third-party public repos. Diff against the pinned marker to find new upstream work.
 
-### pbakaus/impeccable — Apache-2.0 — `tagged` (forked at `skill-v2.1.1`)
+### pbakaus/impeccable — Apache-2.0 — `tagged` (forked at `skill-v3.1.1`)
+
+The pin was corrected on 2026-10-06. The originally recorded `skill-v2.1.1` never existed upstream: the `skill-v*` tags start at `skill-v3.0.4`, and `2.1.x` belongs to the unrelated `cli-v*` family. Compared against every `skill-v*` tag, the vendored audit/polish/shape text matches `skill-v3.1.0`/`skill-v3.1.1` best. The `skill-v4.0.0` rewrite drops polish/shape similarity below 0.1.
 
 Design-quality reference skills. Vendored standalone; these never invoked the `/impeccable` orchestrator (the original dependency that was removed).
 

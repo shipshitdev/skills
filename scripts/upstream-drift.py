@@ -200,15 +200,18 @@ def tag_version(tag: str) -> tuple[int, ...]:
     return tuple(int(part) for part in re.findall(r"\d+", tag))
 
 
-def resolve_pin(pin: str, tags: list[str]) -> tuple[str | None, str]:
-    """Match a stored version to a real tag, tolerating the repo's tag prefix (`skill-v1.2.3` vs `v1.2.3`)."""
+def resolve_pin(pin: str, tags: list[str], latest: str = "") -> tuple[str | None, str]:
+    """Match a stored version to a real tag, tolerating a bare prefix (`v1.2.3` for `skill-v1.2.3`)."""
     if pin in tags:
         return pin, ""
     wanted = tag_version(pin)
     family = tag_family(pin)
-    # A bare `v1.2.3` pin may stand for `skill-v1.2.3` (and back), but never for another tag family.
-    compatible = lambda tag: tag_family(tag) in (family, "v", "") or family in ("v", "")
-    matches = [tag for tag in tags if wanted and tag_version(tag) == wanted and compatible(tag)
+    # A bare pin may stand for the family `upstream_latest` names, but never for another
+    # release stream: `v2.1.1` must not resolve to `cli-v2.1.1` when the skill tracks `skill-v*`.
+    allowed = {family}
+    if family in ("v", ""):
+        allowed |= {"v", ""} | ({tag_family(latest)} if latest else set())
+    matches = [tag for tag in tags if wanted and tag_version(tag) == wanted and tag_family(tag) in allowed
                and not re.search(r"\d-[A-Za-z]", tag)]
     if len(matches) == 1:
         return matches[0], ""
@@ -228,7 +231,7 @@ def inspect_tagged(skill: dict, ctx: Context) -> dict:
     repo = skill["repo"]
     source = {"id": skill["id"], "group": skill["group"], "repository": repo, "commit": skill["pin"],
               "paths": [skill["path"]]}
-    pinned, reason = resolve_pin(skill["pin"], ctx.tag_names(repo))
+    pinned, reason = resolve_pin(skill["pin"], ctx.tag_names(repo), skill.get("latest", ""))
     if pinned is None:
         return {"id": skill["id"], "group": skill["group"], "repo": repo, "branch": "", "pinned": skill["pin"],
                 "head": "", "paths": [skill["path"]], "status": "unknown", "ahead_by": 0, "files": [],
@@ -284,7 +287,7 @@ def discover_skills(root: Path, covered: set[str]) -> list[dict]:
         pin, kind = (meta["upstream_commit"], "rolling") if meta.get("upstream_commit") else (
             (meta["upstream_version"], "tagged") if meta.get("upstream_version") else ("", "none"))
         skills.append({"id": skill_file.parent.name, "group": repo, "repo": repo, "path": path,
-                       "pin": pin, "kind": kind})
+                       "pin": pin, "kind": kind, "latest": meta.get("upstream_latest", "")})
     return skills
 
 
