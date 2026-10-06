@@ -58,7 +58,7 @@ Confirmation Required:
 
 Delegates To:
 
-- Run the `grilling` and `domain-modeling` skills for grilling tickets and for
+- Run the `grill-me` and `domain-modeling` skills for grilling tickets and for
   naming the destination
 - Run the `research` skill for research tickets
 - Run the `prototype` skill for prototype tickets
@@ -124,7 +124,7 @@ questions for the human.
 |---|---|---|
 | `research` | AFK | the `research` skill, for facts outside the working directory |
 | `prototype` | HITL | the `prototype` skill: a cheap artifact to react to, linked as an asset |
-| `grilling` | HITL | `grilling` plus `domain-modeling`; the default |
+| `grilling` | HITL | `grill-me` plus `domain-modeling`; the default |
 | `task` | either | doing the manual step a decision waits on (sign up, provision, move data); the answer records what was done and what later tickets depend on |
 
 ## Fog of war
@@ -141,7 +141,7 @@ the reason, the link. Keep it out of **Decisions so far**.
 
 ## Chart mode
 
-1. **Name the destination.** Run `grilling` and `domain-modeling` until the
+1. **Name the destination.** Run `grill-me` and `domain-modeling` until the
    destination is one or two lines. It fixes the scope.
 2. **Map the frontier.** Grill again breadth-first: the open decisions and the
    first takeable steps. When no fog appears and one session can hold the whole

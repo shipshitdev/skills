@@ -123,16 +123,16 @@ Eight skills derive from this repo, all verified by fetching the live upstream f
 
 ---
 
-## Bucket 2 — Internal ports from private `vitae` repo (4 skills)
+## Bucket 2 — Internal ports from a private repo (2 skills)
 
 Ported from Vincent's own private spec-pipeline repo. No public upstream → nothing to diff externally, so no `metadata.source` and no `## Upstream` README (validator-exempt by design). Listed here for completeness.
 
 | Skill | Origin |
 |-------|--------|
-| prd-writer | private `vitae` spec-pipeline |
-| prd-quality-gate | private `vitae` spec-pipeline |
+| prd-writer | private spec-pipeline |
+| prd-quality-gate | private spec-pipeline |
 
-If `vitae` ever goes public, promote these to Bucket 1 with a real `source` + commit.
+If that source ever goes public, promote these to Bucket 1 with a real `source` + commit.
 
 ---
 

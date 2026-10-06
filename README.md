@@ -277,7 +277,7 @@ plugin skill, not an alias.
 
 ### Dev Loop (15)
 
-`interview`, `grilling`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
+`interview`, `grill-me`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
 
 ### Dev Workflow (36)
 
@@ -317,7 +317,7 @@ plugin skill, not an alias.
 
 ### Planning & PRDs (15)
 
-`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grilling`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `prd-dispatch`
+`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grill-me`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `prd-dispatch`
 
 ### Payments & Product Integrations (1)
 

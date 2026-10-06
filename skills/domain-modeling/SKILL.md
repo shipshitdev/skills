@@ -61,7 +61,7 @@ Confirmation Required:
 
 Delegates To:
 
-- None. `grilling` and `interview` invoke this skill when a term crystallises.
+- None. `grill-me` and `interview` invoke this skill when a term crystallises.
 
 ## File structure
 

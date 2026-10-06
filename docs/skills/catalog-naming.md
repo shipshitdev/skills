@@ -80,7 +80,7 @@ contracts; they are not mandatory naming prefixes.
 | `git-safety` | `git-safety` | retain | git |
 | `github-actions-author` | `github-actions-author` | retain | github |
 | `graphql-architect` | `graphql-architect` | retain | api-design |
-| `grilling` | `grilling` | retain | discovery |
+| `grill-me` | `grill-me` | retain | discovery |
 | `grok-review` | `grok-review` | retain | grok-review |
 | `handoff` | `handoff` | retain | agent-context |
 | `how` | `how` | retain | code-explanation |
@@ -205,7 +205,7 @@ names no longer install through `npx skills add --skill <name>`.
 | `typescript-refactor` | `typescript-expert` (`references/rules/`) | #190 |
 | `spec-first` | `prd-dispatch` (`spec` mode) | #190 |
 | `fullstack-workspace-init` | `project-init-orchestrator` | #190 |
-| `grill-me` | `grilling` | #190 |
+| `grilling` | `grill-me` (renamed back; `/grill-me` is the name in use) | rename |
 | `biome-validator` | `stack-validator` (`--stack biome`, `references/biome.md`) | #190 |
 | `bun-validator` | `stack-validator` (`--stack bun`, `references/bun.md`) | #190 |
 | `clerk-validator` | `stack-validator` (`--stack clerk`, `references/clerk.md`) | #190 |
