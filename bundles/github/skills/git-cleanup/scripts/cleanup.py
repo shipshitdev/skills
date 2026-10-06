@@ -37,10 +37,11 @@ FAILURES = (Refused, OSError, ValueError, KeyError, TypeError)
 
 # Ignored directory names that tooling rebuilds from tracked sources or lockfiles.
 REGENERABLE = {"node_modules", ".next", ".turbo", ".cache", ".parcel-cache", "dist", "build",
-               "coverage", "generated", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+               "coverage", "generated", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache",
+               ".expo", ".build", ".venv", "venv", "test-results", "playwright-report", "blob-report"}
 # Ignored files that tooling writes on every run.
 REGENERABLE_FILES = {"next-env.d.ts"}
-# Top-level ignored directory that holds disposable agent scratch.
+# Ignored directory, at any depth, that holds disposable agent scratch.
 SCRATCH = ".tmp"
 # Reflog messages that move a ref without creating work on it.
 CREATED = ("branch: Created from ", "Branch: renamed ")
@@ -117,10 +118,25 @@ class Repository:
                           accepted=(0, 1)).stdout.strip()
         status = self.run("git", "-C", str(path), "status", "--porcelain=v1", "-z",
                           "--untracked-files=all", "--ignore-submodules=none").stdout
-        if status or "locked" in record or "prunable" in record:
+        entries, links, changes = status.split("\0"), [], []
+        for index, entry in enumerate(entries):
+            # Renames and copies carry their source path as the next entry.
+            if not entry or (index and entries[index - 1][:1] in ("R", "C")):
+                continue
+            # A `node_modules/` ignore rule misses a symlink, so a linked
+            # dependency directory shows as untracked; removal only unlinks it.
+            name = entry[3:]
+            if (entry.startswith("?? ") and name.rsplit("/", 1)[-1] in REGENERABLE
+                    and (path / name).is_symlink()):
+                links.append(name)
+            else:
+                changes.append(entry)
+        if changes or "locked" in record or "prunable" in record:
             raise Refused("dirty, untracked files, locked, or stale worktree")
         state = {"path": str(path.resolve()), "oid": head, "ref": branch}
         ignored = self.ignored_disposition(path, Path(self.worktrees()[0]["worktree"]))
+        if links:
+            ignored["untracked_links"] = sorted(links)
         if any(ignored.values()):
             state["ignored"] = ignored
         return state
@@ -133,7 +149,7 @@ class Repository:
         for entry in sorted(item for item in listing.split("\0") if item):
             relative = entry.rstrip("/")
             target = path / relative
-            if relative == SCRATCH or relative.startswith(SCRATCH + "/"):
+            if SCRATCH in relative.split("/"):
                 scratch.append(entry)
                 continue
             # Removal unlinks a symlink without following it, so a linked
@@ -145,10 +161,15 @@ class Repository:
                 files = []
                 for directory, names, filenames in os.walk(target):
                     links = [name for name in names if (Path(directory) / name).is_symlink()]
-                    rebuilt = [name for name in names if name in REGENERABLE and name not in links]
+                    rebuilt = [name for name in names if name not in links and (
+                        name in REGENERABLE or (name == "_" and Path(directory).name == ".husky"))]
                     regenerable.extend((Path(directory) / name).relative_to(path).as_posix() + "/"
                                        for name in sorted(rebuilt))
-                    names[:] = sorted(name for name in names if name not in links + rebuilt)
+                    disposable = [name for name in names if name == SCRATCH and name not in links]
+                    scratch.extend((Path(directory) / name).relative_to(path).as_posix() + "/"
+                                   for name in disposable)
+                    names[:] = sorted(name for name in names
+                                      if name not in links + rebuilt + disposable)
                     files.extend(Path(directory) / name for name in sorted(filenames + links))
             else:
                 files = [target]
@@ -164,14 +185,17 @@ class Repository:
             raise Refused("ignored files present only in this worktree; preserve or relocate them "
                           "before cleanup: " + ", ".join(unique[:5]))
         return {"regenerable": sorted(set(regenerable)), "duplicated": sorted(set(duplicated)),
-                "scratch": sorted(scratch)}
+                "scratch": sorted(set(scratch))}
 
     @staticmethod
     def regenerable(relative: str, is_directory: bool) -> bool:
         # The names cover directories only; a file called `build` is not output.
-        *parents, last = relative.split("/")
-        return (any(part in REGENERABLE for part in parents)
-                or (is_directory and last in REGENERABLE) or last.endswith(".tsbuildinfo")
+        parts = relative.split("/")
+        *parents, last = parts
+        # Husky writes its hook shims to `.husky/_` on every install.
+        husky = any(parts[i:i + 2] == [".husky", "_"] for i in range(len(parts) - 1))
+        return (husky or any(part in REGENERABLE for part in parents)
+                or (is_directory and last in REGENERABLE) or last.endswith((".tsbuildinfo", ".log"))
                 or last in REGENERABLE_FILES)
 
     @staticmethod
@@ -461,16 +485,29 @@ class Repository:
         result = self.run("gh", "api", "--method", "GET", "--paginate", "--slurp",
                           f"repos/{repository}/commits/{oid}/pulls", "-f", "per_page=100",
                           accepted=(0, 1))
-        if result.returncode != 0:
-            # An unpushed commit has no PR on GitHub.
-            return []
+        candidates = ([pr for page in json.loads(result.stdout) for pr in page]
+                      if result.returncode == 0 else [])
+        if not candidates:
+            # That endpoint lists only PRs that brought the commit onto the
+            # default branch, so a squash-merged PR head is found by search.
+            search = self.run("gh", "api", "--method", "GET", "search/issues", "-f",
+                              f"q={oid} repo:{repository} is:pr", "-f", "per_page=20",
+                              accepted=(0, 1))
+            found = json.loads(search.stdout) if search.returncode == 0 else {}
+            items = found.get("items", []) if isinstance(found, dict) else []
+            for item in items:
+                if not isinstance(item, dict) or not isinstance(item.get("number"), int):
+                    continue
+                pr = self.run("gh", "api", f"repos/{repository}/pulls/{item['number']}",
+                              accepted=(0, 1))
+                if pr.returncode == 0:
+                    candidates.append(json.loads(pr.stdout))
         records = []
-        for page in json.loads(result.stdout):
-            for pr in page:
-                repos = [((pr.get(side) or {}).get("repo") or {}).get("full_name", "").lower()
-                         for side in ("head", "base")]
-                if repos == [repository.lower()] * 2:
-                    records.append(pr)
+        for pr in candidates:
+            repos = [((pr.get(side) or {}).get("repo") or {}).get("full_name", "").lower()
+                     for side in ("head", "base")]
+            if repos == [repository.lower()] * 2:
+                records.append(pr)
         return records
 
     @staticmethod
@@ -752,6 +789,10 @@ class Repository:
                     self.git("push", f"--force-with-lease={action['ref']}:{action['oid']}",
                              "origin", f":{action['ref']}")
                 elif action["kind"] == "worktree":
+                    # Untracked dependency links block a non-forced removal;
+                    # unlinking removes only the link, never its target.
+                    for name in action.get("ignored", {}).get("untracked_links", []):
+                        os.unlink(Path(action["path"]) / name)
                     self.git("worktree", "remove", "--", action["path"])
                 else:
                     raise Refused("unknown action")
