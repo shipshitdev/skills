@@ -7,8 +7,8 @@ metadata:
   version: "2.2.2"
   tags: "audit, quality, accessibility"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/audit.md
-  upstream_version: skill-v2.1.1
-  upstream_latest: skill-v3.5.0
+  upstream_version: skill-v3.1.1
+  upstream_latest: skill-v4.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
 when_to_use: "UI quality report, no code changes"

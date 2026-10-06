@@ -7,8 +7,8 @@ metadata:
   version: "2.2.2"
   tags: "layout, ux, frontend"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/layout.md
-  upstream_version: skill-v2.1.1
-  upstream_latest: skill-v3.5.0
+  upstream_version: skill-v3.1.1
+  upstream_latest: skill-v4.5.0
   last_synced: "2026-06-12"
   license: Apache-2.0
 when_to_use: "every section looks the same, nothing guides the eye"
