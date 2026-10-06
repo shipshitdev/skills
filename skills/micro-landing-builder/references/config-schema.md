@@ -44,7 +44,7 @@ interface ThemeConfig {
   accent: string;            // --brand (text-brand), the extra brand accent
   background: string;        // --background (bg-background)
   foreground?: string;       // --foreground; derived from background brightness when omitted
-  mode?: "dark" | "light";   // Token set in globals.css (default "dark"); toggles the .dark class
+  mode?: "dark" | "light";   // Token set in globals.css; inferred from background brightness when omitted
   font: {
     heading: string;         // Informational: set in layout.tsx <link> and --font-heading in globals.css
     body: string;            // Informational: set in layout.tsx <link> and --font-sans in globals.css
