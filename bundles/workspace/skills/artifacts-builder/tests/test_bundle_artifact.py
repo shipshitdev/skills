@@ -166,9 +166,96 @@ class BundleArtifactTest(unittest.TestCase):
         self.assertIn('"css-tree": "3.2.1"', manifest)
         self.assertRegex(manifest, r'"vite-plugin-singlefile": "\d')  # exact, no caret
 
-    def test_cleanup_trap_is_installed_before_any_temp_file_is_created(self) -> None:
-        script = BUNDLE.read_text()
-        self.assertLess(script.index("trap "), script.index("mktemp"))
+    def cold_project(self) -> Path:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        project = Path(tmp.name) / "app"
+        project.mkdir()
+        (project / "package.json").write_text(
+            '{"name":"fixture","private":true,"type":"module","devDependencies":{"vite":"^8.3.0"}}\n'
+        )
+        (project / "vite.config.js").write_text('import { defineConfig } from "vite"\nexport default defineConfig({})\n')
+        (project / "index.html").write_text(INDEX_HTML.format(head="", body=""))
+        (project / "main.js").write_text('document.title = "x"\n')
+        return project
+
+    def stub_bun(self, project: Path, on_add: str) -> dict:
+        """A bun wrapper in front of PATH whose `bun add` runs `on_add` instead of installing."""
+        import os
+
+        real = shutil.which("bun")
+        bin_dir = project.parent / "stubbin"
+        bin_dir.mkdir(exist_ok=True)
+        stub = bin_dir / "bun"
+        stub.write_text(f'#!/bin/sh\nif [ "$1" = add ]; then\n{on_add}\nfi\nexec "{real}" "$@"\n')
+        stub.chmod(0o755)
+        return {**os.environ, "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}"}
+
+    def leftovers(self, project: Path) -> list[str]:
+        return sorted(p.name for p in project.iterdir() if p.name.startswith((".bundle-", "bundle.html.", "vite.singlefile.config.ts.")))
+
+    def test_stale_install_lock_of_a_killed_run_is_recovered(self) -> None:
+        import os
+        import signal
+        import time
+
+        project = self.cold_project()
+        env = self.stub_bun(project, "sleep 120")  # the first run hangs inside `bun add`
+        first = subprocess.Popen(
+            ["bash", str(BUNDLE)], cwd=project, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        lock = project / ".bundle-install.lock"
+        deadline = time.time() + 30
+        while not lock.exists() and time.time() < deadline:
+            time.sleep(0.1)
+        self.assertTrue(lock.exists(), "the first run never took the install lock")
+        time.sleep(0.5)  # let it finish writing its owner record
+        os.killpg(first.pid, signal.SIGKILL)  # kill -9 during the install
+        first.wait()
+        self.assertTrue(lock.exists(), "kill -9 leaves the lock behind, which is what is being tested")
+
+        result = self.bundle(project)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("<title>fixture</title>", (project / "bundle.html").read_text())
+        self.assertFalse(lock.exists())
+
+    def test_failures_and_signals_clean_up_the_lock_and_temp_files(self) -> None:
+        import os
+        import signal
+        import time
+
+        # 1. the install itself fails: lock released, nothing left behind
+        project = self.cold_project()
+        env = self.stub_bun(project, "exit 1")
+        result = subprocess.run(["bash", str(BUNDLE)], cwd=project, env=env, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.leftovers(project), [])
+        self.assertFalse((project / "bundle.html").exists())
+
+        # 2. SIGTERM while the install holds the lock: the EXIT trap still runs
+        project = self.cold_project()
+        env = self.stub_bun(project, "sleep 120")
+        proc = subprocess.Popen(
+            ["bash", str(BUNDLE)], cwd=project, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        deadline = time.time() + 30
+        while not (project / ".bundle-install.lock").exists() and time.time() < deadline:
+            time.sleep(0.1)
+        # like a terminal or a CI runner: the signal goes to the whole process group
+        os.killpg(proc.pid, signal.SIGTERM)
+        proc.wait(timeout=30)
+        self.assertEqual(self.leftovers(project), [])
+
+        # 3. the inliner rejects the page after the build: work directory removed, config kept
+        project = self.project(body='<img alt="gone" src="/not-in-public.png" />')
+        result = self.bundle(project)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.leftovers(project), [])
+        self.assertTrue((project / "vite.singlefile.config.ts").exists())  # the config itself is kept
+        self.assertFalse((project / ".bundle-install.lock").exists())
 
     def test_public_symlink_escape_is_rejected_end_to_end(self) -> None:
         project = self.project(body='<img alt="x" src="/secret.png" />')

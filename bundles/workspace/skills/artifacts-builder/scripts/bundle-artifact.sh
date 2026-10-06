@@ -11,9 +11,13 @@ LOCK_DIR=""
 cleanup() {
   [ -z "$WORK_DIR" ] || rm -rf "$WORK_DIR"
   [ -z "$CONFIG_TMP" ] || rm -f "$CONFIG_TMP"
-  [ -z "$LOCK_DIR" ] || rmdir "$LOCK_DIR" 2>/dev/null || true
+  [ -z "$LOCK_DIR" ] || rm -rf "$LOCK_DIR"
 }
 trap cleanup EXIT
+# Turn termination signals into a normal exit so the EXIT trap (lock and temp cleanup) still runs
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'exit 129' HUP
 
 echo "Bundling React app to a single HTML artifact..."
 
@@ -62,18 +66,49 @@ dep_installed() {
 }
 
 # Concurrent runs in one project must not install at the same time: serialize with a lock
-# directory (mkdir is atomic) and re-check what is missing once the lock is held.
+# directory (mkdir is atomic) and re-check what is missing once the lock is held. The lock records
+# its owner (pid and process start time); a lock whose owner is gone (for example after kill -9)
+# is stale and gets taken over.
+LOCK_PATH=".bundle-install.lock"
+
+process_start() {
+  ps -o lstart= -p "$1" 2>/dev/null | sed 's/^ *//; s/ *$//'
+}
+
+lock_is_stale() {
+  local owner="$LOCK_PATH/owner" pid started
+  if [ ! -f "$owner" ]; then
+    # The owner may still be about to write its record; only call it stale once the lock is old
+    [ -n "$(find "$LOCK_PATH" -maxdepth 0 -mmin +1 2>/dev/null)" ]
+    return
+  fi
+  read -r pid started < <(head -n 1 "$owner" | awk '{pid=$1; $1=""; sub(/^ /,""); print pid, $0}') || return 0
+  [ -n "$pid" ] || return 0
+  kill -0 "$pid" 2>/dev/null || return 0
+  [ "$(process_start "$pid")" = "$started" ] || return 0
+  return 1
+}
+
 acquire_lock() {
   local tries=0
-  while ! mkdir ".bundle-install.lock" 2>/dev/null; do
+  while ! mkdir "$LOCK_PATH" 2>/dev/null; do
+    if lock_is_stale; then
+      # rename is atomic: of several runs recovering the same stale lock, exactly one wins
+      if mv "$LOCK_PATH" "$LOCK_PATH.stale.$$" 2>/dev/null; then
+        rm -rf "$LOCK_PATH.stale.$$"
+        echo "Removed a stale install lock."
+      fi
+      continue
+    fi
     tries=$((tries + 1))
     if [ "$tries" -gt 600 ]; then
-      echo "Error: another bundle run holds .bundle-install.lock; remove it if it is stale."
+      echo "Error: another bundle run holds $LOCK_PATH (see $LOCK_PATH/owner)."
       exit 1
     fi
     sleep 0.2
   done
-  LOCK_DIR=".bundle-install.lock"
+  LOCK_DIR="$LOCK_PATH"
+  echo "$$ $(process_start $$)" > "$LOCK_DIR/owner"
 }
 
 acquire_lock
@@ -85,7 +120,7 @@ if [ "${#MISSING_DEPS[@]}" -gt 0 ]; then
   echo "Installing bundling dependencies: ${MISSING_DEPS[*]}"
   bun add -d --exact "${MISSING_DEPS[@]}"
 fi
-rmdir "$LOCK_DIR"
+rm -rf "$LOCK_DIR"
 LOCK_DIR=""
 
 # A separate config keeps the normal dev and build setup untouched: it extends the

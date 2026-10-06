@@ -9,7 +9,21 @@
 // bundle-artifact.sh installs the parsers into the project and runs a copy of this file there.
 //
 // Usage: bun inline-local-assets.mjs <build-dir> <output-html> [project-root]
-import { constants, closeSync, fstatSync, mkdirSync, openSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs"
+import {
+  closeSync,
+  constants,
+  copyFileSync,
+  fstatSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  openSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs"
+import { tmpdir } from "node:os"
 import { dirname, extname, join, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
 import { tokenTypes, tokenize } from "css-tree"
@@ -152,8 +166,23 @@ function consumeUrlToken(css, start) {
   return { value, bad: false, end: css.length }
 }
 
+// `<` and `>` are escaped as CSS code points so a generated string can never close a <style>
+// element or open markup, whatever the (decoded) text of the original reference was
 const cssStringLiteral = (value) =>
-  `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("\n", "\\a ")}"`
+  `"${value
+    .replaceAll("\\", "\\\\")
+    .replaceAll('"', '\\"')
+    .replaceAll("\n", "\\a ")
+    .replaceAll("<", "\\3c ")
+    .replaceAll(">", "\\3e ")}"`
+
+// Fragments are copied verbatim from the (decoded) reference, so percent-encode everything that
+// could matter in markup, CSS strings or a URL: `<>"\`, backtick, braces, whitespace, controls and
+// non-ASCII
+const encodeFragment = (fragment) =>
+  fragment.replace(/[^A-Za-z0-9\-._~!$&'()*+,;=:@/?%#[\]]/gu, (c) =>
+    [...Buffer.from(c)].map((byte) => `%${byte.toString(16).toUpperCase().padStart(2, "0")}`).join(""),
+  )
 
 // --- srcset (WHATWG "parse a srcset attribute") -----------------------------------------
 
@@ -184,7 +213,7 @@ function parseDescriptors(descriptors) {
     const last = token.at(-1)
     const number = token.slice(0, -1)
     if (last === "w" && /^[0-9]+$/.test(number)) {
-      if (width !== null || density !== null || height !== null) return null
+      if (width !== null || density !== null) return null
       if (Number.parseInt(number, 10) === 0) return null
       width = Number.parseInt(number, 10)
     } else if (last === "x" && /^-?([0-9]+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?$/.test(number)) {
@@ -199,6 +228,8 @@ function parseDescriptors(descriptors) {
       return null
     }
   }
+  // future-compat height is only valid next to a width
+  if (height !== null && width === null) return null
   return { width, density, height }
 }
 
@@ -246,7 +277,11 @@ const stringifySrcset = (candidates) =>
 
 const quoteDoctypeId = (id) => (id.includes('"') ? `'${id}'` : `"${id}"`)
 
-function doctypeToString(node) {
+function doctypeToString(node, source) {
+  // The original text keeps everything the DOM cannot express (for example the force-quirks flag
+  // of a malformed doctype such as `<!DOCTYPE html foo>`)
+  const location = node.sourceCodeLocation
+  if (location) return source.slice(location.startOffset, location.endOffset)
   let out = `<!DOCTYPE ${node.name}`
   if (node.publicId) {
     out += ` PUBLIC ${quoteDoctypeId(node.publicId)}`
@@ -255,6 +290,24 @@ function doctypeToString(node) {
     out += ` SYSTEM ${quoteDoctypeId(node.systemId)}`
   }
   return `${out}>`
+}
+
+const HTML_NS = "http://www.w3.org/1999/xhtml"
+
+/** A normalized dump of a parse5 tree: document mode, namespaces, attributes with namespaces. */
+function dumpTree(node, depth = 0) {
+  let line = `${"  ".repeat(depth)}${node.nodeName}`
+  if (node.nodeName === "#document") line += ` mode=${node.mode}`
+  if (node.nodeName === "#documentType") {
+    line += ` ${JSON.stringify([node.name, node.publicId, node.systemId])}`
+  }
+  if (node.nodeName === "#text" || node.nodeName === "#comment") line += ` ${JSON.stringify(node.value ?? node.data)}`
+  if (node.namespaceURI) line += ` ns=${node.namespaceURI}`
+  if (node.attrs) line += ` ${JSON.stringify(node.attrs.map((a) => [a.name, a.value, a.namespace ?? null, a.prefix ?? null]))}`
+  const lines = [line]
+  for (const child of node.childNodes ?? []) lines.push(dumpTree(child, depth + 1))
+  if (node.content) lines.push(dumpTree(node.content, depth + 1))
+  return lines.join("\n")
 }
 
 // The HTML parser drops one leading newline in these elements; the serializer does not put it
@@ -273,26 +326,38 @@ function walk(node, visit) {
  * Create an inliner for one build directory. `problems` collects everything that could not be
  * inlined; the caller decides what to do with it.
  */
-export function createInliner({ buildDir, projectRoot: projectArg }) {
+export function createInliner({ buildDir, projectRoot: projectArg, snapshotParent }) {
   const root = resolve(buildDir)
   const projectRoot = resolve(projectArg ?? process.cwd())
-  const realRoot = realpathSync(root)
-  const realProject = realpathSync(projectRoot)
   const problems = []
   const problem = (ref, why) => problems.push(`${ref}  (${why})`)
   const activeCss = new Set()
+  // Referenced files are copied into this private directory (mode 0700) and everything is inlined
+  // from the copies, never from the live tree, so a later swap of a parent directory cannot
+  // redirect a read. Call dispose() when done.
+  const snapshotDir = mkdtempSync(join(snapshotParent ?? tmpdir(), "inline-snap-"))
+  const snapshots = new Map()
+
+  /** lstat one path component; null when it does not exist. */
+  const lstatOrNull = (path) => {
+    try {
+      return lstatSync(path, { bigint: true })
+    } catch {
+      return null
+    }
+  }
 
   /**
-   * Resolve a reference to a real file inside the build directory.
-   * Returns { real, lexical, fragment, dev, ino } or null (after recording why it failed).
-   * `lexical` is the URL-style path (symlinks not followed); relative references inside a
-   * stylesheet resolve against its directory. Confinement is checked on canonical (realpath)
-   * paths, so a symlinked file or parent directory cannot pull in content from outside the build
-   * or the project, and files with several hard links are rejected.
+   * Resolve a reference to a file inside the build directory and copy it into the snapshot.
+   * Returns { snap, lexical, fragment, dev, ino } or null (after recording why it failed).
+   * `lexical` is the URL-style path; relative references inside a stylesheet resolve against its
+   * directory. The copy walks the path component by component with lstat and refuses symlinks,
+   * hard-linked files and anything that is not a regular file, both in the build and in the
+   * project's public/ source (Vite copies public/ following symlinks).
    */
   function resolveRef(ref, baseDir) {
     const hash = ref.indexOf("#")
-    const fragment = hash >= 0 ? ref.slice(hash) : ""
+    const fragment = hash >= 0 ? encodeFragment(ref.slice(hash)) : ""
     const noFragment = hash >= 0 ? ref.slice(0, hash) : ref
     const query = noFragment.indexOf("?")
     const pathname = query >= 0 ? noFragment.slice(0, query) : noFragment
@@ -320,75 +385,95 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
       return null
     }
 
-    let real
-    try {
-      real = realpathSync(lexical)
-    } catch {
-      problem(ref, "file not found")
-      return null
-    }
-    if (!within(real, realRoot)) {
-      problem(ref, "escapes the build directory through a symlink")
-      return null
-    }
-    const stat = statSync(real, { bigint: true })
-    if (!stat.isFile()) {
+    const cached = snapshots.get(lexical)
+    if (cached) return { ...cached, fragment }
+
+    const segments = relative(root, lexical).split(sep).filter(Boolean)
+    if (segments.length === 0) {
       problem(ref, "not a file")
       return null
     }
-    if (stat.nlink > 1n) {
-      problem(ref, `file has ${stat.nlink} hard links; refusing to read it`)
-      return null
-    }
 
-    // Vite copies public/ into the build following symlinks, so also check the source side
-    const source = join(projectRoot, "public", relative(root, lexical))
-    let realSource = null
-    try {
-      realSource = realpathSync(source)
-    } catch {
-      // not a public/ file (e.g. a generated asset)
-    }
-    if (realSource !== null) {
-      if (!within(realSource, realProject)) {
-        problem(ref, "public/ file escapes the project through a symlink")
+    // The build side
+    let current = root
+    let source = null
+    for (const [index, segment] of segments.entries()) {
+      current = join(current, segment)
+      const stat = lstatOrNull(current)
+      if (stat === null) {
+        problem(ref, "file not found")
         return null
       }
-      if (statSync(realSource).nlink > 1) {
+      if (stat.isSymbolicLink()) {
+        problem(ref, `symlink at /${segments.slice(0, index + 1).join("/")} is not allowed`)
+        return null
+      }
+      if (index < segments.length - 1) {
+        if (!stat.isDirectory()) {
+          problem(ref, "file not found")
+          return null
+        }
+      } else {
+        if (!stat.isFile()) {
+          problem(ref, "not a regular file")
+          return null
+        }
+        if (stat.nlink > 1n) {
+          problem(ref, `file has ${stat.nlink} hard links; refusing to read it`)
+          return null
+        }
+        source = current
+      }
+    }
+
+    // The public/ side: a symlink or hard link in the source would have been copied as a plain file
+    let publicPath = join(projectRoot, "public")
+    for (const [index, segment] of ["", ...segments].entries()) {
+      if (segment !== "") publicPath = join(publicPath, segment)
+      const stat = lstatOrNull(publicPath)
+      if (stat === null) break // not a public/ file (e.g. a generated asset)
+      if (stat.isSymbolicLink()) {
+        problem(ref, `public/ symlink at ${relative(projectRoot, publicPath)} is not allowed`)
+        return null
+      }
+      if (index === segments.length && stat.isFile() && stat.nlink > 1n) {
         problem(ref, "public/ file has several hard links; refusing to read it")
         return null
       }
     }
 
-    return { real, lexical, fragment, dev: stat.dev, ino: stat.ino }
+    const snap = join(snapshotDir, "build", ...segments)
+    mkdirSync(dirname(snap), { recursive: true, mode: 0o700 })
+    copyFileSync(source, snap, constants.COPYFILE_EXCL)
+    const copied = statSync(snap, { bigint: true })
+    const record = { snap, lexical, fragment: "", dev: copied.dev, ino: copied.ino }
+    snapshots.set(lexical, record)
+    return { ...record, fragment }
   }
 
   /**
-   * Read a resolved file through one descriptor: opened without following a final symlink, then
-   * compared (device and inode) with what resolveRef checked, so a swap between check and read
-   * is detected. Returns the bytes or null (after recording the problem).
+   * Read a snapshot copy through one descriptor (opened without following a final symlink and
+   * compared by device and inode with the copy that was made). Returns the bytes or null.
    */
   function readChecked(record) {
     let fd
     try {
-      fd = openSync(record.real, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0))
+      fd = openSync(record.snap, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0))
       const stat = fstatSync(fd, { bigint: true })
       if (!stat.isFile() || stat.dev !== record.dev || stat.ino !== record.ino || stat.nlink > 1n) {
-        problem(record.lexical, "file changed between the check and the read")
-        return null
-      }
-      if (realpathSync(record.lexical) !== record.real) {
-        problem(record.lexical, "path changed between the check and the read")
+        problem(record.lexical, "snapshot file changed while inlining")
         return null
       }
       return readFileSync(fd)
     } catch (error) {
-      problem(record.lexical, `file changed between the check and the read (${error.code ?? error.message})`)
+      problem(record.lexical, `snapshot file changed while inlining (${error.code ?? error.message})`)
       return null
     } finally {
       if (fd !== undefined) closeSync(fd)
     }
   }
+
+  const dispose = () => rmSync(snapshotDir, { recursive: true, force: true })
 
   /** Resolve and encode one reference. kind "css" forces stylesheet processing. Null = left alone. */
   function inlineRef(rawRef, baseDir, kind = "asset") {
@@ -396,26 +481,26 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
     if (!isLocal(ref)) return null
     const found = resolveRef(ref, baseDir)
     if (found === null) return null
-    if (kind === "css" || extname(found.real).toLowerCase() === ".css") return stylesheetUri(found)
+    if (kind === "css" || extname(found.lexical).toLowerCase() === ".css") return stylesheetUri(found)
     const bytes = readChecked(found)
-    return bytes === null ? null : toDataUri(bytes, mimeOf(found.real), found.fragment)
+    return bytes === null ? null : toDataUri(bytes, mimeOf(found.lexical), found.fragment)
   }
 
   function stylesheetUri(found) {
-    const { real, lexical, fragment } = found
-    if (activeCss.has(real)) {
-      problem(real, "stylesheet imports itself (cycle)")
+    const { lexical, fragment } = found
+    if (activeCss.has(lexical)) {
+      problem(lexical, "stylesheet imports itself (cycle)")
       return null
     }
     const bytes = readChecked(found)
     if (bytes === null) return null
-    activeCss.add(real)
+    activeCss.add(lexical)
     try {
       // References inside resolve against the stylesheet's URL directory, not its symlink target
       const css = processCss(bytes.toString("utf8"), dirname(lexical))
       return toDataUri(css, "text/css", fragment)
     } finally {
-      activeCss.delete(real)
+      activeCss.delete(lexical)
     }
   }
 
@@ -427,12 +512,10 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
    * content:"url(x)" and comments are never touched.
    */
   function processCss(css, baseDir) {
-    const tokens = []
-    tokenize(css, (type, start, end) => tokens.push({ type, start, end }))
     const edits = []
     const stack = []
     let inImport = false
-    let skipUntil = 0
+    let from = 0
 
     const nextSignificant = (from) => {
       let j = from
@@ -441,8 +524,15 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
     }
     const refKind = () => (inImport ? "css" : "asset")
 
-    for (const token of tokens) {
-      if (token.start < skipUntil) continue
+    // The css-tree tokenizer does not know the escaped spelling of url(, so after the custom url
+    // consumer ran, tokenizing restarts at its exact end offset instead of reusing the old tokens.
+    while (from < css.length) {
+      const tokens = []
+      const offset = from
+      tokenize(css.slice(from), (type, start, end) => tokens.push({ type, start: start + offset, end: end + offset }))
+      let resume = null
+
+      for (const token of tokens) {
       const raw = css.slice(token.start, token.end)
       switch (token.type) {
         case tokenTypes.AtKeyword:
@@ -463,7 +553,7 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
               break
             }
             const url = consumeUrlToken(css, open)
-            skipUntil = url.end
+            resume = url.end
             if (url.bad) {
               problem(css.slice(token.start, url.end), "malformed url() token")
               break
@@ -498,6 +588,10 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
         default:
           break
       }
+      if (resume !== null) break
+      }
+      if (resume === null) break
+      from = resume
     }
 
     let out = ""
@@ -536,7 +630,7 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
   }
 
   function processHtml(html) {
-    const document = parse(html)
+    const document = parse(html, { sourceCodeLocationInfo: true })
     walk(document, (node) => {
       if (node.attrs) processElement(node)
       if (node.tagName === "style") {
@@ -544,14 +638,40 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
           if (child.nodeName === "#text") child.value = processCss(child.value, root)
         }
       }
-      if (LEADING_NEWLINE_ELEMENTS.has(node.tagName)) {
+      if (node.tagName === "plaintext" && node.namespaceURI === HTML_NS) {
+        problem("<plaintext>", "cannot be written back faithfully (it swallows the rest of the document); remove it")
+      }
+    })
+
+    // What the DOM must still be after serialization (taken before the newline repair below)
+    const expected = dumpTree(document)
+
+    walk(document, (node) => {
+      if (LEADING_NEWLINE_ELEMENTS.has(node.tagName) && node.namespaceURI === HTML_NS) {
         const first = node.childNodes[0]
         if (first?.nodeName === "#text" && first.value.startsWith("\n")) first.value = `\n${first.value}`
       }
     })
-    return document.childNodes
-      .map((node) => (node.nodeName === "#documentType" ? doctypeToString(node) : serializeOuter(node)))
+
+    const output = document.childNodes
+      .map((node) =>
+        node.nodeName === "#documentType" ? doctypeToString(node, html) : serializeOuter(node),
+      )
       .join("")
+
+    // Guard: the output must parse to the very same DOM (document mode, namespaces, attributes,
+    // every script and style element). Anything else would be a silent change or an injection.
+    const actual = dumpTree(parse(output))
+    if (actual !== expected) {
+      const a = expected.split("\n")
+      const b = actual.split("\n")
+      const at = a.findIndex((line, i) => line !== b[i])
+      problem(
+        "output",
+        `serializing the page would change its DOM near: ${(a[at] ?? "").trim().slice(0, 120)} -> ${(b[at] ?? "").trim().slice(0, 120)}`,
+      )
+    }
+    return output
   }
 
   /** Read and process <build-dir>/index.html. */
@@ -562,7 +682,7 @@ export function createInliner({ buildDir, projectRoot: projectArg }) {
     return bytes === null ? null : processHtml(bytes.toString("utf8"))
   }
 
-  return { root, problems, resolveRef, readChecked, processCss, processHtml, processIndex }
+  return { root, problems, snapshotDir, dispose, resolveRef, readChecked, processCss, processHtml, processIndex }
 }
 
 // --- CLI ----------------------------------------------------------------------------------
@@ -574,7 +694,12 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     process.exit(2)
   }
   const inliner = createInliner({ buildDir: buildDirArg, projectRoot: projectArg })
-  const output = inliner.processIndex()
+  let output
+  try {
+    output = inliner.processIndex()
+  } finally {
+    inliner.dispose()
+  }
 
   if (output === null || inliner.problems.length > 0) {
     console.error("Error: bundle.html would still reference files that are not inlined:")
