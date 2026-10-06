@@ -10,20 +10,27 @@
  * local docker compose); migrations are applied before the suite runs.
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import { ValidationPipe } from "@nestjs/common";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 import { Test, TestingModule } from "@nestjs/testing";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
-import * as request from "supertest";
+import { toNodeHandler } from "better-auth/node";
+import request from "supertest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { AppModule } from "../app.module";
+import { AuthService } from "../auth/auth.service";
 import { PrismaService } from "../prisma/prisma.service";
 
 describe("{{Entity}}s E2E", () => {
-  let app: INestApplication;
+  let app: NestExpressApplication;
   let prisma: PrismaService;
-  let authToken: string;
+  // Session cookie of a real user created through Better Auth
+  let session: string[];
 
-  // Mock auth token for testing
-  const mockAuthToken = "Bearer test-token";
+  const testUser = {
+    name: "E2E User",
+    email: `e2e-{{entity}}-${Date.now()}@example.com`,
+    password: "correct-horse-battery",
+  };
 
   beforeAll(async () => {
     // Apply migrations first: `bunx prisma migrate deploy` against DATABASE_URL
@@ -31,10 +38,12 @@ describe("{{Entity}}s E2E", () => {
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    // Same wiring as main.ts: Better Auth parses its own bodies, Nest's parser comes after
+    app = moduleFixture.createNestApplication<NestExpressApplication>({ bodyParser: false });
+    app.getHttpAdapter().getInstance().all("/api/auth/*splat", toNodeHandler(app.get(AuthService).auth));
+    app.useBodyParser("json");
     prisma = moduleFixture.get(PrismaService);
 
-    // Apply same configuration as main.ts
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
@@ -44,11 +53,19 @@ describe("{{Entity}}s E2E", () => {
     );
 
     await app.init();
+
+    const signUp = await request(app.getHttpServer())
+      .post("/api/auth/sign-up/email")
+      .set("Origin", process.env.FRONTEND_URL ?? "http://localhost:3000")
+      .send(testUser)
+      .expect(200);
+    session = signUp.headers["set-cookie"] as unknown as string[];
   });
 
   afterAll(async () => {
     // Remove rows created by this suite, then release the connection pool
     await prisma.{{entity}}.deleteMany({});
+    await prisma.user.deleteMany({ where: { email: testUser.email } });
     await app.close();
   });
 
@@ -61,7 +78,7 @@ describe("{{Entity}}s E2E", () => {
 
       const response = await request(app.getHttpServer())
         .post("/{{entities}}")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .send(create{{Entity}}Dto)
         .expect(201);
 
@@ -69,7 +86,7 @@ describe("{{Entity}}s E2E", () => {
       expect(response.body.title).toBe(create{{Entity}}Dto.title);
     });
 
-    it("should return 401 without auth token", async () => {
+    it("should return 401 without a session", async () => {
       await request(app.getHttpServer())
         .post("/{{entities}}")
         .send({ title: "Test" })
@@ -79,7 +96,7 @@ describe("{{Entity}}s E2E", () => {
     it("should return 400 for invalid data", async () => {
       await request(app.getHttpServer())
         .post("/{{entities}}")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .send({}) // Missing required fields
         .expect(400);
     });
@@ -89,13 +106,13 @@ describe("{{Entity}}s E2E", () => {
     it("should return all {{entities}} for user", async () => {
       const response = await request(app.getHttpServer())
         .get("/{{entities}}")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
     });
 
-    it("should return 401 without auth token", async () => {
+    it("should return 401 without a session", async () => {
       await request(app.getHttpServer())
         .get("/{{entities}}")
         .expect(401);
@@ -109,7 +126,7 @@ describe("{{Entity}}s E2E", () => {
       // Create a {{entity}} first
       const response = await request(app.getHttpServer())
         .post("/{{entities}}")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .send({ title: "Test {{Entity}}" });
 
       created{{Entity}}Id = response.body.id;
@@ -118,7 +135,7 @@ describe("{{Entity}}s E2E", () => {
     it("should return a {{entity}} by id", async () => {
       const response = await request(app.getHttpServer())
         .get(`/{{entities}}/${created{{Entity}}Id}`)
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .expect(200);
 
       expect(response.body.id).toBe(created{{Entity}}Id);
@@ -127,7 +144,7 @@ describe("{{Entity}}s E2E", () => {
     it("should return 404 for non-existent {{entity}}", async () => {
       await request(app.getHttpServer())
         .get("/{{entities}}/nonexistent-id")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .expect(404);
     });
   });
@@ -138,7 +155,7 @@ describe("{{Entity}}s E2E", () => {
     beforeEach(async () => {
       const response = await request(app.getHttpServer())
         .post("/{{entities}}")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .send({ title: "Test {{Entity}}" });
 
       created{{Entity}}Id = response.body.id;
@@ -149,7 +166,7 @@ describe("{{Entity}}s E2E", () => {
 
       const response = await request(app.getHttpServer())
         .patch(`/{{entities}}/${created{{Entity}}Id}`)
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .send(updateDto)
         .expect(200);
 
@@ -159,7 +176,7 @@ describe("{{Entity}}s E2E", () => {
     it("should return 404 for non-existent {{entity}}", async () => {
       await request(app.getHttpServer())
         .patch("/{{entities}}/nonexistent-id")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .send({ title: "Updated" })
         .expect(404);
     });
@@ -171,7 +188,7 @@ describe("{{Entity}}s E2E", () => {
     beforeEach(async () => {
       const response = await request(app.getHttpServer())
         .post("/{{entities}}")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .send({ title: "Test {{Entity}}" });
 
       created{{Entity}}Id = response.body.id;
@@ -180,20 +197,20 @@ describe("{{Entity}}s E2E", () => {
     it("should delete a {{entity}}", async () => {
       await request(app.getHttpServer())
         .delete(`/{{entities}}/${created{{Entity}}Id}`)
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .expect(200);
 
       // Verify deletion
       await request(app.getHttpServer())
         .get(`/{{entities}}/${created{{Entity}}Id}`)
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .expect(404);
     });
 
     it("should return 404 for non-existent {{entity}}", async () => {
       await request(app.getHttpServer())
         .delete("/{{entities}}/nonexistent-id")
-        .set("Authorization", mockAuthToken)
+        .set("Cookie", session)
         .expect(404);
     });
   });

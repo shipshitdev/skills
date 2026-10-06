@@ -5,7 +5,7 @@
  * Replace {{entity}} with camelCase entity name (e.g., task)
  * Replace {{entities}} with plural camelCase (e.g., tasks)
  *
- * Requires: npm install -D @testing-library/react-hooks
+ * Requires: bun add -D @testing-library/react @testing-library/dom jsdom
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -23,12 +23,7 @@ vi.mock("@services/{{entity}}.service", () => ({
   },
 }));
 
-// Mock Clerk
-vi.mock("@clerk/nextjs", () => ({
-  useAuth: () => ({
-    getToken: vi.fn().mockResolvedValue("test-token"),
-  }),
-}));
+// No auth mock is needed: the service sends the Better Auth session cookie itself
 
 describe("use{{Entity}}s", () => {
   const mock{{Entity}}s = [

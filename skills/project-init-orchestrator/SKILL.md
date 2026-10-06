@@ -121,14 +121,18 @@ Use only when v0 is not appropriate or when enhancing an existing workspace. Do
 not use for new Shipshit.dev product repos unless v0 is unavailable or the user
 explicitly bypasses it.
 
-Stack: Next.js 16 + React 19 + TypeScript + Tailwind + @agenticindiedev/ui
-(frontend), NestJS 11 + Prisma/Postgres + Clerk Auth + Swagger (backend), Vitest 80%
-coverage + Biome + Husky + GitHub Actions CI/CD, Bun package manager.
+Stack: Next.js 16 (`proxy.ts`) + React 19 + TypeScript 6 + Tailwind v4 CSS-first
+(frontend), NestJS 12 + Prisma 7/Postgres + Better Auth + Swagger (backend), Vitest 80%
+coverage + Biome + GitHub Actions CI, Bun package manager. Every dependency pin lives in
+the `V` table at the top of `scripts/init-workspace.py`; refresh it with `npm view <pkg> version`
+(Expo packages follow the SDK's `bundledNativeModules.json`, not the newest release).
 
 Load `references/legacy-manual-route.md` for the full step-by-step workflow,
 generated structure, key code patterns, and development commands. Helper scripts
 live in `scripts/` (`init-workspace.py`, `add-api-collection.py`,
-`add-frontend-app.py`).
+`add-frontend-app.py`). After generating, run `bun install`, copy `.env.example` to
+`api/.env`, run `bun run prisma:migrate` from `api/`, and run `bun run lint:fix` once so
+Biome formats the generated files.
 
 ## Usage
 
@@ -208,8 +212,9 @@ npx @shipshitdev/v0 ~/projects/my-saas --agent codex --no-github
 
 - `references/legacy-manual-route.md` - Manual workspace workflow
 - `references/templates/` - Code generation templates (NestJS service/controller/e2e
-  specs, React component/hook specs, frontend test setup with Clerk mocks)
-- `references/vitest.config.ts` - Backend Vitest configuration (80% coverage)
+  specs, Better Auth guard/service/client, `proxy.ts`, React component/hook specs,
+  frontend test setup with a mocked auth client)
+- `references/vitest.config.ts` - Backend Vitest configuration (80% coverage, `unplugin-swc`)
 - `references/vitest.config.frontend.ts` - Frontend Vitest configuration (jsdom)
 - `references/github-actions/ci.yml` - CI/CD workflow
 - `references/architecture-guide.md` - Architectural decisions
@@ -227,7 +232,7 @@ npx @shipshitdev/v0 ~/projects/my-saas --agent codex --no-github
 ### Linting errors after setup
 
 - Run `bun run lint:fix` to auto-fix
-- Check `.eslintrc.js` matches your stack
+- Check the root `biome.json` matches your stack
 - Verify TypeScript config if using TS
 
 ### Pre-commit hook not running
@@ -235,3 +240,9 @@ npx @shipshitdev/v0 ~/projects/my-saas --agent codex --no-github
 - Run `bunx husky install` manually
 - Check `.husky/pre-commit` exists and is executable
 - Verify `prepare` script in package.json
+
+### `prisma generate` or `bun run build` asks for DATABASE_URL
+
+- The scaffold's `api/prisma.config.ts` reads `process.env.DATABASE_URL` directly, so
+  generate and build work without a `.env`; only `prisma migrate` and the running API
+  need the URL. Do not switch it to `env("DATABASE_URL")`, which throws when unset.

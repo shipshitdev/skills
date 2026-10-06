@@ -6,10 +6,8 @@ on:
   pull_request:
     branches: [main]
 
-# prisma generate reads prisma.config.ts, which requires DATABASE_URL to be set.
-# Unit tests mock PrismaService, so a placeholder URL is enough here.
-env:
-  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ci?schema=public
+# prisma generate needs no DATABASE_URL (api/prisma.config.ts reads process.env directly)
+# and unit tests mock PrismaService, so no database is required in this workflow.
 
 jobs:
   lint:
@@ -45,6 +43,7 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+        working-directory: .
 
       - name: Generate Prisma client
         run: bun run prisma:generate
@@ -62,9 +61,6 @@ jobs:
   test-frontend:
     name: Test Frontend
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
 
@@ -77,12 +73,12 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Run tests with coverage
-        run: bun run test:coverage
+        run: cd frontend && bun run test:coverage
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
-          files: ./frontend/coverage/lcov.info
+          files: ./frontend/apps/dashboard/coverage/lcov.info
           flags: frontend
           fail_ci_if_error: false
 
@@ -107,8 +103,7 @@ jobs:
       - name: Build Frontend
         run: cd frontend && bun run build
         env:
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
 
   typecheck:
     name: Type Check
@@ -127,8 +122,5 @@ jobs:
       - name: Generate Prisma client
         run: cd api && bun run prisma:generate
 
-      - name: Type check API
-        run: cd api && bun run typecheck
-
-      - name: Type check Frontend
-        run: cd frontend && bun run typecheck
+      - name: Type check API, frontend and mobile
+        run: bun run typecheck

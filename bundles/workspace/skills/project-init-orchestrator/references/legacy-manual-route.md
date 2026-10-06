@@ -32,23 +32,30 @@ Is this correct? Any adjustments?
 
 ## Phase 2: Auth Setup (Always Included)
 
-Generate Clerk authentication:
+Generate Better Auth (email + password, sessions in Postgres through Prisma). Better Auth
+runs inside the API; the dashboard talks to it with `better-auth/react`. The scaffold
+generates all of this, so the manual route only needs it when you assemble a workspace by hand.
 
 **Backend:**
 
-- `auth/guards/clerk-auth.guard.ts` - Token verification guard
+- `auth/auth.service.ts` - Owns the Better Auth instance (Prisma adapter)
+- `auth/auth.module.ts` - Global module exporting `AuthService` and `AuthGuard`
+- `auth/guards/auth.guard.ts` - Session guard (`auth.api.getSession`)
 - `auth/decorators/current-user.decorator.ts` - User extraction decorator
+- `main.ts` - Mounts `toNodeHandler(auth)` at `/api/auth/*` before Nest's body parser
+- `prisma/schema/auth.prisma` - `User`, `Session`, `Account`, `Verification` models
 
-**Frontend:**
+**Frontend (`frontend/apps/dashboard`):**
 
-- `providers/clerk-provider.tsx` - ClerkProvider wrapper
-- `app/sign-in/[[...sign-in]]/page.tsx` - Sign in page
-- `app/sign-up/[[...sign-up]]/page.tsx` - Sign up page
-- `proxy.ts` - Protected route middleware (Next.js 16+)
+- `lib/auth-client.ts` - `createAuthClient` pointed at the API
+- `components/auth-form.tsx` - Shared sign-in / sign-up form
+- `app/sign-in/page.tsx`, `app/sign-up/page.tsx` - Auth pages
+- `proxy.ts` - Optimistic route protection (Next.js 16 renamed `middleware.ts` to `proxy.ts`)
 
 **Environment:**
 
-- `.env.example` with all required variables
+- `.env.example` with `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `FRONTEND_URL`
+  and `NEXT_PUBLIC_API_URL`
 
 ## Phase 3: Entity Generation
 
@@ -59,7 +66,7 @@ For each extracted entity, generate complete CRUD **with tests**:
 ```
 api/apps/api/src/collections/{entity}/
 ├── {entity}.module.ts
-├── {entity}.controller.ts         # Full CRUD + Swagger + ClerkAuthGuard
+├── {entity}.controller.ts         # Full CRUD + Swagger + AuthGuard
 ├── {entity}.controller.spec.ts    # Controller unit tests
 ├── {entity}.service.ts            # Business logic
 ├── {entity}.service.spec.ts       # Service unit tests
@@ -67,9 +74,8 @@ api/apps/api/src/collections/{entity}/
     ├── create-{entity}.dto.ts     # class-validator decorators
     └── update-{entity}.dto.ts     # PartialType of create
 
-api/apps/api/test/
-├── {entity}.e2e-spec.ts           # E2E tests with supertest
-└── setup.ts                       # Test setup (DATABASE_URL, mocks)
+api/apps/api/src/test/
+└── {entity}.e2e.spec.ts           # E2E tests with supertest (needs a Postgres database)
 
 api/prisma/schema/
 └── {entity}.prisma                # Prisma model with userId
@@ -80,11 +86,11 @@ api/prisma/schema/
 ```
 frontend/apps/dashboard/
 ├── app/{entity}/
-│   ├── page.tsx                   # List view (protected)
+│   ├── page.tsx                   # List view (protected by proxy.ts)
+│   ├── page.spec.tsx              # Page test
 │   └── [id]/page.tsx              # Detail view (protected)
-├── src/test/
-│   └── setup.ts                   # Test setup with Clerk mocks
-└── vitest.config.ts               # Frontend test config (jsdom)
+├── vitest.setup.ts                # jest-dom matchers
+└── vitest.config.mts              # Frontend test config (jsdom)
 
 frontend/packages/components/
 ├── {entity}-list.tsx
@@ -105,7 +111,8 @@ frontend/packages/services/
 
 **Vitest Configuration:**
 
-- `vitest.config.ts` in each project
+- `api/vitest.config.mts` (with `unplugin-swc` for decorator metadata) and
+  `frontend/apps/dashboard/vitest.config.mts` (jsdom)
 - 80% coverage threshold for lines, functions, branches
 - `@vitest/coverage-v8` provider
 
@@ -113,7 +120,7 @@ frontend/packages/services/
 
 - `.github/workflows/ci.yml`
 - Runs on push to main and PRs
-- Steps: install → lint → test → build
+- Steps: install → lint → typecheck → test → build
 
 **Husky Hooks:**
 
@@ -122,9 +129,10 @@ frontend/packages/services/
 
 **Biome:**
 
-- `biome.json` in each project
+- One `biome.json` at the workspace root (nested configs would each need `extends: "//"`)
 - 100 character line width
 - Double quotes, semicolons
+- Run `bun run lint:fix` once after generating so Biome formats the scaffold output
 
 ## Phase 5: Verification
 
@@ -153,16 +161,18 @@ myproject/
 │   ├── pre-commit              # Lint staged files
 │   └── pre-push                # Type check
 ├── .agents/                     # AI documentation
-├── package.json                # Workspace root
-├── biome.json                  # Root linting config
+├── package.json                # Workspace root (workspaces: api, frontend/apps/*, frontend/packages, mobile, packages)
+├── biome.json                  # Lint and format config
 │
 ├── api/                        # NestJS backend
 │   ├── apps/api/src/
 │   │   ├── main.ts
 │   │   ├── app.module.ts
 │   │   ├── auth/
-│   │   │   ├── guards/clerk-auth.guard.ts
-│   │   │   ├── guards/clerk-auth.guard.spec.ts  # Auth guard tests
+│   │   │   ├── auth.service.ts                  # Better Auth instance
+│   │   │   ├── auth.module.ts
+│   │   │   ├── guards/auth.guard.ts
+│   │   │   ├── guards/auth.guard.spec.ts        # Auth guard tests
 │   │   │   └── decorators/current-user.decorator.ts
 │   │   └── collections/
 │   │       └── {entity}/
@@ -170,39 +180,35 @@ myproject/
 │   │           ├── {entity}.controller.spec.ts  # Controller tests
 │   │           ├── {entity}.service.ts
 │   │           └── {entity}.service.spec.ts     # Service tests
-│   ├── apps/api/test/
-│   │   ├── {entity}.e2e-spec.ts                 # E2E tests
-│   │   └── setup.ts                             # E2E test setup
-│   ├── vitest.config.ts
-│   ├── package.json
-│   └── .env.example
+│   ├── apps/api/src/test/
+│   │   └── {entity}.e2e.spec.ts                 # E2E tests (optional)
+│   ├── prisma/schema/                           # schema.prisma, auth.prisma, {entity}.prisma
+│   ├── prisma.config.ts
+│   ├── tsconfig.json / tsconfig.build.json
+│   ├── vitest.config.mts
+│   └── package.json
 │
 ├── frontend/                   # Next.js apps
-│   ├── apps/dashboard/
+│   ├── apps/dashboard/         # Own workspace: package.json, next.config.ts, postcss.config.mjs
 │   │   ├── app/
 │   │   │   ├── layout.tsx
 │   │   │   ├── page.tsx
-│   │   │   ├── sign-in/[[...sign-in]]/page.tsx
-│   │   │   ├── sign-up/[[...sign-up]]/page.tsx
+│   │   │   ├── globals.css     # Tailwind v4: @import "tailwindcss" + @theme
+│   │   │   ├── sign-in/page.tsx
+│   │   │   ├── sign-up/page.tsx
 │   │   │   └── {entity}/       # Generated per entity
-│   │   ├── src/test/
-│   │   │   └── setup.ts        # Test setup with Clerk mocks
-│   │   ├── proxy.ts            # Clerk route protection (Next.js 16+)
-│   │   └── providers/
-│   │       └── clerk-provider.tsx
-│   ├── packages/
+│   │   ├── components/auth-form.tsx
+│   │   ├── lib/auth-client.ts
+│   │   ├── proxy.ts            # Route protection (Next.js 16 name for middleware)
+│   │   ├── vitest.config.mts   # Frontend test config (jsdom)
+│   │   └── tsconfig.json
+│   ├── packages/               # Shared workspace package
 │   │   ├── components/
-│   │   │   ├── {entity}-list.tsx
-│   │   │   ├── {entity}-list.spec.tsx   # Component tests
-│   │   │   ├── {entity}-form.tsx
-│   │   │   └── {entity}-form.spec.tsx   # Component tests
+│   │   │   └── {entity}-list.tsx
+│   │   ├── services/           # API clients (credentials: "include")
 │   │   ├── hooks/
-│   │   │   ├── use-{entities}.ts
-│   │   │   └── use-{entities}.spec.ts   # Hook tests
-│   │   ├── services/           # API clients
 │   │   └── interfaces/
-│   ├── vitest.config.ts        # Frontend test config (jsdom)
-│   └── package.json
+│   └── package.json            # Delegates scripts to apps/dashboard
 │
 ├── mobile/                     # React Native + Expo (optional)
 │   └── ...
@@ -221,8 +227,8 @@ myproject/
 
 ```typescript
 @ApiTags('tasks')
-@ApiBearerAuth()
-@UseGuards(ClerkAuthGuard)
+@ApiCookieAuth()
+@UseGuards(AuthGuard)
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
@@ -281,13 +287,12 @@ export function TaskList() {
 ## Additional Scripts
 
 ```bash
-# Add a new entity to existing project
-python3 scripts/add-entity.py \
-  --root ~/www/myproject \
-  --name "comment" \
-  --fields "content:string,taskId:string"
+# Add an organization-scoped collection to an existing API
+python3 scripts/add-api-collection.py \
+  --root ~/www/myproject/api \
+  --name comments
 
-# Add a new frontend app
+# Add a new frontend app (its own workspace under frontend/apps)
 python3 scripts/add-frontend-app.py \
   --root ~/www/myproject/frontend \
   --name admin
@@ -302,6 +307,9 @@ cd myproject
 
 # Install all dependencies
 bun install
+
+# Format the generated files once, then commit
+bun run lint:fix
 
 # Start all services (backend + frontend)
 bun dev
@@ -318,26 +326,31 @@ bun run prisma:deploy    # Apply migrations (CI and production)
 
 # Quality commands
 bun run lint         # Check code style
-bun run test         # Run tests
-bun run test:coverage # Run with coverage
-bun run typecheck    # Type checking
+bun run test         # Run API and frontend tests
+bun run typecheck    # API, frontend and mobile
+(cd api && bun run test:coverage)        # API coverage
+(cd frontend && bun run test:coverage)   # Frontend coverage
 ```
 
 ## Environment Variables
 
 Create `.env` files based on `.env.example`:
 
-**API (.env):**
+**API (`api/.env`):**
 
 ```
 PORT=3001
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/myproject?schema=public
-CLERK_SECRET_KEY=sk_test_...
+BETTER_AUTH_SECRET=<openssl rand -base64 32>
+BETTER_AUTH_URL=http://localhost:3001
+FRONTEND_URL=http://localhost:3000
 ```
 
-**Frontend (.env.local):**
+**Dashboard (`frontend/apps/dashboard/.env.local`):**
 
 ```
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 NEXT_PUBLIC_API_URL=http://localhost:3001
 ```
+
+`prisma generate` and `bun run build` need no `DATABASE_URL`; `prisma migrate` and the running
+API do.

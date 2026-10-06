@@ -104,7 +104,7 @@ project/
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.12/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
   "assist": {
     "actions": {
       "source": { "organizeImports": "on" }
@@ -113,7 +113,7 @@ project/
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "complexity": { "noForEach": "off" },
       "style": { "noNonNullAssertion": "off" },
       "suspicious": { "noArrayIndexKey": "off", "noExplicitAny": "warn" }
@@ -131,9 +131,26 @@ project/
       "trailingCommas": "es5",
       "semicolons": "always"
     }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!**/.next",
+      "!**/out",
+      "!**/.cache",
+      "!**/.turbo",
+      "!**/coverage",
+      "!**/*.min.js",
+      "!**/*.min.css"
+    ]
   }
 }
 ```
+
+Biome 2 replaced the old `files.ignore` list with `files.includes` plus `!` exclusions.
 
 ## Vitest Configuration (with --vitest)
 

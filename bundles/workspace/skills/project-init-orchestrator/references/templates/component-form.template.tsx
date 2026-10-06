@@ -10,7 +10,6 @@
 
 import { useState } from "react";
 import { {{Entity}} } from "@interfaces/{{entity}}.interface";
-import { Button, Input } from "@agenticindiedev/ui";
 
 interface {{Entity}}FormProps {
   {{entity}}?: {{Entity}};
@@ -48,7 +47,8 @@ export function {{Entity}}Form({ {{entity}}, onSubmit, onCancel }: {{Entity}}For
        * Text input:
        * <div>
        *   <label className="block text-sm font-medium mb-1">Title</label>
-       *   <Input
+       *   <input
+       *     className="w-full rounded-lg border border-border bg-background px-3 py-2"
        *     value={formData.title || ""}
        *     onChange={(e) => handleChange("title", e.target.value)}
        *     placeholder="Enter title"
@@ -60,7 +60,7 @@ export function {{Entity}}Form({ {{entity}}, onSubmit, onCancel }: {{Entity}}For
        * <div>
        *   <label className="block text-sm font-medium mb-1">Description</label>
        *   <textarea
-       *     className="w-full p-2 border rounded"
+       *     className="w-full rounded-lg border border-border bg-background px-3 py-2"
        *     value={formData.description || ""}
        *     onChange={(e) => handleChange("description", e.target.value)}
        *     rows={3}
@@ -71,7 +71,7 @@ export function {{Entity}}Form({ {{entity}}, onSubmit, onCancel }: {{Entity}}For
        * <div>
        *   <label className="block text-sm font-medium mb-1">Priority</label>
        *   <select
-       *     className="w-full p-2 border rounded"
+       *     className="w-full rounded-lg border border-border bg-background px-3 py-2"
        *     value={formData.priority || "medium"}
        *     onChange={(e) => handleChange("priority", e.target.value)}
        *   >
@@ -84,7 +84,8 @@ export function {{Entity}}Form({ {{entity}}, onSubmit, onCancel }: {{Entity}}For
        * Date:
        * <div>
        *   <label className="block text-sm font-medium mb-1">Due Date</label>
-       *   <Input
+       *   <input
+       *     className="w-full rounded-lg border border-border bg-background px-3 py-2"
        *     type="date"
        *     value={formData.dueDate || ""}
        *     onChange={(e) => handleChange("dueDate", e.target.value)}
@@ -95,12 +96,16 @@ export function {{Entity}}Form({ {{entity}}, onSubmit, onCancel }: {{Entity}}For
       {/* {{FIELDS}} */}
 
       <div className="flex gap-2 justify-end">
-        <Button type="button" variant="ghost" onClick={onCancel}>
+        <button type="button" className="rounded-lg px-3 py-2 hover:bg-border" onClick={onCancel}>
           Cancel
-        </Button>
-        <Button type="submit" disabled={loading}>
+        </button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-lg bg-primary px-3 py-2 font-medium text-primary-foreground disabled:opacity-50"
+        >
           {loading ? "Saving..." : {{entity}} ? "Update" : "Create"}
-        </Button>
+        </button>
       </div>
     </form>
   );

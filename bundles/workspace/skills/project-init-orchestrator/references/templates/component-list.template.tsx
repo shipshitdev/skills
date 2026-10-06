@@ -13,7 +13,6 @@ import { {{Entity}}Service } from "@services/{{entity}}.service";
 import { {{Entity}} } from "@interfaces/{{entity}}.interface";
 import { {{Entity}}Item } from "./{{entity}}-item";
 import { {{Entity}}Form } from "./{{entity}}-form";
-import { Button } from "@agenticindiedev/ui";
 
 export function {{Entity}}List() {
   const [{{entities}}, set{{Entity}}s] = useState<{{Entity}}[]>([]);
@@ -90,7 +89,7 @@ export function {{Entity}}List() {
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 text-red-600 rounded-lg">
+      <div className="rounded-lg border border-danger p-4 text-danger" role="alert">
         Error: {error}
       </div>
     );
@@ -100,9 +99,13 @@ export function {{Entity}}List() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">{{Entity}}s</h2>
-        <Button onClick={() => setShowForm(true)}>
+        <button
+          type="button"
+          className="rounded-lg bg-primary px-3 py-2 font-medium text-primary-foreground"
+          onClick={() => setShowForm(true)}
+        >
           Add {{Entity}}
-        </Button>
+        </button>
       </div>
 
       {showForm && (
@@ -113,7 +116,7 @@ export function {{Entity}}List() {
       )}
 
       {{{entities}}.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="py-8 text-center text-muted">
           No {{entities}} yet. Create your first one!
         </div>
       ) : (

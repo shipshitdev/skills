@@ -36,30 +36,17 @@ vi.mock("next/image", () => ({
   },
 }));
 
-// Mock Clerk
-vi.mock("@clerk/nextjs", () => ({
-  useAuth: () => ({
-    isLoaded: true,
-    isSignedIn: true,
-    userId: "test-user-id",
-    getToken: vi.fn().mockResolvedValue("test-token"),
+// Mock the Better Auth client (see lib/auth-client.ts)
+vi.mock("@/lib/auth-client", () => ({
+  authClient: {
+    signIn: { email: vi.fn().mockResolvedValue({ data: {}, error: null }) },
+    signUp: { email: vi.fn().mockResolvedValue({ data: {}, error: null }) },
+    signOut: vi.fn().mockResolvedValue({ data: {}, error: null }),
+  },
+  useSession: () => ({
+    data: { user: { id: "test-user-id", name: "Test User", email: "test@example.com" } },
+    isPending: false,
   }),
-  useUser: () => ({
-    isLoaded: true,
-    isSignedIn: true,
-    user: {
-      id: "test-user-id",
-      firstName: "Test",
-      lastName: "User",
-      emailAddresses: [{ emailAddress: "test@example.com" }],
-    },
-  }),
-  SignIn: () => <div data-testid="clerk-sign-in">Sign In</div>,
-  SignUp: () => <div data-testid="clerk-sign-up">Sign Up</div>,
-  SignedIn: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  SignedOut: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  UserButton: () => <button data-testid="clerk-user-button">User</button>,
-  ClerkProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock window.matchMedia

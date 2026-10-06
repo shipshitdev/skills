@@ -5,7 +5,7 @@
  * Replace {{entity}} with camelCase entity name (e.g., task)
  * Replace {{entities}} with plural camelCase (e.g., tasks)
  *
- * Requires: bun add -D @testing-library/react @testing-library/jest-dom jsdom
+ * Requires: bun add -D @testing-library/react @testing-library/dom @testing-library/jest-dom jsdom
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -24,16 +24,10 @@ vi.mock("@services/{{entity}}.service", () => ({
   },
 }));
 
-// Mock Clerk
-vi.mock("@clerk/nextjs", () => ({
-  useAuth: () => ({
-    getToken: vi.fn().mockResolvedValue("test-token"),
-    isSignedIn: true,
-  }),
-  useUser: () => ({
-    user: { id: "user-123", firstName: "Test" },
-  }),
-}));
+// Components that read the session mock the Better Auth client instead, for example:
+// vi.mock("@/lib/auth-client", () => ({
+//   useSession: () => ({ data: { user: { id: "user-123", name: "Test" } } }),
+// }));
 
 describe("{{Entity}}List", () => {
   const mock{{Entity}}s = [

@@ -14,15 +14,9 @@ interface RequestOptions {
   signal?: AbortSignal;
 }
 
-async function getAuthHeaders(): Promise<HeadersInit> {
-  // Get token from Clerk
-  const token = await window.Clerk?.session?.getToken();
-
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-}
+// Better Auth keeps the session in an HTTP-only cookie set by the API, so requests only
+// need to send credentials; no token handling lives in the browser.
+const jsonHeaders: HeadersInit = { "Content-Type": "application/json" };
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -34,48 +28,47 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 export const {{Entity}}Service = {
   async getAll(options?: RequestOptions): Promise<{{Entity}}[]> {
-    const headers = await getAuthHeaders();
     const response = await fetch(`${API_URL}/{{entities}}`, {
-      headers,
+      headers: jsonHeaders,
+      credentials: "include",
       signal: options?.signal,
     });
     return handleResponse<{{Entity}}[]>(response);
   },
 
   async getById(id: string, options?: RequestOptions): Promise<{{Entity}}> {
-    const headers = await getAuthHeaders();
     const response = await fetch(`${API_URL}/{{entities}}/${id}`, {
-      headers,
+      headers: jsonHeaders,
+      credentials: "include",
       signal: options?.signal,
     });
     return handleResponse<{{Entity}}>(response);
   },
 
   async create(data: Partial<{{Entity}}>): Promise<{{Entity}}> {
-    const headers = await getAuthHeaders();
     const response = await fetch(`${API_URL}/{{entities}}`, {
       method: "POST",
-      headers,
+      headers: jsonHeaders,
+      credentials: "include",
       body: JSON.stringify(data),
     });
     return handleResponse<{{Entity}}>(response);
   },
 
   async update(id: string, data: Partial<{{Entity}}>): Promise<{{Entity}}> {
-    const headers = await getAuthHeaders();
     const response = await fetch(`${API_URL}/{{entities}}/${id}`, {
       method: "PATCH",
-      headers,
+      headers: jsonHeaders,
+      credentials: "include",
       body: JSON.stringify(data),
     });
     return handleResponse<{{Entity}}>(response);
   },
 
   async delete(id: string): Promise<void> {
-    const headers = await getAuthHeaders();
     const response = await fetch(`${API_URL}/{{entities}}/${id}`, {
       method: "DELETE",
-      headers,
+      credentials: "include",
     });
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: "Delete failed" }));
