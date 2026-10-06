@@ -1,5 +1,5 @@
 /**
- * NestJS Service Template
+ * NestJS Service Template (Prisma)
  *
  * Replace {{Entity}} with PascalCase entity name (e.g., Task)
  * Replace {{entity}} with camelCase entity name (e.g., task)
@@ -7,34 +7,32 @@
  */
 
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { {{Entity}}, {{Entity}}Document } from "./schemas/{{entity}}.schema";
+import type { {{Entity}} } from "../../generated/prisma/client";
+import { PrismaService } from "../../prisma/prisma.service";
 import { Create{{Entity}}Dto } from "./dto/create-{{entity}}.dto";
 import { Update{{Entity}}Dto } from "./dto/update-{{entity}}.dto";
 
 @Injectable()
 export class {{Entity}}sService {
-  constructor(
-    @InjectModel({{Entity}}.name) private {{entity}}Model: Model<{{Entity}}Document>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(create{{Entity}}Dto: Create{{Entity}}Dto, userId: string): Promise<{{Entity}}> {
-    const {{entity}} = new this.{{entity}}Model({
-      ...create{{Entity}}Dto,
-      userId,
+    return this.prisma.{{entity}}.create({
+      data: { ...create{{Entity}}Dto, userId },
     });
-    return {{entity}}.save();
   }
 
   async findAll(userId: string): Promise<{{Entity}}[]> {
-    const query = this.{{entity}}Model.find({ userId }).sort({ createdAt: -1 });
-    return query.then((docs) => docs);
+    return this.prisma.{{entity}}.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
   }
 
   async findOne(id: string, userId: string): Promise<{{Entity}}> {
-    const query = this.{{entity}}Model.findOne({ _id: id, userId });
-    const {{entity}} = await query.then((doc) => doc);
+    const {{entity}} = await this.prisma.{{entity}}.findFirst({
+      where: { id, userId },
+    });
 
     if (!{{entity}}) {
       throw new NotFoundException(`{{Entity}} with ID ${id} not found`);
@@ -48,25 +46,25 @@ export class {{Entity}}sService {
     update{{Entity}}Dto: Update{{Entity}}Dto,
     userId: string,
   ): Promise<{{Entity}}> {
-    const query = this.{{entity}}Model.findOneAndUpdate(
-      { _id: id, userId },
-      update{{Entity}}Dto,
-      { new: true },
-    );
-    const {{entity}} = await query.then((doc) => doc);
+    // updateMany scopes the write to the owner in a single statement
+    const result = await this.prisma.{{entity}}.updateMany({
+      where: { id, userId },
+      data: update{{Entity}}Dto,
+    });
 
-    if (!{{entity}}) {
+    if (result.count === 0) {
       throw new NotFoundException(`{{Entity}} with ID ${id} not found`);
     }
 
-    return {{entity}};
+    return this.findOne(id, userId);
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    const query = this.{{entity}}Model.deleteOne({ _id: id, userId });
-    const result = await query.then((res) => res);
+    const result = await this.prisma.{{entity}}.deleteMany({
+      where: { id, userId },
+    });
 
-    if (result.deletedCount === 0) {
+    if (result.count === 0) {
       throw new NotFoundException(`{{Entity}} with ID ${id} not found`);
     }
   }

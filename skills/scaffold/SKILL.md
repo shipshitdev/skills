@@ -1,6 +1,6 @@
 ---
 name: scaffold
-description: Generates incremental code modules inside an existing repo following local patterns — endpoints, components, packages, collections. Not for new full-project scaffolds.
+description: Generates incremental code modules inside an existing repo following local patterns — endpoints, components, packages, database models. Not for new full-project scaffolds.
 metadata:
   version: "2.2.2"
   tags: "scaffolding, code-generation, boilerplate, productivity"
@@ -53,7 +53,7 @@ Delegates To:
    - `module [name]` — New backend module with full structure
    - `component [name]` — New UI component with proper typing
    - `package [name]` — New shared package
-   - `collection [name]` — New database collection with schema + service
+   - `model [name]` — New database model (Prisma) with service
 
 2. **Find 3+ existing examples**:
    - Search for similar implementations in the codebase
@@ -79,9 +79,9 @@ Delegates To:
    - Barrel export: `src/index.ts`
    - TypeScript config
 
-   ### Database Collection
+   ### Database Model
 
-   - Schema/model file
+   - Prisma model file plus migration
    - Interface in shared interfaces package
    - Serializer in shared serializers package (if applicable)
 
@@ -94,4 +94,4 @@ Delegates To:
 
 ## Arguments
 
-- Required: what to scaffold (e.g., "endpoint tasks", "component ImageGrid", "collection workflows")
+- Required: what to scaffold (e.g., "endpoint tasks", "component ImageGrid", "model workflows")

@@ -32,8 +32,8 @@ vi.mock("@clerk/nextjs", () => ({
 
 describe("use{{Entity}}s", () => {
   const mock{{Entity}}s = [
-    { _id: "1", title: "{{Entity}} 1", userId: "user-123" },
-    { _id: "2", title: "{{Entity}} 2", userId: "user-123" },
+    { id: "1", title: "{{Entity}} 1", userId: "user-123" },
+    { id: "2", title: "{{Entity}} 2", userId: "user-123" },
   ];
 
   beforeEach(() => {
@@ -69,7 +69,7 @@ describe("use{{Entity}}s", () => {
   });
 
   it("should create a new {{entity}}", async () => {
-    const new{{Entity}} = { _id: "3", title: "New {{Entity}}", userId: "user-123" };
+    const new{{Entity}} = { id: "3", title: "New {{Entity}}", userId: "user-123" };
     ({{Entity}}Service.create as any).mockResolvedValue(new{{Entity}});
 
     const { result } = renderHook(() => use{{Entity}}s());

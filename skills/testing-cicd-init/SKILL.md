@@ -1,10 +1,10 @@
 ---
 name: testing-cicd-init
-description: Installs Vitest and GitHub Actions CI with Bun and 80% coverage for Next.js, NestJS, or React. Use for new test infrastructure, Jest migration, or first CI setup.
+description: Installs Vitest and GitHub Actions CI with Bun and 80% coverage for Next.js, NestJS, or React. Use for new test infrastructure or first CI setup.
 metadata:
   version: "2.2.2"
   tags: "testing, ci, vitest"
-when_to_use: "jest to vitest"
+when_to_use: "set up vitest, add coverage, first CI"
 ---
 
 # Testing & CI/CD Initialization
@@ -61,7 +61,6 @@ This skill should be used when:
 - Setting up GitHub Actions CI/CD for the first time
 - Configuring Vitest with coverage thresholds
 - Initializing testing infrastructure for a new project
-- Migrating from Jest to Vitest
 
 ## What It Does
 
@@ -118,14 +117,14 @@ bun add -D vitest @vitest/coverage-v8 @vitejs/plugin-react @testing-library/reac
 **Dependencies installed:**
 
 ```bash
-bun add -D vitest @vitest/coverage-v8 supertest @types/supertest
+bun add -D vitest @vitest/coverage-v8 unplugin-swc @swc/core supertest @types/supertest
 ```
 
 **Files created:**
 
-- `vitest.config.ts` - Vitest with node environment
+- `vitest.config.ts` - Vitest with node environment and `unplugin-swc` (decorator metadata)
 - `test/setup.ts` - Test setup for NestJS
-- `.github/workflows/ci.yml` - CI with MongoDB service
+- `.github/workflows/ci.yml` - CI with a Postgres service and Prisma migrations
 
 **Test pattern:** `src/**/*.spec.ts`
 
@@ -157,7 +156,7 @@ The generated CI workflow includes:
 - TypeScript type checking
 - Test execution with coverage
 - Build verification
-- MongoDB service (for NestJS projects)
+- Postgres service and Prisma migrations (for NestJS projects)
 
 ## Templates
 
@@ -213,10 +212,10 @@ User: Set up tests for this NestJS API
 
 Agent:
 1. Detects NestJS from @nestjs/core dependency
-2. Installs vitest, @vitest/coverage-v8, supertest
+2. Installs vitest, @vitest/coverage-v8, unplugin-swc, supertest
 3. Creates vitest.config.ts with node environment
 4. Creates test/setup.ts
-5. Creates .github/workflows/ci.yml with MongoDB service
+5. Creates .github/workflows/ci.yml with a Postgres service
 6. Adds test scripts to package.json
 ```
 
@@ -236,7 +235,7 @@ resolve: {
 
 ### Coverage below threshold
 
-1. Check coverage report: `bun test --coverage`
+1. Check coverage report: `bunx vitest run --coverage`
 2. Identify uncovered lines
 3. Add tests or adjust thresholds temporarily
 

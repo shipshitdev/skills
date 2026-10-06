@@ -50,7 +50,7 @@ Delegates To:
 ## When to Use
 
 - Improving API response times
-- Optimizing database queries, indexes, and aggregation pipelines
+- Optimizing database queries, indexes, and aggregations
 - Diagnosing N+1 query patterns
 - Implementing caching strategies and invalidation
 - Moving heavy work into background jobs or queues
@@ -72,7 +72,7 @@ Delegates To:
 
 **API Response Times:** Target < 200ms (p95), caching, background jobs, connection pooling
 
-**Query Optimization:** Indexes, projections, pagination, optimized aggregations
+**Query Optimization:** Indexes, projections (`select`), pagination, database-side aggregation
 
 **Background Processing:** Queues for heavy operations, async for non-critical tasks, no blocking work in request handlers
 
@@ -80,7 +80,7 @@ Delegates To:
 
 **Indexes:** On frequently queried fields, compound indexes, monitor usage
 
-**Queries:** Filter early, project before expensive stages, sort with indexes, avoid full scans
+**Queries:** Filter in `where`, `select` only needed columns, sort with indexes, avoid sequential scans
 
 ### Infrastructure
 

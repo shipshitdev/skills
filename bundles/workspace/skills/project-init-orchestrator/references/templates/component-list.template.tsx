@@ -120,7 +120,7 @@ export function {{Entity}}List() {
         <div className="space-y-2">
           {{{entities}}.map(({{entity}}) => (
             <{{Entity}}Item
-              key={{{entity}}._id}
+              key={{{entity}}.id}
               {{entity}}={{{entity}}}
               onUpdate={handleUpdate}
               onDelete={handleDelete}

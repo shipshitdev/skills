@@ -69,7 +69,7 @@ Phase 1: Frontend Audit (Next.js)
 Phase 2: Backend Audit (NestJS)
     → API Response Times, N+1 Queries, Security
 
-Phase 3: Database Audit (MongoDB)
+Phase 3: Database Audit (Postgres)
     → Query Performance, Index Analysis
 
 Phase 4: Extension & Packages

@@ -1,16 +1,16 @@
 ---
 name: nestjs-expert
-description: Guides NestJS APIs with MongoDB/Mongoose — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues.
+description: Guides NestJS 11 APIs with Prisma and Postgres — modules, DI, guards, interceptors, pipes, DTOs, auth, errors. Use when building NestJS APIs or debugging Nest-specific issues.
 license: MIT
 metadata:
   version: "2.2.2"
-  tags: "nestjs, typescript, backend, api, mongodb, rest"
+  tags: "nestjs, typescript, backend, api, prisma, postgres, rest"
 when_to_use: "nest controller, nest service, dependency injection"
 ---
 
 # NestJS Expert
 
-Stack: NestJS + MongoDB/Mongoose + TypeScript strict mode.
+Stack: NestJS 11 + Prisma + Postgres + TypeScript strict mode.
 
 ## Module architecture
 
@@ -25,16 +25,14 @@ src/
 │   ├── interceptors/
 │   └── pipes/
 ├── config/                 # ConfigModule setup
+├── prisma/                 # PrismaModule + PrismaService (global, one client)
 └── {feature}/
     ├── {feature}.module.ts
     ├── {feature}.controller.ts
     ├── {feature}.service.ts
-    ├── {feature}.repository.ts  # optional, wraps Mongoose model
     ├── dto/
     │   ├── create-{feature}.dto.ts
     │   └── update-{feature}.dto.ts
-    ├── schemas/
-    │   └── {feature}.schema.ts
     └── {feature}.types.ts
 ```
 
@@ -61,8 +59,8 @@ export class ResourceController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: CreateResourceDto, @CurrentUser() user: UserDocument) {
-    return this.resourceService.create(dto, user._id);
+  async create(@Body() dto: CreateResourceDto, @CurrentUser() user: AuthUser) {
+    return this.resourceService.create(dto, user.id);
   }
 }
 ```
@@ -106,53 +104,92 @@ app.useGlobalPipes(new ValidationPipe({
 }));
 ```
 
-## MongoDB / Mongoose
+## Prisma / Postgres
+
+Schema lives in `prisma/schema.prisma`; one global `PrismaService` wraps the client. Feature services depend on `PrismaService` — controllers never touch it.
+
+Prisma 7: the `prisma-client` generator needs an explicit `output` (import `PrismaClient` from that path, not `@prisma/client`), the client needs a driver adapter (`@prisma/adapter-pg`), and the connection URL lives in `prisma.config.ts`. A CommonJS Nest build sets `moduleFormat = "cjs"` in the generator block.
 
 ```typescript
-// schema
-@Schema({ timestamps: true, versionKey: false })
-export class Resource {
-  @Prop({ required: true, index: true })
-  name: string;
+// prisma/prisma.service.ts
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../generated/prisma/client';
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
-  userId: Types.ObjectId;
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  constructor() {
+    super({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
+  }
 
-  @Prop({ enum: ResourceStatus, default: ResourceStatus.ACTIVE })
-  status: ResourceStatus;
+  async onModuleInit() {
+    await this.$connect();
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
+}
+```
+
+```prisma
+// prisma/schema.prisma
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
-export const ResourceSchema = SchemaFactory.createForClass(Resource);
-export type ResourceDocument = Resource & Document;
+datasource db {
+  provider = "postgresql"
+}
+
+model Resource {
+  id        String         @id @default(uuid()) @db.Uuid
+  name      String
+  status    ResourceStatus @default(ACTIVE)
+  userId    String         @db.Uuid
+  user      User           @relation(fields: [userId], references: [id])
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  deletedAt DateTime?
+
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+enum ResourceStatus {
+  ACTIVE
+  ARCHIVED
+}
 ```
 
 ```typescript
 // service
 @Injectable()
 export class ResourceService {
-  constructor(
-    @InjectModel(Resource.name) private readonly model: Model<ResourceDocument>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(userId: Types.ObjectId, query: PaginationQueryDto) {
+  async findAll(userId: string, query: PaginationQueryDto) {
     const { page = 1, limit = 20 } = query;
-    return this.model
-      .find({ userId, deletedAt: null })
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean()
-      .exec();
+    return this.prisma.resource.findMany({
+      where: { userId, deletedAt: null },
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      select: { id: true, name: true, status: true, createdAt: true },
+    });
   }
 }
 ```
 
 Rules:
 
-- Always `.lean()` for read queries (plain objects, ~30% faster)
-- Always `.exec()` to get a real Promise
-- Use `Types.ObjectId` not `string` for references in service layer
-- Soft delete: `deletedAt: Date | null`, never hard delete user data
+- Ids are `String` (uuid or cuid) and relations are explicit `@relation` fields — never hand-rolled id strings with no foreign key
+- Type ids as `string` in the service layer; the Prisma-generated types are the source of truth (no hand-written model interfaces)
+- Use `select` to return only needed fields; never return the raw row when it holds secrets
+- Multi-step writes use `prisma.$transaction`; never chain dependent writes without it
+- Prefer the typed client; for `$queryRaw` use the tagged template (`Prisma.sql`) so values stay parameterized — never `$queryRawUnsafe` with user input
+- Soft delete: `deletedAt DateTime?`, never hard delete user data; filter `deletedAt: null` in reads
+- Schema changes go through `prisma migrate dev` / `prisma migrate deploy`, never edited by hand in the database
 
 ## Auth pattern
 
@@ -168,9 +205,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<UserDocument> {
+  async validate(payload: JwtPayload): Promise<AuthUser> {
     // return value is injected as req.user
-    return { _id: payload.sub, email: payload.email };
+    return { id: payload.sub, email: payload.email };
   }
 }
 
@@ -190,7 +227,7 @@ export class ResourceOwnerGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const { user, params } = context.switchToHttp().getRequest();
     const resource = await this.resourceService.findById(params.id);
-    return resource?.userId.equals(user._id) ?? false;
+    return resource?.userId === user.id;
   }
 }
 ```
@@ -226,7 +263,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 export default registerAs('app', () => ({
   port: parseInt(process.env.PORT ?? '3000', 10),
   jwtSecret: process.env.JWT_SECRET,
-  mongoUri: process.env.MONGO_URI,
+  databaseUrl: process.env.DATABASE_URL,
 }));
 
 // access in service
@@ -238,11 +275,12 @@ Never use `process.env` directly outside config files.
 
 ## Performance rules
 
-- `lean()` on all read queries
-- Add indexes for every field used in `find()` filter or `sort()`
-- Compound indexes for multi-field queries: `{ userId: 1, createdAt: -1 }`
-- Use `select()` to project only needed fields on large documents
-- Cache with `@nestjs/cache-manager` for expensive reads
+- `select` only needed columns on read queries
+- Add `@@index` for every field used in a `where` filter or `orderBy`
+- Compound indexes for multi-field queries: `@@index([userId, createdAt(sort: Desc)])`
+- Avoid N+1: use `include`/`select` relations or batch with `findMany({ where: { id: { in: ids } } })`
+- Paginate with `skip`/`take`, or cursor pagination for large tables
+- Cache with `@nestjs/cache-manager` (Redis) for expensive reads
 
 ## Common mistakes
 
@@ -253,11 +291,12 @@ Never use `process.env` directly outside config files.
 | `console.log` | `new Logger(ClassName.name)` |
 | `req.user` directly | `@CurrentUser()` decorator |
 | Hard-coding env vars | `ConfigService` |
-| `.find()` without `.lean()` on reads | Always `.lean().exec()` |
-| `string` for ObjectId refs | `Types.ObjectId` |
+| `findMany()` returning every column | `select` only what the caller needs |
+| `$queryRawUnsafe` with user input | Typed client or tagged `$queryRaw` |
+| Dependent writes without a transaction | `prisma.$transaction` |
 
 ## Related skills
 
 - `nestjs-queue-architect` — BullMQ async job patterns
-- `mongodb-migration-expert` — schema migrations
+- `postgres-ops` — migrations, indexes, query plans
 - `error-handling-expert` — global error strategy

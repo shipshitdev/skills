@@ -59,7 +59,7 @@ runs the suite with coverage, while `/test coverage` installs the Husky gate.
   tests, and CI integration.
 - **`coverage`** — the `husky-test-coverage` skill: set up or verify Husky
   git hooks that enforce a configurable coverage threshold (default 80%) for
-  Jest, Vitest, or Mocha, blocking commits that fall below it.
+  Vitest (or the repo's existing runner), blocking commits that fall below it.
 - **`init`** — the `testing-cicd-init` skill: install Vitest testing
   infrastructure and GitHub Actions CI/CD for TypeScript projects, configuring
   80% coverage thresholds and Bun-based workflows.

@@ -2,7 +2,9 @@ import { vi } from "vitest";
 
 // Mock environment variables for tests
 process.env.NODE_ENV = "test";
-process.env.MONGODB_URI = "mongodb://localhost:27017/test";
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL ??
+  "postgresql://postgres:postgres@localhost:5432/test?schema=public";
 
 // Global test utilities
 declare global {

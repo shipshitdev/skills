@@ -50,4 +50,4 @@ expect(screen.getByText('Visible message')).toBeVisible()
 - Checking if element was rendered at all
 - Testing conditional rendering logic
 
-Reference: [jest-dom - toBeVisible](https://github.com/testing-library/jest-dom#tobevisible)
+Reference: `@testing-library/jest-dom` toBeVisible
