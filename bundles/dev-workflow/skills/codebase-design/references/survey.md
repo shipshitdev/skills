@@ -105,7 +105,6 @@ Write each plan **for the weakest plausible executor**. That means:
 
 Finish by writing `plans/README.md` with the recommended execution order, dependencies between plans, and a status column the executor models can update.
 
-
 ## Modes and modifiers
 
 The mode names below are the arguments after `codebase-design`. Each runs Phase 1 (Recon) first unless it says otherwise.

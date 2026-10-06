@@ -1,7 +1,7 @@
 {
   "name": "codebase-design",
   "version": "2.2.2",
-  "description": "Deep-module vocabulary (interface, depth, seam, adapter) plus read-only codebase surveys: handoff plans, analysis report, deepen.",
+  "description": "Deep-module vocabulary plus read-only codebase surveys: handoff plans, report, deepen.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

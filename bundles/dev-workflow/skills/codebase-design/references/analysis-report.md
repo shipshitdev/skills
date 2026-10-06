@@ -1,6 +1,6 @@
 # Analysis Report
 
-The `report` variant's output format. Read this when the ask is **understanding** (onboard a developer, document the architecture, assess project health) rather than **execution** (plans another agent runs).
+The `report` mode's output format. Read this when the ask is **understanding** (onboard a developer, document the architecture, assess project health) rather than **execution** (plans another agent runs).
 
 Same recon and audit as any other run — only the artifact changes. Findings still need `file:line` evidence; the report is a survey, not a vibes summary.
 
