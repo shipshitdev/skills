@@ -88,7 +88,7 @@ function UsernameForm() {
                   }}
                 />
                 {isChecking && (
-                  <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin" />
+                  <Loader2 className="absolute right-3 top-3 size-4 animate-spin" />
                 )}
               </div>
             </FormControl>

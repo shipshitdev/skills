@@ -2,7 +2,7 @@
 title: Use CSS Variables for Theme Colors
 impact: HIGH
 impactDescription: enables runtime theme switching and consistency
-tags: style, css-variables, theming, dark-mode, colors
+tags: style, css-variables, theming, dark-mode, colors, theme-inline
 ---
 
 ## Use CSS Variables for Theme Colors
@@ -53,5 +53,7 @@ function StatusCard({ status }: { status: "active" | "inactive" }) {
 - `bg-muted`, `text-muted-foreground` - Subdued elements
 - `bg-destructive`, `text-destructive` - Destructive actions
 - `border-border`, `ring-ring` - Borders and focus rings
+
+Add your own semantic tokens the same way: define `--warning` under `:root` and `.dark`, then map it with `@theme inline { --color-warning: var(--warning); }` to get `bg-warning`.
 
 Reference: [shadcn/ui Theming](https://ui.shadcn.com/docs/theming)

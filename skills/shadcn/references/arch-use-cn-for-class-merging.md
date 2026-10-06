@@ -2,12 +2,12 @@
 title: Use cn() for Safe Class Merging
 impact: CRITICAL
 impactDescription: prevents Tailwind class conflicts
-tags: arch, cn, tailwind-merge, className, utilities
+tags: arch, cn, clsx, tailwind-merge, className, utilities
 ---
 
 ## Use cn() for Safe Class Merging
 
-Always use the `cn()` utility (which wraps `clsx` and `tailwind-merge`) when combining classes. Direct string concatenation causes Tailwind class conflicts where later classes don't override earlier ones.
+Always use the `cn()` utility (current shadcn re-exports it from the `cn` package; older projects wrap `clsx` and `tailwind-merge`) when combining classes. Direct string concatenation causes Tailwind class conflicts where later classes don't override earlier ones.
 
 **Incorrect (string concatenation causes conflicts):**
 
@@ -48,7 +48,7 @@ function Card({ className, variant }: CardProps) {
         className
       )}
     >
-      {/* tailwind-merge ensures bg-primary overrides bg-card */}
+      {/* cn() ensures bg-primary overrides bg-card */}
     </div>
   )
 }
