@@ -163,7 +163,6 @@ node -e "
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('tsconfig.json', 'utf8'));
 config.compilerOptions = config.compilerOptions || {};
-config.compilerOptions.baseUrl = '.';
 config.compilerOptions.paths = { '@/*': ['./src/*'] };
 fs.writeFileSync('tsconfig.json', JSON.stringify(config, null, 2));
 "
@@ -179,7 +178,6 @@ const lines = content.split('\n').filter(line => !line.trim().startsWith('//'));
 const jsonContent = lines.join('\n');
 const config = JSON.parse(jsonContent.replace(/\/\*[\s\S]*?\*\//g, '').replace(/,(\s*[}\]])/g, '\$1'));
 config.compilerOptions = config.compilerOptions || {};
-config.compilerOptions.baseUrl = '.';
 config.compilerOptions.paths = { '@/*': ['./src/*'] };
 fs.writeFileSync(path, JSON.stringify(config, null, 2));
 "
