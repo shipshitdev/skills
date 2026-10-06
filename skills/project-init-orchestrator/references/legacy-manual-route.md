@@ -63,15 +63,16 @@ api/apps/api/src/collections/{entity}/
 ├── {entity}.controller.spec.ts    # Controller unit tests
 ├── {entity}.service.ts            # Business logic
 ├── {entity}.service.spec.ts       # Service unit tests
-├── schemas/
-│   └── {entity}.schema.ts         # Mongoose schema with userId
 └── dto/
     ├── create-{entity}.dto.ts     # class-validator decorators
     └── update-{entity}.dto.ts     # PartialType of create
 
 api/apps/api/test/
 ├── {entity}.e2e-spec.ts           # E2E tests with supertest
-└── setup.ts                       # Test setup with MongoDB Memory Server
+└── setup.ts                       # Test setup (DATABASE_URL, mocks)
+
+api/prisma/schema/
+└── {entity}.prisma                # Prisma model with userId
 ```
 
 **Frontend (Next.js):**
@@ -243,13 +244,10 @@ export class TasksController {
 ```typescript
 @Injectable()
 export class TasksService {
-  constructor(
-    @InjectModel(Task.name) private taskModel: Model<TaskDocument>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createTaskDto: CreateTaskDto, userId: string): Promise<Task> {
-    const task = new this.taskModel({ ...createTaskDto, userId });
-    return task.save();
+    return this.prisma.task.create({ data: { ...createTaskDto, userId } });
   }
   // ... full CRUD with userId filtering
 }
@@ -313,6 +311,11 @@ bun run dev:api      # Backend on :3001
 bun run dev:frontend # Frontend on :3000
 bun run dev:mobile   # Mobile via Expo
 
+# Database (from api/)
+bun run prisma:generate  # Generate the Prisma client
+bun run prisma:migrate   # Create and apply a dev migration
+bun run prisma:deploy    # Apply migrations (CI and production)
+
 # Quality commands
 bun run lint         # Check code style
 bun run test         # Run tests
@@ -328,7 +331,7 @@ Create `.env` files based on `.env.example`:
 
 ```
 PORT=3001
-MONGODB_URI=mongodb://localhost:27017/myproject
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/myproject?schema=public
 CLERK_SECRET_KEY=sk_test_...
 ```
 

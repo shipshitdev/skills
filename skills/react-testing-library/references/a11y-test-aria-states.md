@@ -7,7 +7,7 @@ tags: a11y, aria, states, toBeChecked, expanded
 
 ## Test ARIA States and Properties
 
-Use jest-dom matchers to verify ARIA states like checked, expanded, selected, and pressed update correctly.
+Use DOM matchers (`@testing-library/jest-dom`) to verify ARIA states like checked, expanded, selected, and pressed update correctly.
 
 **Test checkbox state:**
 

@@ -27,6 +27,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 SKILLS_DIR="${SKILLS_DIR_OVERRIDE:-$REPO_ROOT/skills}"
+COMMANDS_DIR="${COMMANDS_DIR_OVERRIDE:-$REPO_ROOT/commands}"
 EXISTING_SKILLS="$(
     find "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r skill_dir; do
         if [[ -f "$skill_dir/SKILL.md" ]]; then
@@ -936,7 +937,7 @@ check_command_surfaces() {
     # a decision on whether the model may start them.
     local user_only_route_exceptions=" merge-open-prs git-cleanup "
 
-    for file in "$REPO_ROOT"/commands/*.md; do
+    for file in "$COMMANDS_DIR"/*.md; do
         [[ -f "$file" ]] || continue
         name=$(basename "$file" .md)
 
@@ -947,7 +948,12 @@ check_command_surfaces() {
 
         # shellcheck disable=SC2016  # backticks are literal Markdown, not expansions
         while IFS= read -r target; do
-            [[ -n "$target" && -f "$SKILLS_DIR/$target/SKILL.md" ]] || continue
+            [[ -n "$target" ]] || continue
+            if [[ ! -f "$SKILLS_DIR/$target/SKILL.md" ]]; then
+                echo -e "${RED}✗${NC} commands/$name.md: routes to missing skill $target (no skills/$target/SKILL.md)"
+                ((++issues))
+                continue
+            fi
             [[ "$user_only_route_exceptions" == *" $target "* ]] && continue
             target_header=$(awk 'NR == 1 { next } /^---$/ { exit } { print }' "$SKILLS_DIR/$target/SKILL.md")
             if grep -q '^disable-model-invocation:[[:space:]]*true[[:space:]]*$' <<< "$target_header"; then

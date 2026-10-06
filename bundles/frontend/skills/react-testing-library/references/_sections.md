@@ -28,7 +28,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 5. Assertions (assert)
 
 **Impact:** HIGH
-**Description:** Using the right assertions with jest-dom matchers provides clearer error messages and tests the correct properties.
+**Description:** Using the right assertions with DOM matchers provides clearer error messages and tests the correct properties.
 
 ## 6. Component Setup (setup)
 

@@ -52,22 +52,21 @@ You are an expert in Nest.js with deep knowledge of enterprise-grade Node.js app
 - Execution order: Middleware → Guards → Interceptors (before) → Pipes → Route handler → Interceptors (after)
 - Resources: [Middleware](https://docs.nestjs.com/middleware), [Guards](https://docs.nestjs.com/guards)
 
-### Testing Strategies (Jest & Supertest)
+### Testing Strategies (Vitest & Supertest)
 
 - Common issues: Mocking dependencies, testing modules, e2e test setup
 - Root causes: Improper test module creation, missing mock providers, incorrect async handling
 - Solution priority: 1) Fix test module setup, 2) Mock dependencies correctly, 3) Handle async tests
-- Tools: `@nestjs/testing`, Jest, Supertest
+- Tools: `@nestjs/testing`, Vitest with `unplugin-swc` (decorator metadata), Supertest
 - Resources: [Testing](https://docs.nestjs.com/fundamentals/testing)
 
-### Database Integration (TypeORM & Mongoose)
+### Database Integration (Prisma & Postgres)
 
-- Common issues: Connection management, entity relationships, migrations
-- Root causes: Incorrect configuration, missing decorators, improper transaction handling
-- Solution priority: 1) Fix configuration, 2) Correct entity setup, 3) Implement transactions
-- TypeORM: `@nestjs/typeorm`, entity decorators, repository pattern
-- Mongoose: `@nestjs/mongoose`, schema decorators, model injection
-- Resources: [TypeORM](https://docs.nestjs.com/techniques/database), [Mongoose](https://docs.nestjs.com/techniques/mongodb)
+- Common issues: Connection management, relation modeling, migrations, N+1 queries
+- Root causes: Incorrect `DATABASE_URL`, stale generated client, missing indexes, improper transaction handling
+- Solution priority: 1) Fix configuration and run `prisma generate`, 2) Correct schema and relations, 3) Implement transactions
+- Prisma: `PrismaService` extending `PrismaClient`, injected into feature services; `prisma migrate dev` / `prisma migrate deploy`
+- Resources: [Prisma with NestJS](https://docs.nestjs.com/recipes/prisma), [Prisma docs](https://www.prisma.io/docs)
 
 ### Authentication & Authorization (Passport.js)
 
@@ -101,7 +100,7 @@ I analyze the project to understand:
 
 - Nest.js version and configuration
 - Module structure and organization
-- Database setup (TypeORM/Mongoose/Prisma)
+- Database setup (Prisma/Postgres; flag any other ORM)
 - Testing framework configuration
 - Authentication implementation
 
@@ -118,7 +117,6 @@ grep "@nestjs/core" package.json | sed 's/.*"\([0-9\.]*\)".*/Nest.js version: \1
 
 # Check database setup
 grep -q "@nestjs/typeorm" package.json && echo "TypeORM integration detected"
-grep -q "@nestjs/mongoose" package.json && echo "Mongoose integration detected"
 grep -q "@prisma/client" package.json && echo "Prisma ORM detected"
 
 # Check authentication
@@ -194,7 +192,7 @@ Community-proven solutions:
 **Real Examples**: SO 75483101, 62942112, 62822943
 Proven testing solutions:
 
-1. Use @golevelup/ts-jest for createMock() helper
+1. Use @golevelup/ts-vitest for createMock() helper
 2. Mock JwtService in test module providers
 3. Import all required modules in Test.createTestingModule()
 4. For Bazel users: Special configuration needed (SO 62942112)
@@ -467,11 +465,11 @@ When reviewing Nest.js applications, focus on:
 
 ```
 Project Requirements:
-├─ Need migrations? → TypeORM or Prisma
-├─ NoSQL database? → Mongoose
+├─ New project on Postgres? → Prisma (house default)
+├─ Need migrations? → Prisma Migrate
 ├─ Type safety priority? → Prisma
-├─ Complex relations? → TypeORM
-└─ Existing database? → TypeORM (better legacy support)
+├─ Complex relations? → Prisma relations (`include`/`select`)
+└─ Hand-tuned SQL? → Prisma `$queryRaw` tagged template
 ```
 
 ### Module Organization Strategy
@@ -551,14 +549,14 @@ Data Characteristics:
 
 ### Testing Resources
 
-- [Jest Documentation](https://jestjs.io/docs/getting-started)
+- [Vitest Documentation](https://vitest.dev/guide/)
+- [unplugin-swc](https://github.com/unplugin/unplugin-swc)
 - [Supertest](https://github.com/visionmedia/supertest)
 - [Testing Best Practices](https://github.com/goldbergyoni/javascript-testing-best-practices)
 
 ### Database Resources
 
-- [TypeORM Documentation](https://typeorm.io)
-- [Mongoose Documentation](https://mongoosejs.com)
+- [Prisma Documentation](https://www.prisma.io/docs)
 
 ### Authentication
 

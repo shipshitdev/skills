@@ -1,5 +1,5 @@
 ---
-name: grilling
+name: grill-me
 description: Grills the user relentlessly about a plan, decision, or idea until every branch of the design tree is resolved. Use when stress-testing thinking or when told grill me.
 license: MIT
 metadata:
@@ -15,7 +15,7 @@ metadata:
 when_to_use: "grill me, interview me"
 ---
 
-# Grilling
+# Grill Me
 
 Interview the user relentlessly until every branch of the **design tree** is resolved. This is the reusable interview primitive. Orchestrators (`interview`, `shape`) invoke it; they own grounding, artifacts, and routing.
 

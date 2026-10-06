@@ -5,9 +5,9 @@
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
 <!-- catalog-summary:start -->
-175 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
+173 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
 
-Catalog: **175 skills · 24 commands · 13 bundles · 188 plugins**.
+Catalog: **173 skills · 24 commands · 13 bundles · 186 plugins**.
 <!-- catalog-summary:end -->
 
 Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
@@ -19,7 +19,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 |---|---|---|
 | `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
 | `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 188 generated plugins |
+| `.claude-plugin/` | Generated Claude marketplace catalog | 186 generated plugins |
 | `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
 | `.github/` | Issue templates and GitHub Actions workflows | Tracked |
 | `.husky/` | Git hook configuration | Tracked |
@@ -31,7 +31,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
 | `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 175 canonical skills |
+| `skills/` | Canonical public Agent Skills sources | 173 canonical skills |
 | `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
 <!-- catalog-layout:end -->
 
@@ -272,12 +272,12 @@ Plain `deslop` is the Shipshit adaptation. `pstack:deslop` is a separate upstrea
 plugin skill, not an alias.
 
 <!-- catalog-skills-heading:start -->
-## Skills (175)
+## Skills (173)
 <!-- catalog-skills-heading:end -->
 
 ### Dev Loop (15)
 
-`interview`, `grilling`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
+`interview`, `grill-me`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
 
 ### Dev Workflow (36)
 
@@ -301,7 +301,7 @@ plugin skill, not an alias.
 
 ### Infrastructure (12)
 
-`docker-expert`, `aws-infrastructure`, `ec2-backend-deployer`, `vercel-deploy`, `postgres-ops`, `mongodb-migration-expert`, `mongodb-atlas-checker`, `monitoring-setup`, `nestjs-queue-architect`, `performance-expert`, `redis-caching`, `security-expert`
+`docker-expert`, `aws-infrastructure`, `ec2-backend-deployer`, `vercel-deploy`, `postgres-ops`, `monitoring-setup`, `nestjs-queue-architect`, `performance-expert`, `redis-caching`, `security-expert`
 
 ### Security (5)
 
@@ -317,7 +317,7 @@ plugin skill, not an alias.
 
 ### Planning & PRDs (15)
 
-`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grilling`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `prd-dispatch`
+`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grill-me`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `prd-dispatch`
 
 ### Payments & Product Integrations (1)
 

@@ -19,7 +19,7 @@ describe("{{Entity}}sController", () => {
 
   const mockUser = { userId: "user-123" };
   const mock{{Entity}} = {
-    _id: "{{entity}}-123",
+    id: "{{entity}}-123",
     title: "Test {{Entity}}",
     userId: mockUser.userId,
     createdAt: new Date().toISOString(),

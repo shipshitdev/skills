@@ -68,8 +68,8 @@ cat apps/extension/package.json  # Plasmo
 ```
 Workspace: GenFeedAI
 ├── apps/
-│   ├── web (Next.js 14, React 18)
-│   ├── api (NestJS 10, MongoDB)
+│   ├── web (Next.js 16, React 19)
+│   ├── api (NestJS 11, Prisma, Postgres)
 │   ├── mobile (Expo 50, React Native)
 │   └── extension (Plasmo, Chrome MV3)
 ├── packages/
@@ -227,7 +227,7 @@ Workspace: GenFeedAI
 
 ---
 
-### Phase 3: Database Audit (MongoDB)
+### Phase 3: Database Audit (Postgres)
 
 **Skills Invoked:**
 
@@ -237,27 +237,36 @@ Workspace: GenFeedAI
 
 | Metric | Target | Tool |
 |--------|--------|------|
-| Query Time (p95) | < 50ms | MongoDB Profiler |
-| Index Hit Ratio | > 95% | db.serverStatus() |
+| Query Time (p95) | < 50ms | `pg_stat_statements` |
+| Index Hit Ratio | > 95% | `pg_statio_user_indexes` |
 | Connection Pool Usage | < 80% | Connection metrics |
 | Slow Queries (>100ms) | 0 | Slow query log |
 
 **Checks:**
 
-```javascript
-// Index Analysis
-db.collection.getIndexes()
-db.collection.aggregate([{$indexStats: {}}])
+```sql
+-- Index analysis: unused or rarely used indexes
+SELECT relname, indexrelname, idx_scan
+FROM pg_stat_user_indexes
+ORDER BY idx_scan ASC
+LIMIT 20;
 
-// Slow Query Analysis
-db.setProfilingLevel(1, { slowms: 100 })
-db.system.profile.find().sort({ts: -1}).limit(10)
+-- Slow query analysis (requires pg_stat_statements)
+SELECT query, calls, mean_exec_time
+FROM pg_stat_statements
+ORDER BY mean_exec_time DESC
+LIMIT 10;
 
-// Collection Stats
-db.collection.stats()
+-- Table stats: sequential scans vs index scans
+SELECT relname, seq_scan, idx_scan, n_live_tup
+FROM pg_stat_user_tables
+ORDER BY seq_scan DESC;
 
-// Connection Pool
-db.serverStatus().connections
+-- Connection pool
+SELECT state, count(*) FROM pg_stat_activity GROUP BY state;
+
+-- Query plan for a suspect query
+EXPLAIN (ANALYZE, BUFFERS) SELECT ...;
 ```
 
 **Report Template:**
@@ -266,7 +275,7 @@ db.serverStatus().connections
 ## Database Performance Report
 
 ### Query Performance
-| Collection | Avg Query Time | Index Usage | Status |
+| Table | Avg Query Time | Index Usage | Status |
 |------------|----------------|-------------|--------|
 | posts      | Xms            | XX%         | ✓/✗    |
 | users      | Xms            | XX%         | ✓/✗    |

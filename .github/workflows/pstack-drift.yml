@@ -1,0 +1,37 @@
+name: Pstack Drift
+
+# Weekly check that the pinned Pstack imports (upstream/pstack/lock.json) have
+# not fallen behind upstream. Opens or updates ONE tracking issue; it never
+# imports anything. Every accepted update still goes through
+# `pstack-sync.py candidate` -> review -> `pstack-sync.py verify`.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1" # Mondays 06:17 UTC
+  workflow_dispatch:
+
+# Reads (upstream compare, issue lookup) use the read-only github.token. Issue
+# writes use PROJECTS_TOKEN because events from github.token never trigger
+# issue-governance.yml, which fills the board fields; the script fails when the
+# secret is absent rather than opening an ungoverned issue.
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: pstack-drift
+  cancel-in-progress: false
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Check upstream drift
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PSTACK_DRIFT_WRITE_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+        run: python3 scripts/pstack-drift.py --repo "$GITHUB_REPOSITORY"

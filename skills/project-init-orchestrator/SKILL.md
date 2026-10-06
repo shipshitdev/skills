@@ -122,7 +122,7 @@ not use for new Shipshit.dev product repos unless v0 is unavailable or the user
 explicitly bypasses it.
 
 Stack: Next.js 16 + React 19 + TypeScript + Tailwind + @agenticindiedev/ui
-(frontend), NestJS 11 + MongoDB + Clerk Auth + Swagger (backend), Vitest 80%
+(frontend), NestJS 11 + Prisma/Postgres + Clerk Auth + Swagger (backend), Vitest 80%
 coverage + Biome + Husky + GitHub Actions CI/CD, Bun package manager.
 
 Load `references/legacy-manual-route.md` for the full step-by-step workflow,

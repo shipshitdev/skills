@@ -1490,12 +1490,13 @@ describe('UserList', () => {
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { axe } from 'vitest-axe';
+import * as matchers from 'vitest-axe/matchers';
 import { describe, it, expect } from 'vitest';
 
 import { Modal } from './modal';
 
-expect.extend(toHaveNoViolations);
+expect.extend(matchers);
 
 describe('Modal accessibility', () => {
   it('has no accessibility violations', async () => {

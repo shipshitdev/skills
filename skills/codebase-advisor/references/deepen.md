@@ -70,7 +70,7 @@ Done when the table is shown. Ask which candidate to explore, then stop.
 
 ## 4. Hand the pick to a grilling
 
-Recommend the `interview` skill for the chosen candidate. It runs `grilling` and
+Recommend the `interview` skill for the chosen candidate. It runs `grill-me` and
 `domain-modeling` over the open decisions: constraints, dependencies, the shape of
 the deepened module, what sits behind the seam, which tests survive. Naming a new
 concept updates the glossary there.

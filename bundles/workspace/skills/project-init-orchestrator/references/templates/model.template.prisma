@@ -1,0 +1,32 @@
+// Prisma Model Template
+//
+// Save as api/prisma/schema/{{entity}}.prisma (multi-file schema folder).
+// Replace {{Entity}} with PascalCase entity name (e.g., Task)
+// Replace {{entities}} with plural camelCase (e.g., tasks)
+// Replace {{FIELDS}} with actual field definitions
+
+model {{Entity}} {
+  id        String   @id @default(cuid())
+
+  // FIELD EXAMPLES - Replace with actual fields:
+  //
+  // Required string:       title       String
+  // Optional string:       description String?
+  // Enum:                  priority    Priority @default(MEDIUM)   (declare `enum Priority { LOW MEDIUM HIGH }`)
+  // Date:                  dueDate     DateTime?
+  // Boolean:               isCompleted Boolean  @default(false)
+  // Array of strings:      tags        String[]
+  // Reference:             projectId   String?
+  //                        project     Project? @relation(fields: [projectId], references: [id])
+  //
+  // {{FIELDS}}
+
+  // Always include userId for multi-tenancy
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Index for the common "list my rows, newest first" query
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("{{entities}}")
+}

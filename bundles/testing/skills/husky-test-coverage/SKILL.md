@@ -1,6 +1,6 @@
 ---
 name: husky-test-coverage
-description: Sets up or verifies Husky pre-commit hooks that enforce test coverage above 80% (configurable) for Node/TypeScript projects using Jest, Vitest, or Mocha.
+description: Sets up or verifies Husky pre-commit hooks that enforce test coverage above 80% (configurable) for Node/TypeScript projects using Vitest (or Mocha with nyc/c8).
 metadata:
   version: "2.2.2"
   tags: "husky, testing, coverage"
@@ -50,18 +50,16 @@ Delegates To:
 
 1. **Check package.json:**
    - Review existing test scripts
-   - Detect test runner from dependencies (jest, vitest, mocha)
+   - Detect test runner from dependencies (vitest, mocha)
    - Check for existing Husky installation
    - Review existing coverage configuration
 
 2. **Identify Test Runner:**
-   - Jest: Check for `jest` in dependencies, look for `jest.config.js` or `jest.config.json`
-   - Vitest: Check for `vitest` in dependencies, look for `vitest.config.ts` or `vitest.config.js`
+   - Vitest: Check for `vitest` in dependencies, look for `vitest.config.ts` or `vitest.config.js`; check `@vitest/coverage-v8` is installed
    - Mocha: Check for `mocha` in dependencies, check for coverage tool (nyc, c8)
 
 3. **Check Coverage Configuration:**
-   - Jest: Look for `coverageThreshold` in jest.config.*
-   - Vitest: Look for `coverage.thresholds` in vitest.config.*
+   - Vitest: Look for `test.coverage.thresholds` in vitest.config.*
    - Mocha: Look for `.nycrc.json` or coverage config in package.json
 
 4. **Verify Existing Husky Setup:**
@@ -95,22 +93,16 @@ See `references/full-guide.md` (§ Quick Start Examples) for threshold, warn-onl
 
 The skill automatically detects:
 
-- **Jest**: Uses `jest --coverage --watchAll=false` in pre-commit hook
-- **Vitest**: Uses `vitest --coverage --run` in pre-commit hook
+- **Vitest**: Uses `vitest run --coverage` in pre-commit hook
 - **Mocha**: Uses `nyc` or `c8` with mocha test command
 
 ### Coverage Configuration
 
-**Jest:**
-
-- Creates or updates `jest.config.json` with `coverageThreshold`
-- Default thresholds: 80% lines, 75% branches, 80% functions, 80% statements
-
 **Vitest:**
 
-- Creates or updates `vitest.config.ts/js` with coverage thresholds
-- Configures v8 coverage provider
-- Sets same default thresholds as Jest
+- Creates `vitest.config.ts/js` with `test.coverage.thresholds` when none exists; prints the snippet when a config already exists
+- Configures the `v8` coverage provider and installs `@vitest/coverage-v8` when missing
+- Default thresholds: 80% lines, 75% branches, 80% functions, 80% statements
 
 **Mocha + nyc:**
 
@@ -155,20 +147,6 @@ Alternatively, add to `package.json`:
 
 ## Tech Stack Adaptation
 
-### Jest Projects
-
-**Detection:**
-
-- Checks for `jest` in dependencies
-- Looks for `jest.config.js` or `jest.config.json`
-
-**Configuration:**
-
-- Updates or creates `jest.config.json` with coverage thresholds
-- Pre-commit hook: `bun run test -- --coverage --watchAll=false`
-
-See `references/full-guide.md` (§ Example jest.config.json) for a full config example.
-
 ### Vitest Projects
 
 **Detection:**
@@ -178,8 +156,8 @@ See `references/full-guide.md` (§ Example jest.config.json) for a full config e
 
 **Configuration:**
 
-- Updates or creates Vitest config with coverage thresholds
-- Pre-commit hook: `bun run test -- --coverage --run`
+- Updates or creates Vitest config with `test.coverage.thresholds` (provider `v8`, package `@vitest/coverage-v8`)
+- Pre-commit hook: `bunx vitest run --coverage`
 
 See `references/full-guide.md` (§ Example vitest.config.ts) for a full config example.
 
@@ -208,7 +186,7 @@ The skill automatically detects and uses:
 ## Workflow
 
 1. Scan package.json for test runner, dependencies, existing Husky config, and coverage config files. Verify test files exist.
-2. Identify Jest, Vitest, or Mocha; detect coverage tool (built-in or nyc/c8); determine package manager.
+2. Identify Vitest or Mocha; detect coverage tool (built-in or nyc/c8); determine package manager.
 3. Install Husky if missing; initialize hooks; add `prepare` script if needed.
 4. Create or update coverage configuration; set thresholds (default 80%); configure reporters.
 5. Generate pre-commit hook script; set enforcement behavior (block or warn).
@@ -244,7 +222,7 @@ chmod +x .husky/pre-commit
 
 - Verify test command includes coverage flag
 - Check coverage configuration file exists and is correct
-- Ensure coverage tool is installed (nyc/c8 for Mocha)
+- Ensure the coverage tool is installed (`@vitest/coverage-v8` for Vitest, nyc/c8 for Mocha)
 
 ### Hook fails even when tests pass
 
@@ -255,16 +233,15 @@ chmod +x .husky/pre-commit
 ### Tests run but coverage not enforced
 
 - Verify coverage configuration file has correct thresholds
-- Check test runner supports coverage (Jest/Vitest have built-in, Mocha needs nyc/c8)
+- Check test runner supports coverage (Vitest needs `@vitest/coverage-v8`, Mocha needs nyc/c8)
 - Review pre-commit hook script for correct command
 
 ### Multiple test runners detected
 
-The skill uses the first detected runner in priority order: Vitest > Jest > Mocha
+The skill uses the first detected runner in priority order: Vitest > Mocha
 
 ## Resources
 
 - Husky Documentation: https://typicode.github.io/husky/
-- Jest Coverage: https://jestjs.io/docs/configuration#coveragethreshold-object
-- Vitest Coverage: https://vitest.dev/config/#coverage
+- Vitest Coverage: https://vitest.dev/guide/coverage
 - nyc (Istanbul): https://github.com/istanbuljs/nyc

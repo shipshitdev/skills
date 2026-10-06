@@ -80,7 +80,7 @@ number means, how to choose test data, how to kill a flake — use
 
 ### 5. Assertions (HIGH)
 
-- [`assert-jest-dom-matchers`](references/assert-jest-dom-matchers.md) - Use jest-dom matchers
+- [`assert-dom-matchers`](references/assert-dom-matchers.md) - Use DOM matchers
 - [`assert-visible-over-in-document`](references/assert-visible-over-in-document.md) - Use toBeVisible() for visibility
 - [`assert-text-content`](references/assert-text-content.md) - Use toHaveTextContent() for text
 - [`assert-have-value`](references/assert-have-value.md) - Use toHaveValue() for inputs

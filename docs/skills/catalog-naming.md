@@ -4,7 +4,7 @@ Migration from the catalog after board correctness and composition repairs,
 2026-09-05, kept current through the 2026-10-05 catalog simplification (#190). This is
 a migration inventory, not a runtime registry.
 
-176 skills and 24 commands. Eight rows record a rename from an earlier name (one of
+173 skills and 24 commands. Eight rows record a rename from an earlier name (one of
 them, `gh-address-comments`, was later merged into `pr-comments`). Skills folded into
 another since the migration are listed under Retired skills. Owning surfaces describe
 contracts; they are not mandatory naming prefixes.
@@ -80,7 +80,7 @@ contracts; they are not mandatory naming prefixes.
 | `git-safety` | `git-safety` | retain | git |
 | `github-actions-author` | `github-actions-author` | retain | github |
 | `graphql-architect` | `graphql-architect` | retain | api-design |
-| `grilling` | `grilling` | retain | discovery |
+| `grill-me` | `grill-me` | retain | discovery |
 | `grok-review` | `grok-review` | retain | grok-review |
 | `handoff` | `handoff` | retain | agent-context |
 | `how` | `how` | retain | code-explanation |
@@ -99,8 +99,6 @@ contracts; they are not mandatory naming prefixes.
 | `memory-systems` | `memory-systems` | retain | agent-context |
 | `merge-open-prs` | `merge-open-prs` | retain | pull-request-integration |
 | `micro-landing-builder` | `micro-landing-builder` | retain | landing-pages |
-| `mongodb-atlas-checker` | `mongodb-atlas-checker` | retain | mongodb |
-| `mongodb-migration-expert` | `mongodb-migration-expert` | retain | mongodb |
 | `monitoring-setup` | `monitoring-setup` | retain | observability |
 | `multi-agent-patterns` | `multi-agent-patterns` | retain | agent-architecture |
 | `nestjs-expert` | `nestjs-expert` | retain | nestjs |
@@ -207,14 +205,16 @@ names no longer install through `npx skills add --skill <name>`.
 | `typescript-refactor` | `typescript-expert` (`references/rules/`) | #190 |
 | `spec-first` | `prd-dispatch` (`spec` mode) | #190 |
 | `fullstack-workspace-init` | `project-init-orchestrator` | #190 |
-| `grill-me` | `grilling` | #190 |
+| `grilling` | `grill-me` (renamed back; `/grill-me` is the name in use) | rename |
 | `biome-validator` | `stack-validator` (`--stack biome`, `references/biome.md`) | #190 |
 | `bun-validator` | `stack-validator` (`--stack bun`, `references/bun.md`) | #190 |
 | `clerk-validator` | `stack-validator` (`--stack clerk`, `references/clerk.md`) | #190 |
 | `nextjs-validator` | `stack-validator` (`--stack nextjs`, `references/nextjs.md`) | #190 |
 | `tailwind-validator` | `stack-validator` (`--stack tailwind`, `references/tailwind.md`) | #190 |
 | `refactor-dispatch` | deleted; `/refactor` routes to its engines directly | #190 |
-| `context-engineering` | removed: no consumers; Vitae keeps its own copy, and execution skills read repo instructions themselves | #190 |
+| `context-engineering` | removed: no consumers; execution skills read repo instructions themselves | #190 |
+| `mongodb-atlas-checker` | removed: the house stack is Postgres only; use `postgres-ops` | #207 |
+| `mongodb-migration-expert` | removed: the house stack is Postgres only; use `postgres-ops` (Prisma migrations) | #207 |
 
 ## Commands
 

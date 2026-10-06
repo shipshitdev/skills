@@ -34,7 +34,7 @@ Before setting up deployment, gather information about your project.
 5. **Port**: What port does the application listen on?
 6. **Environment Variables**: What secrets/config are needed?
 7. **Health Endpoint**: Does the app have a health check endpoint?
-8. **Database**: MongoDB, PostgreSQL, Redis connections?
+8. **Database**: PostgreSQL (Prisma), Redis connections?
 
 ### Discovery Commands
 
@@ -852,7 +852,7 @@ services:
     environment:
       - NODE_ENV=production
       - REDIS_URL=redis://redis:6379
-      - MONGODB_URI=${MONGODB_URI}
+      - DATABASE_URL=${DATABASE_URL}
     env_file:
       - .env
     depends_on:
@@ -875,7 +875,7 @@ services:
     environment:
       - NODE_ENV=production
       - REDIS_URL=redis://redis:6379
-      - MONGODB_URI=${MONGODB_URI}
+      - DATABASE_URL=${DATABASE_URL}
     env_file:
       - .env
     depends_on:
@@ -1089,21 +1089,23 @@ import { Controller, Get } from '@nestjs/common';
 import {
   HealthCheck,
   HealthCheckService,
-  MongooseHealthIndicator,
+  PrismaHealthIndicator,
 } from '@nestjs/terminus';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('health')
 export class HealthController {
   constructor(
     private health: HealthCheckService,
-    private mongoose: MongooseHealthIndicator,
+    private prismaHealth: PrismaHealthIndicator,
+    private prisma: PrismaService,
   ) {}
 
   @Get()
   @HealthCheck()
   check() {
     return this.health.check([
-      () => this.mongoose.pingCheck('mongodb'),
+      () => this.prismaHealth.pingCheck('database', this.prisma),
     ]);
   }
 
@@ -1116,7 +1118,7 @@ export class HealthController {
   @HealthCheck()
   ready() {
     return this.health.check([
-      () => this.mongoose.pingCheck('mongodb'),
+      () => this.prismaHealth.pingCheck('database', this.prisma),
     ]);
   }
 }
@@ -1127,9 +1129,22 @@ export class HealthController {
 ```typescript
 // health.ts
 import { Router } from 'express';
-import mongoose from 'mongoose';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from './generated/prisma/client';
 
 const router = Router();
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
+});
+
+async function databaseStatus(): Promise<'connected' | 'disconnected'> {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return 'connected';
+  } catch {
+    return 'disconnected';
+  }
+}
 
 router.get('/health', async (req, res) => {
   const health = {
@@ -1137,11 +1152,11 @@ router.get('/health', async (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     checks: {
-      mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+      database: await databaseStatus(),
     },
   };
 
-  const isHealthy = health.checks.mongodb === 'connected';
+  const isHealthy = health.checks.database === 'connected';
   res.status(isHealthy ? 200 : 503).json(health);
 });
 
@@ -1652,7 +1667,7 @@ NODE_ENV=production
 PORT=3001
 
 # Database
-MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster.mongodb.net/db
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB?schema=public
 
 # Redis
 REDIS_URL=redis://localhost:6379

@@ -34,7 +34,7 @@ scripts) provisions labels, board, and workflows.
 `interview` → `prd-writer` / `feature-intake` → `writing-plans` →
 `executing-plans` (drives `tdd` + `qa-reviewer`) → human PR review.
 
-`grilling` and `domain-modeling` run underneath `interview`. They are
+`grill-me` and `domain-modeling` run underneath `interview`. They are
 reusable engines. A selected workflow can invoke them within its existing scope.
 Delegation preserves report-only restrictions and action gates. `/ask`,
 `interview`, and `shape` remain explicit advisory entry points.

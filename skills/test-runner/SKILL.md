@@ -1,10 +1,10 @@
 ---
 name: test-runner
 description: Runs tests at the right scope (changed, focused, full, type-check, e2e) in Bun repos and reports failures with evidence; repairs only if authorized. Use for /test run.
-compatibility: Requires a Bun-managed JavaScript/TypeScript project with Vitest, Jest, Bun test, or Playwright.
+compatibility: Requires a Bun-managed JavaScript/TypeScript project with Vitest, Bun test, or Playwright.
 metadata:
   version: "2.2.2"
-  tags: "testing, vitest, jest, playwright, e2e, smoke, type-check, ci, scoped-tests"
+  tags: "testing, vitest, playwright, e2e, smoke, type-check, ci, scoped-tests"
 allowed-tools: Bash(bun *) Bash(bunx *) Bash(git *)
 when_to_use: "smoke tests, build compiles"
 ---
@@ -114,8 +114,6 @@ lockfiles, installing Bun, or substituting a different command.
 Detect the runner from `package.json` scripts and dev-dependencies:
 
 - **Vitest** — `vitest` present; supports `--changed` and `related`
-- **Jest** — `jest` present; supports `--onlyChanged`, `--changedSince`,
-  `--findRelatedTests`
 - **Bun test** — `bun test`; no related-test detection (map by path convention)
 - **Playwright** — `@playwright/test`; e2e, no related detection (use tag grep)
 
@@ -138,7 +136,6 @@ Map the scope to a command:
 
 - **changed** (default) — related tests for the changed files:
   - Vitest: `bunx vitest related <files> --run` (or `vitest --changed`)
-  - Jest: `bunx jest --findRelatedTests <files>` (or `--changedSince <ref>`)
   - Bun/Playwright: no related detection — map changed source files to their
     sibling test files by convention, else fall back to `full` and say so
 - **full** — the whole suite (what CI runs)

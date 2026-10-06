@@ -1,7 +1,7 @@
 {
-  "name": "mongodb-migration-expert",
+  "name": "grill-me",
   "version": "2.2.2",
-  "description": "Database schema design, indexing, and migration guidance for MongoDB-based applications.",
+  "description": "Relentless interview primitive: design tree, frontier rounds, recommended answers.",
   "author": {
     "name": "Ship Shit Dev",
     "email": "hello@shipshit.dev",

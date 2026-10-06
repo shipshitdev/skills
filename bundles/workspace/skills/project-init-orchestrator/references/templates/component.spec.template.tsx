@@ -5,7 +5,7 @@
  * Replace {{entity}} with camelCase entity name (e.g., task)
  * Replace {{entities}} with plural camelCase (e.g., tasks)
  *
- * Requires: npm install -D @testing-library/react @testing-library/jest-dom jsdom
+ * Requires: bun add -D @testing-library/react @testing-library/jest-dom jsdom
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -37,8 +37,8 @@ vi.mock("@clerk/nextjs", () => ({
 
 describe("{{Entity}}List", () => {
   const mock{{Entity}}s = [
-    { _id: "1", title: "{{Entity}} 1", userId: "user-123" },
-    { _id: "2", title: "{{Entity}} 2", userId: "user-123" },
+    { id: "1", title: "{{Entity}} 1", userId: "user-123" },
+    { id: "2", title: "{{Entity}} 2", userId: "user-123" },
   ];
 
   beforeEach(() => {
@@ -114,7 +114,7 @@ describe("{{Entity}}Form", () => {
   });
 
   it("should render populated form for editing", () => {
-    const {{entity}} = { _id: "1", title: "Existing {{Entity}}" };
+    const {{entity}} = { id: "1", title: "Existing {{Entity}}" };
 
     render(
       <{{Entity}}Form

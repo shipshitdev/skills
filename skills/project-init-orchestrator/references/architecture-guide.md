@@ -29,21 +29,23 @@ collections/users/
 │   └── users.controller.ts   # HTTP endpoints
 ├── services/
 │   └── users.service.ts      # Business logic
-├── schemas/
-│   └── users.schema.ts       # Mongoose schema
 ├── dto/
 │   ├── create-user.dto.ts
 │   └── update-user.dto.ts
 └── users.http                # REST Client tests
+
+# Models live in the multi-file Prisma schema folder, one file per model:
+prisma/schema/users.prisma
 ```
 
 ### Database Patterns
 
 **Soft Deletes:**
 
-```typescript
-@Prop({ default: false, index: true })
-isDeleted: boolean;
+```prisma
+isDeleted Boolean @default(false)
+
+@@index([organizationId, isDeleted])
 ```
 
 **Multi-Tenancy:**
@@ -51,27 +53,26 @@ isDeleted: boolean;
 ```typescript
 // Always filter by organization
 async findAll(organizationId: string) {
-  return this.model.find({
-    organization: organizationId,
-    isDeleted: false,
+  return this.prisma.user.findMany({
+    where: { organizationId, isDeleted: false },
   });
 }
 ```
 
 **Indexes:**
 
-- Simple indexes: In schema via `@Prop({ index: true })`
-- Compound indexes: In module's `useFactory`
+- Single-column: `@@index([email])` or `@unique` in the model
+- Compound: `@@index([organizationId, isDeleted])` in the model
+- Every index change ships as a migration (`bun run prisma:migrate`)
 
-```typescript
-MongooseModule.forFeatureAsync([{
-  name: User.name,
-  useFactory: () => {
-    const schema = UserSchema;
-    schema.index({ organization: 1, isDeleted: 1 });
-    return schema;
-  },
-}]),
+```prisma
+model User {
+  id             String  @id @default(cuid())
+  organizationId String
+  isDeleted      Boolean @default(false)
+
+  @@index([organizationId, isDeleted])
+}
 ```
 
 ---
@@ -170,9 +171,9 @@ Serializers live in packages, NOT in API:
 
 ```typescript
 // packages/packages/common/serializers/user.serializer.ts
-export function serializeUser(user: UserDocument): IUser {
+export function serializeUser(user: User): IUser {
   return {
-    id: user._id.toString(),
+    id: user.id,
     name: user.name,
     email: user.email,
     // Never expose isDeleted, internal fields, etc.
