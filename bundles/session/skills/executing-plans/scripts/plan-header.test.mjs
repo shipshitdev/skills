@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { fileURLToPath } from 'node:url';
-import { checkPlan, requirementsFingerprint } from './plan-header.mjs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { checkPlan, isEntrypoint, requirementsFingerprint } from './plan-header.mjs';
 
 const headSha = 'a'.repeat(40);
 const issueBody = 'Ship the complete feature.\nKeep the settled scope.';
@@ -153,6 +153,30 @@ test('CLI emits digest and JSON with exits 0, 1 and invocation errors with exit 
       assert.equal(result.stdout, '');
       assert.match(result.stderr, /Usage:|ENOENT|Head SHA must be a 40-character lowercase SHA/);
     }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('CLI runs when invoked through a symlinked skill directory', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'plan-header-link-'));
+  const scripts = fileURLToPath(new URL('.', import.meta.url));
+  const linked = join(directory, 'executing-plans');
+  const issueFile = join(directory, 'issue.md');
+  const script = fileURLToPath(new URL('./plan-header.mjs', import.meta.url));
+  try {
+    symlinkSync(scripts, linked, 'dir');
+    writeFileSync(issueFile, issueBody);
+    const run = (...args) => spawnSync(process.execPath, [join(linked, 'plan-header.mjs'), ...args], { encoding: 'utf8' });
+    const fingerprint = run('digest', issueFile);
+    assert.equal(fingerprint.status, 0);
+    assert.equal(fingerprint.stdout, `${digest}\n`);
+    const usage = run();
+    assert.equal(usage.status, 2);
+    assert.match(usage.stderr, /Usage/);
+    assert.equal(isEntrypoint(join(linked, 'plan-header.mjs'), pathToFileURL(script).href), true);
+    assert.equal(isEntrypoint(join(directory, 'other.mjs'), pathToFileURL(script).href), false);
+    assert.equal(isEntrypoint(undefined, pathToFileURL(script).href), false);
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }

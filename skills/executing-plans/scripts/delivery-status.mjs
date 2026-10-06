@@ -1,5 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { readFileSync, realpathSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const sha = (value) => typeof value === 'string' && /^[a-f0-9]{40}$/i.test(value);
 const text = (value) => typeof value === 'string' && value.trim().length > 0;
@@ -76,7 +76,18 @@ export function deliveryStatus(receipt) {
   return result('done');
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+function realPath(path) {
+  try { return realpathSync(path); } catch { return path; }
+}
+
+// Node resolves the main module through symlinks, so a skill installed via a
+// symlinked directory yields an import.meta.url that never equals argv[1].
+export function isEntrypoint(argvPath, moduleUrl) {
+  if (!argvPath) return false;
+  return realPath(argvPath) === realPath(fileURLToPath(moduleUrl));
+}
+
+if (isEntrypoint(process.argv[1], import.meta.url)) {
   try {
     if (process.argv.length !== 3) throw new Error('Usage: node delivery-status.mjs <receipt.json>');
     const evaluated = deliveryStatus(JSON.parse(readFileSync(process.argv[2], 'utf8')));

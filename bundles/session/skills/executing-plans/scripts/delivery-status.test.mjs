@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { deliveryStatus } from './delivery-status.mjs';
 
 const head = 'a'.repeat(40);
@@ -114,4 +119,23 @@ test('missing fields and duplicate evidence fail rather than fabricating success
   const duplicate = fixture();
   duplicate.expectedAcceptanceIds.push('AC1');
   assert.throws(() => deliveryStatus(duplicate));
+});
+
+test('CLI runs when invoked through a symlinked skill directory', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'delivery-status-link-'));
+  const linked = join(directory, 'executing-plans');
+  const receiptFile = join(directory, 'receipt.json');
+  try {
+    symlinkSync(fileURLToPath(new URL('.', import.meta.url)), linked, 'dir');
+    writeFileSync(receiptFile, JSON.stringify(fixture()));
+    const run = (...args) => spawnSync(process.execPath, [join(linked, 'delivery-status.mjs'), ...args], { encoding: 'utf8' });
+    const evaluated = run(receiptFile);
+    assert.equal(evaluated.status, 0);
+    assert.deepEqual(JSON.parse(evaluated.stdout), deliveryStatus(fixture()));
+    const usage = run();
+    assert.equal(usage.status, 2);
+    assert.match(usage.stderr, /Usage/);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

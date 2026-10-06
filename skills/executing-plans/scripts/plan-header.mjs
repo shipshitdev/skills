@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { readFileSync, realpathSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const sha = (value) => /^[0-9a-f]{40}$/.test(value);
 
@@ -66,7 +66,18 @@ export function checkPlan({ issueBody, planBody, headSha }) {
   return { ready: blockers.length === 0, blockers, fields };
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+function realPath(path) {
+  try { return realpathSync(path); } catch { return path; }
+}
+
+// Node resolves the main module through symlinks, so a skill installed via a
+// symlinked directory yields an import.meta.url that never equals argv[1].
+export function isEntrypoint(argvPath, moduleUrl) {
+  if (!argvPath) return false;
+  return realPath(argvPath) === realPath(fileURLToPath(moduleUrl));
+}
+
+if (isEntrypoint(process.argv[1], import.meta.url)) {
   try {
     const [command, ...args] = process.argv.slice(2);
     if (command === 'digest' && args.length === 1) {
