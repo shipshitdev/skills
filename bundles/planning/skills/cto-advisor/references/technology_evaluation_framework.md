@@ -335,7 +335,7 @@
 ### Databases
 
 - **SQL**: PostgreSQL, MySQL, SQL Server
-- **NoSQL**: MongoDB, Cassandra, DynamoDB
+- **Key-value / wide-column**: Redis, Cassandra, DynamoDB
 - **NewSQL**: CockroachDB, Vitess, TiDB
 - **Evaluation Focus**: Performance, scalability, consistency, operations
 

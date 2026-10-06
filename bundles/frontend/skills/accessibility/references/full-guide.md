@@ -706,10 +706,12 @@ pnpm add -D eslint-plugin-jsx-a11y
 
 ```typescript
 import { render } from "@testing-library/react";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "vitest-axe";
+import * as matchers from "vitest-axe/matchers";
+import { describe, expect, it } from "vitest";
 import Button from "./Button";
 
-expect.extend(toHaveNoViolations);
+expect.extend(matchers);
 
 describe("Button accessibility", () => {
   it("should have no a11y violations", async () => {

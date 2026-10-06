@@ -39,7 +39,7 @@ when_to_use: "security headers, multi-tenancy isolation"
 
 - DTOs with class-validator
 - Sanitize user input
-- Prevent NoSQL/SQL injection
+- Prevent SQL injection (typed Prisma client, tagged `$queryRaw` only)
 - Parameterized queries
 
 ### Data Protection
@@ -82,4 +82,4 @@ when_to_use: "security headers, multi-tenancy isolation"
 
 ---
 
-**For complete authentication/authorization patterns, input validation examples, OWASP prevention techniques, framework-specific security (React/Next.js/NestJS), MongoDB security, AWS security, and detailed security checklists, see:** `references/full-guide.md`
+**For complete authentication/authorization patterns, input validation examples, OWASP prevention techniques, framework-specific security (React/Next.js/NestJS), Postgres/Prisma security, AWS security, and detailed security checklists, see:** `references/full-guide.md`

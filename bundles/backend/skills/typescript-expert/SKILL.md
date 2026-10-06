@@ -25,7 +25,7 @@ when_to_use: "type performance, monorepo config, satisfies, branded types, remov
    bunx tsc --version
    node -v
    # Detect tooling ecosystem (prefer parsing package.json)
-   node -e "const p=require('./package.json');console.log(Object.keys({...p.devDependencies,...p.dependencies}||{}).join('\n'))" 2>/dev/null | grep -E 'biome|eslint|prettier|vitest|jest|turborepo|nx' || echo "No tooling detected"
+   node -e "const p=require('./package.json');console.log(Object.keys({...p.devDependencies,...p.dependencies}||{}).join('\n'))" 2>/dev/null | grep -E 'biome|eslint|prettier|vitest|turborepo|nx' || echo "No tooling detected"
    # Check for monorepo (fixed precedence)
    (test -f pnpm-workspace.yaml || test -f lerna.json || test -f nx.json || test -f turbo.json) && echo "Monorepo detected"
    ```

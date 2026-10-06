@@ -92,7 +92,6 @@ def check_tooling():
             "eslint": "ESLint",
             "prettier": "Prettier",
             "vitest": "Vitest (testing)",
-            "jest": "Jest (testing)",
             "turborepo": "Turborepo (monorepo)",
             "turbo": "Turbo (monorepo)",
             "nx": "Nx (monorepo)",

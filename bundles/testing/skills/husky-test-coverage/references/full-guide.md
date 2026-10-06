@@ -64,21 +64,6 @@ export default defineConfig({
 }
 ```
 
-## Example jest.config.json
-
-```json
-{
-  "coverageThreshold": {
-    "global": {
-      "lines": 80,
-      "branches": 75,
-      "functions": 80,
-      "statements": 80
-    }
-  }
-}
-```
-
 ## Example .nycrc.json
 
 ```json

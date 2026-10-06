@@ -14,8 +14,6 @@ DevOps, cloud, and infrastructure skills
 - `aws-infrastructure`
 - `docker-expert`
 - `ec2-backend-deployer`
-- `mongodb-atlas-checker`
-- `mongodb-migration-expert`
 - `monitoring-setup`
 - `nestjs-queue-architect`
 - `performance-expert`

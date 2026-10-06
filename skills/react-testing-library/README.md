@@ -138,4 +138,4 @@ Examples:
 
 - [Testing Library](https://testing-library.com) - Official documentation
 - [Kent C. Dodds](https://kentcdodds.com) - Creator guidance and best practices
-- [jest-dom](https://github.com/testing-library/jest-dom) - Custom matchers
+- `@testing-library/jest-dom` ([repository](https://github.com/testing-library/jest-dom)) - Custom DOM matchers

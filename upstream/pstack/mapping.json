@@ -5226,12 +5226,12 @@
         {
           "executable": false,
           "path": "skills/typescript-expert/SKILL.md",
-          "sha256": "e0dbb5295f7e92b573a7a4a11bff1cc6c503a0e90cb004d39783d1468cac3645"
+          "sha256": "cccb3ba1a9202ee89a97aac480a6b3dc06871dc2e3a5c09169a9f8d57bbeb2a4"
         }
       ],
       "disposition": "adapted",
       "reason": "Canonical name and harness-owned authorization; runtime preserved unless explicitly noted.",
-      "review_note": "Post-merge review of #195: typescript-expert carries the refactoring-rule index inline so each rule is one reference hop from SKILL.md.",
+      "review_note": "Dropped the Jest tooling probe from the tooling detection command; Vitest is the house test runner",
       "verification": [
         "docs/pstack-import-verification.md"
       ]

@@ -72,21 +72,25 @@ const sanitized = sanitize(userInput);
 **Prevent Injection Attacks:**
 
 ```typescript
-// BAD: NoSQL Injection risk
-const query = { [userInput]: value };
+// BAD: raw SQL built from user input (Prisma $queryRawUnsafe)
+const rows = await prisma.$queryRawUnsafe(
+  `SELECT * FROM "User" WHERE email = '${email}'`,
+);
 
-// GOOD: Validated input
-const query = {
-  organization: validatedOrgId,
-  email: validatedEmail
-};
+// GOOD: Prisma client with typed, validated input
+const user = await prisma.user.findFirst({
+  where: { organizationId: validatedOrgId, email: validatedEmail },
+});
 
-// BAD: SQL Injection (if using SQL)
-const query = `SELECT * FROM users WHERE email = '${email}'`;
+// GOOD: raw SQL only via the tagged template (values stay parameters)
+const rows = await prisma.$queryRaw`SELECT * FROM "User" WHERE email = ${email}`;
 
-// GOOD: Parameterized query
-const query = 'SELECT * FROM users WHERE email = ?';
-db.query(query, [email]);
+// BAD: user-controlled field names or operators in a where/orderBy clause
+const users = await prisma.user.findMany({ where: JSON.parse(req.query.filter) });
+
+// GOOD: allow-list sortable fields
+const sortField = ['createdAt', 'name'].includes(sort) ? sort : 'createdAt';
+const sorted = await prisma.user.findMany({ orderBy: { [sortField]: 'desc' } });
 ```
 
 ### 3. Data Protection
@@ -199,7 +203,7 @@ async getData() {
 - Parameterized queries
 - Input validation
 - Output encoding
-- Use ORM/ODM safely
+- Use Prisma safely: typed client first, `$queryRaw` tagged template only, never `$queryRawUnsafe` with user input
 
 ### 4. Insecure Design
 
@@ -312,28 +316,27 @@ async getData() {
 - Proper HTTP status codes
 - Log errors securely
 
-## MongoDB Security
+## Postgres / Prisma Security
 
 **Connection Security:**
 
-- Use connection strings (not hardcoded)
-- Database user with minimal privileges
-- Network access restricted
-- Encryption at rest enabled
+- `DATABASE_URL` from the environment (not hardcoded)
+- Database role with minimal privileges (no superuser for the app)
+- Network access restricted to the application security group
+- TLS required (`sslmode=require`) and encryption at rest enabled
 
 **Query Security:**
 
-- Validate all inputs
-- Use parameterized queries
-- Prevent NoSQL injection
-- Enforce multi-tenancy
+- Validate all inputs with DTOs
+- Use the typed Prisma client; `$queryRaw` tagged template only, never `$queryRawUnsafe` with user input
+- Allow-list sortable/filterable fields
+- Enforce multi-tenancy in every `where` clause (or with Postgres row-level security)
 
-**Index Security:**
+**Constraint and Index Security:**
 
-- Indexes for performance
-- Unique indexes for constraints
-- Compound indexes for queries
-- Monitor index usage
+- Unique indexes and foreign keys enforce integrity in the database
+- Compound indexes for tenant-scoped queries
+- Monitor index usage (`pg_stat_user_indexes`)
 
 ## AWS Security
 

@@ -4,7 +4,7 @@ description: Writes Dockerfiles, multi-stage builds, and docker-compose setups f
 metadata:
   version: "2.2.2"
   tags: "docker, containers, infrastructure"
-when_to_use: "volumes, MongoDB/Redis containers"
+when_to_use: "volumes, Postgres/Redis containers"
 ---
 
 # Docker Expert
@@ -16,7 +16,7 @@ when_to_use: "volumes, MongoDB/Redis containers"
 - Container networking and volumes
 - Multi-stage builds optimization
 - Health checks and restart policies
-- MongoDB/Redis container setup
+- Postgres/Redis container setup
 
 ## Dockerfile Best Practices
 
@@ -84,24 +84,32 @@ CMD ["npm", "start"]
 - Configure health checks
 - Use secrets management
 
-### MongoDB with Docker Compose
+### Postgres with Docker Compose
 
 ```yaml
 services:
-  mongodb:
-    image: mongo:7.0
-    container_name: mongodb
+  postgres:
+    image: postgres:17
+    container_name: postgres
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "127.0.0.1:5432:5432"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - mongodb_data:/data/db
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
-    command: mongod --auth
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
 ```
 
 ## Health Checks

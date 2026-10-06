@@ -19,7 +19,7 @@ expect(input.value).toBe(42)
 // Fails! input.value is always a string ("42")
 ```
 
-**Correct (jest-dom matcher):**
+**Correct (DOM matcher):**
 
 ```tsx
 render(<input type="number" defaultValue={42} />)
@@ -55,4 +55,4 @@ expect(screen.getByRole('checkbox')).toBeChecked()
 expect(screen.getByRole('radio', { name: /yes/i })).toBeChecked()
 ```
 
-Reference: [jest-dom - toHaveValue](https://github.com/testing-library/jest-dom#tohavevalue)
+Reference: `@testing-library/jest-dom` [toHaveValue](https://github.com/testing-library/jest-dom#tohavevalue)

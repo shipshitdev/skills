@@ -18,7 +18,7 @@ interface OrderSummaryProps {
   orderId: string;
 }
 
-// Component is untestable without jest.mock or equivalent module override
+// Component is untestable without vi.mock or equivalent module override
 export function OrderSummary({ orderId }: OrderSummaryProps) {
   const [order, setOrder] = useState<Order | null>(null);
 

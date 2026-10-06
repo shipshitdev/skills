@@ -75,7 +75,7 @@ Outbound:
 
 ```
 Inbound:
-- MongoDB (27017) from application security group only
+- Postgres (5432) from application security group only
 - Redis (6379) from application security group only
 - SSH (22) from bastion/your IP only
 
@@ -159,4 +159,4 @@ Outbound:
 
 ## Integration
 
-This skill integrates with `/db-setup` for MongoDB on EC2 and `/deploy` for deployment workflows.
+This skill integrates with `postgres-ops` for Postgres setup (RDS or EC2) and `/deploy` for deployment workflows.

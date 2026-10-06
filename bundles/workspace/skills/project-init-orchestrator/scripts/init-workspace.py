@@ -128,6 +128,9 @@ def create_gitignore() -> str:
         # Test
         coverage/
 
+        # Generated Prisma client
+        api/apps/api/src/generated/
+
         # Misc
         .vercel
         .turbo
@@ -218,11 +221,14 @@ def create_api_package_json(org: str) -> str:
         "version": "0.0.1",
         "private": True,
         "scripts": {
-            "build": "nest build",
+            "build": "bunx --bun prisma generate && nest build",
             "start": "nest start",
             "start:dev": "nest start --watch",
             "start:debug": "nest start --debug --watch",
             "start:prod": "node dist/main",
+            "prisma:generate": "bunx --bun prisma generate",
+            "prisma:migrate": "bunx --bun prisma migrate dev",
+            "prisma:deploy": "bunx --bun prisma migrate deploy",
             "lint": "biome check .",
             "lint:fix": "biome check --write .",
             "test": "vitest run",
@@ -233,11 +239,11 @@ def create_api_package_json(org: str) -> str:
             "@nestjs/common": "11.1.11",
             "@nestjs/core": "11.1.11",
             "@nestjs/config": "4.1.1",
-            "@nestjs/mongoose": "11.0.4",
             "@nestjs/platform-express": "11.1.11",
             "@nestjs/swagger": "11.2.3",
             "@clerk/clerk-sdk-node": "6.6.0",
-            "mongoose": "9.1.1",
+            "@prisma/client": "7.10.0",
+            "@prisma/adapter-pg": "7.10.0",
             "reflect-metadata": "0.2.2",
             "rxjs": "7.8.2",
             "class-validator": "0.14.3",
@@ -251,6 +257,9 @@ def create_api_package_json(org: str) -> str:
             "@types/node": "25.0.3",
             "typescript": "5.9.3",
             "@biomejs/biome": "2.3.11",
+            "prisma": "7.10.0",
+            "unplugin-swc": "2.0.0",
+            "@swc/core": "1.16.13",
             "vitest": "3.0.7",
             "@vitest/coverage-v8": "3.0.7"
         }
@@ -352,14 +361,14 @@ def create_api_app_module_ts() -> str:
     return dedent("""\
         import { Module } from "@nestjs/common";
         import { ConfigModule } from "@nestjs/config";
-        import { MongooseModule } from "@nestjs/mongoose";
+        import { PrismaModule } from "./prisma/prisma.module";
 
         @Module({
           imports: [
             ConfigModule.forRoot({
               isGlobal: true,
             }),
-            MongooseModule.forRoot(process.env.MONGODB_URI || "mongodb://localhost/api"),
+            PrismaModule,
           ],
           controllers: [],
           providers: [],
@@ -905,41 +914,39 @@ def generate_entity_controller(entity: EntityConfig) -> str:
 
 
 def generate_entity_service(entity: EntityConfig) -> str:
-    """Generate NestJS service for an entity."""
+    """Generate NestJS service for an entity (Prisma)."""
     E = entity.pascal_case
     e = entity.camel_case
     es = entity.plural
 
     return dedent(f"""\
         import {{ Injectable, NotFoundException }} from "@nestjs/common";
-        import {{ InjectModel }} from "@nestjs/mongoose";
-        import {{ Model }} from "mongoose";
-        import {{ {E}, {E}Document }} from "./schemas/{e}.schema";
+        import type {{ {E} }} from "../../generated/prisma/client";
+        import {{ PrismaService }} from "../../prisma/prisma.service";
         import {{ Create{E}Dto }} from "./dto/create-{e}.dto";
         import {{ Update{E}Dto }} from "./dto/update-{e}.dto";
 
         @Injectable()
         export class {E}sService {{
-          constructor(
-            @InjectModel({E}.name) private {e}Model: Model<{E}Document>,
-          ) {{}}
+          constructor(private readonly prisma: PrismaService) {{}}
 
           async create(create{E}Dto: Create{E}Dto, userId: string): Promise<{E}> {{
-            const {e} = new this.{e}Model({{
-              ...create{E}Dto,
-              userId,
+            return this.prisma.{e}.create({{
+              data: {{ ...create{E}Dto, userId }},
             }});
-            return {e}.save();
           }}
 
           async findAll(userId: string): Promise<{E}[]> {{
-            const query = this.{e}Model.find({{ userId }}).sort({{ createdAt: -1 }});
-            return query.then((docs) => docs);
+            return this.prisma.{e}.findMany({{
+              where: {{ userId }},
+              orderBy: {{ createdAt: "desc" }},
+            }});
           }}
 
           async findOne(id: string, userId: string): Promise<{E}> {{
-            const query = this.{e}Model.findOne({{ _id: id, userId }});
-            const {e} = await query.then((doc) => doc);
+            const {e} = await this.prisma.{e}.findFirst({{
+              where: {{ id, userId }},
+            }});
 
             if (!{e}) {{
               throw new NotFoundException(`{E} with ID ${{id}} not found`);
@@ -953,25 +960,25 @@ def generate_entity_service(entity: EntityConfig) -> str:
             update{E}Dto: Update{E}Dto,
             userId: string,
           ): Promise<{E}> {{
-            const query = this.{e}Model.findOneAndUpdate(
-              {{ _id: id, userId }},
-              update{E}Dto,
-              {{ new: true }},
-            );
-            const {e} = await query.then((doc) => doc);
+            // updateMany scopes the write to the owner in a single statement
+            const result = await this.prisma.{e}.updateMany({{
+              where: {{ id, userId }},
+              data: update{E}Dto,
+            }});
 
-            if (!{e}) {{
+            if (result.count === 0) {{
               throw new NotFoundException(`{E} with ID ${{id}} not found`);
             }}
 
-            return {e};
+            return this.findOne(id, userId);
           }}
 
           async remove(id: string, userId: string): Promise<void> {{
-            const query = this.{e}Model.deleteOne({{ _id: id, userId }});
-            const result = await query.then((res) => res);
+            const result = await this.prisma.{e}.deleteMany({{
+              where: {{ id, userId }},
+            }});
 
-            if (result.deletedCount === 0) {{
+            if (result.count === 0) {{
               throw new NotFoundException(`{E} with ID ${{id}} not found`);
             }}
           }}
@@ -980,50 +987,40 @@ def generate_entity_service(entity: EntityConfig) -> str:
 
 
 def generate_entity_schema(entity: EntityConfig) -> str:
-    """Generate Mongoose schema for an entity."""
+    """Generate the Prisma model file for an entity."""
     E = entity.pascal_case
+    es = entity.plural
 
-    # Generate field definitions
-    field_defs = []
+    prisma_types = {
+        "string": "String",
+        "number": "Float",
+        "boolean": "Boolean",
+        "date": "DateTime",
+    }
+
+    field_lines = []
     for field in entity.fields:
-        decorator = "@Prop("
-        options = []
-        if field.required:
-            options.append("required: true")
-        if field.default:
-            options.append(f'default: "{field.default}"')
-        if field.enum_values:
-            enum_str = ", ".join(f'"{v}"' for v in field.enum_values)
-            options.append(f"enum: [{enum_str}]")
-
-        if options:
-            decorator += "{ " + ", ".join(options) + " }"
-        decorator += ")"
-
+        prisma_type = prisma_types.get(field.type, "String")
         optional = "" if field.required else "?"
-        field_defs.append(f"  {decorator}\n  {field.name}{optional}: string;")
+        attrs = ""
+        if field.default:
+            attrs = f' @default("{field.default}")'
+        field_lines.append(f"  {field.name} {prisma_type}{optional}{attrs}")
 
-    fields_str = "\n\n".join(field_defs)
+    fields_str = "\n".join(field_lines)
 
-    return dedent(f"""\
-        import {{ Prop, Schema, SchemaFactory }} from "@nestjs/mongoose";
-        import {{ Document }} from "mongoose";
-
-        export type {E}Document = {E} & Document;
-
-        @Schema({{ timestamps: true }})
-        export class {E} {{
-{fields_str}
-
-          @Prop({{ required: true }})
-          userId: string;
-        }}
-
-        export const {E}Schema = SchemaFactory.createForClass({E});
-
-        {E}Schema.index({{ userId: 1 }});
-        {E}Schema.index({{ userId: 1, createdAt: -1 }});
-    """)
+    return (
+        f"model {E} {{\n"
+        f"  id        String   @id @default(cuid())\n"
+        f"{fields_str}\n"
+        f"  userId    String\n"
+        f"  createdAt DateTime @default(now())\n"
+        f"  updatedAt DateTime @updatedAt\n"
+        f"\n"
+        f"  @@index([userId, createdAt(sort: Desc)])\n"
+        f'  @@map("{es}")\n'
+        f"}}\n"
+    )
 
 
 def generate_entity_create_dto(entity: EntityConfig) -> str:
@@ -1081,24 +1078,16 @@ def generate_entity_update_dto(entity: EntityConfig) -> str:
 
 
 def generate_entity_module(entity: EntityConfig) -> str:
-    """Generate NestJS module for an entity."""
+    """Generate NestJS module for an entity (PrismaModule is global)."""
     E = entity.pascal_case
-    e = entity.camel_case
     es = entity.plural
 
     return dedent(f"""\
         import {{ Module }} from "@nestjs/common";
-        import {{ MongooseModule }} from "@nestjs/mongoose";
         import {{ {E}sController }} from "./{es}.controller";
         import {{ {E}sService }} from "./{es}.service";
-        import {{ {E}, {E}Schema }} from "./schemas/{e}.schema";
 
         @Module({{
-          imports: [
-            MongooseModule.forFeature([
-              {{ name: {E}.name, schema: {E}Schema }},
-            ]),
-          ],
           controllers: [{E}sController],
           providers: [{E}sService],
           exports: [{E}sService],
@@ -1116,45 +1105,38 @@ def generate_entity_service_spec(entity: EntityConfig) -> str:
     return dedent(f"""\
         import {{ describe, it, expect, beforeEach, vi }} from "vitest";
         import {{ Test, TestingModule }} from "@nestjs/testing";
-        import {{ getModelToken }} from "@nestjs/mongoose";
         import {{ NotFoundException }} from "@nestjs/common";
+        import {{ PrismaService }} from "../../prisma/prisma.service";
         import {{ {E}sService }} from "./{es}.service";
-        import {{ {E} }} from "./schemas/{e}.schema";
 
         describe("{E}sService", () => {{
           let service: {E}sService;
-          let mockModel: any;
+
+          const prismaMock = {{
+            {e}: {{
+              create: vi.fn(),
+              findMany: vi.fn(),
+              findFirst: vi.fn(),
+              updateMany: vi.fn(),
+              deleteMany: vi.fn(),
+            }},
+          }};
 
           const mockUserId = "user-123";
           const mock{E} = {{
-            _id: "{e}-123",
+            id: "{e}-123",
             title: "Test {E}",
+            description: null,
             userId: mockUserId,
             createdAt: new Date(),
-            save: vi.fn().mockResolvedValue(this),
+            updatedAt: new Date(),
           }};
 
           beforeEach(async () => {{
-            mockModel = {{
-              find: vi.fn(),
-              findOne: vi.fn(),
-              findOneAndUpdate: vi.fn(),
-              deleteOne: vi.fn(),
-            }};
-
             const module: TestingModule = await Test.createTestingModule({{
               providers: [
                 {E}sService,
-                {{
-                  provide: getModelToken({E}.name),
-                  useValue: {{
-                    ...mockModel,
-                    new: vi.fn().mockImplementation((data) => ({{
-                      ...data,
-                      save: vi.fn().mockResolvedValue({{ ...data, _id: "new-id" }}),
-                    }})),
-                  }},
-                }},
+                {{ provide: PrismaService, useValue: prismaMock }},
               ],
             }}).compile();
 
@@ -1165,27 +1147,36 @@ def generate_entity_service_spec(entity: EntityConfig) -> str:
             expect(service).toBeDefined();
           }});
 
+          describe("create", () => {{
+            it("should create a {e} owned by the user", async () => {{
+              prismaMock.{e}.create.mockResolvedValue(mock{E});
+
+              const result = await service.create({{ title: "Test {E}" }}, mockUserId);
+
+              expect(result).toEqual(mock{E});
+              expect(prismaMock.{e}.create).toHaveBeenCalledWith({{
+                data: {{ title: "Test {E}", userId: mockUserId }},
+              }});
+            }});
+          }});
+
           describe("findAll", () => {{
             it("should return all {es} for a user", async () => {{
-              const mock{E}s = [mock{E}];
-              mockModel.find.mockReturnValue({{
-                sort: vi.fn().mockReturnValue({{
-                  then: vi.fn().mockResolvedValue(mock{E}s),
-                }}),
-              }});
+              prismaMock.{e}.findMany.mockResolvedValue([mock{E}]);
 
               const result = await service.findAll(mockUserId);
 
-              expect(result).toEqual(mock{E}s);
-              expect(mockModel.find).toHaveBeenCalledWith({{ userId: mockUserId }});
+              expect(result).toEqual([mock{E}]);
+              expect(prismaMock.{e}.findMany).toHaveBeenCalledWith({{
+                where: {{ userId: mockUserId }},
+                orderBy: {{ createdAt: "desc" }},
+              }});
             }});
           }});
 
           describe("findOne", () => {{
             it("should return a {e} by id", async () => {{
-              mockModel.findOne.mockReturnValue({{
-                then: vi.fn().mockResolvedValue(mock{E}),
-              }});
+              prismaMock.{e}.findFirst.mockResolvedValue(mock{E});
 
               const result = await service.findOne("{e}-123", mockUserId);
 
@@ -1193,9 +1184,7 @@ def generate_entity_service_spec(entity: EntityConfig) -> str:
             }});
 
             it("should throw NotFoundException if {e} not found", async () => {{
-              mockModel.findOne.mockReturnValue({{
-                then: vi.fn().mockResolvedValue(null),
-              }});
+              prismaMock.{e}.findFirst.mockResolvedValue(null);
 
               await expect(
                 service.findOne("nonexistent", mockUserId),
@@ -1205,9 +1194,10 @@ def generate_entity_service_spec(entity: EntityConfig) -> str:
 
           describe("update", () => {{
             it("should update a {e}", async () => {{
-              const updated{E} = {{ ...mock{E}, title: "Updated" }};
-              mockModel.findOneAndUpdate.mockReturnValue({{
-                then: vi.fn().mockResolvedValue(updated{E}),
+              prismaMock.{e}.updateMany.mockResolvedValue({{ count: 1 }});
+              prismaMock.{e}.findFirst.mockResolvedValue({{
+                ...mock{E},
+                title: "Updated",
               }});
 
               const result = await service.update(
@@ -1218,13 +1208,19 @@ def generate_entity_service_spec(entity: EntityConfig) -> str:
 
               expect(result.title).toBe("Updated");
             }});
+
+            it("should throw NotFoundException if {e} not found", async () => {{
+              prismaMock.{e}.updateMany.mockResolvedValue({{ count: 0 }});
+
+              await expect(
+                service.update("nonexistent", {{ title: "Updated" }}, mockUserId),
+              ).rejects.toThrow(NotFoundException);
+            }});
           }});
 
           describe("remove", () => {{
             it("should delete a {e}", async () => {{
-              mockModel.deleteOne.mockReturnValue({{
-                then: vi.fn().mockResolvedValue({{ deletedCount: 1 }}),
-              }});
+              prismaMock.{e}.deleteMany.mockResolvedValue({{ count: 1 }});
 
               await expect(
                 service.remove("{e}-123", mockUserId),
@@ -1232,9 +1228,7 @@ def generate_entity_service_spec(entity: EntityConfig) -> str:
             }});
 
             it("should throw NotFoundException if {e} not found", async () => {{
-              mockModel.deleteOne.mockReturnValue({{
-                then: vi.fn().mockResolvedValue({{ deletedCount: 0 }}),
-              }});
+              prismaMock.{e}.deleteMany.mockResolvedValue({{ count: 0 }});
 
               await expect(
                 service.remove("nonexistent", mockUserId),
@@ -1267,7 +1261,7 @@ def generate_entity_interface(entity: EntityConfig) -> str:
 
     return dedent(f"""\
         export interface {E} {{
-          _id: string;
+          id: string;
 {fields_str}
           userId: string;
           createdAt: string;
@@ -1453,7 +1447,7 @@ def generate_entity_list_component(entity: EntityConfig) -> str:
               ) : (
                 <div className="space-y-2">
                   {{{es}.map(({e}) => (
-                    <div key={{{e}._id}} className="p-4 border rounded-lg flex justify-between items-center">
+                    <div key={{{e}.id}} className="p-4 border rounded-lg flex justify-between items-center">
                       <div>
                         <h3 className="font-medium">{{{e}.title}}</h3>
                         {{{e}.description && (
@@ -1463,13 +1457,13 @@ def generate_entity_list_component(entity: EntityConfig) -> str:
                       <div className="flex gap-2">
                         <Button
                           variant="ghost"
-                          onClick={{() => window.location.href = `/{es}/${{{e}._id}}`}}
+                          onClick={{() => window.location.href = `/{es}/${{{e}.id}}`}}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="ghost"
-                          onClick={{() => handleDelete({e}._id)}}
+                          onClick={{() => handleDelete({e}.id)}}
                         >
                           Delete
                         </Button>
@@ -1487,6 +1481,7 @@ def generate_entity_list_component(entity: EntityConfig) -> str:
 def generate_entity_page(entity: EntityConfig) -> str:
     """Generate NextJS page for entity list."""
     E = entity.pascal_case
+    e = entity.camel_case
     es = entity.plural
 
     return dedent(f"""\
@@ -1575,6 +1570,118 @@ def generate_current_user_decorator() -> str:
 # QUALITY SETUP FUNCTIONS
 # =============================================================================
 
+def generate_api_vitest_config() -> str:
+    """Vitest config for the NestJS API: unplugin-swc emits decorator metadata."""
+    return dedent("""\
+        import swc from "unplugin-swc";
+        import { defineConfig } from "vitest/config";
+
+        export default defineConfig({
+          // esbuild does not emit decorator metadata, which NestJS DI needs
+          plugins: [swc.vite({ module: { type: "es6" } })],
+          test: {
+            globals: true,
+            environment: "node",
+            include: ["**/*.spec.ts", "**/*.test.ts"],
+            exclude: ["node_modules", "dist"],
+            coverage: {
+              provider: "v8",
+              reporter: ["text", "json", "html", "lcov"],
+              include: ["apps/**/src/**/*.ts"],
+              exclude: [
+                "**/*.spec.ts",
+                "**/*.test.ts",
+                "**/*.d.ts",
+                "**/main.ts",
+                "**/index.ts",
+                "**/generated/**",
+                "**/*.module.ts",
+              ],
+              thresholds: {
+                lines: 80,
+                functions: 80,
+                branches: 75,
+                statements: 80,
+              },
+            },
+            mockReset: true,
+            restoreMocks: true,
+          },
+        });
+    """)
+
+
+def create_prisma_config() -> str:
+    return dedent("""\
+        import { defineConfig, env } from "prisma/config";
+
+        // Run Prisma through Bun (bunx --bun prisma ...) so .env is loaded.
+        export default defineConfig({
+          schema: "prisma/schema",
+          migrations: { path: "prisma/migrations" },
+          datasource: { url: env("DATABASE_URL") },
+        });
+    """)
+
+
+def create_prisma_base_schema() -> str:
+    return dedent("""\
+        // Multi-file schema: one <entity>.prisma file per model in this folder.
+        generator client {
+          provider = "prisma-client"
+          output   = "../../apps/api/src/generated/prisma"
+          // The NestJS API compiles to CommonJS (tsconfig module: commonjs)
+          moduleFormat = "cjs"
+        }
+
+        datasource db {
+          provider = "postgresql"
+        }
+    """)
+
+
+def create_prisma_service_ts() -> str:
+    return dedent("""\
+        import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
+        import { PrismaPg } from "@prisma/adapter-pg";
+        import { PrismaClient } from "../generated/prisma/client";
+
+        @Injectable()
+        export class PrismaService
+          extends PrismaClient
+          implements OnModuleInit, OnModuleDestroy
+        {
+          constructor() {
+            super({
+              adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
+            });
+          }
+
+          async onModuleInit(): Promise<void> {
+            await this.$connect();
+          }
+
+          async onModuleDestroy(): Promise<void> {
+            await this.$disconnect();
+          }
+        }
+    """)
+
+
+def create_prisma_module_ts() -> str:
+    return dedent("""\
+        import { Global, Module } from "@nestjs/common";
+        import { PrismaService } from "./prisma.service";
+
+        @Global()
+        @Module({
+          providers: [PrismaService],
+          exports: [PrismaService],
+        })
+        export class PrismaModule {}
+    """)
+
+
 def generate_vitest_config() -> str:
     """Generate Vitest configuration with coverage thresholds."""
     return dedent("""\
@@ -1637,6 +1744,7 @@ def generate_github_actions_ci() -> str:
               - uses: actions/checkout@v4
               - uses: oven-sh/setup-bun@v2
               - run: bun install
+              - run: cd api && bun run prisma:generate
               - run: cd api && bun run test:coverage
               - uses: codecov/codecov-action@v4
                 with:
@@ -1673,6 +1781,7 @@ def generate_github_actions_ci() -> str:
               - uses: actions/checkout@v4
               - uses: oven-sh/setup-bun@v2
               - run: bun install
+              - run: cd api && bun run prisma:generate
               - run: cd api && bunx tsc --noEmit
               - run: cd frontend && bunx tsc --noEmit
     """)
@@ -1681,10 +1790,9 @@ def generate_github_actions_ci() -> str:
 def generate_env_example() -> str:
     """Generate .env.example file."""
     return dedent("""\
-        # Database - MongoDB Atlas (recommended for production)
-        # Get your connection string from: https://cloud.mongodb.com
-        # Format: mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/DATABASE?retryWrites=true&w=majority
-        MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster.mongodb.net/myapp?retryWrites=true&w=majority
+        # Database - Postgres (Prisma)
+        # Format: postgresql://USER:PASSWORD@HOST:5432/DATABASE?schema=public
+        DATABASE_URL=postgresql://postgres:postgres@localhost:5432/myapp?schema=public
 
         # Clerk Authentication
         CLERK_SECRET_KEY=sk_test_xxxxx
@@ -1707,7 +1815,7 @@ def generate_entity_crud(
 
     # Backend paths
     api_collections = root / "api" / "apps" / "api" / "src" / "collections" / es
-    api_schemas = api_collections / "schemas"
+    api_schemas = root / "api" / "prisma" / "schema"
     api_dto = api_collections / "dto"
 
     # Frontend paths
@@ -1727,7 +1835,7 @@ def generate_entity_crud(
         api_collections / f"{es}.service.ts": generate_entity_service(entity),
         api_collections / f"{es}.module.ts": generate_entity_module(entity),
         api_collections / f"{es}.service.spec.ts": generate_entity_service_spec(entity),
-        api_schemas / f"{e}.schema.ts": generate_entity_schema(entity),
+        api_schemas / f"{e}.prisma": generate_entity_schema(entity),
         api_dto / f"create-{e}.dto.ts": generate_entity_create_dto(entity),
         api_dto / f"update-{e}.dto.ts": generate_entity_update_dto(entity),
     }
@@ -1763,7 +1871,7 @@ def generate_app_module_with_entities(entities: list[EntityConfig]) -> str:
     return dedent(f"""\
         import {{ Module }} from "@nestjs/common";
         import {{ ConfigModule }} from "@nestjs/config";
-        import {{ MongooseModule }} from "@nestjs/mongoose";
+        import {{ PrismaModule }} from "./prisma/prisma.module";
 {imports_str}
 
         @Module({{
@@ -1771,7 +1879,7 @@ def generate_app_module_with_entities(entities: list[EntityConfig]) -> str:
             ConfigModule.forRoot({{
               isGlobal: true,
             }}),
-            MongooseModule.forRoot(process.env.MONGODB_URI || "mongodb://localhost/api"),
+            PrismaModule,
 {module_imports_str}
           ],
           controllers: [],
@@ -1811,6 +1919,8 @@ def scaffold_workspace(
         root / ".agents",
         root / ".github" / "workflows",
         root / "api" / "apps" / "api" / "src" / "collections",
+        root / "api" / "apps" / "api" / "src" / "prisma",
+        root / "api" / "prisma" / "schema",
         root / "api" / "apps" / "api" / "src" / "auth" / "guards",
         root / "api" / "apps" / "api" / "src" / "auth" / "decorators",
         root / "api" / "apps" / "api" / "src" / "config",
@@ -1859,7 +1969,11 @@ def scaffold_workspace(
         root / "api" / "nest-cli.json": create_nest_cli_json(),
         root / "api" / "tsconfig.json": create_api_tsconfig(),
         root / "api" / "biome.json": create_biome_config(),
-        root / "api" / "vitest.config.ts": generate_vitest_config(),
+        root / "api" / "vitest.config.ts": generate_api_vitest_config(),
+        root / "api" / "prisma.config.ts": create_prisma_config(),
+        root / "api" / "prisma" / "schema" / "schema.prisma": create_prisma_base_schema(),
+        root / "api" / "apps" / "api" / "src" / "prisma" / "prisma.service.ts": create_prisma_service_ts(),
+        root / "api" / "apps" / "api" / "src" / "prisma" / "prisma.module.ts": create_prisma_module_ts(),
         root / "api" / "Dockerfile": create_api_dockerfile(),
         root / "api" / "apps" / "api" / "src" / "main.ts": create_api_main_ts(),
         root / "api" / "apps" / "api" / "src" / "app.module.ts": app_module_content,
