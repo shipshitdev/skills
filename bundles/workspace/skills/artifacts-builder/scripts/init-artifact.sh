@@ -1,17 +1,36 @@
 #!/bin/bash
+# Scaffold a React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui project with Bun.
+# Usage: bash init-artifact.sh <project-name>
 
-# Exit on error
-set -e
+set -euo pipefail
 
-# Detect Node version
-NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
+if [ -z "${1:-}" ]; then
+  echo "Usage: bash init-artifact.sh <project-name>"
+  exit 1
+fi
 
-echo "🔍 Detected Node.js version: $NODE_VERSION"
+PROJECT_NAME="$1"
 
-# Tailwind CSS v4 (its oxide engine) and current Vite need Node 20+
-if [ "$NODE_VERSION" -lt 20 ]; then
-  echo "❌ Error: Node.js 20 or higher is required"
-  echo "   Current version: $(node -v)"
+# Bun is the package manager and runner for the whole scaffold
+if ! command -v bun &> /dev/null; then
+  echo "Error: Bun is not installed. Install it from https://bun.sh and re-run."
+  exit 1
+fi
+
+# Vite 8 and Tailwind CSS v4 run on Node: Vite requires 20.19+ or 22.12+ (see node-version-check.sh)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=node-version-check.sh disable=SC1091
+source "$SCRIPT_DIR/node-version-check.sh"
+
+if ! command -v node &> /dev/null; then
+  echo "Error: Node.js $NODE_MIN_DISPLAY is required (Vite runs on it)."
+  exit 1
+fi
+NODE_VERSION="$(node -v)"
+echo "Detected Node.js $NODE_VERSION, Bun $(bun -v)"
+if ! node_version_supported "$NODE_VERSION"; then
+  echo "Error: Node.js $NODE_MIN_DISPLAY is required by Vite (current: $NODE_VERSION)."
+  echo "       Upgrade Node and re-run."
   exit 1
 fi
 
@@ -24,191 +43,119 @@ sed_inplace() {
   fi
 }
 
-# Check if pnpm is installed
-if ! command -v pnpm &> /dev/null; then
-  echo "📦 pnpm not found. Installing pnpm..."
-  npm install -g pnpm
-fi
+echo "Creating new React + Vite project: $PROJECT_NAME"
+bun create vite "$PROJECT_NAME" --template react-ts --no-interactive
 
-# Check if project name is provided
-if [ -z "$1" ]; then
-  echo "❌ Usage: ./init-artifact.sh <project-name>"
+cd "$PROJECT_NAME"
+
+echo "Cleaning up Vite template..."
+sed_inplace '/<link rel="icon"/d' index.html
+sed_inplace 's/<title>.*<\/title>/<title>'"$PROJECT_NAME"'<\/title>/' index.html
+rm -f src/App.css
+rm -rf src/assets public/favicon.svg public/icons.svg
+
+echo "Installing dependencies..."
+bun install
+
+echo "Installing Tailwind CSS v4 (CSS-first, no tailwind.config file)..."
+bun add tailwindcss @tailwindcss/vite
+bun add -d @types/node
+
+# Tailwind v4 is configured in CSS; shadcn init adds the theme tokens to this file
+cat > src/index.css << 'EOF'
+@import "tailwindcss";
+EOF
+
+# shadcn/ui needs the @/* alias in both tsconfig files and in Vite.
+# paths resolves relative to the tsconfig, so no baseUrl (deprecated in TypeScript 6).
+echo "Adding the @/* path alias to tsconfig.json and tsconfig.app.json..."
+# shellcheck disable=SC2016  # the JS below is single-quoted on purpose
+bun -e '
+const fs = require("fs");
+const addAlias = (file) => {
+  const raw = fs.readFileSync(file, "utf8");
+  // tsconfig files are JSONC: drop block comments and full-line // comments, then trailing commas
+  const json = raw
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .split("\n")
+    .filter((line) => !line.trim().startsWith("//"))
+    .join("\n")
+    .replace(/,(\s*[}\]])/g, "$1");
+  const config = JSON.parse(json);
+  config.compilerOptions = config.compilerOptions || {};
+  config.compilerOptions.paths = { "@/*": ["./src/*"] };
+  fs.writeFileSync(file, JSON.stringify(config, null, 2) + "\n");
+};
+addAlias("tsconfig.json");
+addAlias("tsconfig.app.json");
+'
+
+echo "Writing vite.config.ts (React, Tailwind v4 plugin, @ alias)..."
+cat > vite.config.ts << 'EOF'
+import path from "node:path"
+import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(import.meta.dirname, "./src"),
+    },
+  },
+})
+EOF
+
+echo "Initializing shadcn/ui (components.json, CSS variables, cn util, tw-animate-css)..."
+# Radix primitives with the Nova preset; --preset also skips the interactive prompt
+bunx --bun shadcn@latest init --yes --base radix --preset nova --force --no-monorepo
+
+if [ ! -f components.json ]; then
+  echo "Error: shadcn init did not create components.json"
   exit 1
 fi
 
-PROJECT_NAME="$1"
+echo "Adding the shadcn/ui component set..."
+bunx --bun shadcn@latest add --all --yes --overwrite
 
-echo "🚀 Creating new React + Vite project: $PROJECT_NAME"
+echo "Writing a starter src/App.tsx..."
+cat > src/App.tsx << EOF
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
-# Create new Vite project (always use latest create-vite)
-pnpm create vite "$PROJECT_NAME" --template react-ts
-
-# Navigate into project directory
-cd "$PROJECT_NAME"
-
-echo "🧹 Cleaning up Vite template..."
-sed_inplace '/<link rel="icon".*vite\.svg/d' index.html
-sed_inplace 's/<title>.*<\/title>/<title>'"$PROJECT_NAME"'<\/title>/' index.html
-
-echo "📦 Installing base dependencies..."
-pnpm install
-
-echo "📦 Installing Tailwind CSS v4 and dependencies..."
-pnpm install -D tailwindcss@4.3.3 @tailwindcss/postcss@4.3.3 @types/node tw-animate-css
-pnpm install class-variance-authority clsx tailwind-merge lucide-react next-themes
-
-echo "⚙️  Creating PostCSS configuration (Tailwind v4 is configured in CSS, no JS config file)..."
-cat > postcss.config.js << 'EOF'
-export default {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
+export default function App() {
+  return (
+    <main className="mx-auto max-w-2xl p-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Artifact</CardTitle>
+          <CardDescription>Edit src/App.tsx to build your artifact.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button>Get started</Button>
+        </CardContent>
+      </Card>
+    </main>
+  )
 }
 EOF
 
-# Tailwind v4 is CSS-first: imports, sources, theme tokens and variants all live in index.css
-echo "🎨 Writing CSS-first Tailwind setup for @agenticindiedev/ui..."
-cat > src/index.css << 'EOF'
-@import "tailwindcss";
-@import "tw-animate-css";
-
-/* Packages in node_modules are not scanned automatically */
-@source "../node_modules/@agenticindiedev/ui";
-
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(0 0% 3.9%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(0 0% 3.9%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(0 0% 3.9%);
-  --primary: hsl(0 0% 9%);
-  --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(0 0% 96.1%);
-  --secondary-foreground: hsl(0 0% 9%);
-  --muted: hsl(0 0% 96.1%);
-  --muted-foreground: hsl(0 0% 45.1%);
-  --accent: hsl(0 0% 96.1%);
-  --accent-foreground: hsl(0 0% 9%);
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 89.8%);
-  --input: hsl(0 0% 89.8%);
-  --ring: hsl(0 0% 3.9%);
-  --radius: 0.5rem;
-}
-
-.dark {
-  --background: hsl(0 0% 3.9%);
-  --foreground: hsl(0 0% 98%);
-  --card: hsl(0 0% 3.9%);
-  --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(0 0% 3.9%);
-  --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(0 0% 98%);
-  --primary-foreground: hsl(0 0% 9%);
-  --secondary: hsl(0 0% 14.9%);
-  --secondary-foreground: hsl(0 0% 98%);
-  --muted: hsl(0 0% 14.9%);
-  --muted-foreground: hsl(0 0% 63.9%);
-  --accent: hsl(0 0% 14.9%);
-  --accent-foreground: hsl(0 0% 98%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 14.9%);
-  --input: hsl(0 0% 14.9%);
-  --ring: hsl(0 0% 83.1%);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-EOF
-
-# Add path aliases to tsconfig.json
-echo "🔧 Adding path aliases to tsconfig.json..."
-node -e "
-const fs = require('fs');
-const config = JSON.parse(fs.readFileSync('tsconfig.json', 'utf8'));
-config.compilerOptions = config.compilerOptions || {};
-config.compilerOptions.paths = { '@/*': ['./src/*'] };
-fs.writeFileSync('tsconfig.json', JSON.stringify(config, null, 2));
-"
-
-# Add path aliases to tsconfig.app.json
-echo "🔧 Adding path aliases to tsconfig.app.json..."
-node -e "
-const fs = require('fs');
-const path = 'tsconfig.app.json';
-const content = fs.readFileSync(path, 'utf8');
-// Remove comments manually
-const lines = content.split('\n').filter(line => !line.trim().startsWith('//'));
-const jsonContent = lines.join('\n');
-const config = JSON.parse(jsonContent.replace(/\/\*[\s\S]*?\*\//g, '').replace(/,(\s*[}\]])/g, '\$1'));
-config.compilerOptions = config.compilerOptions || {};
-config.compilerOptions.paths = { '@/*': ['./src/*'] };
-fs.writeFileSync(path, JSON.stringify(config, null, 2));
-"
-
-# Update vite.config.ts
-echo "⚙️  Updating Vite configuration..."
-cat > vite.config.ts << 'EOF'
-import path from "path";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
-
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-});
-EOF
-
-# Install UI package
-echo "📦 Installing @agenticindiedev/ui..."
-pnpm install @agenticindiedev/ui
-
-echo "✅ Setup complete! You can now use Tailwind CSS v4 and @agenticindiedev/ui in your project."
+echo ""
+echo "Setup complete: React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui (Bun)."
 echo ""
 echo "To start developing:"
 echo "  cd $PROJECT_NAME"
-echo "  pnpm dev"
+echo "  bun run dev"
 echo ""
-echo "📚 Import components like:"
-echo "  import { Button } from '@agenticindiedev/ui'"
-echo "  import { Card } from '@agenticindiedev/ui'"
+echo "Import components like:"
+echo "  import { Button } from '@/components/ui/button'"
+echo "  import { Card, CardContent } from '@/components/ui/card'"
+echo ""
+echo "Add more with: bunx shadcn@latest add <component>"

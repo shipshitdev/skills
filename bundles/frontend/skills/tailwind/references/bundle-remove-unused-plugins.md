@@ -46,6 +46,17 @@ Tailwind CSS v4 includes features that previously required separate plugins. Rem
 <div class="aspect-video">Video</div>
 ```
 
+**Animation plugin:** the JavaScript `tailwindcss-animate` plugin belongs to Tailwind v3. In v4 use the CSS-first `tw-animate-css` package (what shadcn/ui installs):
+
+```bash
+bun add -d tw-animate-css
+```
+
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+```
+
 **Built-in features in v4:**
 
 - Container queries (`@container`, `@sm:`, `@lg:`)

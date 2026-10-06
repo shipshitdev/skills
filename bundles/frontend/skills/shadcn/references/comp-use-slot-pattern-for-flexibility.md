@@ -70,7 +70,7 @@ function Notification({ children, className }: NotificationProps) {
 }
 
 function NotificationIcon({ children }: { children: React.ReactNode }) {
-  return <div className="flex-shrink-0">{children}</div>
+  return <div className="shrink-0">{children}</div>
 }
 
 function NotificationContent({ children }: { children: React.ReactNode }) {
@@ -92,7 +92,7 @@ function NotificationActions({ children }: { children: React.ReactNode }) {
 function NotificationDismiss({ onDismiss }: { onDismiss: () => void }) {
   return (
     <Button variant="ghost" size="icon" onClick={onDismiss} className="absolute top-2 right-2">
-      <X className="h-4 w-4" />
+      <X className="size-4" />
       <span className="sr-only">Dismiss</span>
     </Button>
   )
@@ -101,7 +101,7 @@ function NotificationDismiss({ onDismiss }: { onDismiss: () => void }) {
 // Usage - compose exactly what you need
 <Notification className="relative">
   <NotificationIcon>
-    <CheckCircle className="h-5 w-5 text-green-500" />
+    <CheckCircle className="size-5 text-green-500" />
   </NotificationIcon>
   <NotificationContent>
     <NotificationTitle>Success!</NotificationTitle>

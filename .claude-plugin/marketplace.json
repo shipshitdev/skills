@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "169 AI agent skills for development workflows",
+  "description": "168 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -867,13 +867,7 @@
       "name": "shadcn",
       "source": "./skills/shadcn",
       "version": "2.2.2",
-      "description": "Applies shadcn/ui best practices when writing, reviewing or refactoring components: Radix primitives, React Hook Form, data tables, theming, composition."
-    },
-    {
-      "name": "shadcn-setup",
-      "source": "./skills/shadcn-setup",
-      "version": "2.2.2",
-      "description": "Sets up shadcn/ui with Tailwind v4 CSS-first config: packages, @theme globals.css, components.json, cn(). Use for new Next.js/React projects or migrating from Tailwind v3."
+      "description": "Applies shadcn/ui best practices (Radix, forms, tables, theming) and sets up shadcn/ui on Tailwind v4: init, components.json, cn(), v3 migration. Use to build, review or install shadcn."
     },
     {
       "name": "shape",

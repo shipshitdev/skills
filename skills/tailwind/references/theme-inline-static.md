@@ -44,10 +44,23 @@ Tailwind v4 provides `@theme inline` and `@theme static` modifiers to control ho
 /* Consumers in other packages can reference these variables */
 ```
 
+**Use @theme inline when a token references another variable (the shadcn/ui pattern):**
+
+```css
+:root { --background: oklch(1 0 0); }
+.dark { --background: oklch(0.145 0 0); }
+
+@theme inline {
+  --color-background: var(--background);
+}
+/* .bg-background { background-color: var(--background); } resolves where it is used,
+   so .dark overrides work. A plain @theme resolves the reference once on :root. */
+```
+
 **When to use each:**
 
 - `@theme` (default) — most cases, balances runtime access with output size
-- `@theme inline` — when you don't need runtime CSS variable access (e.g., fonts, static values)
+- `@theme inline` — when values are static (fonts), or when tokens reference other CSS variables such as light/dark theme variables
 - `@theme static` — when building shared libraries where consumers reference your variables
 
 Reference: [Tailwind CSS Theme Variables](https://tailwindcss.com/docs/theme)

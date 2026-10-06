@@ -39,7 +39,7 @@ function TaskList({
     if (searchQuery) {
       return (
         <div className="flex flex-col items-center justify-center p-12 text-center">
-          <Search className="h-12 w-12 text-muted-foreground mb-4" />
+          <Search className="size-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-medium">No results for "{searchQuery}"</h3>
           <p className="text-muted-foreground mt-1 mb-4">
             Try adjusting your search or filters
@@ -54,7 +54,7 @@ function TaskList({
     if (filter !== "all") {
       return (
         <div className="flex flex-col items-center justify-center p-12 text-center">
-          <Filter className="h-12 w-12 text-muted-foreground mb-4" />
+          <Filter className="size-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-medium">No {filter} tasks</h3>
           <p className="text-muted-foreground mt-1 mb-4">
             Tasks marked as {filter} will appear here
@@ -69,13 +69,13 @@ function TaskList({
     // Fresh start - no tasks yet
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed rounded-lg">
-        <Plus className="h-12 w-12 text-muted-foreground mb-4" />
+        <Plus className="size-12 text-muted-foreground mb-4" />
         <h3 className="text-lg font-medium">No tasks yet</h3>
         <p className="text-muted-foreground mt-1 mb-4 max-w-sm">
           Get started by creating your first task to track your work
         </p>
         <Button onClick={onCreateTask}>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="size-4 mr-2" />
           Create task
         </Button>
       </div>

@@ -17,7 +17,7 @@ function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Button variant="ghost">
-          <UserIcon className="h-4 w-4" />
+          <UserIcon className="size-4" />
           Account
         </Button>
       </DropdownMenuTrigger>
@@ -39,7 +39,7 @@ function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          <UserIcon className="h-4 w-4" />
+          <UserIcon className="size-4" />
           Account
         </Button>
       </DropdownMenuTrigger>

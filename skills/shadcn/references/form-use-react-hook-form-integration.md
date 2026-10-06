@@ -2,12 +2,12 @@
 title: Use React Hook Form with shadcn/ui Forms
 impact: HIGH
 impactDescription: eliminates re-renders and provides validation
-tags: form, react-hook-form, validation, performance, integration
+tags: form, react-hook-form, field, controller, validation, performance, integration
 ---
 
 ## Use React Hook Form with shadcn/ui Forms
 
-shadcn/ui's Form components are designed for React Hook Form integration. Using controlled state with useState causes re-renders on every keystroke.
+shadcn/ui pairs React Hook Form with the `Field` components (`Field`, `FieldLabel`, `FieldError`, `FieldGroup`) and RHF's `Controller`. The older `Form`, `FormField`, `FormItem` wrapper is no longer in the registry. Using controlled state with useState causes re-renders on every keystroke.
 
 **Incorrect (controlled state causes re-renders):**
 
@@ -42,16 +42,23 @@ function LoginForm() {
 }
 ```
 
-**Correct (React Hook Form with shadcn/ui):**
+**Correct (React Hook Form with the shadcn/ui Field components):**
+
+```bash
+bunx --bun shadcn@latest add field input button
+bun add react-hook-form @hookform/resolvers zod
+```
 
 ```tsx
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 
 const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 })
 
@@ -68,39 +75,47 @@ function LoginForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <FieldGroup>
+        <Controller
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="email@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="login-email">Email</FieldLabel>
+              <Input
+                {...field}
+                id="login-email"
+                aria-invalid={fieldState.invalid}
+                placeholder="email@example.com"
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
-        <FormField
-          control={form.control}
+        <Controller
           name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="login-password">Password</FieldLabel>
+              <Input
+                {...field}
+                id="login-password"
+                type="password"
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
         />
         <Button type="submit">Login</Button>
-      </form>
-    </Form>
+      </FieldGroup>
+    </form>
   )
 }
 ```
 
-Reference: [shadcn/ui Forms](https://ui.shadcn.com/docs/components/form)
+`Controller` owns each field's registration; `data-invalid` on `Field` and `aria-invalid` on the control drive the error styling and the accessibility state.
+
+Reference: [shadcn/ui React Hook Form guide](https://ui.shadcn.com/docs/forms/react-hook-form)

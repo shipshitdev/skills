@@ -38,7 +38,7 @@ Tailwind CSS v4 renames several utility classes to create consistent scaling. Up
 **Automated migration:**
 
 ```bash
-npx @tailwindcss/upgrade
+bunx @tailwindcss/upgrade
 # Automatically renames classes in your templates
 ```
 

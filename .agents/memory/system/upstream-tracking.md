@@ -81,7 +81,7 @@ Agent workflow skills. **The prior `author: Ship Shit Dev` frontmatter on three 
 | frontend-design | `2235be7c60b5` | |
 | mcp-builder | `ef740771ac90` | |
 | skill-creator | `b0cbd3df1533` | |
-| artifacts-builder | `ef740771ac90` | upstream name is `web-artifacts-builder`; shared-UI import repointed to `@agenticindiedev/ui` |
+| artifacts-builder | `ef740771ac90` | upstream name is `web-artifacts-builder`; scaffold moved to Bun, Vite, Tailwind v4 and shadcn/ui components (replaces `@agenticindiedev/ui`) |
 | theme-factory | `ef740771ac90` | |
 
 ### Dimillian/Skills — MIT — `rolling` (`main`)
