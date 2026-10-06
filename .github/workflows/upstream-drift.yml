@@ -1,8 +1,10 @@
-name: Pstack Drift
+name: Upstream Drift
 
-# Weekly check that the pinned Pstack imports (upstream/pstack/lock.json) have
-# not fallen behind upstream. Opens or updates ONE tracking issue; it never
-# imports anything. Every accepted update still goes through
+# Weekly check that every tracked upstream has not moved past its pin: the
+# Pstack imports (upstream/pstack/lock.json) and every skill whose
+# `metadata.source` is a GitHub URL. One run maintains ONE aggregate issue
+# (updated in place, commented only when the drift set changes, reopened when
+# drift returns); it never imports anything. Pstack updates still go through
 # `pstack-sync.py candidate` -> review -> `pstack-sync.py verify`.
 
 on:
@@ -19,7 +21,7 @@ permissions:
   issues: read
 
 concurrency:
-  group: pstack-drift
+  group: upstream-drift
   cancel-in-progress: false
 
 jobs:
@@ -33,5 +35,5 @@ jobs:
       - name: Check upstream drift
         env:
           GH_TOKEN: ${{ github.token }}
-          PSTACK_DRIFT_WRITE_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
-        run: python3 scripts/pstack-drift.py --repo "$GITHUB_REPOSITORY"
+          UPSTREAM_DRIFT_WRITE_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+        run: python3 scripts/upstream-drift.py --repo "$GITHUB_REPOSITORY"

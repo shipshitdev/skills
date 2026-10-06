@@ -32,6 +32,12 @@ Tagged upstream: compare the repo's latest `skill-v*` tag against `metadata.upst
 
 After porting anything worth bringing home: bump `metadata.upstream_commit` (or `upstream_version`) **and** `metadata.last_synced` in both `SKILL.md` and the README table.
 
+## Automated drift check
+
+`.github/workflows/upstream-drift.yml` runs `scripts/upstream-drift.py` weekly (and on dispatch). It checks the Pstack imports from `upstream/pstack/lock.json` plus every `skills/*/SKILL.md` whose `metadata.source` is a GitHub blob URL in a repo the lock file does not cover. Rolling pins (`upstream_commit`) are compared with the default branch; tagged pins (`upstream_version`) with the newest tag of the same family, tolerating the prefix (`v2.1.1` vs `skill-v2.1.1`). A pin that resolves to no real tag or commit is reported as unresolvable and counts as inconclusive, never clean.
+
+One aggregate issue (marker `<!-- pstack-drift-check -->`, found in any state) carries the report: edited in place, commented only when the drift set changes (the previous set is the hidden `drift-state` block in its body), reopened when drift returns, closed only when everything is clean and conclusive. Run `python3 scripts/upstream-drift.py --repo shipshitdev/skills --dry-run` to see the would-be action.
+
 ---
 
 ## Bucket 1 — External upstreams (32 skills, public + trackable)
