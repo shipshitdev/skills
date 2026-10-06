@@ -159,7 +159,7 @@
       "name": "audit",
       "source": "./skills/audit",
       "version": "2.2.2",
-      "description": "Sweeps frontend code across accessibility, performance, theming, responsive design, and anti-patterns, scoring each 0-4 in one P0-P3 report. Report only. Use as a broad first pass."
+      "description": "Sweeps frontend code across accessibility, performance, theming, responsive design, and implementation integrity, scoring each 0-4 in one P0-P3 report. Report only. Use as a broad first pass."
     },
     {
       "name": "aws-infrastructure",
