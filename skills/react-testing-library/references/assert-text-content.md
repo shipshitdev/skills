@@ -50,4 +50,4 @@ expect(emptyElement).toHaveTextContent('')
 expect(emptyElement).toBeEmptyDOMElement()
 ```
 
-Reference: `@testing-library/jest-dom` [toHaveTextContent](https://github.com/testing-library/jest-dom#tohavetextcontent)
+Reference: `@testing-library/jest-dom` toHaveTextContent

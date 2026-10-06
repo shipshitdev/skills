@@ -67,4 +67,4 @@ expect(button).toBeInTheDocument()
 
 For TypeScript, include the setup file (or a `.d.ts` that imports `@testing-library/jest-dom/vitest`) in `tsconfig.json` so the matcher types resolve.
 
-Reference: `@testing-library/jest-dom` [Custom Matchers](https://github.com/testing-library/jest-dom)
+Reference: `@testing-library/jest-dom` Custom Matchers

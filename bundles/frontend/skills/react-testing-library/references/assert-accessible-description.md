@@ -56,4 +56,4 @@ expect(screen.getByLabelText('Email')).toBeInvalid()
 - `toHaveAccessibleName()` - verifies accessible name (label)
 - `toHaveErrorMessage()` - verifies `aria-errormessage` association
 
-Reference: `@testing-library/jest-dom` [toHaveAccessibleDescription](https://github.com/testing-library/jest-dom#tohaveaccessibledescription)
+Reference: `@testing-library/jest-dom` toHaveAccessibleDescription

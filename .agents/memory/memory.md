@@ -293,7 +293,7 @@ layer over `PrismaService`, string ids and explicit relations, `$queryRaw` tagge
 only) and Vitest (`vi.*`, `unplugin-swc` for NestJS decorator metadata). The two
 document-database skills were retired (see the Retired skills table in
 `docs/skills/catalog-naming.md`); `postgres-ops` is the destination. The only allowed
-residual of the word "jest" is the `@testing-library/jest-dom` package path.
+residual is the `@testing-library/jest-dom` package path.
 
 ## Known Issues
 

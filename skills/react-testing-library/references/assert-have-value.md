@@ -55,4 +55,4 @@ expect(screen.getByRole('checkbox')).toBeChecked()
 expect(screen.getByRole('radio', { name: /yes/i })).toBeChecked()
 ```
 
-Reference: `@testing-library/jest-dom` [toHaveValue](https://github.com/testing-library/jest-dom#tohavevalue)
+Reference: `@testing-library/jest-dom` toHaveValue
