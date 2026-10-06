@@ -18,7 +18,7 @@ function UserProfile({ userId }: { userId: string }) {
   if (isLoading) {
     return (
       <div className="flex justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="size-8 animate-spin" />
         {/* Content jumps when data loads - layout shift */}
       </div>
     )
@@ -28,7 +28,7 @@ function UserProfile({ userId }: { userId: string }) {
     <Card>
       <CardHeader>
         <div className="flex items-center gap-4">
-          <Avatar className="h-16 w-16">
+          <Avatar className="size-16">
             <AvatarImage src={user.avatar} />
           </Avatar>
           <div>
@@ -52,7 +52,7 @@ function UserProfileSkeleton() {
     <Card>
       <CardHeader>
         <div className="flex items-center gap-4">
-          <Skeleton className="h-16 w-16 rounded-full" />
+          <Skeleton className="size-16 rounded-full" />
           <div className="space-y-2">
             <Skeleton className="h-5 w-32" />
             <Skeleton className="h-4 w-48" />
@@ -75,7 +75,7 @@ function UserProfile({ userId }: { userId: string }) {
     <Card>
       <CardHeader>
         <div className="flex items-center gap-4">
-          <Avatar className="h-16 w-16">
+          <Avatar className="size-16">
             <AvatarImage src={user.avatar} />
           </Avatar>
           <div>

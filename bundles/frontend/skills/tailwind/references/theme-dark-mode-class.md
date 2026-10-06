@@ -7,7 +7,7 @@ tags: theme, dark-mode, class, selector, preferences
 
 ## Use Class-Based Dark Mode for Control
 
-By default, Tailwind v4 uses `prefers-color-scheme`. For user-controlled theme switching, configure class-based dark mode.
+By default, Tailwind v4 uses `prefers-color-scheme`. For user-controlled theme switching, override the `dark` variant with `@custom-variant` so it follows a class instead of the OS setting. (shadcn/ui uses `@custom-variant dark (&:is(.dark *));`.)
 
 **Incorrect (only system preference):**
 
@@ -26,7 +26,7 @@ By default, Tailwind v4 uses `prefers-color-scheme`. For user-controlled theme s
 ```css
 @import "tailwindcss";
 
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 ```
 
 ```html

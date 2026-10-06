@@ -13,7 +13,7 @@ Never remove focus ring styles. Keyboard users rely on visible focus indicators 
 
 ```tsx
 const buttonVariants = cva(
-  "inline-flex items-center justify-center outline-none", // Removed focus ring
+  "inline-flex items-center justify-center outline-none", // Removed focus ring, nothing replaces it
   {
     variants: {
       variant: {
@@ -29,7 +29,7 @@ const buttonVariants = cva(
 
 ```tsx
 const buttonVariants = cva(
-  "inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "inline-flex items-center justify-center outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
   {
     variants: {
       variant: {
@@ -40,11 +40,13 @@ const buttonVariants = cva(
 )
 ```
 
+Tailwind v4 notes: `ring` utilities now default to 1px (use `ring-3` for the shadcn width), and the old `outline-none` behavior is `outline-hidden` (it keeps a transparent outline for forced-colors mode). Either is fine when a `focus-visible:ring-*` replaces it.
+
 **Custom focus styles (if needed):**
 
 ```tsx
 // Still visible, but customized
-<Button className="focus-visible:ring-brand focus-visible:ring-offset-4">
+<Button className="focus-visible:ring-brand/50 focus-visible:border-brand">
   Custom Focus
 </Button>
 ```

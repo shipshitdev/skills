@@ -2,7 +2,7 @@
 title: Use CLI to Add Components Instead of Copy-Paste
 impact: CRITICAL
 impactDescription: ensures correct imports, dependencies, and file structure
-tags: setup, cli, npx, shadcn, add, installation
+tags: setup, cli, bunx, shadcn, add, installation
 ---
 
 ## Use CLI to Add Components Instead of Copy-Paste
@@ -13,8 +13,8 @@ The CLI handles import paths, peer dependencies, and file placement automaticall
 
 ```typescript
 // Copied button.tsx manually
-import { Slot } from "@radix-ui/react-slot"
-// Error: @radix-ui/react-slot is not installed
+import { Slot } from "radix-ui"
+// Error: radix-ui is not installed
 
 import { cva, type VariantProps } from "class-variance-authority"
 // Error: class-variance-authority is not installed
@@ -23,10 +23,10 @@ import { cva, type VariantProps } from "class-variance-authority"
 **Correct (CLI installation):**
 
 ```bash
-# Installs component with all dependencies
-pnpm dlx shadcn@latest add button
+# Installs the component with all dependencies
+bunx --bun shadcn@latest add button
 
-# Adds: @radix-ui/react-slot, class-variance-authority
+# Adds: radix-ui, class-variance-authority (as needed)
 # Creates: components/ui/button.tsx with correct imports
 ```
 
@@ -34,10 +34,21 @@ pnpm dlx shadcn@latest add button
 
 ```bash
 # Add multiple components at once
-pnpm dlx shadcn@latest add button card dialog input
+bunx --bun shadcn@latest add button card dialog input
 
 # Add all components
-pnpm dlx shadcn@latest add --all
+bunx --bun shadcn@latest add --all
 ```
+
+**Useful CLI commands:**
+
+```bash
+bunx --bun shadcn@latest add button --dry-run   # preview files without writing
+bunx --bun shadcn@latest add button --diff      # compare against your local copy
+bunx --bun shadcn@latest view button            # read the registry source first
+bunx --bun shadcn@latest search @shadcn -q "sidebar"
+```
+
+Without `--overwrite` the CLI asks before replacing a component you may have edited.
 
 Reference: [shadcn/ui CLI](https://ui.shadcn.com/docs/cli)

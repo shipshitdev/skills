@@ -63,4 +63,4 @@ function EmailInput({ error }) {
 )}
 ```
 
-Reference: [shadcn/ui Forms](https://ui.shadcn.com/docs/components/form)
+Reference: [shadcn/ui React Hook Form guide](https://ui.shadcn.com/docs/forms/react-hook-form)

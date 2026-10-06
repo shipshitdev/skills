@@ -19,14 +19,14 @@ function CheckoutForm() {
   const total = calculateTotal(values.items, values.coupon)
 
   return (
-    <Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       {/* All 20 form fields re-render on every keystroke */}
-      <FormField name="name" control={form.control} render={...} />
-      <FormField name="email" control={form.control} render={...} />
-      <FormField name="address" control={form.control} render={...} />
+      <Controller name="name" control={form.control} render={...} />
+      <Controller name="email" control={form.control} render={...} />
+      <Controller name="address" control={form.control} render={...} />
       {/* ... 17 more fields */}
       <div>Total: ${total}</div>
-    </Form>
+    </form>
   )
 }
 ```
@@ -38,15 +38,15 @@ function CheckoutForm() {
   const form = useForm<CheckoutFormValues>()
 
   return (
-    <Form {...form}>
-      <FormField name="name" control={form.control} render={...} />
-      <FormField name="email" control={form.control} render={...} />
-      <FormField name="address" control={form.control} render={...} />
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <Controller name="name" control={form.control} render={...} />
+      <Controller name="email" control={form.control} render={...} />
+      <Controller name="address" control={form.control} render={...} />
       {/* Fields don't re-render when unrelated fields change */}
 
       {/* Isolated component for reactive total */}
       <OrderTotal control={form.control} />
-    </Form>
+    </form>
   )
 }
 
@@ -72,9 +72,9 @@ function CheckoutForm() {
   // Still causes re-renders but only for these 2 fields
 
   return (
-    <Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       {/* ... */}
-    </Form>
+    </form>
   )
 }
 ```
@@ -84,6 +84,6 @@ function CheckoutForm() {
 - Use `useWatch` in isolated child components
 - Watch specific field names, not entire form
 - Use `useFormState` for submission/validation state
-- Use `useController` for complex controlled components
+- Use `Controller` (or `useController`) for controlled shadcn/ui inputs
 
 Reference: [React Hook Form useWatch](https://react-hook-form.com/docs/usewatch)

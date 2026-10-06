@@ -23,7 +23,9 @@ To build claude.ai artifacts, follow these steps:
 4. Display artifact to user
 5. (Optional) Test the artifact
 
-**Stack**: React 18 + TypeScript + Vite + Parcel (bundling) + Tailwind CSS + @agenticindiedev/ui
+**Stack**: React 19 + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui (Radix), installed and run with Bun. Bundling: `vite-plugin-singlefile`.
+
+**Requirements**: [Bun](https://bun.sh) and Node.js 20.19+ or 22.12+ (the Vite minimum; the init script rejects anything older).
 
 ## Design & Style Guidelines
 
@@ -42,16 +44,17 @@ cd <project-name>
 
 This creates a fully configured project with:
 
-- ✅ React + TypeScript (via Vite)
-- ✅ Tailwind CSS v4 (CSS-first: `@import`, `@source`, `@theme` in `src/index.css`) configured for @agenticindiedev/ui
-- ✅ Path aliases (`@/`) configured
-- ✅ @agenticindiedev/ui installed and ready
-- ✅ Parcel configured for bundling (via .parcelrc)
-- ✅ Node 20+ required (Tailwind v4 and current Vite)
+- ✅ React + TypeScript (via `bun create vite`)
+- ✅ Tailwind CSS v4, CSS-first: `@import "tailwindcss"` in `src/index.css`, tokens in `@theme inline`, the `@tailwindcss/vite` plugin, no `tailwind.config.*`
+- ✅ shadcn/ui initialized (`components.json`, OKLCH theme variables, `cn` utility, `tw-animate-css`) with the full component set in `src/components/ui`
+- ✅ Path alias (`@/`) configured in tsconfig and Vite
+- ✅ A starter `src/App.tsx` using `Button` and `Card`
+
+Add or refresh components later with `bunx shadcn@latest add <component>`.
 
 ### Step 2: Develop Your Artifact
 
-To build the artifact, edit the generated files. See **Common Development Tasks** below for guidance.
+To build the artifact, edit the generated files.
 
 ### Step 3: Bundle to Single HTML File
 
@@ -67,10 +70,9 @@ This creates `bundle.html` - a self-contained artifact with all JavaScript, CSS,
 
 **What the script does**:
 
-- Installs bundling dependencies (parcel, @parcel/config-default, parcel-resolver-tspaths, html-inline)
-- Creates `.parcelrc` config with path alias support
-- Builds with Parcel (no source maps)
-- Inlines all assets into single HTML using html-inline
+- Installs `vite-plugin-singlefile` as a dev dependency
+- Writes `vite.singlefile.config.ts`, which extends your `vite.config.*` and inlines all JS, CSS, fonts and assets into `index.html`
+- Runs `bunx vite build` with that config and copies the result to `bundle.html`
 
 ### Step 4: Share Artifact with User
 
@@ -82,4 +84,4 @@ To test/visualize the artifact, use available tools (including other Skills or b
 
 ## Reference
 
-- **@agenticindiedev/ui**: Check the package README/docs
+- **shadcn/ui**: https://ui.shadcn.com/docs (see also the `shadcn` and `tailwind` skills in this marketplace)
