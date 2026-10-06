@@ -196,11 +196,16 @@ class InlineLocalAssetsTest(unittest.TestCase):
         self.write_page('<img src="/../package.json">')
         self.fails_naming("package.json")
 
-    def test_regular_files_and_internal_symlinks_still_work(self) -> None:
+    def test_symlinks_are_rejected_even_when_they_stay_inside_the_build(self) -> None:
         (self.dist / "real.png").write_bytes(PNG)
         (self.dist / "alias.png").symlink_to(self.dist / "real.png")
-        self.write_page('<img src="/real.png"><img src="/alias.png">')
-        self.assertEqual(self.ok().count("data:image/png;base64,"), 2)
+        self.write_page('<img src="/alias.png">')
+        self.fails_naming("/alias.png", "symlink")
+
+    def test_regular_files_still_work(self) -> None:
+        (self.dist / "real.png").write_bytes(PNG)
+        self.write_page('<img src="/real.png">')
+        self.assertEqual(self.ok().count("data:image/png;base64,"), 1)
 
     # --- HTML character references in attribute values ------------------------------------
 
@@ -334,18 +339,6 @@ class InlineLocalAssetsTest(unittest.TestCase):
         self.assertIn("/* url(/commented.png) */", html)
         self.assertEqual(html.count("data:image/png;base64,"), 2)
         self.assertIn("data:text/css;base64,", html)
-
-    def test_stylesheet_urls_resolve_against_the_lexical_url_directory(self) -> None:
-        (self.dist / "styles").mkdir()
-        (self.dist / "css").mkdir()
-        (self.dist / "styles" / "theme.css").write_text(".a{background:url(img.png)}")
-        (self.dist / "css" / "img.png").write_bytes(PNG)  # next to the URL the page links
-        (self.dist / "css" / "alias.css").symlink_to(self.dist / "styles" / "theme.css")
-        self.write_page("", '<link rel="stylesheet" href="/css/alias.css">')
-        html = self.ok()
-        match = re.search(r'href="data:text/css;base64,([^"]+)"', html)
-        self.assertIsNotNone(match, html)
-        self.assertIn("data:image/png;base64,", base64.b64decode(match.group(1)).decode())
 
     # --- distinct-content fixtures: the right bytes must be inlined --------------------------
 
@@ -524,40 +517,182 @@ class InlineLocalAssetsTest(unittest.TestCase):
         self.write_page('<img src="/hard.png">')
         self.fails_naming("/hard.png", "hard link")
 
-    def swap_script(self, how: str) -> dict:
-        script = self.base / "swap.mjs"
+    def run_script(self, source: str) -> dict:
+        import json
+
+        script = self.base / "probe.mjs"
         script.write_text(
-            'import { renameSync, symlinkSync, writeFileSync, rmSync } from "node:fs"\n'
+            'import { renameSync, symlinkSync, writeFileSync, rmSync, mkdirSync, statSync } from "node:fs"\n'
             'import { createInliner } from "./inline-local-assets.mjs"\n'
-            f"const inliner = createInliner({{ buildDir: {str(self.dist)!r}, projectRoot: {str(self.project)!r} }})\n"
-            'const record = inliner.resolveRef("/a.png", inliner.root)\n'
-            f"const target = {str(self.dist / 'a.png')!r}\n"
-            f"const how = {how!r}\n"
-            'if (how === "inode") { writeFileSync(target + ".new", "SWAPPED"); renameSync(target + ".new", target) }\n'
-            f'if (how === "symlink") {{ rmSync(target); symlinkSync({str(self.outside / "secret.png")!r}, target) }}\n'
-            "const bytes = inliner.readChecked(record)\n"
-            "console.log(JSON.stringify({ bytes: bytes === null ? null : bytes.toString(), problems: inliner.problems }))\n"
+            f"const dist = {str(self.dist)!r}\n"
+            f"const outside = {str(self.outside)!r}\n"
+            f"const inliner = createInliner({{ buildDir: dist, projectRoot: {str(self.project)!r} }})\n"
+            + source
         )
         result = subprocess.run(["bun", str(script)], cwd=self.base, capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
-        import json
-
         return json.loads(result.stdout)
 
-    def test_a_file_swapped_after_the_check_is_detected(self) -> None:
+    def test_inlining_reads_the_private_snapshot_not_the_live_tree(self) -> None:
+        (self.dist / "sub").mkdir()
+        (self.dist / "sub" / "a.png").write_bytes(b"ORIGINAL")
+        (self.outside / "a.png").write_bytes(b"OUTSIDE-BYTES")
+        outcome = self.run_script(
+            'const record = inliner.resolveRef("/sub/a.png", inliner.root)\n'
+            # swap the parent directory for a symlink to outside content, after the check
+            'renameSync(dist + "/sub", dist + "/sub.old")\n'
+            'symlinkSync(outside, dist + "/sub")\n'
+            "const bytes = inliner.readChecked(record)\n"
+            "console.log(JSON.stringify({ bytes: bytes === null ? null : bytes.toString(), problems: inliner.problems }))\n"
+            "inliner.dispose()\n"
+        )
+        self.assertEqual(outcome, {"bytes": "ORIGINAL", "problems": []})
+
+    def test_file_swaps_after_the_check_cannot_inject_outside_bytes(self) -> None:
         for how in ("inode", "symlink"):
             with self.subTest(how=how):
                 (self.dist / "a.png").unlink(missing_ok=True)
                 (self.dist / "a.png").write_bytes(b"ORIGINAL")
-                outcome = self.swap_script(how)
-                self.assertIsNone(outcome["bytes"], outcome)
-                self.assertTrue(any("changed" in p for p in outcome["problems"]), outcome)
+                swap = (
+                    'writeFileSync(dist + "/a.png.new", "SWAPPED"); renameSync(dist + "/a.png.new", dist + "/a.png")'
+                    if how == "inode"
+                    else 'rmSync(dist + "/a.png"); symlinkSync(outside + "/secret.png", dist + "/a.png")'
+                )
+                outcome = self.run_script(
+                    'const record = inliner.resolveRef("/a.png", inliner.root)\n'
+                    f"{swap}\n"
+                    "const bytes = inliner.readChecked(record)\n"
+                    "console.log(JSON.stringify({ bytes: bytes === null ? null : bytes.toString(), problems: inliner.problems }))\n"
+                    "inliner.dispose()\n"
+                )
+                self.assertEqual(outcome, {"bytes": "ORIGINAL", "problems": []})
 
-    def test_an_unswapped_file_is_read_through_the_checked_descriptor(self) -> None:
+    def test_snapshot_directory_is_private_and_removed(self) -> None:
         (self.dist / "a.png").write_bytes(b"ORIGINAL")
-        outcome = self.swap_script("none")
-        self.assertEqual(outcome["bytes"], "ORIGINAL")
-        self.assertEqual(outcome["problems"], [])
+        outcome = self.run_script(
+            'inliner.resolveRef("/a.png", inliner.root)\n'
+            "const mode = statSync(inliner.snapshotDir).mode & 0o777\n"
+            "inliner.dispose()\n"
+            "let gone = false\n"
+            "try { statSync(inliner.snapshotDir) } catch { gone = true }\n"
+            "console.log(JSON.stringify({ mode, gone }))\n"
+        )
+        self.assertEqual(outcome, {"mode": 0o700, "gone": True})
+
+    def test_cli_leaves_no_snapshot_behind(self) -> None:
+        (self.dist / "a.png").write_bytes(PNG)
+        self.write_page('<img src="/a.png">')
+        tmpdir = self.base / "tmp"
+        tmpdir.mkdir()
+        import os
+
+        result = subprocess.run(
+            ["bun", str(self.script), str(self.dist), str(self.out), str(self.project)],
+            cwd=self.base,
+            capture_output=True,
+            text=True,
+            env={**os.environ, "TMPDIR": str(tmpdir)},
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(list(tmpdir.iterdir()), [])
+
+    # --- script injection through rewritten CSS ---------------------------------------------
+
+    PAYLOAD = r"/x.png#\3c /style\3e \3c script\3e alert(1)\3c /script\3e"
+
+    def assert_no_injected_script(self, html: str) -> None:
+        self.assertNotIn("</style><script", html)
+        self.assertNotIn("<script", html)
+        self.out.write_text(html)
+        dump = self.dump(self.out)
+        self.assertNotRegex(dump, r"(?m)^\s*script\b", dump)
+
+    def test_css_payloads_cannot_close_style_or_open_markup(self) -> None:
+        (self.dist / "x.png").write_bytes(PNG)
+        payload = self.PAYLOAD
+        pages = {
+            "style element": ("", f'<style>.a{{background:url("{payload}")}}</style>'),
+            "style attribute": (f"<div style='background:url(\"{payload}\")'></div>", ""),
+            "svg style": (f'<svg><style>.a{{background:url("{payload}")}}</style></svg>', ""),
+            "import": ("", f'<style>@import "{payload}";</style>'),
+            "image-set": ("", f'<style>.a{{background:image-set("{payload}" 1x)}}</style>'),
+        }
+        (self.dist / "x.png").write_bytes(PNG)
+        for name, (body, head) in pages.items():
+            with self.subTest(page=name):
+                if self.out.exists():
+                    self.out.unlink()
+                self.write_page(body, head)
+                if name == "import":
+                    (self.dist / "x.png").unlink()
+                    (self.dist / "x.png").write_text(".z{color:red}")
+                result = self.inline()
+                if result.returncode == 0:
+                    self.assert_no_injected_script(self.out.read_text())
+                else:
+                    self.assertFalse(self.out.exists())
+                if name == "import":
+                    (self.dist / "x.png").unlink()
+                    (self.dist / "x.png").write_bytes(PNG)
+
+    def test_unsafe_characters_in_fragments_are_percent_encoded(self) -> None:
+        (self.dist / "x.png").write_bytes(PNG)
+        self.write_page('<img src="/x.png#a<b>c&quot;d\\e">')
+        html = self.ok()
+        self.assertRegex(html, r'src="data:image/png;base64,[A-Za-z0-9+/=]+#a%3Cb%3Ec%22d%5Ce"')
+
+    # --- CSS tokenizer resync -----------------------------------------------------------------
+
+    def test_dependencies_after_a_custom_url_token_are_not_hidden(self) -> None:
+        self.write_page("", r"<style>.a{background:u\72l(data:x,/*)}b{background:url(/missing.png)}</style>")
+        self.fails_naming("/missing.png")
+
+    def test_dependencies_after_a_custom_url_token_are_inlined(self) -> None:
+        (self.dist / "x.png").write_bytes(b"AFTER-CUSTOM-URL")
+        (self.dist / "y.png").write_bytes(b"CUSTOM-URL-TARGET")
+        self.write_page("", r"<style>.a{background:u\72l(/y.png)}.b{background:url(/x.png)}</style>")
+        self.assertEqual(self.inlined(self.ok()), [b"CUSTOM-URL-TARGET", b"AFTER-CUSTOM-URL"])
+
+    # --- srcset height descriptors --------------------------------------------------------------
+
+    def test_height_descriptors_follow_the_whatwg_rules(self) -> None:
+        for name in ("both-orders", "w-then-h", "plain"):
+            (self.dist / f"{name}.png").write_bytes(name.encode())
+        self.write_page(
+            '<img srcset="/both-orders.png 50h 100w, /w-then-h.png 100w 50h, /plain.png 2x,'
+            ' /lone-h.png 50h, /h-with-x.png 50h 2x, /x-with-h.png 2x 50h">'
+        )
+        html = self.ok()
+        self.assertEqual(self.inlined(html), [b"both-orders", b"w-then-h", b"plain"])
+        for gone in ("lone-h", "h-with-x", "x-with-h"):
+            self.assertNotIn(gone, html)
+
+    # --- foreign content, doctypes and plaintext ------------------------------------------------
+
+    def test_newline_repair_only_touches_html_namespace_elements(self) -> None:
+        html = (
+            "<!DOCTYPE html><html><body>"
+            "<math><textarea>\n\nmath text</textarea></math>"
+            "<svg><title>\nsvg</title><foreignObject><pre>\n\nin html</pre></foreignObject></svg>"
+            "<pre>\n\nhtml</pre>"
+            "</body></html>"
+        )
+        (self.dist / "index.html").write_text(html)
+        self.ok()
+        self.assertEqual(self.dump(self.out), self.dump(self.dist / "index.html"))
+
+    def test_document_mode_and_doctype_source_are_preserved(self) -> None:
+        for doctype in ("<!DOCTYPE html foo>", "<!DOCTYPE html>", "", "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN'>"):
+            with self.subTest(doctype=doctype):
+                if self.out.exists():
+                    self.out.unlink()
+                (self.dist / "index.html").write_text(f"{doctype}<html><body>x</body></html>")
+                self.ok()
+                self.assertEqual(self.dump(self.out), self.dump(self.dist / "index.html"))
+
+    def test_plaintext_cannot_be_written_back_and_fails_clearly(self) -> None:
+        (self.dist / "index.html").write_text("<!DOCTYPE html><html><body><plaintext>raw <b>text</plaintext></body></html>")
+        self.fails_naming("plaintext")
 
 
 if __name__ == "__main__":
