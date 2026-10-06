@@ -5276,12 +5276,12 @@
         {
           "executable": false,
           "path": "skills/standup/SKILL.md",
-          "sha256": "990cfab52b57df1528d6e9c745e14905902671a81c5607830d2c02c2a9ab3b10"
+          "sha256": "01a8af700002517eb05291bf17b8c8005a6fd85dc4d8ddf6baad5b35aae9c05c"
         }
       ],
       "disposition": "superseded",
       "reason": "standup personal mode already summarizes the current author's commits over a requested window, excluding merges and uncommitted work, and carries the same concision and no-inferred-intent guardrails. The duplicate commit-summary procedure was removed.",
-      "review_note": "Repointed to standup after confirming its personal mode covers the author-scoped commit summary; removed the duplicate commit-summary procedure.",
+      "review_note": "Reviewed standup PR-enrichment window filter (mergedAt vs frozen instants); local adaptation only, upstream procedure unchanged.",
       "verification": [
         "docs/pstack-import-verification.md"
       ]
