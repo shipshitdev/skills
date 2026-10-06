@@ -462,27 +462,50 @@ class ThemeResolutionTest(unittest.TestCase):
         self.assertEqual(self.resolve(background="#fffe")["mode"], "light")
         self.assertEqual(self.resolve(background="#000f")["mode"], "dark")
 
+    def expected_foreground(self, color: str) -> str:
+        """Near pair when one reaches AA, otherwise the pure black/white extreme."""
+        near = max(("#0a0a0a", "#fafafa"), key=lambda fg: self.ratio(color, fg))
+        if self.ratio(color, near) >= 4.5:
+            return near
+        return max(("#000000", "#ffffff"), key=lambda fg: self.ratio(color, fg))
+
     def test_mid_greys_pick_the_higher_contrast_foreground(self) -> None:
-        near_black, near_white = "#0a0a0a", "#fafafa"
         for level in range(0x40, 0xC0, 0x10):
             grey = f"#{level:02x}{level:02x}{level:02x}"
             vars_ = self.resolve(primary=grey, background=grey)["vars"]
-            best = max((near_black, near_white), key=lambda fg: self.ratio(grey, fg))
             for token in ("--primary-foreground", "--foreground"):
-                self.assertEqual(vars_[token], best, f"{token} on {grey}")
+                self.assertEqual(vars_[token], self.expected_foreground(grey), f"{token} on {grey}")
+
+    def test_user_color_is_kept_when_neither_near_color_reaches_aa(self) -> None:
+        # #6366f1 is 4.43:1 against near-black and 4.28:1 against near-white.
+        vars_ = self.resolve(primary="#6366f1", background="#6366f1")["vars"]
+        self.assertEqual(vars_["--primary"], "#6366f1")
+        self.assertEqual(vars_["--background"], "#6366f1")
+        for token in ("--primary-foreground", "--foreground"):
+            self.assertIn(vars_[token], ("#000000", "#ffffff"))
+            self.assertGreaterEqual(self.ratio("#6366f1", vars_[token]), 4.5)
+
+    def test_borderline_greys_always_get_aa_text(self) -> None:
+        for level in range(0x50, 0xA0):
+            grey = f"#{level:02x}{level:02x}{level:02x}"
+            vars_ = self.resolve(primary=grey, accent=grey, background=grey)["vars"]
+            self.assertEqual(vars_["--primary"], grey)
+            for token in ("--primary-foreground", "--brand-foreground", "--foreground"):
+                self.assertGreaterEqual(self.ratio(grey, vars_[token]), 4.5, f"{token} on {grey}")
+
+    def test_near_color_is_kept_when_it_passes(self) -> None:
+        self.assertEqual(self.resolve(primary="#4f46e5")["vars"]["--primary-foreground"], "#fafafa")
+        self.assertEqual(self.resolve(primary="#f59e0b")["vars"]["--primary-foreground"], "#0a0a0a")
 
     def test_accent_gets_a_paired_foreground(self) -> None:
         vars_ = self.resolve(accent="#facc15")["vars"]
         self.assertGreaterEqual(self.ratio("#facc15", vars_["--brand-foreground"]), 4.5)
 
     def test_mode_inference_matches_foreground_choice(self) -> None:
-        for background in ("#767676", "#777777", "#808080", "#595959"):
+        for background in ("#6366f1", "#767676", "#777777", "#808080", "#595959"):
             resolved = self.resolve(background=background)
-            light = resolved["mode"] == "light"
-            best_is_dark = (
-                self.ratio(background, "#0a0a0a") >= self.ratio(background, "#fafafa")
-            )
-            self.assertEqual(light, best_is_dark, background)
+            text_is_dark = self.wcag_luminance(resolved["vars"]["--foreground"]) < 0.5
+            self.assertEqual(resolved["mode"] == "light", text_is_dark, background)
 
     def test_invalid_colors_fall_back_to_defaults_with_a_warning(self) -> None:
         for bad in ("red", "rgb(0, 255, 0)", "#12", "#12345", "#ggg", "oklch(0.7 0.2 140)", ""):
@@ -548,6 +571,159 @@ class ThemeResolutionTest(unittest.TestCase):
         layout = (self.app / "app" / "layout.tsx").read_text()
         self.assertIn("resolveTheme", layout)
         self.assertIn('mode === "dark" ? "dark" : undefined', layout)
+
+
+class BatchThemeTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.base = Path(self._tmp.name).resolve()
+        self.root = self.base / "sites"
+        # A scaffolded dark site doubles as the --template source.
+        result = run(
+            "scaffold.py", "--root", str(self.base), "--slug", "tpl", "--name", "Tpl",
+            "--allow-outside",
+        )
+        assert result.returncode == 0, result.stderr
+        self.template = self.base / "tpl"
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def batch(self, projects: list[dict], *extra: str) -> subprocess.CompletedProcess:
+        source = self.base / "projects.json"
+        source.write_text(json.dumps(projects))
+        return run(
+            "batch_create.py", "--root", str(self.root), "--json", str(source),
+            "--allow-outside", *extra,
+        )
+
+    def theme(self, slug: str) -> dict:
+        return json.loads((self.root / slug / "app.json").read_text())["theme"]
+
+    def test_template_clone_applies_colors_and_clears_inherited_mode(self) -> None:
+        result = self.batch(
+            [{"slug": "a", "name": "A", "primary": "#00ff00", "background": "#f4f4f5"}],
+            "--template", str(self.template),
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        theme = self.theme("a")
+        self.assertEqual(theme["primary"], "#00ff00")
+        self.assertEqual(theme["background"], "#f4f4f5")
+        self.assertNotIn("mode", theme)
+        self.assertNotIn("foreground", theme)
+        self.assertNotIn("accent", theme)  # inherited accent was chosen for the old background
+
+    def test_template_clone_keeps_an_explicit_accent_with_a_new_background(self) -> None:
+        result = self.batch(
+            [{"slug": "e", "name": "E", "accent": "#b45309", "background": "#ffffff"}],
+            "--template", str(self.template),
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.theme("e")["accent"], "#b45309")
+
+    def test_template_clone_applies_theme_mode_defaults(self) -> None:
+        result = self.batch(
+            [{"slug": "b", "name": "B", "theme_mode": "light"}], "--template", str(self.template)
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        theme = self.theme("b")
+        self.assertEqual(theme["mode"], "light")
+        self.assertEqual(theme["background"], "#ffffff")
+        self.assertEqual(theme["foreground"], "#0a0a0a")
+
+    def test_template_clone_without_theme_fields_keeps_the_template_theme(self) -> None:
+        result = self.batch([{"slug": "c", "name": "C"}], "--template", str(self.template))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.theme("c"), self.theme_of(self.template))
+
+    @staticmethod
+    def theme_of(app: Path) -> dict:
+        return json.loads((app / "app.json").read_text())["theme"]
+
+    def test_template_clone_rejects_invalid_colors(self) -> None:
+        result = self.batch(
+            [{"slug": "d", "name": "D", "primary": "#fff;outline:1px solid red"}],
+            "--template", str(self.template),
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((self.root / "d").exists())
+
+    def test_csv_keeps_and_validates_theme_columns(self) -> None:
+        source = self.base / "projects.csv"
+        source.write_text(
+            "slug,name,domain,concept,primary,accent,background,theme_mode\n"
+            "good,Good,,,#00ff00,,#f4f4f5,\n"
+            "bad,Bad,,,#fff;x,,,\n"
+        )
+        result = run(
+            "batch_create.py", "--root", str(self.root), "--csv", str(source), "--allow-outside",
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((self.root / "bad").exists())
+        theme = self.theme("good")
+        self.assertEqual(theme["primary"], "#00ff00")
+        self.assertEqual(theme["background"], "#f4f4f5")
+        self.assertNotIn("mode", theme)
+
+    def test_csv_with_theme_columns_works_with_a_template(self) -> None:
+        source = self.base / "projects.csv"
+        source.write_text(
+            "slug,name,primary,theme_mode\nlight-one,One,#4f46e5,light\n"
+        )
+        result = run(
+            "batch_create.py", "--root", str(self.root), "--csv", str(source),
+            "--template", str(self.template), "--allow-outside",
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        theme = self.theme("light-one")
+        self.assertEqual(theme["mode"], "light")
+        self.assertEqual(theme["primary"], "#4f46e5")
+
+    def test_batch_rejects_invalid_theme_mode(self) -> None:
+        result = self.batch([{"slug": "m", "name": "M", "theme_mode": "sepia"}])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((self.root / "m").exists())
+
+    VALID = ("#fff", "#FFF", "#ABCDEF", "#abcd", "#12345678", "#00ff00")
+    INVALID = ("#fff\n", " #fff", "#fff ", "", "#ff", "#ggg", "fff", "#fff;x", "#fffff", "red")
+
+    def test_validation_parity_between_cli_batch_and_typescript(self) -> None:
+        for value in self.VALID + self.INVALID:
+            expected_ok = value in self.VALID
+            cli = run(
+                "scaffold.py", "--root", str(self.base / "cli"), "--slug", "x", "--name", "X",
+                "--allow-outside", f"--primary={value}",
+            )
+            self.assertEqual(cli.returncode == 0, expected_ok, f"cli {value!r}")
+            shutil_target = self.base / "cli" / "x"
+            if shutil_target.exists():
+                shutil.rmtree(shutil_target)
+            batch = self.batch([{"slug": "p", "name": "P", "primary": value}])
+            self.assertEqual(batch.returncode == 0, expected_ok, f"batch {value!r}")
+            created = self.root / "p"
+            if created.exists():
+                shutil.rmtree(created)
+
+    @unittest.skipUnless(shutil.which("bun"), "bun is required to evaluate lib/theme.ts")
+    def test_typescript_accepts_exactly_the_same_strings(self) -> None:
+        probe = self.template / "probe.ts"
+        for value in self.VALID + self.INVALID:
+            probe.write_text(
+                'import { resolveTheme } from "./lib/theme"\n'
+                "console.log(JSON.stringify(resolveTheme("
+                f'{{ primary: {json.dumps(value)}, background: "#0a0a0a" }})))\n'
+            )
+            out = subprocess.run(["bun", str(probe)], capture_output=True, text=True, cwd=self.template)
+            self.assertEqual(out.returncode, 0, out.stderr)
+            kept = json.loads(out.stdout)["vars"]["--primary"] == value
+            self.assertEqual(kept, value in self.VALID, f"ts {value!r}")
+
+    def test_batch_does_not_strip_color_strings(self) -> None:
+        result = self.batch([{"slug": "w", "name": "W", "primary": "#fff\n"}])
+        self.assertNotEqual(result.returncode, 0)
+        result = self.batch([{"slug": "w", "name": "W", "accent": ""}])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((self.root / "w").exists())
 
 
 class BatchCreateTest(unittest.TestCase):

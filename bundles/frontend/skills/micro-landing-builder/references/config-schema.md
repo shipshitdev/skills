@@ -52,9 +52,9 @@ interface ThemeConfig {
 }
 ```
 
-Card, popover and muted-text colors are derived from `background` and `foreground`, so a light background never gets light text. Text on `bg-primary` uses `--primary-foreground` and text on `bg-brand` uses `--brand-foreground`; `lib/theme.ts` picks near-black or near-white for each by WCAG contrast ratio. Colors must be `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa`; other formats fail the build, and alpha is treated as opaque for contrast (with a warning).
+Card, popover and muted-text colors are derived from `background` and `foreground`, so a light background never gets light text. Text on `bg-primary` uses `--primary-foreground` and text on `bg-brand` uses `--brand-foreground`; `lib/theme.ts` picks near-black or near-white for each by WCAG contrast ratio. Colors must be exactly `#rgb`, `#rgba`, `#rrggbb` or `#rrggbbaa`: `scaffold.py` and `batch_create.py` reject anything else, and at runtime `lib/theme.ts` ignores an invalid value with a build warning and uses the default (it is never written to the page). Alpha is treated as opaque for contrast, with a warning. When neither near-black nor near-white reaches 4.5:1 on your color, the text color becomes pure black or white; your color is unchanged.
 
-**Defaults** are chosen to pass WCAG AA (4.5:1): primary `#4f46e5` (white-ish text 6.0:1), dark accent `#f59e0b` on `#0a0a0a` (9.2:1), light accent `#b45309` on `#ffffff` (5.0:1), and near-black/near-white foreground pairs. Custom colors are not checked beyond picking the higher-contrast text color, so verify them yourself (a mid-tone primary can fail against both text colors).
+**Defaults** are chosen to pass WCAG AA (4.5:1): primary `#4f46e5` (white-ish text 6.0:1), dark accent `#f59e0b` on `#0a0a0a` (9.2:1), light accent `#b45309` on `#ffffff` (5.0:1), and near-black/near-white foreground pairs. Custom colors keep their value and only the text drawn on them is adjusted to reach 4.5:1. How a custom `primary` or `accent` contrasts with the page background (for example `text-primary` on a dark background) is not checked, so verify that yourself.
 
 **Recommended fonts:**
 

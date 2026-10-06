@@ -21,25 +21,70 @@ from typing import Any
 SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 
-# Same rule as scaffold.py: #rgb, #rgba, #rrggbb or #rrggbbaa, nothing else reaches app.json.
-COLOR_PATTERN = re.compile(r"^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
+# Color validation is shared with scaffold.py (and mirrored in lib/theme.ts): exactly
+# #rgb, #rgba, #rrggbb or #rrggbbaa, no surrounding whitespace, no empty strings.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from scaffold import COLOR_PATTERN, THEME_MODES  # noqa: E402
+
 THEME_FIELDS = ("primary", "accent", "background")
 
 
-def theme_args(project: dict[str, Any]) -> list[str] | None:
-    """Optional per-project theme flags for scaffold.py, or None when a color is invalid."""
-    args: list[str] = []
+def parse_theme(project: dict[str, Any]) -> dict[str, str] | None:
+    """Validated optional theme fields of a project, or None when any of them is invalid.
+
+    Values are validated exactly as supplied (no stripping). A missing key or JSON null means
+    "not set"; an empty or whitespace-padded string is invalid.
+    """
+    theme: dict[str, str] = {}
     for field in THEME_FIELDS:
         value = project.get(field)
-        if value in (None, ""):
+        if value is None:
             continue
-        if not isinstance(value, str) or not COLOR_PATTERN.fullmatch(value.strip()):
+        if not isinstance(value, str) or not COLOR_PATTERN.fullmatch(value):
             return None
-        args += [f"--{field}", value.strip()]
+        theme[field] = value
     mode = project.get("theme_mode")
-    if mode in ("dark", "light"):
-        args += ["--theme-mode", mode]
+    if mode is not None:
+        if mode not in THEME_MODES:
+            return None
+        theme["mode"] = mode
+    return theme
+
+
+def theme_args(theme: dict[str, str]) -> list[str]:
+    args: list[str] = []
+    for field in THEME_FIELDS:
+        if field in theme:
+            args += [f"--{field}", theme[field]]
+    if "mode" in theme:
+        args += ["--theme-mode", theme["mode"]]
     return args
+
+
+def apply_theme(config_theme: dict[str, Any], theme: dict[str, str]) -> None:
+    """Apply validated per-project theme fields to a cloned template's app.json theme.
+
+    Inherited foreground, mode and accent were chosen for the template's background, so a new
+    background clears them (unless given) and lib/theme.ts derives matching ones."""
+    for field in THEME_FIELDS:
+        if field in theme:
+            config_theme[field] = theme[field]
+    if "background" in theme:
+        # Contrast and mode must follow the new background unless a mode was requested.
+        config_theme.pop("foreground", None)
+        if "accent" not in theme:
+            config_theme.pop("accent", None)  # lib/theme.ts picks an accent that fits the background
+        if "mode" in theme:
+            config_theme["mode"] = theme["mode"]
+        else:
+            config_theme.pop("mode", None)
+    elif "mode" in theme:
+        defaults = THEME_MODES[theme["mode"]]
+        config_theme["mode"] = theme["mode"]
+        config_theme["background"] = defaults["background"]
+        config_theme["foreground"] = defaults["foreground"]
+        if "accent" not in theme:
+            config_theme["accent"] = defaults["accent"]
 
 
 def destination_for(root: Path, slug: str) -> Path | None:
@@ -59,12 +104,19 @@ def load_projects_from_csv(csv_path: Path) -> list[dict[str, Any]]:
     with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            projects.append({
-                "slug": row.get("slug", "").strip(),
-                "name": row.get("name", "").strip(),
-                "domain": row.get("domain", "").strip(),
-                "concept": row.get("concept", "").strip(),
-            })
+            project = {
+                "slug": (row.get("slug") or "").strip(),
+                "name": (row.get("name") or "").strip(),
+                "domain": (row.get("domain") or "").strip(),
+                "concept": (row.get("concept") or "").strip(),
+            }
+            # CSV cannot express "absent", so an empty cell leaves the theme field unset; any
+            # other value (including whitespace) is kept as is and validated later.
+            for column in (*THEME_FIELDS, "theme_mode"):
+                cell = row.get(column)
+                if cell:
+                    project[column] = cell
+            projects.append(project)
     return projects
 
 
@@ -87,6 +139,7 @@ def clone_from_template(
     name: str,
     domain: str,
     concept: str,
+    theme: dict[str, str] | None = None,
 ) -> None:
     """Clone a landing page from template and update config."""
     if not template_dir.exists():
@@ -108,6 +161,8 @@ def clone_from_template(
         config["domain"] = domain
         config["meta"]["title"] = f"{name} - {concept}"
         config["meta"]["description"] = f"{name}: {concept}. Join thousands of users."
+        if theme:
+            apply_theme(config.setdefault("theme", {}), theme)
 
         with open(app_json_path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=2)
@@ -182,11 +237,11 @@ def batch_create(
             failed.append(project)
             continue
 
-        extra_args = theme_args(project)
-        if extra_args is None:
+        theme = parse_theme(project)
+        if theme is None:
             print(
                 f"❌ Skipping {slug!r}: primary, accent and background must be "
-                "#rgb, #rgba, #rrggbb or #rrggbbaa"
+                "#rgb, #rgba, #rrggbb or #rrggbbaa and theme_mode must be dark or light"
             )
             failed.append(project)
             continue
@@ -203,10 +258,10 @@ def batch_create(
 
         try:
             if template_dir and template_dir.exists():
-                clone_from_template(template_dir, target_dir, slug, name, domain, concept)
+                clone_from_template(template_dir, target_dir, slug, name, domain, concept, theme)
             else:
                 create_from_scaffold(
-                    root, slug, name, domain, concept, scaffold_script, extra_args
+                    root, slug, name, domain, concept, scaffold_script, theme_args(theme)
                 )
             created.append(slug)
         except Exception as e:
@@ -241,12 +296,12 @@ def main() -> None:
     parser.add_argument(
         "--csv",
         type=Path,
-        help="CSV file with columns: slug,name,domain,concept",
+        help="CSV file with columns: slug,name,domain,concept[,primary,accent,background,theme_mode]",
     )
     parser.add_argument(
         "--json",
         type=Path,
-        help="JSON file with array of {slug, name, domain, concept} objects",
+        help="JSON file with array of {slug, name, domain, concept[, primary, accent, background, theme_mode]} objects",
     )
     parser.add_argument(
         "--allow-outside",

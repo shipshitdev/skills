@@ -69,17 +69,30 @@ function safeColor(
   return fallback && fallbackRgba ? { value: fallback, rgba: fallbackRgba } : null
 }
 
-// Whichever of the near-black / near-white pair has the higher contrast on `color`.
+const AA = 4.5
+const PURE_BLACK = "#000000"
+const PURE_WHITE = "#ffffff"
+
+// Text color for `color`: the near-black / near-white pair when one of them reaches AA (4.5:1),
+// otherwise the pure black or white extreme, which always reaches at least 4.58:1. The user's
+// color is never changed; only the text drawn on it is.
 function bestForeground(color: Rgba): string {
   const dark = contrast(color, parseColor(NEAR_BLACK) as Rgba)
   const light = contrast(color, parseColor(NEAR_WHITE) as Rgba)
-  return dark >= light ? NEAR_BLACK : NEAR_WHITE
+  if (Math.max(dark, light) >= AA) return dark >= light ? NEAR_BLACK : NEAR_WHITE
+  const black = contrast(color, parseColor(PURE_BLACK) as Rgba)
+  const white = contrast(color, parseColor(PURE_WHITE) as Rgba)
+  return black >= white ? PURE_BLACK : PURE_WHITE
 }
 
 // True when dark text reads better than light text on this color.
+function usesDarkText(color: Rgba): boolean {
+  return bestForeground(color) === NEAR_BLACK || bestForeground(color) === PURE_BLACK
+}
+
 export function isLight(color: string): boolean {
   const parsed = parseColor(color)
-  return parsed ? bestForeground(parsed) === NEAR_BLACK : false
+  return parsed ? usesDarkText(parsed) : false
 }
 
 // Turns app.json `theme` into the token set (mode) and CSS variable overrides.
@@ -91,14 +104,14 @@ export function resolveTheme(theme: Theme) {
   const accent = safeColor(
     "accent",
     theme.accent,
-    bestForeground(background.rgba) === NEAR_BLACK ? ACCENT_ON_LIGHT : ACCENT_ON_DARK,
+    usesDarkText(background.rgba) ? ACCENT_ON_LIGHT : ACCENT_ON_DARK,
   )!
   const explicitForeground = safeColor("foreground", theme.foreground, undefined)
 
   const mode: "dark" | "light" =
     theme.mode === "light" || theme.mode === "dark"
       ? theme.mode
-      : bestForeground(background.rgba) === NEAR_BLACK
+      : usesDarkText(background.rgba)
         ? "light"
         : "dark"
 
