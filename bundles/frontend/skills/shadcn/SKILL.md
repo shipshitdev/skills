@@ -1,6 +1,6 @@
 ---
 name: shadcn
-description: "Applies shadcn/ui best practices when writing, reviewing or refactoring components: Radix primitives, React Hook Form, data tables, theming, composition."
+description: "Applies shadcn/ui best practices (Radix, forms, tables, theming) and sets up shadcn/ui on Tailwind v4: init, components.json, cn(), v3 migration. Use to build, review or install shadcn."
 metadata:
   version: "2.2.2"
   source: https://github.com/pproenca/dot-skills/blob/master/skills/.curated/shadcn/SKILL.md
@@ -10,7 +10,7 @@ metadata:
   last_synced: "2026-06-12"
   license: MIT
   tags: "shadcn, ui, react"
-when_to_use: "shadcn components, dark mode"
+when_to_use: "shadcn components, dark mode, init shadcn, set up shadcn"
 ---
 # shadcn/ui Community Best Practices
 
@@ -20,9 +20,13 @@ when_to_use: "shadcn components, dark mode"
 
 Rules target current shadcn/ui: Tailwind CSS v4 (CSS-first, no `tailwind.config.*`, tokens in `@theme inline`), React 19 (`ref` as a prop, `data-slot` attributes), the unified `radix-ui` package, OKLCH color tokens, `tw-animate-css`, `Field` + React Hook Form `Controller` forms, and Bun (`bunx --bun shadcn@latest ...`). Examples use the Radix base (`--base radix`); the CLI also supports a Base UI base (`--base base`), where triggers take a `render` prop instead of `asChild`. For a Tailwind v3 project, keep the existing config and follow the shadcn upgrade guide first.
 
+## Setup mode
+
+Use when installing, repairing or migrating shadcn/ui (new project, existing project, Tailwind v3 to v4). Follow [`references/_setup-mode.md`](references/_setup-mode.md): pick the `bunx --bun shadcn@latest init` path, then wire Tailwind v4 CSS-first (`@theme inline`, `@custom-variant dark`), `components.json` with an empty `tailwind.config`, the `cn()` helper, and the validation checklist. Do only the requested setup and confirm before overwriting existing styles, config or components. After setup, the rules below apply.
+
 ## When to Apply
 
-- Installing and configuring shadcn/ui in a project
+- Installing and configuring shadcn/ui in a project (see Setup mode)
 - Writing new shadcn/ui components or composing primitives
 - Implementing forms with React Hook Form and Zod validation
 - Building data tables or handling large dataset displays

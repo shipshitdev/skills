@@ -39,6 +39,5 @@ Frontend development and design skills
 - `stack-validator`
 - `nextra-writer`
 - `shadcn`
-- `shadcn-setup`
 - `tailwind`
 - `design-dispatch`
