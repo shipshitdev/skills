@@ -168,6 +168,59 @@ function stylesheetUri({ real, fragment }) {
   }
 }
 
+// --- HTML character references -------------------------------------------------------
+
+// Named references that can occur in URLs and CSS (the full HTML table has 2,231 entries; any
+// other `&name;` is reported instead of guessed).
+const NAMED = {
+  amp: "&", AMP: "&", lt: "<", LT: "<", gt: ">", GT: ">", quot: '"', QUOT: '"', apos: "'",
+  nbsp: "\u00a0", num: "#", sol: "/", bsol: "\\", colon: ":", semi: ";", comma: ",",
+  period: ".", excl: "!", quest: "?", equals: "=", percnt: "%", lpar: "(", rpar: ")",
+  lsqb: "[", lbrack: "[", rsqb: "]", rbrack: "]", lcub: "{", lbrace: "{", rcub: "}", rbrace: "}",
+  lowbar: "_", UnderBar: "_", plus: "+", ast: "*", midast: "*", commat: "@", dollar: "$",
+  grave: "`", Hat: "^", vert: "|", verbar: "|", VerticalLine: "|", Tab: "\t", NewLine: "\n",
+}
+// Legacy names the HTML parser also accepts without a trailing semicolon
+const LEGACY = new Set(["amp", "AMP", "lt", "LT", "gt", "GT", "quot", "QUOT", "nbsp"])
+
+function codePoint(value) {
+  if (value === 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) return "\ufffd"
+  return String.fromCodePoint(value)
+}
+
+/**
+ * Decode character references the way the HTML tokenizer does inside an attribute value.
+ * Returns { text, unknown } where `unknown` lists `&name;` references this table cannot decide.
+ */
+function decodeAttribute(value) {
+  const unknown = []
+  const text = value.replace(/&(?:#([xX][0-9a-fA-F]+|[0-9]+);?|([A-Za-z][A-Za-z0-9]*)(;?))/g, (match, num, name, semi, offset) => {
+    if (num !== undefined) {
+      const parsed = /^[xX]/.test(num) ? Number.parseInt(num.slice(1), 16) : Number.parseInt(num, 10)
+      return codePoint(parsed)
+    }
+    if (semi === ";") {
+      if (Object.hasOwn(NAMED, name)) return NAMED[name]
+      unknown.push(match)
+      return match
+    }
+    // No semicolon: only legacy names, and in attributes not when followed by "=" or alphanumerics
+    if (LEGACY.has(name) && value[offset + match.length] !== "=") return NAMED[name]
+    // anything else (including a legacy prefix followed by more name characters) is literal
+    return match
+  })
+  return { text, unknown }
+}
+
+const encodeAttribute = (value, quote) => {
+  const escaped = value.replaceAll("&", "&amp;")
+  return quote === "'" ? escaped.replaceAll("'", "&#39;") : escaped.replaceAll('"', "&quot;")
+}
+
+// Browsers strip tabs and newlines inside URLs and trim control characters and spaces around them
+// eslint-disable-next-line no-control-regex
+const cleanUrl = (text) => text.replace(/[\t\n\r]/g, "").replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, "")
+
 // --- HTML tokenizer -------------------------------------------------------------------
 
 const RAW_TEXT = new Set(["script", "style", "textarea", "title"])
@@ -220,42 +273,57 @@ function parseTag(html, start) {
 /** Rewrite the asset-bearing attributes of a start tag; returns the new tag text. */
 function rewriteTag(html, start, tag) {
   const edits = []
-  const attr = (name) => tag.attrs.find((a) => a.name === name && a.value !== null)
-  const replace = (a, value) => {
+  // Attribute values are character-reference decoded before anything is resolved, and a changed
+  // value is encoded again when written back. Untouched attributes keep their original text.
+  const read = (a) => {
+    const { text, unknown } = decodeAttribute(a.value)
+    if (unknown.length > 0) {
+      problem(unknown.join(" "), `unrecognized character reference in ${a.name}="${a.value}"`)
+      return null
+    }
+    return text
+  }
+  const write = (a, decodedBefore, decodedAfter) => {
+    if (decodedAfter === decodedBefore) return
     // An unquoted value becomes a quoted one so any data URI is safe in the attribute
     const quote = a.quote || '"'
-    const safe = quote === '"' ? value.replaceAll('"', "%22") : value.replaceAll("'", "%27")
-    edits.push(
-      a.quote
-        ? { from: a.start, to: a.end, text: safe }
-        : { from: a.start, to: a.end, text: `${quote}${safe}${quote}` },
-    )
+    const encoded = encodeAttribute(decodedAfter, quote)
+    edits.push({ from: a.start, to: a.end, text: a.quote ? encoded : `${quote}${encoded}${quote}` })
   }
-  const rel = (attr("rel")?.value ?? "").toLowerCase().split(/\s+/)
+  const relAttr = tag.attrs.find((a) => a.name === "rel" && a.value !== null)
+  const rel = (relAttr ? decodeAttribute(relAttr.value).text : "").toLowerCase().split(/\s+/)
 
   for (const a of tag.attrs) {
     if (a.value === null) continue
     if (a.name === "src" || a.name === "poster" || (a.name === "href" && tag.name === "link")) {
-      if (!isLocal(a.value.trim())) continue
-      const found = resolveRef(a.value.trim(), root)
+      const before = read(a)
+      if (before === null) continue
+      const ref = cleanUrl(before)
+      if (!isLocal(ref)) continue
+      const found = resolveRef(ref, root)
       if (found === null) continue
       if (tag.name === "link" && a.name === "href" && rel.includes("stylesheet")) {
         const uri = stylesheetUri(found)
-        if (uri !== null) replace(a, uri)
+        if (uri !== null) write(a, before, uri)
       } else {
-        replace(a, toDataUri(readFileSync(found.real), mimeOf(found.real), found.fragment))
+        write(a, before, toDataUri(readFileSync(found.real), mimeOf(found.real), found.fragment))
       }
     } else if (a.name === "srcset" || a.name === "imagesrcset") {
-      const candidates = a.value.split(",").map((candidate) => {
+      const before = read(a)
+      if (before === null) continue
+      const candidates = before.split(",").map((candidate) => {
         const [url, ...descriptor] = candidate.trim().split(/\s+/)
-        if (!url || !isLocal(url)) return candidate.trim()
-        const found = resolveRef(url, root)
+        const ref = cleanUrl(url ?? "")
+        if (!ref || !isLocal(ref)) return candidate.trim()
+        const found = resolveRef(ref, root)
         if (found === null) return candidate.trim()
         return [toDataUri(readFileSync(found.real), mimeOf(found.real), found.fragment), ...descriptor].join(" ")
       })
-      replace(a, candidates.join(", "))
+      write(a, before, candidates.join(", "))
     } else if (a.name === "style") {
-      replace(a, processCss(a.value, root))
+      const before = read(a)
+      if (before === null) continue
+      write(a, before, processCss(before, root))
     }
   }
 

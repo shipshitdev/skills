@@ -178,6 +178,86 @@ class InlineLocalAssetsTest(unittest.TestCase):
         self.write_page('<img src="/real.png"><img src="/alias.png">')
         self.assertEqual(self.ok().count("data:image/png;base64,"), 2)
 
+    # --- HTML character references in attribute values ------------------------------------
+
+    def test_entity_encoded_references_are_decoded_and_inlined(self) -> None:
+        (self.dist / "x.png").write_bytes(PNG)
+        (self.dist / "a&b.png").write_bytes(PNG)
+        self.write_page(
+            '<img src="&#47;x.png"><img src="&#x2F;x.png"><img src="&sol;x.png"><img src=&#47;x.png>'
+            '<img src="&#x2f;a&amp;b.png"><img src="/&#120;.png"><img src="&#47x.png">'
+        )
+        html = self.ok()
+        self.assertEqual(html.count("data:image/png;base64,"), 7)
+        self.assertNotIn("x.png", html)
+
+    def test_entity_encoded_missing_references_fail_instead_of_being_skipped(self) -> None:
+        for body in ('<img src="&#47;gone.png">', "<img src=&#47;gone.png>", '<img SRC = "&sol;gone.png">'):
+            with self.subTest(body=body):
+                self.write_page(body)
+                self.fails_naming("/gone.png")
+
+    def test_entity_encoded_parent_traversal_cannot_escape(self) -> None:
+        (self.project / "package.json").write_text('{"secret": true}')
+        for ref in (
+            "&#46;&#46;/package.json",
+            "/&#x2e;&#x2E;/package.json",
+            "&period;&period;&sol;package.json",
+            "/..&sol;package.json",
+            "/.&Tab;./package.json",
+            "/&#46;.&#47;package.json",
+            "/..&bsol;package.json",
+        ):
+            with self.subTest(ref=ref):
+                self.write_page(f'<img src="{ref}">')
+                result = self.inline()
+                self.assertNotEqual(result.returncode, 0, ref)
+                self.assertFalse(self.out.exists())
+                self.assertNotIn("secret", self.out.read_text() if self.out.exists() else "")
+
+    def test_entity_encoded_symlink_escape_is_still_rejected_after_decoding(self) -> None:
+        (self.dist / "link.png").symlink_to(self.outside / "secret.png")
+        self.write_page('<img src="/lin&#107;.png">')
+        self.fails_naming("/link.png")
+
+    def test_unknown_named_references_are_rejected_not_guessed(self) -> None:
+        self.write_page('<img src="/x&notarealentity;.png">')
+        self.fails_naming("&notarealentity;")
+
+    def test_ambiguous_ampersand_rules_follow_the_html_spec_in_attributes(self) -> None:
+        (self.dist / "a&ampb.png").write_bytes(PNG)  # "&ampb" is literal: next char is alphanumeric
+        (self.dist / "a&.png").write_bytes(PNG)  # "&amp." decodes: legacy name followed by "."
+        self.write_page('<img src="/a&ampb.png"><img src="/a&amp.png">')
+        self.assertEqual(self.ok().count("data:image/png;base64,"), 2)
+
+    def test_legacy_name_followed_by_equals_stays_literal(self) -> None:
+        (self.dist / "x.png").write_bytes(PNG)
+        self.write_page('<img src="/x.png?a=1&copy=2&amp=3">')
+        self.assertEqual(self.ok().count("data:image/png;base64,"), 1)
+
+    def test_rewritten_values_are_encoded_correctly(self) -> None:
+        (self.dist / "icon.svg").write_bytes(SVG)
+        (self.dist / "x.png").write_bytes(PNG)
+        self.write_page(
+            '<img src="/icon.svg#a&amp;b"><img src=\'/icon.svg#q&#39;z\'>'
+            '<div style="background:url(&quot;/x.png&quot;)"></div><p title="a&amp;b">t</p>'
+        )
+        html = self.ok()
+        self.assertRegex(html, r'src="data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#a&amp;b"')
+        self.assertRegex(html, r"src='data:image/svg\+xml;base64,[A-Za-z0-9+/=]+#q&#39;z'")
+        self.assertRegex(html, r'style="background:url\(&quot;data:image/png;base64,[A-Za-z0-9+/=]+&quot;\)"')
+        self.assertIn('title="a&amp;b"', html)
+
+    def test_entities_in_srcset_and_rel_are_decoded(self) -> None:
+        (self.dist / "x.png").write_bytes(PNG)
+        (self.dist / "s.css").write_text(".a{color:red}")
+        self.write_page(
+            '<img srcset="&#47;x.png 1x, &sol;x.png 2x">', '<link rel="&#115;tylesheet" href="/s.css">'
+        )
+        html = self.ok()
+        self.assertEqual(html.count("data:image/png;base64,"), 2)
+        self.assertIn('href="data:text/css;base64,', html)
+
 
 if __name__ == "__main__":
     unittest.main()

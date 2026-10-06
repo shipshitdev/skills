@@ -74,6 +74,7 @@ This creates `bundle.html` - a self-contained artifact with all JavaScript, CSS,
 - Writes `vite.singlefile.config.ts`, which extends your `vite.config.*` and inlines all JS, CSS, fonts and assets into `index.html`
 - Runs `bunx vite build` with that config (object, promise or function-style `vite.config.*` all work)
 - Inlines the files that the HTML or CSS reference (images, fonts, icons, linked stylesheets and their own `url()` dependencies) as data URIs, keeping `#fragments`, and fails with the list of any local reference it cannot inline or that escapes the project through a symlink
+- Decodes HTML character references (`&amp;`, `&#47;`, `&#x2F;`, ...) in attribute values before resolving them, so an entity-encoded reference is inlined or rejected, never skipped; an unrecognized `&name;` in a resolved attribute fails the bundle
 - Builds in a private temporary work directory per run, so concurrent runs do not collide
 - Replaces `bundle.html` only after every step succeeded, so a failed build never destroys the previous bundle
 
