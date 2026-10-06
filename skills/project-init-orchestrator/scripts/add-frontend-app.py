@@ -125,7 +125,7 @@ def add_frontend_app(root: Path, name: str) -> None:
     print(f"\n✅ Frontend app '{name}' created at: {app_root}")
     print("\nNext steps:")
     print("1. Run `bun install` at the workspace root (frontend/apps/* is already a workspace glob)")
-    print(f"2. cd {app_root.relative_to(root)} && bun run dev -- -p 3001 (the dashboard uses 3000)")
+    print(f"2. cd {app_root.relative_to(root)} && bun run dev -- -p 3002 (the dashboard uses 3000 and the API 3001)")
 
 
 def main() -> None:

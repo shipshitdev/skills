@@ -43,16 +43,16 @@ def create_prisma_model(name: str) -> str:
     return (
         f"model {pascal} {{\n"
         f"  id             String   @id @default(cuid())\n"
-        f"  organizationId String\n"
+        f"  userId         String\n"
         f"  name           String\n"
         f"  isDeleted      Boolean  @default(false)\n"
         f"  createdAt      DateTime @default(now())\n"
         f"  updatedAt      DateTime @updatedAt\n"
         f"\n"
-        f"  // Add the relation to Organization here once that model exists:\n"
-        f"  // organization Organization @relation(fields: [organizationId], references: [id])\n"
+        f"  // userId is the tenant: it is always set from the signed-in session, never from the\n"
+        f"  // request. For organizations, swap it for the session's active organization id.\n"
         f"\n"
-        f"  @@index([organizationId, isDeleted])\n"
+        f"  @@index([userId, isDeleted])\n"
         f'  @@map("{table}")\n'
         f"}}\n"
     )
@@ -70,57 +70,65 @@ def create_controller_ts(name: str) -> str:
           Delete,
           Body,
           Param,
-          Query,
+          UseGuards,
         }} from "@nestjs/common";
-        import {{ ApiTags, ApiOperation, ApiBearerAuth }} from "@nestjs/swagger";
+        import {{ ApiTags, ApiOperation, ApiCookieAuth }} from "@nestjs/swagger";
+        import {{ CurrentUser }} from "../../../auth/decorators/current-user.decorator";
+        import {{ AuthGuard }} from "../../../auth/guards/auth.guard";
         import {{ {pascal}Service }} from "../services/{name}.service";
         import {{ Create{pascal}Dto }} from "../dto/create-{name}.dto";
         import {{ Update{pascal}Dto }} from "../dto/update-{name}.dto";
 
+        // Every route needs a Better Auth session. The tenant (userId) comes from that session,
+        // never from the query string or body.
         @ApiTags("{name}")
-        @ApiBearerAuth()
+        @ApiCookieAuth()
+        @UseGuards(AuthGuard)
         @Controller("{name}")
         export class {pascal}Controller {{
           constructor(private readonly {camel}Service: {pascal}Service) {{}}
 
           @Post()
           @ApiOperation({{ summary: "Create {name}" }})
-          create(@Body() dto: Create{pascal}Dto) {{
-            return this.{camel}Service.create(dto);
+          create(
+            @Body() dto: Create{pascal}Dto,
+            @CurrentUser() user: {{ userId: string }},
+          ) {{
+            return this.{camel}Service.create(dto, user.userId);
           }}
 
           @Get()
-          @ApiOperation({{ summary: "Get all {name}s" }})
-          findAll(@Query("organizationId") organizationId: string) {{
-            return this.{camel}Service.findAll(organizationId);
+          @ApiOperation({{ summary: "Get all {name}" }})
+          findAll(@CurrentUser() user: {{ userId: string }}) {{
+            return this.{camel}Service.findAll(user.userId);
           }}
 
           @Get(":id")
           @ApiOperation({{ summary: "Get {name} by ID" }})
           findOne(
             @Param("id") id: string,
-            @Query("organizationId") organizationId: string,
+            @CurrentUser() user: {{ userId: string }},
           ) {{
-            return this.{camel}Service.findOne(id, organizationId);
+            return this.{camel}Service.findOne(id, user.userId);
           }}
 
           @Patch(":id")
           @ApiOperation({{ summary: "Update {name}" }})
           update(
             @Param("id") id: string,
-            @Query("organizationId") organizationId: string,
             @Body() dto: Update{pascal}Dto,
+            @CurrentUser() user: {{ userId: string }},
           ) {{
-            return this.{camel}Service.update(id, organizationId, dto);
+            return this.{camel}Service.update(id, dto, user.userId);
           }}
 
           @Delete(":id")
           @ApiOperation({{ summary: "Soft delete {name}" }})
           remove(
             @Param("id") id: string,
-            @Query("organizationId") organizationId: string,
+            @CurrentUser() user: {{ userId: string }},
           ) {{
-            return this.{camel}Service.remove(id, organizationId);
+            return this.{camel}Service.remove(id, user.userId);
           }}
         }}
     """)
@@ -136,24 +144,26 @@ def create_service_ts(name: str) -> str:
         import {{ Create{pascal}Dto }} from "../dto/create-{name}.dto";
         import {{ Update{pascal}Dto }} from "../dto/update-{name}.dto";
 
+        // Every read and write is scoped to the signed-in user (userId). A row outside that
+        // scope looks exactly like a missing row: 404.
         @Injectable()
         export class {pascal}Service {{
           constructor(private readonly prisma: PrismaService) {{}}
 
-          async create(dto: Create{pascal}Dto): Promise<{pascal}> {{
-            return this.prisma.{camel}.create({{ data: dto }});
+          async create(dto: Create{pascal}Dto, userId: string): Promise<{pascal}> {{
+            return this.prisma.{camel}.create({{ data: {{ ...dto, userId }} }});
           }}
 
-          async findAll(organizationId: string): Promise<{pascal}[]> {{
+          async findAll(userId: string): Promise<{pascal}[]> {{
             return this.prisma.{camel}.findMany({{
-              where: {{ organizationId, isDeleted: false }},
+              where: {{ userId, isDeleted: false }},
               orderBy: {{ createdAt: "desc" }},
             }});
           }}
 
-          async findOne(id: string, organizationId: string): Promise<{pascal}> {{
+          async findOne(id: string, userId: string): Promise<{pascal}> {{
             const row = await this.prisma.{camel}.findFirst({{
-              where: {{ id, organizationId, isDeleted: false }},
+              where: {{ id, userId, isDeleted: false }},
             }});
 
             if (!row) {{
@@ -165,21 +175,31 @@ def create_service_ts(name: str) -> str:
 
           async update(
             id: string,
-            organizationId: string,
             dto: Update{pascal}Dto,
+            userId: string,
           ): Promise<{pascal}> {{
-            await this.findOne(id, organizationId);
-            // Never let the caller move a row to another organization
-            const {{ organizationId: _ignored, ...data }} = dto;
-            return this.prisma.{camel}.update({{ where: {{ id }}, data }});
+            // updateMany scopes the write to the owner in a single statement
+            const result = await this.prisma.{camel}.updateMany({{
+              where: {{ id, userId, isDeleted: false }},
+              data: dto,
+            }});
+
+            if (result.count === 0) {{
+              throw new NotFoundException("{pascal} not found");
+            }}
+
+            return this.findOne(id, userId);
           }}
 
-          async remove(id: string, organizationId: string): Promise<{pascal}> {{
-            await this.findOne(id, organizationId);
-            return this.prisma.{camel}.update({{
-              where: {{ id }},
+          async remove(id: string, userId: string): Promise<void> {{
+            const result = await this.prisma.{camel}.updateMany({{
+              where: {{ id, userId, isDeleted: false }},
               data: {{ isDeleted: true }},
             }});
+
+            if (result.count === 0) {{
+              throw new NotFoundException("{pascal} not found");
+            }}
           }}
         }}
     """)
@@ -191,12 +211,8 @@ def create_create_dto_ts(name: str) -> str:
         import {{ ApiProperty }} from "@nestjs/swagger";
         import {{ IsString, IsNotEmpty }} from "class-validator";
 
+        // No tenant field here: the service sets it from the signed-in session.
         export class Create{pascal}Dto {{
-          @ApiProperty()
-          @IsString()
-          @IsNotEmpty()
-          organizationId: string;
-
           @ApiProperty()
           @IsString()
           @IsNotEmpty()
@@ -217,34 +233,40 @@ def create_update_dto_ts(name: str) -> str:
 
 def create_http_file(name: str) -> str:
     return dedent(f"""\
+        # Every route needs a Better Auth session cookie. Sign in first, then paste the token:
+        #   POST {{{{baseUrl}}}}/api/auth/sign-in/email  (Origin must be a trusted origin)
         @baseUrl = http://localhost:3001
-        @organizationId = YOUR_ORG_ID
+        @sessionCookie = better-auth.session_token=PASTE_SESSION_TOKEN
 
-        ### Get all {name}s
-        GET {{{{baseUrl}}}}/{name}?organizationId={{{{organizationId}}}}
+        ### Get all {name}
+        GET {{{{baseUrl}}}}/{name}
+        Cookie: {{{{sessionCookie}}}}
 
         ### Get {name} by ID
-        GET {{{{baseUrl}}}}/{name}/ITEM_ID?organizationId={{{{organizationId}}}}
+        GET {{{{baseUrl}}}}/{name}/ITEM_ID
+        Cookie: {{{{sessionCookie}}}}
 
         ### Create {name}
         POST {{{{baseUrl}}}}/{name}
         Content-Type: application/json
+        Cookie: {{{{sessionCookie}}}}
 
         {{
-          "organizationId": "{{{{organizationId}}}}",
           "name": "Test {name}"
         }}
 
         ### Update {name}
-        PATCH {{{{baseUrl}}}}/{name}/ITEM_ID?organizationId={{{{organizationId}}}}
+        PATCH {{{{baseUrl}}}}/{name}/ITEM_ID
         Content-Type: application/json
+        Cookie: {{{{sessionCookie}}}}
 
         {{
           "name": "Updated name"
         }}
 
         ### Delete {name}
-        DELETE {{{{baseUrl}}}}/{name}/ITEM_ID?organizationId={{{{organizationId}}}}
+        DELETE {{{{baseUrl}}}}/{name}/ITEM_ID
+        Cookie: {{{{sessionCookie}}}}
     """)
 
 
@@ -295,7 +317,9 @@ def add_api_collection(root: Path, name: str) -> None:
     print(f"\nDon't forget to:")
     print(f"1. Import {pascal}Module in app.module.ts")
     print(f"2. Run `bun run prisma:migrate` to create the migration for prisma/schema/{name}.prisma")
-    print(f"3. Create serializer in packages/common/serializers/")
+    print("3. Run `bun run prisma:generate` (Prisma 7 migrate no longer regenerates the client;")
+    print("   repeat it after every schema change)")
+    print(f"4. Create serializer in packages/common/serializers/")
 
 
 def main() -> None:

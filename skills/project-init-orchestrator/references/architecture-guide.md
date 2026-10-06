@@ -47,33 +47,39 @@ prisma/schema/projects.prisma
 ```prisma
 isDeleted Boolean @default(false)
 
-@@index([organizationId, isDeleted])
+@@index([userId, isDeleted])
 ```
 
 **Multi-Tenancy:**
 
 ```typescript
-// Always filter by organization
-async findAll(organizationId: string) {
+// Controllers use @UseGuards(AuthGuard) and pass the session's userId (the tenant) down.
+// Never accept the tenant from @Query or @Body, and scope every read and write with it.
+async findAll(userId: string) {
   return this.prisma.project.findMany({
-    where: { organizationId, isDeleted: false },
+    where: { userId, isDeleted: false },
   });
 }
+
+// Writes use updateMany/deleteMany with the same scope and answer 404 when count is 0
 ```
+
+Switch the tenant to `organizationId` only when the organization plugin is installed, and
+resolve it from the session's active organization.
 
 **Indexes:**
 
 - Single-column: `@@index([email])` or `@unique` in the model
-- Compound: `@@index([organizationId, isDeleted])` in the model
-- Every index change ships as a migration (`bun run prisma:migrate`)
+- Compound: `@@index([userId, isDeleted])` in the model
+- Every index change ships as a migration (`bun run prisma:migrate`), then `bun run prisma:generate`
 
 ```prisma
 model Project {
-  id             String  @id @default(cuid())
-  organizationId String
-  isDeleted      Boolean @default(false)
+  id        String  @id @default(cuid())
+  userId    String
+  isDeleted Boolean @default(false)
 
-  @@index([organizationId, isDeleted])
+  @@index([userId, isDeleted])
 }
 ```
 
