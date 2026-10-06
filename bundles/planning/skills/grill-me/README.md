@@ -1,4 +1,4 @@
-# grilling
+# grill-me
 
 The reusable interview primitive: map a plan as a design tree, ask the whole frontier each round, recommend an answer, and stop when the frontier is empty.
 

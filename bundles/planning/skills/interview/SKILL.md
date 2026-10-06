@@ -20,7 +20,7 @@ when_to_use: "interview me, send a questionnaire, grill me, grill me with docs, 
 # Interview
 
 Run a focused discovery interview before creating a PRD, writing a plan, shaping
-UX, or starting implementation. Ground in the repo first, then run `grilling` for
+UX, or starting implementation. Ground in the repo first, then run `grill-me` for
 the decisions that cannot be inferred.
 
 This skill does not write code, create issues, or produce a final PRD by default.
@@ -39,7 +39,7 @@ Inputs:
 Outputs:
 
 - Concise context scan summary.
-- Settled decisions from `grilling`.
+- Settled decisions from `grill-me`.
 - Final interview brief ready for `prd-writer`, `feature-intake`, `shape`,
   `/prd spec`, or direct implementation.
 - Send mode: a Markdown questionnaire for one recipient and its absolute path.
@@ -64,7 +64,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `grilling` for the design-tree interview (frontier rounds, recommended answers).
+- `grill-me` for the design-tree interview (frontier rounds, recommended answers).
 - `domain-modeling` when a term crystallizes or conflicts with `CONTEXT.md`.
 
 Recommend next (do not invoke): `prd-writer`, `feature-intake`, `shape`,
@@ -126,9 +126,9 @@ Before asking questions, summarize the context scan in three compact bullets:
 If the repo gives enough context, ask for confirmation instead of running a long
 interview.
 
-### 3. Run grilling
+### 3. Run grill-me
 
-Run the `grilling` skill on the remaining decisions. It owns the design tree,
+Run the `grill-me` skill on the remaining decisions. It owns the design tree,
 the **frontier**, recommended answers, and the facts-vs-decisions split.
 
 When a term is resolved or conflicts with `CONTEXT.md`, run `domain-modeling`

@@ -474,8 +474,8 @@
       "description": "Designs and reviews GraphQL schemas, resolvers, mutations, pagination, and data loading. Use when building or refactoring GraphQL APIs or fixing N+1 and resolver design."
     },
     {
-      "name": "grilling",
-      "source": "./skills/grilling",
+      "name": "grill-me",
+      "source": "./skills/grill-me",
       "version": "2.2.2",
       "description": "Grills the user relentlessly about a plan, decision, or idea until every branch of the design tree is resolved. Use when stress-testing thinking or when told grill me."
     },
