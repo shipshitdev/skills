@@ -317,7 +317,7 @@ plugin skill, not an alias.
 
 ### Planning & PRDs (15)
 
-`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grilling`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `prd-dispatch`
+`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grilling`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `executing-plans`, `prd-dispatch`
 
 ### Payments & Product Integrations (1)
 

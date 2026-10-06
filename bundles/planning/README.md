@@ -26,5 +26,6 @@ Strategy, planning, and analysis skills
 - `roadmap-to-milestones`
 - `rules-capture`
 - `writing-plans`
+- `executing-plans`
 - `wayfinder`
 - `research`
