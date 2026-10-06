@@ -96,7 +96,7 @@ mystartup/
 ├── app.json              # All content/config here
 ├── package.json          # Depends on UI package
 ├── next.config.ts
-├── tailwind.config.ts
+├── postcss.config.mjs    # @tailwindcss/postcss (Tailwind v4)
 ├── tsconfig.json
 ├── vercel.json           # Vercel deployment config
 ├── public/
@@ -104,7 +104,7 @@ mystartup/
 └── app/
     ├── layout.tsx
     ├── page.tsx          # Renders sections from app.json
-    └── globals.css
+    └── globals.css       # CSS-first Tailwind v4: @import, @source, @theme
 ```
 
 ## app.json Config

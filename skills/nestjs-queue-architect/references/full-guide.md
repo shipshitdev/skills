@@ -3,7 +3,7 @@
 ## Technology Stack
 
 - **BullMQ**: 5.61.0 (Redis-backed job queue)
-- **@nestjs/bullmq**: 11.0.4
+- **@nestjs/bullmq**: 12.0.0 (NestJS 12)
 - **@bull-board/nestjs**: 6.13.1 (Queue monitoring UI)
 - **Redis**: ioredis 5.8.2
 
@@ -310,7 +310,6 @@ export interface VideoJobData {
   ingredientId: string;
   userId: string;
   organizationId: string;
-  clerkUserId: string;
   priority?: JobPriority;
 
   params: {

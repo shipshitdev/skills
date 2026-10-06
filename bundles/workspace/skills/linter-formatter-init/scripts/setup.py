@@ -172,6 +172,7 @@ coverage/
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+bun.lock
 bun.lockb
 
 # Generated
@@ -282,7 +283,7 @@ def detect_package_manager(root: Path) -> str:
         pass
 
     # Fall back to checking lock files
-    if (root / "bun.lockb").exists():
+    if (root / "bun.lock").exists() or (root / "bun.lockb").exists():
         return "bun"
     elif (root / "pnpm-lock.yaml").exists():
         return "pnpm"

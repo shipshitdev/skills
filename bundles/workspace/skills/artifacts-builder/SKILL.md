@@ -43,11 +43,11 @@ cd <project-name>
 This creates a fully configured project with:
 
 - ✅ React + TypeScript (via Vite)
-- ✅ Tailwind CSS 3.4.1 configured for @agenticindiedev/ui
+- ✅ Tailwind CSS v4 (CSS-first: `@import`, `@source`, `@theme` in `src/index.css`) configured for @agenticindiedev/ui
 - ✅ Path aliases (`@/`) configured
 - ✅ @agenticindiedev/ui installed and ready
 - ✅ Parcel configured for bundling (via .parcelrc)
-- ✅ Node 18+ compatibility (auto-detects and pins Vite version)
+- ✅ Node 20+ required (Tailwind v4 and current Vite)
 
 ### Step 2: Develop Your Artifact
 

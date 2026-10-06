@@ -18,6 +18,17 @@ TEMPLATES_DIR = SKILL_DIR / "assets" / "templates" / "landing"
 DEFAULT_UI_PACKAGE = "@agenticindiedev/ui"
 
 
+# Looked up with `npm view <pkg> version` on 2026-10-06; same pins as project-init-orchestrator.
+PINS = {
+    "next": "16.3.8",
+    "react": "19.3.0",
+    "types-node": "26.6.4",
+    "types-react": "19.3.0",
+    "typescript": "6.0.3",
+    "tailwindcss": "4.3.3",
+}
+
+
 def create_package_json(name: str, ui_package: str) -> str:
     return json.dumps({
         "name": name.lower().replace(" ", "-"),
@@ -27,21 +38,21 @@ def create_package_json(name: str, ui_package: str) -> str:
             "dev": "next dev",
             "build": "next build",
             "start": "next start",
-            "lint": "next lint"
+            "typecheck": "tsc --noEmit"
         },
         "dependencies": {
-            "next": "^15.0.0",
-            "react": "^19.0.0",
-            "react-dom": "^19.0.0",
-            "@agenticindiedev/ui": "latest"
+            "next": PINS["next"],
+            "react": PINS["react"],
+            "react-dom": PINS["react"],
+            ui_package: "latest"
         },
         "devDependencies": {
-            "@types/node": "^22.0.0",
-            "@types/react": "^19.0.0",
-            "@types/react-dom": "^19.0.0",
-            "typescript": "^5.7.0",
-            "tailwindcss": "^4.0.0",
-            "@tailwindcss/postcss": "^4.0.0"
+            "@types/node": PINS["types-node"],
+            "@types/react": PINS["types-react"],
+            "@types/react-dom": PINS["types-react"],
+            "typescript": PINS["typescript"],
+            "tailwindcss": PINS["tailwindcss"],
+            "@tailwindcss/postcss": PINS["tailwindcss"]
         }
     }, indent=2)
 
@@ -58,24 +69,16 @@ def create_next_config() -> str:
     """)
 
 
-def create_tailwind_config(ui_package: str) -> str:
-    template = dedent("""\
-        import type { Config } from "tailwindcss";
-
-        const config: Config = {
-          content: [
-            "./app/**/*.{js,ts,jsx,tsx,mdx}",
-            "./node_modules/__UI_PACKAGE__/**/*.{js,ts,jsx,tsx}",
-          ],
-          theme: {
-            extend: {},
+def create_postcss_config() -> str:
+    return dedent("""\
+        const config = {
+          plugins: {
+            "@tailwindcss/postcss": {},
           },
-          plugins: [],
         };
 
         export default config;
     """)
-    return template.replace("__UI_PACKAGE__", ui_package)
 
 
 def create_tsconfig() -> str:
@@ -363,26 +366,33 @@ def create_page_tsx(ui_package: str) -> str:
     """)
 
 
-def create_globals_css() -> str:
-    return dedent("""\
+def create_globals_css(ui_package: str) -> str:
+    """Tailwind v4 CSS-first entry: @import, @source for the UI package and an @theme block."""
+    template = dedent("""\
         @import "tailwindcss";
 
-        :root {
+        /* Packages in node_modules are not scanned automatically */
+        @source "../node_modules/__UI_PACKAGE__";
+
+        @theme {
           --color-primary: #6366f1;
           --color-accent: #f59e0b;
           --color-background: #0a0a0a;
+          --font-sans: "Space Grotesk", sans-serif;
+          --font-heading: "Fraunces", serif;
         }
 
-        body {
-          font-family: "Space Grotesk", sans-serif;
-          background-color: var(--color-background);
-          color: #ffffff;
-        }
+        @layer base {
+          body {
+            @apply bg-background font-sans text-white;
+          }
 
-        h1, h2, h3, h4, h5, h6 {
-          font-family: "Fraunces", serif;
+          h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+          }
         }
     """)
+    return template.replace("__UI_PACKAGE__", ui_package)
 
 
 def create_gitignore() -> str:
@@ -451,14 +461,14 @@ def scaffold_landing(
     files = {
         "package.json": create_package_json(name, ui_package),
         "next.config.ts": create_next_config(),
-        "tailwind.config.ts": create_tailwind_config(ui_package),
+        "postcss.config.mjs": create_postcss_config(),
         "tsconfig.json": create_tsconfig(),
         "vercel.json": create_vercel_json(domain),
         "app.json": create_app_json(name, slug, domain, concept),
         ".gitignore": create_gitignore(),
         "app/layout.tsx": create_layout_tsx(name),
         "app/page.tsx": create_page_tsx(ui_package),
-        "app/globals.css": create_globals_css(),
+        "app/globals.css": create_globals_css(ui_package),
     }
 
     for filename, content in files.items():

@@ -123,6 +123,25 @@ export const getStripe = () => {
 };
 ```
 
+#### Session Helper (Better Auth)
+
+The route handlers below read the signed-in user with one helper, so swapping the session
+source touches a single file.
+
+```typescript
+// lib/session.ts
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth'; // Better Auth server instance
+
+export async function getUserId(): Promise<string | null> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  return session?.user.id ?? null;
+}
+```
+
+If Better Auth runs in a separate API (the house layout), call that API with the incoming
+cookie instead: `authClient.getSession({ fetchOptions: { headers: await headers() } })`.
+
 ---
 
 ## 2. Payment Processing
@@ -137,7 +156,7 @@ Checkout Sessions provide a Stripe-hosted payment page with built-in UI, validat
 // app/api/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { auth } from '@clerk/nextjs/server';
+import { getUserId } from '@/lib/session';
 
 interface CheckoutRequestBody {
   priceId: string;
@@ -148,7 +167,7 @@ interface CheckoutRequestBody {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -328,7 +347,7 @@ Payment Intents provide full control over the payment UI using Stripe Elements.
 // app/api/payment-intent/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { auth } from '@clerk/nextjs/server';
+import { getUserId } from '@/lib/session';
 
 interface PaymentIntentRequestBody {
   amount: number; // in cents
@@ -338,7 +357,7 @@ interface PaymentIntentRequestBody {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -620,7 +639,7 @@ createProducts();
 // app/api/subscription/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { auth } from '@clerk/nextjs/server';
+import { getUserId } from '@/lib/session';
 import { db } from '@/lib/db';
 
 interface SubscriptionCheckoutBody {
@@ -630,7 +649,7 @@ interface SubscriptionCheckoutBody {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -760,7 +779,7 @@ async createSubscription(
 // app/api/subscription/update/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { auth } from '@clerk/nextjs/server';
+import { getUserId } from '@/lib/session';
 import { db } from '@/lib/db';
 
 interface UpdateSubscriptionBody {
@@ -770,7 +789,7 @@ interface UpdateSubscriptionBody {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -830,7 +849,7 @@ export async function POST(request: NextRequest) {
 // app/api/subscription/cancel/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { auth } from '@clerk/nextjs/server';
+import { getUserId } from '@/lib/session';
 import { db } from '@/lib/db';
 
 interface CancelSubscriptionBody {
@@ -839,7 +858,7 @@ interface CancelSubscriptionBody {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -892,12 +911,12 @@ export async function POST(request: NextRequest) {
 // app/api/subscription/reactivate/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { auth } from '@clerk/nextjs/server';
+import { getUserId } from '@/lib/session';
 import { db } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -1057,12 +1076,12 @@ export async function updateStripeCustomer({
 // app/api/customer-portal/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { auth } from '@clerk/nextjs/server';
+import { getUserId } from '@/lib/session';
 import { db } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
