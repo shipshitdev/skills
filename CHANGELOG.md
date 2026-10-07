@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.4](https://github.com/shipshitdev/skills/compare/v2.2.3...v2.2.4) (2026-10-07)
+
+
+### Features
+
+* coordinate project sessions with /orchestrate ([#267](https://github.com/shipshitdev/skills/issues/267)) ([89c57d9](https://github.com/shipshitdev/skills/commit/89c57d9d2ed49b0a7b7c9e2b3ea6b71a8bb7f6e7))
+
 ## [2.2.3](https://github.com/shipshitdev/skills/compare/v2.2.2...v2.2.3) (2026-10-06)
 
 
