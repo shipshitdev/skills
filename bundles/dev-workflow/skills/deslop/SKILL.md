@@ -5,7 +5,7 @@ argument-hint: "[ui | prose | --changed | all | dry-run | --product]"
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "code-quality, cleanup, ai-artifacts, product-polish, prose, maintenance"
   source: https://github.com/cursor/plugins/blob/main/pstack/skills/unslop/SKILL.md
   upstream_repo: cursor/plugins

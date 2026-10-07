@@ -3,7 +3,7 @@ name: theme-factory
 description: Styles slides, docs and HTML pages with one of 10 preset color/font themes or a generated custom theme. Use when theming an artifact.
 license: Complete terms in LICENSE.txt
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   source: https://github.com/anthropics/skills/blob/main/skills/theme-factory/SKILL.md
   upstream_repo: anthropics/skills
   upstream_ref: main

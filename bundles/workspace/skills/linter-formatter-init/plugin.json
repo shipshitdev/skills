@@ -1,6 +1,6 @@
 {
   "name": "linter-formatter-init",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Set up Biome (default) or ESLint + Prettier, Vitest testing, and pre-commit hooks for any JavaScript",
   "author": {
     "name": "Ship Shit Dev",

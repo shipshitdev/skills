@@ -2,7 +2,7 @@
 name: multi-agent-patterns
 description: Designs multi-agent architectures that split work across agents to isolate context. Use when one agent's context limit is exceeded or subtasks decompose in parallel.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/multi-agent-patterns/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

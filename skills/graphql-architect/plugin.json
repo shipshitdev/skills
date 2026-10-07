@@ -1,6 +1,6 @@
 {
   "name": "graphql-architect",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "GraphQL: federation, schema design, DataLoader, caching, subscriptions, and security.",
   "author": {
     "name": "Ship Shit Dev",

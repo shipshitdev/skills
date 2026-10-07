@@ -1,6 +1,6 @@
 {
   "name": "git-cleanup",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Audit current trunk code and intent, preserve history, then prune proven-safe resources.",
   "author": {
     "name": "Ship Shit Dev",

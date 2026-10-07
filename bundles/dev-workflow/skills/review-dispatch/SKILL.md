@@ -2,7 +2,7 @@
 name: review-dispatch
 description: Routes /review for diffs, one/all PRs, commit windows, retros, or Grok second opinions. Report-only except confirmation-gated GitHub issue filing from retros.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "code-review, dispatcher, pull-requests, commits, retro, orchestration, second-opinion"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *)

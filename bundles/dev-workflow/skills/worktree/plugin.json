@@ -1,6 +1,6 @@
 {
   "name": "worktree",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Create an isolated git worktree from the correct base branch in a clean directory.",
   "author": {
     "name": "Ship Shit Dev",

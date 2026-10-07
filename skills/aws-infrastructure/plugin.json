@@ -1,6 +1,6 @@
 {
   "name": "aws-infrastructure",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Expert in AWS infrastructure setup including EC2, VPC, security groups, Application Load Balancers, ",
   "author": {
     "name": "Ship Shit Dev",

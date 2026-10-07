@@ -4,7 +4,7 @@ description: Supplies deep-module vocabulary and runs read-only codebase surveys
 license: MIT
 allowed-tools: Read, Grep, Glob, Write(plans/**), Edit(plans/**), Write(advisor-plans/**), Edit(advisor-plans/**), Write(.agents/memory/**), Edit(.agents/memory/**), Write(.tmp/**), Task, Bash(git log:*), Bash(git diff:*), Bash(git status:*), Bash(git show:*), Bash(git rev-parse:*), Bash(git merge-base:*), Bash(git branch --list:*), Bash(git branch --show-current), Bash(find:*), Bash(grep:*), Bash(rg:*), Bash(tree:*), Bash(npm audit), Bash(pnpm audit), Bash(pip-audit), Bash(cargo audit), Bash(tsc --noEmit:*), Bash(command -v gh), Bash(gh auth status:*), Bash(gh repo view --json visibility:*)
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "architecture, modules, seams, design, testability, audit, analysis, handoff-plans, read-only"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/SKILL.md

@@ -2,7 +2,7 @@
 name: docs
 description: Writes or updates README files, guides, runbooks, API references, and setup docs matching the repo's conventions. Use when documenting software projects.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "documentation, technical-writing, runbooks"
 when_to_use: "troubleshooting notes, onboarding docs"
 ---

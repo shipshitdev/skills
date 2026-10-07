@@ -3,7 +3,7 @@ name: grill-me
 description: Grills the user relentlessly about a plan, decision, or idea until every branch of the design tree is resolved. Use when stress-testing thinking or when told grill me.
 license: MIT
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "interview, grilling, discovery, planning, frontier"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md

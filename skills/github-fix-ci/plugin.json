@@ -1,6 +1,6 @@
 {
   "name": "github-fix-ci",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Inspect GitHub PR checks with gh, pull failing GitHub Actions logs, summarize failure context, then ",
   "author": {
     "name": "Ship Shit Dev",

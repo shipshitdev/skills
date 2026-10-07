@@ -4,7 +4,7 @@ description: Coordinates a weekly engineering review of board accuracy, recent c
 argument-hint: "[7d|since <SHA>] [--report-only|--fix]"
 compatibility: Requires repository history and access to the selected board; operational checks depend on existing service connections.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "review, weekly, maintenance, boards, retrospective"
   author: Ship Shit Dev
 ---

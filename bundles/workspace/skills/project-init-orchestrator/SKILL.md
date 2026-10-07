@@ -2,7 +2,7 @@
 name: project-init-orchestrator
 description: Picks the project initialization route and orchestrates setup, preferring npx @shipshitdev/v0 for new Shipshit.dev repos. Use when bootstrapping or initializing a project.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "project-init, scaffolding, orchestration, setup, monorepo"
 when_to_use: "initialize project, set up new project, bootstrap project, new product scaffold"
 ---

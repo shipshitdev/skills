@@ -1,6 +1,6 @@
 {
   "name": "context-optimization",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Improves context efficiency and diagnoses context degradation: budgets, masking, KV-cache, partition",
   "author": {
     "name": "Ship Shit Dev",

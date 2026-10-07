@@ -1,6 +1,6 @@
 {
   "name": "evaluation",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Builds evaluation frameworks for agent systems, including LLM-as-judge design. Use when testing agen",
   "author": {
     "name": "Ship Shit Dev",

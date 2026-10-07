@@ -1,6 +1,6 @@
 {
   "name": "codex-image-gen",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Generate images via the Codex CLI and extract the PNG from the session rollout.",
   "author": {
     "name": "Ship Shit Dev",

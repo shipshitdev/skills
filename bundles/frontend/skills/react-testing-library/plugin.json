@@ -1,6 +1,6 @@
 {
   "name": "react-testing-library",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "React Testing Library mechanics for component and hook tests: queries, async, interaction.",
   "author": {
     "name": "Ship Shit Dev",

@@ -4,7 +4,7 @@ description: Sweeps frontend accessibility, performance, theming, responsive des
 user-invocable: true
 argument-hint: "[area (feature, page, component...)]"
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "audit, quality, accessibility"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/audit.md
   upstream_version: skill-v4.5.0

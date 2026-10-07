@@ -2,7 +2,7 @@
 name: husky-test-coverage
 description: Sets up or verifies Husky pre-commit hooks that enforce test coverage above 80% (configurable) for Node/TypeScript projects using Vitest (or Mocha with nyc/c8).
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "husky, testing, coverage"
 when_to_use: "coverage threshold, pre-commit tests"
 ---

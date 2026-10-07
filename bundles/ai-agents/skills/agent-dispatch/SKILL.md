@@ -2,7 +2,7 @@
 name: agent-dispatch
 description: Router behind /agent. Parses audit, config, init, or route and delegates to the matching agent-setup engine without adding logic of its own.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "agents, dispatcher, architecture, config, setup, routing, orchestration"
   author: Ship Shit Dev
 when_to_use: "/agent, agent audit, agent config drift, init the .agents/ folder, set up agent routing"

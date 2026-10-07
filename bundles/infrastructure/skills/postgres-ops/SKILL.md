@@ -6,7 +6,7 @@ argument-hint: "[backup | restore | pooling | dr]"
 compatibility: Requires psql / pg_dump / pg_restore for self-managed instances; provider CLI for managed.
 allowed-tools: Bash(psql *) Bash(pg_dump *) Bash(pg_restore *) Bash(pg_basebackup *) Bash(createdb *) Bash(dropdb *)
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "postgres, backup, disaster-recovery, pooling, database, infrastructure"
   author: Ship Shit Dev
 when_to_use: "postgres backups, database backup strategy, point in time recovery, PITR, restore the database, connection pooling, PgBouncer, disaster recovery, DR runbook, harden postgres"

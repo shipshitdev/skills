@@ -2,7 +2,7 @@
 name: evaluation
 description: Builds evaluation frameworks for agent systems, including LLM-as-judge design. Use when testing agent performance, comparing model outputs, or debugging inconsistent evals.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/evaluation/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

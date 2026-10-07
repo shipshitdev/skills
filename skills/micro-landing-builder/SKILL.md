@@ -3,7 +3,7 @@ name: micro-landing-builder
 description: Scaffolds, clones, and deploys config-driven NextJS landing pages built on shadcn/ui and Tailwind v4. Use when creating single or multiple startup landing pages with email capture, analytics, and modern design. Supports batch creation from templates or CSV/JSON files and Vercel deployment with custom domains. Each landing is a standalone NextJS app driven by an app.json config file.
 disable-model-invocation: true
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "landing-page, nextjs, vercel"
 ---
 

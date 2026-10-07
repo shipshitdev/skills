@@ -1,6 +1,6 @@
 {
   "name": "pstack",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Playbook orchestrator for verified, unslopped engineering work.",
   "author": {
     "name": "Ship Shit Dev",

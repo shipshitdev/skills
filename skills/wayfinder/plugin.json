@@ -1,6 +1,6 @@
 {
   "name": "wayfinder",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Chart a foggy multi-session effort as a map of decision tickets and resolve them one at a time.",
   "author": {
     "name": "Ship Shit Dev",

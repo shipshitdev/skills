@@ -1,6 +1,6 @@
 {
   "name": "agent-architecture-audit",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Audit agent stack failures across prompts, memory, tools, wrappers, and rendering.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "nestjs-queue-architect",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Queue job management patterns, processors, and async workflows for video/image processing",
   "author": {
     "name": "Ship Shit Dev",

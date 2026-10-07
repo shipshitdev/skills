@@ -4,7 +4,7 @@ description: "Summarizes personal git activity by default, all authors' integrat
 argument-hint: "[all] [24|7d|today|yesterday|since <ref|date>|from <date> to <date>] [audit] [--author <email>] [--all-repos <dir>] [--branch <name>] [--scope <path>] [--timezone <IANA-zone>]"
 compatibility: Requires git; host access enriches PR/integration evidence. All-author modes require the installed weekly-review shared history procedure; audit also requires code-review and full-code-review.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "git, standup, recap, weekly-review, activity, reporting, personal, audit"
 allowed-tools: Bash(git *) Bash(gh *)
 disable-model-invocation: true

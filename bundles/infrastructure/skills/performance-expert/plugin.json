@@ -1,6 +1,6 @@
 {
   "name": "performance-expert",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Backend, database, and infrastructure performance: queries, caching, jobs, delivery.",
   "author": {
     "name": "Ship Shit Dev",

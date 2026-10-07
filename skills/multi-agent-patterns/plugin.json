@@ -1,6 +1,6 @@
 {
   "name": "multi-agent-patterns",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Design multi-agent architectures for complex tasks. Use when single-agent context limits are exceede",
   "author": {
     "name": "Ship Shit Dev",

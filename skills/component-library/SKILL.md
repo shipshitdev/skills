@@ -2,7 +2,7 @@
 name: component-library
 description: "Guides React/Next.js component architecture for monorepos: naming, reuse, shared patterns. Use when creating or refactoring UI components or reviewing component structure."
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "react, nextjs, components, design-system, typescript, performance, patterns"
 when_to_use: "props, reusable components"
 ---

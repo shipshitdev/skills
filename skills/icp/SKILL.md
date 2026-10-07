@@ -4,7 +4,7 @@ description: Documents a product's Ideal Customer Profile as .agents/memory/icp.
 user-invocable: true
 argument-hint: "[product or repo]"
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "icp, customer, product, revenue, discovery, positioning"
   author: Ship Shit Dev
 when_to_use: "who is our customer, who are we selling to"

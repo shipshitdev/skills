@@ -4,7 +4,7 @@ description: Ask which Dev Loop skill or flow fits the current situation. A rout
 user-invocable: false
 license: MIT
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "dev-loop, router, planning, dispatch"
   author: Ship Shit Dev
 when_to_use: "which skill, what should I run, ask-dev-loop, how do I start, idea to ship, which flow"

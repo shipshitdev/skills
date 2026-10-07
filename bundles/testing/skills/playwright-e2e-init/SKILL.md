@@ -2,7 +2,7 @@
 name: playwright-e2e-init
 description: "Initializes Playwright end-to-end testing for Next.js/React projects: config, example tests, Bun scripts, CI integration. Use when adding E2E tests to a frontend project."
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "playwright, e2e, testing"
 when_to_use: "playwright.config, e2e folder, browser tests"
 ---

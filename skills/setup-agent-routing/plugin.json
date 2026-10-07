@@ -1,6 +1,6 @@
 {
   "name": "setup-agent-routing",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Configure tracker and domain routing docs around the shared prepared-delivery contracts.",
   "author": {
     "name": "Ship Shit Dev",

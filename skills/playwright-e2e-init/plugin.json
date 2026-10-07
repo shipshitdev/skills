@@ -1,6 +1,6 @@
 {
   "name": "playwright-e2e-init",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Initialize Playwright end-to-end testing for Next.js and React projects. Sets up configuration, crea",
   "author": {
     "name": "Ship Shit Dev",
