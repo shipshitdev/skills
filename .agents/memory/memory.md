@@ -7,7 +7,7 @@ last_verified: 2026-08-14
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **168 skills · 24 commands · 13 bundles · 181 plugins**.
+Generated catalog: **169 skills · 24 commands · 13 bundles · 182 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,13 +26,23 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 168 | `skills/*/SKILL.md` |
+| Skills | 169 | `skills/*/SKILL.md` |
 | Commands | 24 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 181 | skills + bundles |
+| Plugins | 182 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
+
+### Project session coordination (2026-10-07)
+
+`orchestrate` is the user-invoked project-session coordinator. Bare/run enrolls
+existing project chats with an announcement/report protocol; status/plan is
+read-only; explicit watch uses a thread heartbeat where supported. Human questions
+live in one decision queue with source-session context, deduplication, answer
+relay and restart receipts. New sessions need a human request. The same-named
+skill owns `/orchestrate`; no shadowed command file or deprecated Codex prompt.
+Pstack's multi-PR playbook and `swarm`'s worker fan-out retain separate contracts.
 
 ### Single-Source Skills (2026-02-04)
 

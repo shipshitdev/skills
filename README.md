@@ -5,9 +5,9 @@
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
 <!-- catalog-summary:start -->
-168 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
+169 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
 
-Catalog: **168 skills · 24 commands · 13 bundles · 181 plugins**.
+Catalog: **169 skills · 24 commands · 13 bundles · 182 plugins**.
 <!-- catalog-summary:end -->
 
 Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
@@ -19,7 +19,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 |---|---|---|
 | `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
 | `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 181 generated plugins |
+| `.claude-plugin/` | Generated Claude marketplace catalog | 182 generated plugins |
 | `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
 | `.github/` | Issue templates and GitHub Actions workflows | Tracked |
 | `.husky/` | Git hook configuration | Tracked |
@@ -31,7 +31,7 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
 | `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 168 canonical skills |
+| `skills/` | Canonical public Agent Skills sources | 169 canonical skills |
 | `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
 <!-- catalog-layout:end -->
 
@@ -238,7 +238,7 @@ or another Agent Skills-compatible harness.
 
 - `/qa` = `/test qa` and `/deslop` = `/refactor deslop` — the two most-used
   modes keep their own top-level spelling on purpose.
-- `/bug`, `/deslop`, `/release`, `/standup`, `/wait-what`, and `/weekly-review`
+- `/bug`, `/deslop`, `/orchestrate`, `/release`, `/standup`, `/wait-what`, and `/weekly-review`
   are skills, not command files: a skill with the same name owns the slash name,
   so a command file would be shadowed.
 - `/address`, `/suggest`, and `/fix-ci` are three distinct jobs in the same PR
@@ -249,6 +249,15 @@ or another Agent Skills-compatible harness.
 - `/performance` and `/tests` were retired: performance analysis lives at
   `/refactor perf`, and every `/tests <scope>` spelling is now
   `/test run <scope>`.
+
+### Project session coordination
+
+Run `/orchestrate` in the project's coordinator to announce coordination to existing
+sessions, collect reports, relay instructions and ask shared questions once with
+session context. Use `status` for a read-only snapshot, `plan <goal>` for a battle
+plan, `run <goal>` for execution coordination and `watch <goal>` for background
+follow-up through a supported thread heartbeat. See
+[session coordination](docs/skills/orchestrate.md) for scope and harness limits.
 
 ### Weekly engineering review
 
@@ -272,7 +281,7 @@ Plain `deslop` is the Shipshit adaptation. `pstack:deslop` is a separate upstrea
 plugin skill, not an alias.
 
 <!-- catalog-skills-heading:start -->
-## Skills (168)
+## Skills (169)
 <!-- catalog-skills-heading:end -->
 
 ### Dev Loop (15)
@@ -323,9 +332,9 @@ plugin skill, not an alias.
 
 `stripe-implementer`
 
-### Session Management (5)
+### Session Management (7)
 
-`agent-folder-init`, `executing-plans`, `setup-agent-routing`, `wait-what`, `workspace-performance-audit`
+`agent-folder-init`, `executing-plans`, `orchestrate`, `setup-agent-routing`, `wait-what`, `workspace-performance-audit`, `handoff`
 
 ## How Skills Adapt to Projects
 

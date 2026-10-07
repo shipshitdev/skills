@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ship Shit Dev"
   },
-  "description": "168 AI agent skills for development workflows",
+  "description": "169 AI agent skills for development workflows",
   "plugins": [
     {
       "name": "shipshitdev-testing",
@@ -610,6 +610,12 @@
       "source": "./skills/open-source-checker",
       "version": "2.2.3",
       "description": "Audits a private repo once before it goes public: license, secrets in git history, private references, publish readiness. Returns a publish or block verdict."
+    },
+    {
+      "name": "orchestrate",
+      "source": "./skills/orchestrate",
+      "version": "2.2.3",
+      "description": "Coordinates all existing project sessions from one session, collects reports, routes questions once, and follows issues and PRs through delivery. User-invoked."
     },
     {
       "name": "package-architect",

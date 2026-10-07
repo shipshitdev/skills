@@ -74,6 +74,7 @@ show-me-your-work
 no-comments
 arena
 swarm
+orchestrate
 "
 
 skill_exists() {

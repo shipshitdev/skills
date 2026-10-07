@@ -13,6 +13,7 @@ Session management and documentation
 
 - `agent-folder-init`
 - `executing-plans`
+- `orchestrate`
 - `setup-agent-routing`
 - `wait-what`
 - `workspace-performance-audit`

@@ -1,0 +1,12 @@
+{
+  "name": "orchestrate",
+  "version": "2.2.3",
+  "description": "Coordinate project sessions, collect reports and route human decisions once",
+  "author": {
+    "name": "Ship Shit Dev",
+    "email": "hello@shipshit.dev",
+    "url": "https://shipshit.dev"
+  },
+  "license": "MIT",
+  "skills": "."
+}
