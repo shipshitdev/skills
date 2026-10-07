@@ -2,7 +2,7 @@
 name: receiving-code-review
 description: "Evaluates incoming review feedback technically before changing code: verifies each point, pushes back when wrong, avoids empty agreement. Use when you receive a review."
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   source: https://github.com/obra/superpowers/blob/main/skills/receiving-code-review/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main

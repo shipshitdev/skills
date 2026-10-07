@@ -4,7 +4,7 @@ description: Writes a handoff document so a fresh agent session can continue the
 disable-model-invocation: true
 license: MIT
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "handoff, context, session, continuity"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/productivity/handoff/SKILL.md

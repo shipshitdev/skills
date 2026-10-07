@@ -1,6 +1,6 @@
 {
   "name": "wizard",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Generate a bash wizard for human-only setup steps, secrets, and cutovers.",
   "author": {
     "name": "Ship Shit Dev",

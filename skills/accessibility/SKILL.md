@@ -2,7 +2,7 @@
 name: accessibility
 description: Applies WCAG 2.1 AA to web UI and fixes failures. Use when building or reviewing components for a11y, ARIA, keyboard navigation, focus traps, or contrast.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "accessibility, a11y, wcag, aria, keyboard-navigation, screen-reader, inclusive-design"
 when_to_use: "screen readers, semantic HTML"
 ---

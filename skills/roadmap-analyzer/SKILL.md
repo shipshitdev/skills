@@ -4,7 +4,7 @@ description: Turns the ICP in .agents/memory/icp.md into a revenue-ranked roadma
 user-invocable: true
 argument-hint: "[product or focus area]"
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "roadmap, product, revenue, mrr, prioritization, icp"
   author: Ship Shit Dev
 when_to_use: "what to build next, blocking revenue, plan toward MRR"

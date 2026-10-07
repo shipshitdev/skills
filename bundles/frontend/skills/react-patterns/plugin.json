@@ -1,6 +1,6 @@
 {
   "name": "react-patterns",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Modern React patterns and principles. Hooks, composition, performance, TypeScript best practices.",
   "author": {
     "name": "Ship Shit Dev",

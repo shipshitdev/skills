@@ -1,6 +1,6 @@
 {
   "name": "memory-systems",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Design and implement memory architectures for agent systems. Use when building agents that need to p",
   "author": {
     "name": "Ship Shit Dev",

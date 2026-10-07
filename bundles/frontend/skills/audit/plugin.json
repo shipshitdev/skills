@@ -1,6 +1,6 @@
 {
   "name": "audit",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Sweep frontend code across five technical dimensions and score it into one P0-P3 report.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "prd-task-creator",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Publishes prepared requirements and implementation plans as one complete feature issue, with inde...",
   "author": {
     "name": "Ship Shit Dev",

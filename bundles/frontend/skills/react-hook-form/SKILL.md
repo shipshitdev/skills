@@ -2,7 +2,7 @@
 name: react-hook-form
 description: Applies 41 performance rules for React Hook Form — useForm, useWatch, useController, useFieldArray, Controller. Use when writing RHF forms or fixing re-renders. Client-side only.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "react, forms, performance"
 when_to_use: "RHF, form re-renders, field arrays"
 ---

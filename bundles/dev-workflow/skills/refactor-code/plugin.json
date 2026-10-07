@@ -1,6 +1,6 @@
 {
   "name": "refactor-code",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Systematic approach to safely refactoring code with tests",
   "author": {
     "name": "Ship Shit Dev",

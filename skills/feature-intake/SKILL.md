@@ -4,7 +4,7 @@ description: Turns a rough request into one execution-ready issue via the shared
 compatibility: Requires GitHub CLI gh for GitHub issue and project-board operations.
 allowed-tools: Bash(gh *) Bash(git *)
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "feature-intake, prd, github, kanban, requirements, ears"
   author: Ship Shit Dev
 when_to_use: "write this as a PRD, push to GitHub board, /feature"

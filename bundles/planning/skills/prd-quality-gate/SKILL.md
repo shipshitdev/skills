@@ -2,7 +2,7 @@
 name: prd-quality-gate
 description: Validates draft requirements and blocks execution until the issue holds a complete, current implementation contract. Use when checking a PRD or plan for execution readiness.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "prd, planning, validation, quality-gate, spec, requirements, ears"
 when_to_use: "draft-lint, execution-readiness, is this issue ready"
 user-invocable: false

@@ -7,7 +7,7 @@ metadata:
   category: framework
   risk: critical
   date_added: '2026-02-27'
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "typescript, javascript, tooling"
 when_to_use: "type performance, monorepo config, satisfies, branded types, remove as casts"
 ---

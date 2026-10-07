@@ -1,6 +1,6 @@
 {
   "name": "setup-pstack",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Configure canonical Pstack adapters while preserving harness roles and authorization.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "security-audit",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Run a self-contained security audit workflow for web applications and APIs, covering scoping, reconn",
   "author": {
     "name": "Ship Shit Dev",

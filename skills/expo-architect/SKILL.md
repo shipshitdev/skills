@@ -2,7 +2,7 @@
 name: expo-architect
 description: Scaffolds a runnable Expo React Native app with screens, Expo Router navigation, and optional Better Auth. Use when starting a new Expo or mobile app.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "expo, react-native, mobile, scaffold, better-auth"
 when_to_use: "NativeWind, mobile app scaffold"
 ---

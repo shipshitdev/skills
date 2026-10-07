@@ -1,6 +1,6 @@
 {
   "name": "swarm",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Fan out N workers and return one coverage or race report.",
   "author": {
     "name": "Ship Shit Dev",

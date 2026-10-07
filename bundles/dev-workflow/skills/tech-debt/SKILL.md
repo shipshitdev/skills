@@ -5,7 +5,7 @@ user-invocable: true
 argument-hint: "[directory, or 'issues' to file]"
 compatibility: Requires git; gh to file issues; optional bun/npm audit for dependency debt.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "tech-debt, refactor, prioritization, code-quality, maintenance"
   author: Ship Shit Dev
 when_to_use: "debt register, debt backlog, /refactor debt"

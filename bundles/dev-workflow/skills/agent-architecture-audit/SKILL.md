@@ -2,7 +2,7 @@
 name: agent-architecture-audit
 description: Audits LLM agent apps for wrapper regressions, prompt or memory contamination, tool misuse, and hidden retry loops. Use when an agent fails in-product but works as a direct call.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "agents, llm, architecture, audit, debugging"
 when_to_use: "before shipping agent features"
 ---

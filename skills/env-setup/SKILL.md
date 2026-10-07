@@ -2,7 +2,7 @@
 name: env-setup
 description: Finds the env vars a codebase reads, generates .env.example, validates .env, and checks .gitignore covers secrets. Use for /env or environment configuration setup.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "environment, dotenv, secrets, configuration, scaffolding, validation"
   author: Ship Shit Dev
 when_to_use: "missing env var, secrets in git, env template"

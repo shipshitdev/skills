@@ -4,7 +4,7 @@ description: "Cuts a release from a green trunk: proves checks on the trunk SHA,
 argument-hint: "[gates|notes|cut [patch|minor|major|vX.Y.Z]]"
 compatibility: Requires git, GitHub CLI gh, and jq access to the target repository.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "git, github, release, tag, semver, changelog, patch-notes, trunk-based, ci-cd, quality-gates"
 allowed-tools: Bash(git *) Bash(gh *) Bash(jq *)
 when_to_use: "/release, tag a release, is master green, release notes, app store notes"

@@ -2,7 +2,7 @@
 name: design-consistency-auditor
 description: "Hunts design-token drift in frontends: hardcoded colors, off-scale spacing, one-off classes duplicating components. Use when auditing styling consistency or design debt."
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "design, ux, ui, consistency, design-tokens, design-debt, tailwind"
 when_to_use: "hardcoded hex, palette usage"
 ---

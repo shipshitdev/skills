@@ -2,7 +2,7 @@
 name: finishing-a-development-branch
 description: Finishes an implementation branch through authorized PR publication and verified delivery gates, or preserves/discards it when explicitly requested. Use when coding is complete and the branch needs integration or a delivery status.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   source: https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main

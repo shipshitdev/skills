@@ -1,6 +1,6 @@
 {
   "name": "tool-design",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Design tools that agents can use effectively, including when to reduce tool complexity. Use when cre",
   "author": {
     "name": "Ship Shit Dev",

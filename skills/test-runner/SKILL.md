@@ -3,7 +3,7 @@ name: test-runner
 description: Runs tests at the right scope (changed, focused, full, type-check, e2e) in Bun repos and reports failures with evidence; repairs only if authorized. Use for /test run.
 compatibility: Requires a Bun-managed JavaScript/TypeScript project with Vitest, Bun test, or Playwright.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "testing, vitest, playwright, e2e, smoke, type-check, ci, scoped-tests"
 allowed-tools: Bash(bun *) Bash(bunx *) Bash(git *)
 when_to_use: "smoke tests, build compiles"

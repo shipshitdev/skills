@@ -2,7 +2,7 @@
 name: error-handling-expert
 description: Designs error handling, exception filters, error responses, logging, and recovery for React, Next.js, and NestJS. Use when implementing or reviewing error flows.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "errors, reliability, architecture"
 when_to_use: "error boundaries, retry logic"
 ---

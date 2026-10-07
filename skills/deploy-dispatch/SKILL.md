@@ -2,7 +2,7 @@
 name: deploy-dispatch
 description: Router behind /deploy. Parses app, compose, ec2, monitor, or devcontainer and delegates to the matching deployment engine without adding logic of its own.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "deployment, dispatcher, infra, ec2, docker, devops, orchestration"
   author: Ship Shit Dev
 when_to_use: "/deploy, deploy the app, compose a deploy workflow, EC2 deploy setup, monitoring setup, devcontainer"

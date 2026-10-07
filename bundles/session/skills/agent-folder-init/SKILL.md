@@ -2,7 +2,7 @@
 name: agent-folder-init
 description: "Adds or repairs .agents/ project context in an existing repo: docs, session tracking, tasks, coding standards. Not for scaffolding a new product."
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "agents, setup, documentation"
 ---
 

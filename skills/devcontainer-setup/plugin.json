@@ -1,6 +1,6 @@
 {
   "name": "devcontainer-setup",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Set up a .devcontainer for VS Code with Docker, Claude Code CLI support, and configurable options. U",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "pr-comments",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Read a PR's review threads into a severity-tagged, priority-ordered, read-only digest.",
   "author": {
     "name": "Ship Shit Dev",

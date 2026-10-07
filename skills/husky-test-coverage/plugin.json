@@ -1,6 +1,6 @@
 {
   "name": "husky-test-coverage",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Set up or verify Husky git hooks to ensure all tests run and coverage stays above 80% (configurable)",
   "author": {
     "name": "Ship Shit Dev",

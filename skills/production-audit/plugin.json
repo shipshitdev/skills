@@ -1,6 +1,6 @@
 {
   "name": "production-audit",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Audit app readiness for launch using local release, CI, config, and runtime evidence.",
   "author": {
     "name": "Ship Shit Dev",

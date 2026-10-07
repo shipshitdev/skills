@@ -2,7 +2,7 @@
 name: stripe-implementer
 description: Implements Stripe payments, subscriptions, webhooks and customer management in Next.js and NestJS. Use for checkout, payment intents, billing, Stripe Connect.
 metadata:
-  version: "2.2.3"
+  version: "2.2.4"
   tags: "stripe, payments, subscriptions"
 when_to_use: "stripe webhook, subscription billing"
 ---
