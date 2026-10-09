@@ -93,6 +93,9 @@ export function createReader(run = ghJson) {
     let termination = 'exhausted';
     let previousDate = Number.POSITIVE_INFINITY;
     let ordered = true;
+    let orderAnomalies = 0;
+    let invalidDates = false;
+    let idsIntact = true;
     const ids = new Set();
     do {
       page ??= fetch(after);
@@ -103,12 +106,17 @@ export function createReader(run = ghJson) {
       if (window) {
         for (const node of page.nodes.filter(Boolean)) {
           const date = Date.parse(node[window.field]);
-          if (!Number.isFinite(date) || date > previousDate) {
+          if (!Number.isFinite(date)) {
             ordered = false;
-            warn(`${name}: invalid or unordered ${window.field}; window boundary cannot establish completeness.`);
+            invalidDates = true;
+          } else {
+            if (date > previousDate) {
+              ordered = false;
+              orderAnomalies += 1;
+            }
+            previousDate = date;
           }
-          previousDate = date;
-          if (!node.id || ids.has(node.id)) warn(`${name}: duplicate or missing activity ID; collection changed or is incomplete.`);
+          if (!node.id || ids.has(node.id)) idsIntact = false;
           ids.add(node.id);
         }
       }
@@ -122,12 +130,20 @@ export function createReader(run = ghJson) {
       cursors.add(after);
       page = null;
     } while (true);
-    if (termination === 'exhausted' && page.totalCount !== undefined && nodes.length !== page.totalCount) {
+    const countMatches = page.totalCount !== undefined && nodes.length === page.totalCount;
+    if (termination === 'exhausted' && page.totalCount !== undefined && !countMatches) {
       warn(`${name}: fetched ${nodes.length}, expected ${page.totalCount}; changed during collection or inaccessible nodes.`);
+    }
+    if (invalidDates) warn(`${name}: invalid ${window.field}; window boundary cannot establish completeness.`);
+    if (!idsIntact) warn(`${name}: duplicate or missing activity ID; collection changed or is incomplete.`);
+    // Unordered pages disable the early stop, so an exhausted read whose IDs
+    // match the reported total is complete; the anomaly stays as metadata.
+    if (orderAnomalies && !(termination === 'exhausted' && countMatches && idsIntact && !invalidDates)) {
+      warn(`${name}: unordered ${window.field}; window boundary cannot establish completeness.`);
     }
     coverage.connections.push({ name, fetched: nodes.length, total: page.totalCount, pages,
       termination, ...(window ? { scope: 'activity_window', orderedBy: window.field,
-        since: new Date(window.since).toISOString() } : {}) });
+        since: new Date(window.since).toISOString(), orderAnomalies } : {}) });
     return nodes;
   };
   const nodeConnection = (id, type, field, selection, extra = '', initial) =>
@@ -335,7 +351,7 @@ export function renderReport(report) {
     ...report.activityCounts.map((entry) => `${entry.repo}: ${JSON.stringify(entry.counts)}`),
     `Collections: ${report.coverage.connections.length}; pages: ${report.coverage.connections.reduce((sum, entry) => sum + entry.pages, 0)}; deliberate activity-window stops: ${report.coverage.connections.filter((entry) => entry.termination === 'window_boundary').length}`,
     ...report.coverage.connections.filter((entry) => entry.scope === 'activity_window').map((entry) =>
-      `Fetched ${entry.name}: ${entry.fetched} of ${entry.total ?? 'unknown'} historical items; ${entry.pages} page(s); ${entry.termination}; since ${entry.since}`),
+      `Fetched ${entry.name}: ${entry.fetched} of ${entry.total ?? 'unknown'} historical items; ${entry.pages} page(s); ${entry.termination}; since ${entry.since}${entry.orderAnomalies ? `; ${entry.orderAnomalies} ordering anomaly(ies), read exhaustively` : ''}`),
   ];
   for (const [name, rows] of Object.entries(report.findings)) {
     lines.push(`\n${name}: ${rows.length}`);

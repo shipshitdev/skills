@@ -43,8 +43,12 @@ recently is scanned but excluded from recent delivery.
 JSON records every connection's counts, historical total, scope, and termination
 (`exhausted` or deliberate `window_boundary`). Console output summarizes
 collections/pages and shows activity boundaries; it does not print a line for
-every nested field read. Invalid ordering, duplicate activity IDs, and other
-coverage gaps invalidate trust. Milestones and focus lists remain paginated.
+every nested field read. An out-of-order activity date disables the early stop,
+so the scan reads the whole collection; when it exhausts with every ID unique and
+the fetched count equal to the reported total, the anomaly is recorded as
+`orderAnomalies` without invalidating trust. Otherwise unordered dates, invalid
+dates, duplicate or missing activity IDs, and other coverage gaps invalidate
+trust. Milestones and focus lists remain paginated.
 Archived cards provide membership evidence; their historical lanes and metadata
 are not current hygiene targets. Missing content is an inaccessible item, not a
 draft. Removed/deleted membership history is unavailable.
