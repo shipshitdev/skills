@@ -2,7 +2,7 @@
 name: agent-config-audit
 description: Audits agent instruction files (AGENTS.md, CLAUDE.md, hooks, settings) across workspaces, report-only. Use when configs drift, rules duplicate, or files go stale.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "audit, claude-md, agents-md, config, documentation, maintenance"
 when_to_use: "stale cursorrules, sync agent configs"
 ---

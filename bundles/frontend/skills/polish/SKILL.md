@@ -4,7 +4,7 @@ description: Runs the final refinement pass on a finished feature — alignment,
 user-invocable: true
 argument-hint: "[target]"
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "polish, ui, quality"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/polish.md
   upstream_version: skill-v4.5.0

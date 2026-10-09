@@ -2,7 +2,7 @@
 name: structural-review
 description: "Reviews a PR diff for structure and maintainability: file size, abstractions, layering, types, stack hygiene. Report-only. Not for correctness bugs."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "code-quality, maintainability, architecture, refactoring, structural"
   author: Ship Shit Dev
 when_to_use: "maintainability review, code judo, simplify this PR"

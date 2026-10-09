@@ -2,7 +2,7 @@
 name: skill-dispatch
 description: Router behind /skill. Parses create, capture, comply, or scout and delegates to the matching skill-authoring engine without adding logic of its own.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "skills, dispatcher, authoring, compliance, orchestration"
   author: Ship Shit Dev
 when_to_use: "/skill, create a skill, capture this as a skill, test skill compliance, scout for an existing skill"

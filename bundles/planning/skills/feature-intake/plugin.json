@@ -1,6 +1,6 @@
 {
   "name": "feature-intake",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Coordinates a rough request into one complete, execution-ready issue by composing the shared requ...",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: deploy-app
 description: Runs deployment workflows for web apps to staging or production. Use when the user says deploy, push to staging, ship it, or go live. Version or tag cuts are release.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "deployment, devops, ci-cd, production, staging"
 ---
 

@@ -4,7 +4,7 @@ description: Applies modern React patterns — hooks, composition, performance, 
 metadata:
   risk: safe
   date_added: '2026-02-27'
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "react, patterns, frontend"
 when_to_use: "custom hook, composition, server vs client component"
 ---

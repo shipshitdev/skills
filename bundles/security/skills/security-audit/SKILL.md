@@ -2,7 +2,7 @@
 name: security-audit
 description: "Runs a scoped security audit of a web app or API: recon, manual testing, auth and injection review, hardening, report. Use before release or when probing auth and input validation."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "security, audit, web, api, hardening"
 when_to_use: "pentest, vulnerability assessment"
 ---

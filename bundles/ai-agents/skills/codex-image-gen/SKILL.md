@@ -4,7 +4,7 @@ description: Generates raster images (icons, illustrations, textures) via the lo
 license: MIT
 compatibility: Requires the `codex` CLI (logged in) plus `python3` and `base64`; `sips` is optional for post-processing on macOS.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "codex, image-generation, gpt-image, cli, assets, app-icon"
 when_to_use: "app icon, codex image generation"
 ---

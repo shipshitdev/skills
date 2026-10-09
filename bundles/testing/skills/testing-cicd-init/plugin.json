@@ -1,6 +1,6 @@
 {
   "name": "testing-cicd-init",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Add Vitest testing infrastructure and GitHub Actions CI/CD to any TypeScript project. Supports Next.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "handoff",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Write a handoff document so a fresh agent session can continue the work.",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: tool-design
 description: "Designs agent-facing tools: descriptions, schemas, responses, errors, naming, and consolidating overlapping tool sets. Use when creating tools or when agents pick the wrong one."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/tool-design/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main
