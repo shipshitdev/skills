@@ -1,6 +1,6 @@
 {
   "name": "qa-loop",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Run localhost QA, monitor runtime errors, and commit each verified fix.",
   "author": {
     "name": "Ship Shit Dev",

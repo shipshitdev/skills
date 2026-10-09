@@ -1,6 +1,6 @@
 {
   "name": "orchestrate",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Coordinate project sessions, collect reports and route human decisions once",
   "author": {
     "name": "Ship Shit Dev",

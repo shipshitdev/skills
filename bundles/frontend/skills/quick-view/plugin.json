@@ -1,6 +1,6 @@
 {
   "name": "quick-view",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Generate minimal HTML pages to review Claude Code output in a browser. Use when terminal output is h",
   "author": {
     "name": "Ship Shit Dev",

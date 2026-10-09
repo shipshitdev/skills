@@ -4,7 +4,7 @@ description: File a GitHub issue of type Bug from a description — structures a
 argument-hint: "[draft] [description]"
 compatibility: Requires git and GitHub CLI gh access to the target repository.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "github, issue, bug, report, gh, triage"
 allowed-tools: Bash(gh *) Bash(git *)
 disable-model-invocation: true

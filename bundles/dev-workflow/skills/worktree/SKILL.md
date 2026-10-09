@@ -3,7 +3,7 @@ name: worktree
 description: Creates an isolated git worktree from the right base branch (current feature branch, else trunk), gitignored. Use for parallel or isolated workspaces and multi-agent runs.
 compatibility: Requires git 2.5+ (worktree support).
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "git, worktree, branch, isolation, parallel, workspace"
   author: Ship Shit Dev
 allowed-tools: Bash(git *)

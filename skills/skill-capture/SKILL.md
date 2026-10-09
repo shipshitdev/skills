@@ -2,7 +2,7 @@
 name: skill-capture
 description: Turns workflows and hard-won knowledge from a conversation into reusable SKILL.md files. Use when asked to save something as a skill, or after a complex procedure succeeds.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "skills, capture, automation, knowledge-management"
 when_to_use: "make this reusable, save this pattern"
 ---

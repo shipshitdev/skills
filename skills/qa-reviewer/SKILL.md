@@ -2,7 +2,7 @@
 name: qa-reviewer
 description: Runs a multi-phase verification pass on finished AI agent work to catch bugs, missed requirements, and bad assumptions. Use after long multi-step tasks or on check your work.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "quality-assurance, verification, code-review, accuracy, completeness"
 when_to_use: "check your work, verify before commit"
 ---

@@ -2,7 +2,7 @@
 name: context-optimization
 description: "Improves context efficiency and diagnoses context degradation: budgets, masking, KV-cache, partitioning, lost-in-middle, poisoning. Use when token cost or context quality constrains a task."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/blob/main/skills/context-optimization/SKILL.md
   upstream_repo: muratcankoylan/Agent-Skills-for-Context-Engineering
   upstream_ref: main

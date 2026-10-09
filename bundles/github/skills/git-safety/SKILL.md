@@ -2,7 +2,7 @@
 name: git-safety
 description: "Guards daily git work: blocks staged secrets, gates destructive git commands, installs pre-commit hooks, drives leak response. Use before commits, pushes, or history rewrites."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "git, security, secrets, pre-commit"
 when_to_use: "staged secret, force push, reset --hard, filter-repo, BFG"
 ---

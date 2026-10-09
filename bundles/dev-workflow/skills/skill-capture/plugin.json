@@ -1,6 +1,6 @@
 {
   "name": "skill-capture",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Extract reusable workflows and patterns from sessions into skill files.",
   "author": {
     "name": "Ship Shit Dev",

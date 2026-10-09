@@ -4,7 +4,7 @@ description: Charts a foggy effort too big for one session as a map issue of dec
 disable-model-invocation: true
 license: MIT
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "planning, decisions, map, multi-session, fog-of-war"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/wayfinder/SKILL.md

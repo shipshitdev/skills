@@ -6,7 +6,7 @@ argument-hint: "[status|plan|run|watch] [goal or session references]"
 compatibility: Requires harness-provided session discovery, reading and messaging; background monitoring requires a thread scheduler.
 license: MIT
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "orchestration, sessions, reports, questions, delivery"
   author: Ship Shit Dev
 ---

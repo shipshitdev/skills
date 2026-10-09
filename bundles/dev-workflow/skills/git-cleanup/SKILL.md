@@ -3,7 +3,7 @@ name: git-cleanup
 description: Audits candidate code and intent against current trunk, then plans or removes only proven-safe or merged branches and worktrees. Defaults to a read-only cleanup plan.
 compatibility: Requires Python 3.9+, git with patch-id --verbatim, authenticated GitHub CLI gh.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "git, cleanup, branches, worktrees, prune, ci-cd, squash-merge, trunk-based"
 disable-model-invocation: true
 ---

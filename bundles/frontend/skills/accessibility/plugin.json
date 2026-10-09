@@ -1,6 +1,6 @@
 {
   "name": "accessibility",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Apply WCAG 2.1 AA to web UI work and fix what fails, from ARIA to keyboard access.",
   "author": {
     "name": "Ship Shit Dev",

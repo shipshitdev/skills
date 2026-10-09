@@ -2,7 +2,7 @@
 name: verification-before-completion
 description: Blocks done, fixed or passing claims until the verification command has run fresh and its full output was read. Use before claiming completion, committing, pushing or opening a PR.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main

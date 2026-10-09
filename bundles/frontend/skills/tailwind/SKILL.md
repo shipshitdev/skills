@@ -2,7 +2,7 @@
 name: tailwind
 description: "Applies Tailwind CSS v4 best practices when writing, reviewing or refactoring styles: @theme, build config, responsive, dark mode, container queries, CSS size and performance."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/pproenca/dot-skills/blob/master/skills/.curated/tailwind/SKILL.md
   upstream_repo: pproenca/dot-skills
   upstream_ref: master

@@ -58,5 +58,5 @@
     "pstack:candidate": "python3 scripts/pstack-sync.py candidate",
     "version:sync": "bun scripts/sync-skill-versions.js"
   },
-  "version": "2.2.4"
+  "version": "2.2.5"
 }

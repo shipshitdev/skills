@@ -1,6 +1,6 @@
 {
   "name": "github-review-suggestions",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Review GitHub PRs and post precise inline suggested changes with safe GitHub suggestion blocks.",
   "author": {
     "name": "Ship Shit Dev",
