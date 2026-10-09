@@ -261,8 +261,9 @@ test('window boundary is inclusive and untrustworthy ordering prevents an early 
     return {nodes:[{id:'d',createdAt:RECENT}],totalCount:4,pageInfo:{hasNextPage:false}};
   },undefined,{field:'createdAt',since});
   assert.equal(secondRead,true);
-  assert.equal(unordered.coverage.complete,false);
+  assert.equal(unordered.coverage.complete,true, 'exhaustive read with matching total stays complete');
   assert.equal(unordered.coverage.connections[0].termination,'exhausted');
+  assert.equal(unordered.coverage.connections[0].orderAnomalies,2);
 });
 
 test('status map needs its own value rather than consuming the following option', () => {
@@ -297,4 +298,47 @@ test('entrypoint detection survives a symlinked skill directory', () => {
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('activity ordering anomalies block trust only when the scan cannot prove a complete read', () => {
+  const since = NOW - 14 * 86400000;
+  const window = { field: 'updatedAt', since };
+  const scan = (pages, totalCount) => {
+    const reader = createReader();
+    reader.connection('activity', (after) => {
+      const index = Number(after ?? 0);
+      return { nodes: pages[index], totalCount,
+        pageInfo: { hasNextPage: index + 1 < pages.length, endCursor: String(index + 1) } };
+    }, undefined, window);
+    return reader.coverage;
+  };
+  const unordered = [[{ id: 'a', updatedAt: RECENT }, { id: 'b', updatedAt: OLD }, { id: 'c', updatedAt: RECENT }],
+    [{ id: 'd', updatedAt: OLD }, { id: 'e', updatedAt: RECENT }]];
+
+  const complete = scan(unordered, 5);
+  assert.equal(complete.complete, true, 'exhausted read with matching total is complete despite ordering');
+  assert.deepEqual(complete.warnings, []);
+  assert.equal(complete.connections[0].termination, 'exhausted');
+  assert.equal(complete.connections[0].orderAnomalies, 2);
+
+  const mismatch = scan(unordered, 6);
+  assert.equal(mismatch.complete, false);
+  assert.equal(mismatch.warnings.filter((warning) => /unordered updatedAt/.test(warning)).length, 1);
+  assert.ok(mismatch.warnings.some((warning) => /fetched 5, expected 6/.test(warning)));
+
+  const invalid = scan([[{ id: 'a', updatedAt: RECENT }, { id: 'b', updatedAt: 'not-a-date' },
+    { id: 'c', updatedAt: 'also-bad' }]], 3);
+  assert.equal(invalid.complete, false);
+  assert.deepEqual(invalid.warnings, ['activity: invalid updatedAt; window boundary cannot establish completeness.']);
+
+  const duplicate = scan([[{ id: 'a', updatedAt: OLD }, { id: 'b', updatedAt: RECENT }, { id: 'a', updatedAt: OLD }]], 3);
+  assert.equal(duplicate.complete, false);
+  assert.ok(duplicate.warnings.some((warning) => /unordered updatedAt/.test(warning)));
+
+  const ordered = scan([[{ id: 'a', updatedAt: RECENT }, { id: 'b', updatedAt: OLD }],
+    [{ id: 'c', updatedAt: OLD }]], 3);
+  assert.equal(ordered.complete, true);
+  assert.equal(ordered.connections[0].termination, 'window_boundary');
+  assert.equal(ordered.connections[0].fetched, 2);
+  assert.equal(ordered.connections[0].orderAnomalies, 0);
 });
