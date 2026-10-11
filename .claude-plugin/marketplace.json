@@ -1089,7 +1089,7 @@
       "name": "worktree",
       "source": "./skills/worktree",
       "version": "2.2.4",
-      "description": "Creates an isolated git worktree outside the repository, in the agent's worktree home, from the right base branch (feature branch, else trunk). Use for parallel or isolated workspaces and multi-agent runs."
+      "description": "Creates an isolated git worktree outside the repository, in the agent's worktree home, off the right base branch. Use for parallel or isolated workspaces and multi-agent runs."
     },
     {
       "name": "writing-plans",
