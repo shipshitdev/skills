@@ -1,6 +1,6 @@
 ---
 name: worktree
-description: Creates an isolated git worktree outside the repository, in the agent's shared worktree home, from the right base branch (feature branch, else trunk). Use for parallel or isolated workspaces and multi-agent runs.
+description: Creates an isolated git worktree outside the repository, in the agent's worktree home, from the right base branch (feature branch, else trunk). Use for parallel or isolated workspaces and multi-agent runs.
 compatibility: Requires git 2.5+ (worktree support).
 metadata:
   version: "2.2.4"
@@ -25,11 +25,11 @@ a user-level home. The layout is `<home>/<owner-repo>/<name>`.
 
 | Creator | Home |
 |---|---|
-| Claude Code | `~/.claude/worktrees` |
-| Codex | `~/.codex/worktrees` |
-| Grok | `~/.grok/worktrees` |
-| T3 Code | `~/.t3/worktrees` |
-| By hand / unknown | `~/worktrees` |
+| Claude Code | `$HOME/.claude/worktrees` |
+| Codex | `$HOME/.codex/worktrees` |
+| Grok | `$HOME/.grok/worktrees` |
+| T3 Code | `$HOME/.t3/worktrees` |
+| By hand / unknown | `$HOME/worktrees` |
 
 - `GIT_WT_HOME` overrides the home when set.
 - `<owner-repo>` comes from the `origin` remote (`owner/repo` becomes
