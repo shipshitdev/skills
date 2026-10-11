@@ -1,6 +1,6 @@
 ---
 name: worktree
-description: Creates an isolated git worktree from the right base branch (current feature branch, else trunk), gitignored. Use for parallel or isolated workspaces and multi-agent runs.
+description: Creates an isolated git worktree outside the repository, in the agent's shared worktree home, from the right base branch (feature branch, else trunk). Use for parallel or isolated workspaces and multi-agent runs.
 compatibility: Requires git 2.5+ (worktree support).
 metadata:
   version: "2.2.4"
@@ -12,10 +12,35 @@ when_to_use: "branch off current work, sibling checkout"
 
 # Worktree
 
-Create a git worktree off the **right base branch**, in a clean gitignored
-directory, with the safety checks that keep the main checkout and `.gitignore`
-correct. This skill only **creates** and **lists** worktrees. Removing and
-pruning merged worktrees is `git-cleanup`'s job (`/cleanup`) — do not delete here.
+Create a git worktree off the **right base branch**, in a directory **outside
+the repository**, with the safety checks that keep the main checkout and its
+branches correct. Worktrees never live inside a repository. This skill only
+**creates** and **lists** worktrees. Removing and pruning merged worktrees is
+`git-cleanup`'s job (`/cleanup`) — do not delete here.
+
+## Worktree Home
+
+Each agent keeps one shared home for all of its accounts; manual worktrees use
+a user-level home. The layout is `<home>/<owner-repo>/<name>`.
+
+| Creator | Home |
+|---|---|
+| Claude Code | `~/.claude/worktrees` |
+| Codex | `~/.codex/worktrees` |
+| Grok | `~/.grok/worktrees` |
+| T3 Code | `~/.t3/worktrees` |
+| By hand / unknown | `~/worktrees` |
+
+- `GIT_WT_HOME` overrides the home when set.
+- `<owner-repo>` comes from the `origin` remote (`owner/repo` becomes
+  `owner-repo`), lowercased — not from the checkout directory name, which is
+  not unique across repositories. Fall back to the checkout directory name
+  only when there is no `origin`.
+- A harness that already placed the session in a worktree under its own home
+  (for example a managed `.../worktrees/` checkout) keeps that location; never
+  relocate a session or block on where it lives.
+- A `git wt <name>` alias that implements this convention may be used instead of
+  the manual commands below. It must resolve to the same paths.
 
 ## Authorized Scope
 
@@ -35,14 +60,15 @@ Inputs:
 
 Outputs:
 
-- A new worktree directory at `.worktrees/<name>` checked out on a new branch
+- A new worktree directory at `<home>/<owner-repo>/<name>`, outside the repository, checked out on a new branch
 - The resolved base branch and why it was chosen
 - A warning if the base is behind its remote (local mode does not auto-fetch)
+- The linked-worktree count for the repository against the soft and hard caps
 - The path to `cd` into, ready for a parallel session
 
 Creates/Modifies:
 
-- Adds `.worktrees/` to `.gitignore` and commits that change if not already ignored
+- Creates the `<home>/<owner-repo>` directory if missing
 - Creates a new branch and a new worktree directory
 - Never touches the current working tree's tracked files, never switches the current branch
 
@@ -53,7 +79,7 @@ External Side Effects:
 
 Confirmation Required:
 
-- Before writing to `.gitignore` and committing it (one-time, only if `.worktrees/` is not yet ignored)
+- Before creating a worktree when the repository already has the soft cap (5) of linked worktrees
 - Before reusing an existing branch instead of creating a new one
 - Before overwriting or reusing a worktree path that already exists
 
@@ -107,7 +133,7 @@ Resolve the **new branch name**:
 - If the user gave a name, use it as the new branch name and the directory name.
 - If no name was given, ask for one. Do not invent a throwaway name.
 - Sanitize the directory name from the branch name (a branch like `feat/foo`
-  becomes directory `.worktrees/feat-foo` while the branch stays `feat/foo`).
+  becomes directory `<home>/<owner-repo>/feat-foo` while the branch stays `feat/foo`).
 
 ## Phase 2: Resolve the Base Branch
 
@@ -158,31 +184,56 @@ git update-ref "refs/heads/$BASE" "origin/$BASE"   # only when safe / fast-forwa
 Do not fetch by default. Do not rewrite a base branch that has local commits not
 on the remote — warn and use the local tip instead.
 
-## Phase 4: Ensure `.worktrees/` Is Gitignored
+## Phase 4: Resolve the Worktree Home and Check Caps
 
-The worktree directory must never be tracked. Verify, and fix once if needed.
+The worktree directory is outside the repository, so there is nothing to
+ignore or commit. Resolve the home and destination, then count linked worktrees.
 
 ```bash
-if ! git -C "$TOPLEVEL" check-ignore -q .worktrees; then
-  # .worktrees/ is not ignored yet — confirm, then add and commit
-  printf '\n# Local git worktrees (created by the worktree skill)\n.worktrees/\n' >> "$TOPLEVEL/.gitignore"
-  git -C "$TOPLEVEL" add .gitignore
-  git -C "$TOPLEVEL" commit -m "chore: ignore .worktrees/ directory"
-fi
+# Home: GIT_WT_HOME wins; else the running agent's shared home; else ~/worktrees.
+# AGENT is the running agent: claude, codex, grok or t3 (empty for a manual run).
+case "${AGENT:-}" in
+  claude) HOME_DIR="$HOME/.claude/worktrees" ;;
+  codex)  HOME_DIR="$HOME/.codex/worktrees" ;;
+  grok)   HOME_DIR="$HOME/.grok/worktrees" ;;
+  t3)     HOME_DIR="$HOME/.t3/worktrees" ;;
+  *)      HOME_DIR="$HOME/worktrees" ;;
+esac
+HOME_DIR="${GIT_WT_HOME:-$HOME_DIR}"
+
+# owner-repo from the origin remote, lowercased.
+URL="$(git -C "$TOPLEVEL" remote get-url origin 2>/dev/null | sed -E 's#/+$##; s#\.git$##')"
+SLUG="$(printf '%s' "$URL" | sed -nE 's#.*[/:]([^/:]+)/([^/:]+)$#\1-\2#p')"
+SLUG="$(printf '%s' "${SLUG:-$(basename "$TOPLEVEL")}" | tr '[:upper:]' '[:lower:]')"
+
+# Guard: the destination must be outside the repository.
+case "$HOME_DIR/" in "$TOPLEVEL"/*) echo "Worktree home is inside the repository: $HOME_DIR"; exit 1 ;; esac
+
+# Caps: soft 5 (warn and confirm), hard 25 (stop). The primary checkout is not linked.
+LINKED="$(( $(git worktree list --porcelain | grep -c '^worktree ') - 1 ))"
+echo "Linked worktrees: $LINKED"
+[ "$LINKED" -ge 25 ] && { echo "Hard cap (25) reached. Run /cleanup before creating another."; exit 1; }
+[ "$LINKED" -ge 5 ]  && echo "WARNING: soft cap (5) reached. Confirm, or remove merged worktrees with /cleanup first."
 ```
 
-This is the only commit the skill makes, and only the first time in a repo.
-Confirm before committing in a shared repo.
+Rules:
+
+- One session per task. Remove a worktree once its PR merges (`/cleanup`),
+  keeping any uncommitted work.
+- Legacy repo-local `.worktrees/` directories may still exist and stay
+  gitignored where the repository already ignores them. Do not create new
+  ones, and do not add `.worktrees/` to `.gitignore` for new work.
 
 ## Phase 5: Create the Worktree
 
 ```bash
 NAME="<sanitized-name>"
 BRANCH="<new-branch-name>"
-DEST="$TOPLEVEL/.worktrees/$NAME"
+DEST="$HOME_DIR/$SLUG/$NAME"
 
 # Guard: destination must not already exist
 [ -e "$DEST" ] && { echo "Path exists: $DEST — choose another name or remove it first."; exit 1; }
+mkdir -p "$(dirname "$DEST")"
 
 if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
   # Branch already exists: confirm, then attach it (no -b, no new branch)
@@ -207,10 +258,10 @@ Rules:
 
 Report:
 
-- Worktree path: `.worktrees/<name>`
+- Worktree path: `<home>/<owner-repo>/<name>` (outside the repository)
 - New branch and the base it forked from (plus why that base)
 - Any freshness warning from Phase 3
-- How to start work there: `cd .worktrees/<name>` and open a parallel session in
+- How to start work there: `cd` to that path and open a parallel session in
   that directory. Each worktree is an independent checkout sharing one `.git`.
 - If the project needs dependencies, install them inside the worktree before
   running anything (worktrees do not share `node_modules`).
@@ -223,15 +274,16 @@ Report:
 - `worktree <name> --fetch` — refresh the base from origin before branching.
 - `worktree list` — list existing worktrees and their branches; create nothing.
 
-When the user scopes it differently ("off master", "use my current branch",
-"don't touch gitignore"), honor the scope but keep the safety checks that prevent
-tracking the worktree dir or clobbering an existing branch/path.
+When the user scopes it differently ("off master", "use my current branch"),
+honor the scope but keep the safety checks that keep the worktree outside the
+repository and prevent clobbering an existing branch/path.
 
 ## Safety Model
 
 1. Never switches the current branch or modifies the current working tree's
    tracked files. A worktree is additive.
-2. Never tracks the worktree directory — `.worktrees/` is verified ignored first.
+2. Never creates a worktree inside the repository, so it can never be tracked;
+   the destination is verified to be outside the repo first.
 3. Local tips by default; network only on explicit `--fetch`.
 4. Never `--force`, never reset an existing branch, never overwrite an existing
    path. On conflict, report and stop.

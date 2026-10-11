@@ -95,7 +95,13 @@ mkdir -p "$REPO_TMP"
 # write "$REPO_TMP/snapshot.json", "$REPO_TMP/body.md", …
 ```
 
-Worktrees stay at `<repo>/.worktrees/<name>`. Durable non-repo artifacts stay
+Worktrees never live inside a repository. Each agent has one shared home for all
+its accounts (`~/.claude/worktrees`, `~/.codex/worktrees`, `~/.grok/worktrees`,
+`~/.t3/worktrees`); manual worktrees go in `~/worktrees`. The layout is
+`<home>/<owner-repo>/<name>`, with `owner-repo` taken from the origin remote and
+lowercased, and `GIT_WT_HOME` overrides the home. Keep at most 5 linked worktrees
+per repository (hard limit 25) and remove each once its PR merges. A legacy
+`.worktrees/` directory stays gitignored. Durable non-repo artifacts stay
 under `~/.codex/artifacts/`. Never write helper scripts, PR snapshots, issue
 bodies, or logs to the machine-wide temp directory.
 
