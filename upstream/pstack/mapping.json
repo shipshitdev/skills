@@ -1614,12 +1614,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "c11c4b97ede60be92273ebf0e25506d285ef98683c95759efb23480cbee91323"
+          "sha256": "8e9a16ad5b8d731cbea30e62022fd65ecdfaddf351b12af4ffed6262e797ab5e"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup #185/#153 (PR #217): duplicate() walks symlink chains one component at a time so a directory link inside the removable worktree (or a loop) blocks; distinct deleted-upstream and objects-missing-locally reasons; triage consistent with live remote checks; PR cache keyed by trunk OID. Deletion proofs unchanged; all cross-lab findings fixed.",
+      "review_note": "git-cleanup PR #274: keep worktrees holding the caller's cwd or a live process cwd (lsof) as active session, rechecked before removal; review-free ancestor-of-trunk proof only when the worktree HEAD log back to creation holds trunk commits alone; network git without prompts with one SSH insteadOf retry for https GitHub origins; gh-less runs apply only git-only proofs; identical ignored copies at a deeper path count as duplicated. Worktree removal stays unforced; 124 tests passed on Mac Studio.",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
@@ -4477,12 +4477,12 @@
         {
           "executable": false,
           "path": "skills/git-cleanup/scripts/cleanup.py",
-          "sha256": "c11c4b97ede60be92273ebf0e25506d285ef98683c95759efb23480cbee91323"
+          "sha256": "8e9a16ad5b8d731cbea30e62022fd65ecdfaddf351b12af4ffed6262e797ab5e"
         }
       ],
       "disposition": "superseded",
       "reason": "Superseded legacy audit by canonical immutable-evidence cleanup helper. Removes implicit fetch, global Claude transcript scan, incomplete PR buckets and second cleanup implementation; active harness session inventory supplies in-use evidence.",
-      "review_note": "git-cleanup #185/#153 (PR #217): duplicate() walks symlink chains one component at a time so a directory link inside the removable worktree (or a loop) blocks; distinct deleted-upstream and objects-missing-locally reasons; triage consistent with live remote checks; PR cache keyed by trunk OID. Deletion proofs unchanged; all cross-lab findings fixed.",
+      "review_note": "git-cleanup PR #274: keep worktrees holding the caller's cwd or a live process cwd (lsof) as active session, rechecked before removal; review-free ancestor-of-trunk proof only when the worktree HEAD log back to creation holds trunk commits alone; network git without prompts with one SSH insteadOf retry for https GitHub origins; gh-less runs apply only git-only proofs; identical ignored copies at a deeper path count as duplicated. Worktree removal stays unforced; 124 tests passed on Mac Studio.",
       "verification": [
         "docs/pstack-import-verification.md",
         "skills/git-cleanup/tests/test_cleanup.py"
