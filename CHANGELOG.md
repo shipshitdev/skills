@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.5](https://github.com/shipshitdev/skills/compare/v2.2.4...v2.2.5) (2026-10-17)
+
+
+### Bug Fixes
+
+* **board-sync:** keep exhaustive activity scans complete despite ordering anomalies ([#270](https://github.com/shipshitdev/skills/issues/270)) ([93991e7](https://github.com/shipshitdev/skills/commit/93991e76dc34b274dd428346f9b4c67a3bc19650))
+* **git-cleanup:** keep active sessions, prove squash checkouts, work over SSH and without gh ([#274](https://github.com/shipshitdev/skills/issues/274)) ([366150f](https://github.com/shipshitdev/skills/commit/366150f6ff4abf908164df8b94a6a49d65f46295))
+
+
+### Chores
+
+* **worktree:** create worktrees outside the repository ([#273](https://github.com/shipshitdev/skills/issues/273)) ([cccb912](https://github.com/shipshitdev/skills/commit/cccb912bdd2f0ac33475ec39cebe1a3817c34e9d)), closes [#272](https://github.com/shipshitdev/skills/issues/272)
+
 ## [2.2.4](https://github.com/shipshitdev/skills/compare/v2.2.3...v2.2.4) (2026-10-07)
 
 
