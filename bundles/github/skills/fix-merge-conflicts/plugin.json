@@ -1,6 +1,6 @@
 {
   "name": "fix-merge-conflicts",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Resolve git merge conflicts correctness-first, then prove the tree still builds.",
   "author": {
     "name": "Ship Shit Dev",

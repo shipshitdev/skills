@@ -2,7 +2,7 @@
 name: prompt-engineering
 description: Applies prompt engineering patterns — few-shot, chain-of-thought, templates, optimization. Use when improving prompts, debugging agent behavior, or designing generation prompts.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "prompt-engineering, ai, optimization, content-generation, templates"
 when_to_use: "few-shot, system prompt, prompt template"
 ---

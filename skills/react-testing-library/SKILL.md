@@ -2,7 +2,7 @@
 name: react-testing-library
 description: Covers React Testing Library for component and hook tests — queries, async, userEvent, providers, brittle-test anti-patterns. Use for any test rendering a component or hook.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "react, testing, rtl, components, hooks"
   author: Ship Shit Dev
 when_to_use: "getByRole, findBy, waitFor, renderHook, userEvent"

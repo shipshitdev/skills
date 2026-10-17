@@ -6,7 +6,7 @@ disable-model-invocation: true
 allowed-tools: Bash(gh *) Bash(git *)
 argument-hint: "[roadmap file, or 'burndown']"
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "github, milestones, roadmap, planning, burndown, mrr"
   author: Ship Shit Dev
 when_to_use: "create milestones, roadmap to milestones, set milestone due dates, group issues under a milestone, turn the roadmap into a schedule, milestone burndown, milestone progress"

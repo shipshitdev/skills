@@ -2,7 +2,7 @@
 name: ai-agent-cost-optimizer
 description: Audits and cuts AI agent token and inference spend via context discipline, prompt caching, model routing, and batching. Use when AI coding bills or token waste are too high.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "ai, agents, cost, tokens, context"
 when_to_use: "model tier choice, cache misses"
 ---

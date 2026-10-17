@@ -2,7 +2,7 @@
 name: scaffold
 description: Generates incremental code modules inside an existing repo following local patterns — endpoints, components, packages, database models. Not for new full-project scaffolds.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "scaffolding, code-generation, boilerplate, productivity"
 when_to_use: "add a module, new endpoint, new component"
 ---

@@ -2,7 +2,7 @@
 name: incremental-fetch
 description: Builds resilient data ingestion pipelines from paginated APIs using two watermarks so progress is never lost. Not for one-shot calls, websockets, or file downloads.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "data-ingestion, api, pagination"
 when_to_use: "backfill older data, resume the download, pull tweets, sync from X"
 ---

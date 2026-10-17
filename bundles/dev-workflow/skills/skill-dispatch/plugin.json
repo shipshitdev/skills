@@ -1,6 +1,6 @@
 {
   "name": "skill-dispatch",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Single front door for skill authoring — routes create/capture/comply/scout to the right engine.",
   "author": {
     "name": "Ship Shit Dev",

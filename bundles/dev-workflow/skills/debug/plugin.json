@@ -1,6 +1,6 @@
 {
   "name": "debug",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Front-door debug triage: repro loop, ranked hypotheses, instrumentation, 54-rule library.",
   "author": {
     "name": "Ship Shit Dev",

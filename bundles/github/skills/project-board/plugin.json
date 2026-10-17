@@ -1,6 +1,6 @@
 {
   "name": "project-board",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Audit and configure project boards while preserving their workflow and provider boundaries.",
   "author": {
     "name": "Ship Shit Dev",

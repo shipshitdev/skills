@@ -5,7 +5,7 @@ user-invocable: true
 disable-model-invocation: true
 argument-hint: "[feature to shape]"
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "ux, planning, design-brief"
   source: https://github.com/pbakaus/impeccable/blob/main/skill/reference/shape.md
   upstream_version: skill-v4.5.0

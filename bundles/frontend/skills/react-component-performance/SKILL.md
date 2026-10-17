@@ -2,7 +2,7 @@
 name: react-component-performance
 description: Diagnoses slow React components and applies render-time fixes — re-renders, memo/useMemo/useCallback, list virtualization, Profiler traces. Not for API or database latency.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/Dimillian/Skills/blob/main/react-component-performance/SKILL.md
   upstream_repo: Dimillian/Skills
   upstream_ref: main

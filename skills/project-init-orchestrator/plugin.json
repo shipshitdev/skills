@@ -1,6 +1,6 @@
 {
   "name": "project-init-orchestrator",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Orchestrates complete project initialization by coordinating agent-folder-init, linter-formatter-ini",
   "author": {
     "name": "Ship Shit Dev",

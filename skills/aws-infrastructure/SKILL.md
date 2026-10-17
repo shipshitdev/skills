@@ -2,7 +2,7 @@
 name: aws-infrastructure
 description: "Sets up AWS infrastructure: EC2, VPC, security groups, load balancers, Route53 DNS, and ACM certificates. Use when configuring or deploying AWS resources."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "aws, infrastructure, devops"
 when_to_use: "auto-scaling, CloudWatch"
 ---

@@ -1,6 +1,6 @@
 {
   "name": "design-consistency-auditor",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Hunt design-token drift, hardcoded colors, and design-system divergence across a frontend.",
   "author": {
     "name": "Ship Shit Dev",

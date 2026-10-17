@@ -1,6 +1,6 @@
 {
   "name": "redis-caching",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Design Redis caching, rate limiting, sessions, pub/sub, and production integration.",
   "author": {
     "name": "Ship Shit Dev",

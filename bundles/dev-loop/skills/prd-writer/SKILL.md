@@ -2,7 +2,7 @@
 name: prd-writer
 description: "Writes repository-grounded requirements with full scope and observable EARS acceptance criteria. Use when drafting a PRD or scoping a feature. Plans: writing-plans."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "prd, planning, requirements, spec, scoping, ears"
 when_to_use: "write a PRD, scope this out, formalize this feature"
 ---

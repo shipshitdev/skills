@@ -1,6 +1,6 @@
 {
   "name": "artifacts-builder",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern fronten",
   "author": {
     "name": "Ship Shit Dev",

@@ -2,7 +2,7 @@
 name: react-refactor
 description: Guides architectural React refactoring — state architecture, hook extraction, decomposition, coupling. Use when splitting oversized components or reviewing PR architecture.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "react, refactoring, architecture"
 when_to_use: "god component, module boundaries, extract hooks"
 ---
