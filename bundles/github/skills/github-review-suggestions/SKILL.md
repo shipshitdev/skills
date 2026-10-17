@@ -4,7 +4,7 @@ description: Reviews GitHub PRs and posts inline comments with applyable suggest
 compatibility: Requires GitHub CLI gh access to the repository. The bundled diff-line helper runs with Node.js or Bun.
 allowed-tools: Bash(git *) Bash(gh *) Bash(node *) Bash(bun *)
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "github, pull-requests, review, suggestions"
 when_to_use: "submit review suggestions"
 ---

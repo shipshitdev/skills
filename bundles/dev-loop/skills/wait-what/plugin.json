@@ -1,6 +1,6 @@
 {
   "name": "wait-what",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Re-pitch the last message in plain English using CONTEXT.md vocabulary.",
   "author": {
     "name": "Ship Shit Dev",

@@ -4,7 +4,7 @@ description: Reviews a finished agent session for friction and proposes environm
 disable-model-invocation: true
 license: MIT
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "retrospective, session, environment, guardrails, steering, reflect"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/retro/SKILL.md

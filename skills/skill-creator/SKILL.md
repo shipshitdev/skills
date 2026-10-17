@@ -3,7 +3,7 @@ name: skill-creator
 description: Guides creating or updating a skill with specialized knowledge, workflows or tool integrations. Use when authoring a new SKILL.md or editing an existing skill.
 license: Complete terms in LICENSE.txt
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md
   upstream_repo: anthropics/skills
   upstream_ref: main

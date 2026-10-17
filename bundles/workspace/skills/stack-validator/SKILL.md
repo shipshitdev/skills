@@ -2,7 +2,7 @@
 name: stack-validator
 description: Validates Biome 2.3+, Bun workspace, Next.js 16 and Tailwind v4 config and flags deprecated patterns. Use before stack work or when AI-generated config may be outdated.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "biome, bun, nextjs, tailwind, validation, configuration, code-quality"
 when_to_use: "biome.json check, middleware.ts to proxy.ts, @theme v3 leftovers, bun workspace"
 ---

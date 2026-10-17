@@ -5,7 +5,7 @@ license: MIT
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "testing, tdd, red-green-refactor, quality, verification"
   author: Ship Shit Dev
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/tdd/SKILL.md

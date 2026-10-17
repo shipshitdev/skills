@@ -8,7 +8,7 @@ description: >-
 disable-model-invocation: true
 license: Complete terms in LICENSE.txt
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/anthropics/skills/blob/main/skills/mcp-builder/SKILL.md
   upstream_repo: anthropics/skills
   upstream_ref: main

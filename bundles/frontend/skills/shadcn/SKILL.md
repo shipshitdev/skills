@@ -2,7 +2,7 @@
 name: shadcn
 description: "Applies shadcn/ui best practices (Radix, forms, tables, theming) and sets up shadcn/ui on Tailwind v4 (init, components.json, cn, v3 migration). Use to build, review or install."
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   source: https://github.com/pproenca/dot-skills/blob/master/skills/.curated/shadcn/SKILL.md
   upstream_repo: pproenca/dot-skills
   upstream_ref: master

@@ -1,6 +1,6 @@
 {
   "name": "agent-folder-init",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Initialize a project .agents folder for AI-first development workflows.",
   "author": {
     "name": "Ship Shit Dev",

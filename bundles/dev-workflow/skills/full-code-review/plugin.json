@@ -1,6 +1,6 @@
 {
   "name": "full-code-review",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Run orchestrated PR review with parallel reviewers, verification, and synthesis.",
   "author": {
     "name": "Ship Shit Dev",

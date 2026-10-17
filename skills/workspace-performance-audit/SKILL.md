@@ -2,7 +2,7 @@
 name: workspace-performance-audit
 description: Orchestrates a full-stack monorepo performance audit across frontend, backend, database, extensions and shared packages. Use for workspace-wide bottleneck reviews.
 metadata:
-  version: "2.2.4"
+  version: "2.2.5"
   tags: "performance, audit, monorepo"
 when_to_use: "monorepo audit, slow workspace"
 ---

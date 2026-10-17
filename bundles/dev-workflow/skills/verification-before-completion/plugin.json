@@ -1,6 +1,6 @@
 {
   "name": "verification-before-completion",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Hard gate: forbids completion claims without running verification and reading fresh output.",
   "author": {
     "name": "Ship Shit Dev",

@@ -1,6 +1,6 @@
 {
   "name": "github-actions-author",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Author and harden GitHub Actions workflows with secure triggers and permissions.",
   "author": {
     "name": "Ship Shit Dev",

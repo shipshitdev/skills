@@ -1,6 +1,6 @@
 {
   "name": "bug",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "File a structured GitHub Bug issue with repro steps, environment, and fallback labels.",
   "author": {
     "name": "Ship Shit Dev",

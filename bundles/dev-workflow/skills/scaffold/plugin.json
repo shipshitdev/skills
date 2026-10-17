@@ -1,6 +1,6 @@
 {
   "name": "scaffold",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Generate new code modules following existing codebase patterns",
   "author": {
     "name": "Ship Shit Dev",
