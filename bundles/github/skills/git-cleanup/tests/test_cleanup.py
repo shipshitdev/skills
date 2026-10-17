@@ -4,6 +4,7 @@ import copy
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -549,12 +550,12 @@ class GitFixtureTests(unittest.TestCase):
         new = self.commit("new", "new\n")
         self.git("push", "origin", "feature:staging")
         self.git("switch", "main")
-        original = self.repo.git
-        def git(*args):
+        original = self.repo.network
+        def network(*args, **kwargs):
             if args[0] == "push":
                 self.command("git", "--git-dir", str(self.remote), "update-ref", "refs/heads/feature", new)
-            return original(*args)
-        with patch.object(self.repo, "git", side_effect=git):
+            return original(*args, **kwargs)
+        with patch.object(self.repo, "network", side_effect=network):
             self.assertEqual(self.repo.apply(plan, "remote-branches")["actions"][0]["result"], "skipped")
         self.assertEqual(self.repo.remote_heads()["refs/heads/feature"], new)
 
@@ -1529,6 +1530,184 @@ class GitFixtureTests(unittest.TestCase):
         self.assertEqual([call.args[1] for call in lookup.call_args_list].count("feature"), 1)
         self.assertTrue(worktree.exists())
 
+
+    def test_caller_working_directory_keeps_its_worktree(self):
+        worktree = self.make_worktree()
+        self.addCleanup(os.chdir, os.getcwd())
+        os.chdir(worktree)
+        plan = self.repo.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertTrue(plan["skipped"][0]["reason"].startswith(
+            "active session; the caller's working directory is inside this worktree"))
+        self.assertEqual(plan["summary"]["kept"], {"active session": 1})
+
+    @unittest.skipUnless(shutil.which("lsof"), "lsof unavailable")
+    def test_live_process_in_worktree_is_kept_and_blocks_apply(self):
+        worktree = self.make_worktree()
+        plan = self.repo.plan("worktrees")
+        self.assertEqual(plan["actions"][0]["proof"]["kind"], "no-own-commits")
+        process = subprocess.Popen(["sleep", "60"], cwd=worktree)
+        self.addCleanup(process.wait)
+        self.addCleanup(process.kill)
+        replan = self.repo.plan("worktrees")
+        self.assertEqual(replan["actions"], [])
+        self.assertTrue(replan["skipped"][0]["reason"].startswith(
+            f"active session; process {process.pid} (sleep) works in this worktree"))
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "skipped")
+        self.assertTrue(result["actions"][0]["reason"].startswith("active session; "))
+        self.assertTrue(worktree.exists())
+
+    def detached_on_squash_merge(self):
+        head, merge = self.squash()
+        self.commit("later trunk work", "third\n")
+        self.git("push", "origin", "main")
+        worktree = self.root / ".worktrees" / "detached"
+        self.git("worktree", "add", "--detach", str(worktree), "main~2")
+        self.command("git", "-C", str(worktree), "checkout", "--detach", merge)
+        return worktree, merge
+
+    def test_detached_checkout_of_squash_merge_commit_is_removable_without_review(self):
+        worktree, merge = self.detached_on_squash_merge()
+        plan = self.repo.plan("worktrees")
+        self.assertEqual([action["path"] for action in plan["actions"]], [str(worktree.resolve())])
+        proof = plan["actions"][0]["proof"]
+        self.assertEqual(proof["kind"], "ancestor-of-trunk")
+        self.assertTrue(proof["content_audit"]["candidate_in_trunk_history"])
+        self.assertEqual(plan["intent_reviews"], {})
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertEqual(result["actions"][0]["result"], "removed")
+        self.assertFalse(worktree.exists())
+        self.assertTrue(self.repo.ancestor(merge, self.git("rev-parse", "main")))
+
+    def test_detached_commit_reset_away_is_not_review_free(self):
+        worktree = self.root / ".worktrees/detached"
+        self.git("worktree", "add", "--detach", str(worktree), "main")
+        self.command("git", "-C", str(worktree), "commit", "--allow-empty", "-m", "own work")
+        # The commit now lives only in the worktree's HEAD log.
+        self.command("git", "-C", str(worktree), "reset", "--hard", "main")
+        plan = self.repo.plan("worktrees")
+        self.assertNotIn("ancestor-of-trunk", [action["proof"]["kind"] for action in plan["actions"]])
+        result = self.repo.apply(plan, "worktrees", exclusive_worktrees=True)
+        self.assertNotIn("removed", [action["result"] for action in result["actions"]])
+        self.assertTrue(worktree.exists())
+
+    def test_forged_ancestor_of_trunk_kind_on_a_branch_is_rejected(self):
+        self.git("switch", "-c", "feature")
+        head = self.commit("unmerged", "unmerged\n")
+        self.git("switch", "main")
+        plan = self.repo.plan("local-branches")
+        self.assertEqual(plan["actions"], [])
+        plan["actions"] = [{"kind": "local", "ref": "refs/heads/feature", "oid": head, "proof": {
+            "kind": "ancestor-of-trunk", "ahead": [], "content_audit": {
+                "base_oid": head, "candidate_oid": head, "trunk_oid": plan["context"]["trunk_oid"],
+                "scope": "ancestor-of-trunk", "candidate_in_trunk_history": True,
+                "current_content_present": True, "paths": []}}}]
+        result = self.repo.apply(plan, "local-branches")
+        self.assertEqual(result["actions"][0]["result"], "skipped")
+        self.assertEqual(self.git("rev-parse", "feature"), head)
+
+    def test_https_origin_falls_back_to_ssh_transport(self):
+        self.git("branch", "feature")
+        self.git("push", "origin", "main:stale")
+        self.git("remote", "set-url", "origin", "https://github.com/owner/repo.git")
+        original = self.repo.run.side_effect
+        rewrite = f"url.{self.remote}.insteadOf=https://github.com/owner/repo.git"
+        attempts = []
+
+        def run(*args, **kwargs):
+            if args[:3] == ("git", *cleanup.SSH_REWRITE):
+                # Stand-in for SSH: route the rewritten URL to the local origin.
+                return original("git", "-c", rewrite, *args[3:], **kwargs)
+            if args[0] == "git" and len(args) > 1 and args[1] in ("fetch", "ls-remote", "push"):
+                attempts.append(args[1])
+                return subprocess.CompletedProcess(args, 128, "", "could not read Username")
+            return original(*args, **kwargs)
+
+        self.repo.run.side_effect = run
+        plan = self.plan("branches")
+        self.assertEqual(self.repo.transport, cleanup.SSH_REWRITE)
+        self.assertEqual(attempts, ["fetch"])
+        self.assertEqual(sorted(self.action_names(plan)), ["refs/heads/feature", "refs/heads/stale"])
+        result = self.repo.apply(plan, "branches")
+        self.assertEqual([action["result"] for action in result["actions"]], ["removed", "removed"])
+        remote_refs = self.command("git", "--git-dir", str(self.remote), "for-each-ref", "--format=%(refname)")
+        self.assertEqual(remote_refs.splitlines(), ["refs/heads/main"])
+
+    def test_https_failure_without_ssh_access_stops_planning(self):
+        self.git("remote", "set-url", "origin", "https://github.com/owner/repo.git")
+        original = self.repo.run.side_effect
+
+        def run(*args, **kwargs):
+            if args[0] == "git" and (args[1:3] == cleanup.SSH_REWRITE or args[1] in ("fetch", "ls-remote")):
+                return subprocess.CompletedProcess(args, 128, "", "no access")
+            return original(*args, **kwargs)
+
+        self.repo.run.side_effect = run
+        with self.assertRaisesRegex(Refused, r"^git fetch failed \(128\); no proof$"):
+            self.repo.plan("all")
+        self.assertEqual(self.repo.transport, ())
+
+    def without_github(self, error):
+        self.command("git", "--git-dir", str(self.remote), "symbolic-ref", "HEAD", "refs/heads/main")
+        original = self.repo.run.side_effect
+
+        def run(*args, **kwargs):
+            if args[0] == "gh":
+                raise error
+            return original(*args, **kwargs)
+
+        self.repo.run.side_effect = run
+
+    def test_unauthenticated_gh_degrades_to_git_only_proofs(self):
+        head, _ = self.squash()
+        pointer = self.root / ".worktrees" / "pointer"
+        self.git("worktree", "add", "-b", "pointer", str(pointer), "main")
+        detached = self.root / ".worktrees" / "detached"
+        self.git("worktree", "add", "--detach", str(detached), "main~1")
+        self.command("git", "-C", str(detached), "checkout", "--detach", "main")
+        self.without_github(Refused("gh repo failed (4); no proof"))
+        plan = self.repo.plan("all")
+        self.assertFalse(plan["context"]["github"])
+        self.assertEqual(plan["context"]["trunk"], "main")
+        self.assertIn("gh repo failed (4)", plan["summary"]["github"])
+        self.assertEqual(sorted((action["kind"], action["proof"]["kind"]) for action in plan["actions"]), [
+            ("local", "no-own-commits"), ("worktree", "ancestor-of-trunk"), ("worktree", "no-own-commits")])
+        kept = next(item for item in plan["skipped"] if item["ref"] == "refs/heads/feature")
+        self.assertTrue(kept["reason"].startswith("unproven without GitHub: no PR evidence"))
+        result = self.repo.apply(plan, "all", exclusive_worktrees=True)
+        self.assertEqual([action["result"] for action in result["actions"]], ["removed"] * 3)
+        self.assertFalse(pointer.exists() or detached.exists())
+        self.assertEqual(self.git("rev-parse", "feature"), head)
+
+    def test_main_runs_without_gh_on_path(self):
+        self.git("branch", "feature")
+        self.without_github(FileNotFoundError(2, "No such file or directory", "gh"))
+        args = ["cleanup.py", "dry-run", "--scope", "local-branches"]
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(cleanup, "Repository", return_value=self.repo), \
+             patch.object(cleanup.shutil, "which", side_effect=lambda name: None if name == "gh" else "/fixture/tool"), \
+             patch.object(sys, "argv", args), patch.object(sys, "stdout", stdout), patch.object(sys, "stderr", stderr):
+            self.assertEqual(cleanup.main(), 0)
+        self.assertIn("warning: GitHub unavailable", stderr.getvalue())
+        report = json.loads(stdout.getvalue())
+        self.assertEqual(self.action_names(report), ["refs/heads/feature"])
+        self.assertEqual(report["actions"][0]["proof"]["kind"], "no-own-commits")
+
+    def test_identical_copy_at_a_deeper_path_is_a_duplicate(self):
+        worktree = self.make_worktree()
+        (self.root / ".git/info/exclude").write_text("*.env.local\n")
+        (self.root / "apps/api").mkdir(parents=True)
+        (self.root / "apps/api/.env.local").write_text("SECRET=shared\n")
+        copied = worktree / "scripts/dev/apps/api/.env.local"
+        copied.parent.mkdir(parents=True)
+        copied.write_text("SECRET=shared\n")
+        plan = self.repo.plan("worktrees")
+        self.assertEqual(plan["actions"][0]["ignored"]["duplicated"], ["scripts/dev/apps/api/.env.local"])
+        copied.write_text("SECRET=changed\n")
+        plan = self.repo.plan("worktrees")
+        self.assertEqual(plan["actions"], [])
+        self.assertIn("scripts/dev/apps/api/.env.local", plan["skipped"][0]["reason"])
 
 if __name__ == "__main__":
     unittest.main()

@@ -47,8 +47,15 @@ SCRATCH = ".tmp"
 # Reflog messages that move a ref without creating work on it.
 CREATED = ("branch: Created from ", "Branch: renamed ")
 # Proof kinds whose evidence is mechanical, so pruning needs no intent review:
-# a ref that never held commits, or a tip GitHub records as delivered by a merged PR.
-REVIEW_FREE = ("no-own-commits", "merged-pr-head", "exact-pr-head-squash")
+# a ref that never held commits, a checkout whose HEAD trunk contains, or a tip
+# GitHub records as delivered by a merged PR.
+REVIEW_FREE = ("no-own-commits", "ancestor-of-trunk", "merged-pr-head", "exact-pr-head-squash")
+# Proofs that need no GitHub lookup, so they still apply when gh is unavailable.
+GIT_ONLY = ("no-own-commits", "ancestor-of-trunk")
+# Reaches a GitHub origin over SSH when HTTPS credentials are unavailable (an SSH host).
+SSH_REWRITE = ("-c", "url.git@github.com:.insteadOf=https://github.com/")
+# Kept-reason prefix for a worktree that a live process works in.
+ACTIVE_SESSION = "active session"
 
 
 class Repository:
@@ -60,6 +67,9 @@ class Repository:
         self.root = Path(top.stdout.strip() if top.returncode == 0 and top.stdout.strip()
                          else root).resolve()
         self._trunk_entries: tuple[str, dict, set | None] | None = None
+        # Extra git options for networked commands, chosen by the first one that succeeds.
+        self.transport: tuple[str, ...] = ()
+        self.github_error: str | None = None
 
     def run(self, *args: str, input_text: str | None = None,
             accepted: tuple[int, ...] = (0,), extra_env: dict | None = None) -> subprocess.CompletedProcess:
@@ -77,6 +87,20 @@ class Repository:
 
     def git(self, *args: str) -> str:
         return self.run("git", *args).stdout.strip()
+
+    def network(self, *args: str, accepted: tuple[int, ...] = (0,)) -> subprocess.CompletedProcess:
+        """Run a git command that talks to origin, retrying over SSH when HTTPS fails."""
+        env = {"GIT_TERMINAL_PROMPT": "0"}
+        result = self.run("git", *self.transport, *args, accepted=tuple(range(256)), extra_env=env)
+        if (result.returncode != 0 and not self.transport
+                and self.git("remote", "get-url", "origin").startswith("https://github.com/")):
+            # A host with SSH keys but no HTTPS credential helper fails here first.
+            retry = self.run("git", *SSH_REWRITE, *args, accepted=tuple(range(256)), extra_env=env)
+            if retry.returncode == 0:
+                self.transport, result = SSH_REWRITE, retry
+        if result.returncode not in accepted:
+            raise Refused(f"git {args[0]} failed ({result.returncode}); no proof")
+        return result
 
     def oid(self, ref: str) -> str:
         return self.git("rev-parse", "--verify", f"{ref}^{{commit}}")
@@ -178,7 +202,11 @@ class Repository:
                 name = file.relative_to(path).as_posix()
                 if self.regenerable(name, False):
                     regenerable.append(name)
-                elif self.duplicate(file, main / name, path):
+                # Setup scripts may copy a main-checkout file to a deeper path
+                # (apps/api/.env.local to scripts/dev/apps/api/.env.local), so
+                # each shorter suffix of the path is also a surviving original.
+                elif any(self.duplicate(file, main / name.split("/", depth)[-1], path)
+                         for depth in range(name.count("/") + 1)):
                     duplicated.append(name)
                 else:
                     unique.append(name)
@@ -271,23 +299,42 @@ class Repository:
         return (entries[-1][1].startswith(CREATED[0])
                 and all(message.startswith(CREATED) for _, message in entries))
 
+    def checkouts_in_trunk(self, worktree: str, trunk: str) -> bool:
+        """The worktree's HEAD log, back to its creation, holds only trunk commits."""
+        # Removing a worktree deletes its HEAD log, so a commit reachable only
+        # from that log (made, then reset away) would be lost with it.
+        log = self.run("git", "-C", worktree, "reflog", "show", "--format=%H%x00%gs", "HEAD", "--",
+                       accepted=(0, 128)).stdout
+        entries = [line.split("\0", 1) for line in log.splitlines() if line]
+        # `worktree add` logs an empty message; a log without it was truncated.
+        return (bool(entries) and len(entries[-1]) == 2 and entries[-1][1] == ""
+                and all(self.ancestor(entry[0], trunk) for entry in entries))
+
     def remote_heads(self) -> dict[str, str]:
         return {ref: oid for oid, ref in (line.split("\t") for line in
-                self.git("ls-remote", "--heads", "origin").splitlines())}
+                self.network("ls-remote", "--heads", "origin").stdout.strip().splitlines())}
+
+    def remote_default(self) -> str:
+        """Origin's default branch, read from its HEAD symref without GitHub."""
+        for line in self.network("ls-remote", "--symref", "origin", "HEAD").stdout.splitlines():
+            target, _, name = line.partition("\t")
+            if name == "HEAD" and target.startswith("ref: refs/heads/"):
+                return target.removeprefix("ref: refs/heads/")
+        raise Refused("origin default branch unknown without GitHub; pass --trunk")
 
     def fetch_objects(self, *refs: str) -> None:
         """Fetch objects for refs without creating or moving any local ref."""
         # An empty refmap stops the opportunistic remote-tracking update; tags stay unfetched.
-        fetch = ("git", "fetch", "--no-write-fetch-head", "--no-prune", "--no-tags", "--refmap=", "origin")
-        if refs and self.run(*fetch, *refs, accepted=(0, 1, 128)).returncode != 0:
+        fetch = ("fetch", "--no-write-fetch-head", "--no-prune", "--no-tags", "--refmap=", "origin")
+        if refs and self.network(*fetch, *refs, accepted=(0, 1, 128)).returncode != 0:
             # One vanished ref fails the batch; retry the rest one at a time.
             for ref in refs if len(refs) > 1 else ():
-                self.run(*fetch, ref, accepted=(0, 1, 128))
+                self.network(*fetch, ref, accepted=(0, 1, 128))
 
     def refresh_trunk(self, trunk: str) -> str:
         """Fetch origin trunk and fast-forward the local trunk ref when it is behind."""
-        self.git("fetch", "--no-prune", "origin",
-                 f"refs/heads/{trunk}:refs/remotes/origin/{trunk}")
+        self.network("fetch", "--no-prune", "origin",
+                     f"refs/heads/{trunk}:refs/remotes/origin/{trunk}")
         remote_oid = self.oid(f"refs/remotes/origin/{trunk}")
         local_ref = f"refs/heads/{trunk}"
         if self.run("git", "show-ref", "--verify", "--quiet", local_ref,
@@ -416,28 +463,38 @@ class Repository:
                 "current_content_present": present, "paths": evidence}
 
     def context(self, trunk: str | None = None) -> dict:
-        metadata = json.loads(self.run("gh", "repo", "view", "--json",
-                                       "nameWithOwner,defaultBranchRef").stdout)
-        trunk = trunk or metadata["defaultBranchRef"]["name"]
-        self.git("check-ref-format", f"refs/heads/{trunk}")
         remote = self.git("remote", "get-url", "origin")
         push_urls = self.git("remote", "get-url", "--push", "--all", "origin").splitlines()
         if push_urls != [remote]:
             raise Refused("origin push destination differs or has multiple URLs")
-        # Resolve the origin itself: gh's inferred repository may be a parent fork.
-        origin_metadata = json.loads(self.run("gh", "repo", "view", remote, "--json",
-                                              "nameWithOwner").stdout)
-        if origin_metadata["nameWithOwner"].lower() != metadata["nameWithOwner"].lower():
-            raise Refused("origin repository differs from selected GitHub repository")
+        try:
+            metadata = json.loads(self.run("gh", "repo", "view", "--json",
+                                           "nameWithOwner,defaultBranchRef").stdout)
+            repository, default = metadata["nameWithOwner"], metadata["defaultBranchRef"]["name"]
+            # Resolve the origin itself: gh's inferred repository may be a parent fork.
+            origin = json.loads(self.run("gh", "repo", "view", remote, "--json",
+                                         "nameWithOwner").stdout)["nameWithOwner"]
+        except FAILURES as error:
+            # Without gh (missing or unauthenticated) no PR can be looked up;
+            # only git-only proofs apply and every other candidate is kept.
+            self.github_error = str(error) or type(error).__name__
+            match = re.search(r"github\.com[:/](.+?)(?:\.git)?/?$", remote)
+            repository, default = (match.group(1) if match else None), None
+        else:
+            self.github_error = None
+            if origin.lower() != repository.lower():
+                raise Refused("origin repository differs from selected GitHub repository")
+        trunk = trunk or default or self.remote_default()
+        self.git("check-ref-format", f"refs/heads/{trunk}")
         self.refresh_trunk(trunk)
         remote_oid = self.remote_heads().get(f"refs/heads/{trunk}")
         if not remote_oid or self.oid(remote_oid) != remote_oid:
             raise Refused("remote trunk object unavailable after fetching origin trunk")
         current = self.run("git", "symbolic-ref", "-q", "HEAD", accepted=(0, 1)).stdout.strip()
         return {"root": str(self.root), "common": self.git("rev-parse", "--path-format=absolute", "--git-common-dir"),
-                "repository": metadata["nameWithOwner"], "remote": remote,
+                "repository": repository, "remote": remote,
                 "trunk": trunk, "trunk_oid": remote_oid, "current": current,
-                "head": self.oid("HEAD")}
+                "head": self.oid("HEAD"), "github": self.github_error is None}
 
     DELETED_UPSTREAM = "remote ref deleted upstream \u2014 nothing to do"
 
@@ -481,6 +538,39 @@ class Repository:
             raise Refused(self.OPERATION_REASON)
         if candidate["kind"] in ("local", "remote") and candidate["ref"] in refs:
             raise Refused(self.OPERATION_REASON)
+
+    @staticmethod
+    def active_sessions() -> dict[Path, str]:
+        """Working directories in use: the caller's, and every live process lsof can see."""
+        sessions: dict[Path, str] = {}
+        try:
+            sessions[Path.cwd().resolve()] = "the caller's working directory is inside this worktree"
+        except OSError:
+            pass
+        try:
+            listing = subprocess.run(["lsof", "-w", "-a", "-d", "cwd", "-Fpcn"], capture_output=True,
+                                     text=True, errors="surrogateescape", check=False, timeout=60).stdout
+        except (OSError, subprocess.SubprocessError):
+            listing = ""  # Best effort: lsof is optional; the caller's cwd is still checked.
+        pid = command = ""
+        for line in listing.splitlines():
+            field, value = line[:1], line[1:]
+            if field == "p":
+                pid, command = value, ""
+            elif field == "c":
+                command = value
+            elif field == "n" and value.startswith("/"):
+                sessions.setdefault(Path(value).resolve(),
+                                    f"process {pid} ({command}) works in this worktree")
+        return sessions
+
+    @staticmethod
+    def assert_not_in_use(path: str, sessions: dict[Path, str]) -> None:
+        """Keep a worktree that a live session (an agent, shell or server) works in."""
+        removed = Path(path).resolve()
+        for directory, holder in sessions.items():
+            if directory == removed or removed in directory.parents:
+                raise Refused(f"{ACTIVE_SESSION}; {holder}; preserve until it exits")
 
     def pull_requests(self, repository: str, branch: str) -> list[dict]:
         owner = repository.split("/")[0]
@@ -589,16 +679,24 @@ class Repository:
         return [pr for pr in prs if pr.get("merged_at") and pr.get("merge_commit_sha")
                 and not self.has_commit(pr["merge_commit_sha"])]
 
-    def proof(self, oid: str, trunk: str, prs: list[dict], *, unmoved: bool = False) -> dict:
+    def proof(self, oid: str, trunk: str, prs: list[dict], *, unmoved: bool = False,
+              checkout_only: bool = False, git_only: bool = False) -> dict:
         if any(pr.get("state") == "open" for pr in prs):
             raise Refused("in-flight open PR")
-        if unmoved and self.ancestor(oid, trunk):
-            # The ref only ever pointed at a trunk commit, so it never held work
-            # that trunk could have reverted; there is no delta to audit.
-            return {"kind": "no-own-commits", "ahead": [], "content_audit": {
-                "base_oid": oid, "candidate_oid": oid, "trunk_oid": trunk,
-                "scope": "no-own-commits", "candidate_in_trunk_history": True,
-                "current_content_present": True, "paths": []}}
+        for kind, holds in (("no-own-commits", unmoved), ("ancestor-of-trunk", checkout_only)):
+            # no-own-commits: the ref only ever pointed at a trunk commit, so it
+            # never held work that trunk could have reverted. ancestor-of-trunk:
+            # removing a checkout deletes no ref, and its HEAD only ever held
+            # trunk commits, so a later trunk revert loses nothing. Neither has
+            # a delta to audit.
+            if holds and self.ancestor(oid, trunk):
+                return {"kind": kind, "ahead": [], "content_audit": {
+                    "base_oid": oid, "candidate_oid": oid, "trunk_oid": trunk,
+                    "scope": kind, "candidate_in_trunk_history": True,
+                    "current_content_present": True, "paths": []}}
+        if git_only:
+            raise Refused("unproven without GitHub: no PR evidence; authenticate gh and replan, "
+                          "preserve candidate")
         ahead = self.git("rev-list", trunk + ".." + oid).splitlines()
         try:
             audit = self.current_content_audit(oid, trunk, prs)
@@ -651,7 +749,8 @@ class Repository:
 
     def evaluate(self, candidate: dict, context: dict, scope: str, *,
                  worktrees: list[dict] | None = None, heads: dict | None = None,
-                 pr_cache: dict | None = None, released: set[str] = frozenset()) -> dict:
+                 pr_cache: dict | None = None, released: set[str] = frozenset(),
+                 sessions: dict[Path, str] | None = None) -> dict:
         kind, ref, oid = candidate["kind"], candidate["ref"], candidate["oid"]
         if kind not in SCOPES[scope]:
             raise Refused("candidate outside authorized resource scope")
@@ -664,17 +763,20 @@ class Repository:
             raise Refused("protected branch")
         worktrees = self.worktrees() if worktrees is None else worktrees
         result = {"kind": kind, "ref": ref, "oid": oid}
-        unmoved = False
+        unmoved = checkout_only = False
         if kind == "worktree":
             records = [wt for wt in worktrees if wt["worktree"] == candidate["path"]]
             if (len(records) != 1 or records[0] == worktrees[0]
                     or Path(candidate["path"]).resolve() == self.root):
                 raise Refused("missing, main, or caller worktree")
+            self.assert_not_in_use(candidate["path"],
+                                   self.active_sessions() if sessions is None else sessions)
             result.update(self.worktree_state(records[0]))
             if any(result[key] != candidate[key] for key in ("path", "oid", "ref")):
                 raise Refused("worktree changed since discovery")
             unmoved = (self.unmoved_since_creation(ref, oid) if ref else
                        self.unmoved_since_creation("HEAD", oid, records[0]["worktree"]))
+            checkout_only = self.checkouts_in_trunk(records[0]["worktree"], context["trunk_oid"])
         elif kind == "local":
             self.git("check-ref-format", ref)
             if self.oid(ref) != oid:
@@ -707,7 +809,9 @@ class Repository:
         # Lookups are keyed by the trunk this run proves against, so a run
         # never re-paginates PRs for a branch it has already seen.
         key = (context["trunk_oid"], branch or "@" + oid)
-        if pr_cache is not None and key in pr_cache:
+        if not context["github"]:
+            prs = []
+        elif pr_cache is not None and key in pr_cache:
             prs = pr_cache[key]
         else:
             prs = (self.pull_requests(context["repository"], branch) if branch
@@ -716,7 +820,9 @@ class Repository:
                 pr_cache[key] = prs
         exists = ("refs/heads/" + branch in heads) if branch and heads is not None else None
         try:
-            result["proof"] = self.proof(oid, context["trunk_oid"], prs, unmoved=unmoved)
+            result["proof"] = self.proof(oid, context["trunk_oid"], prs, unmoved=unmoved,
+                                         checkout_only=checkout_only,
+                                         git_only=not context["github"])
         except Refused as error:
             error.triage = self.triage(prs, exists, error.audit)
             raise
@@ -745,6 +851,8 @@ class Repository:
             for ref, oid in remote_heads.items():
                 candidates.append({"kind": "remote", "ref": ref, "oid": oid})
         operations = self.active_operations(worktrees)
+        sessions = self.active_sessions() if any(
+            candidate["kind"] == "worktree" for candidate in candidates) else {}
         actions, skipped, pr_cache, released = [], [], {}, set()
         # Worktree candidates come first, so a branch checked out only in
         # removable worktrees is planned in the same pass.
@@ -753,7 +861,7 @@ class Repository:
                 self.assert_not_pinned(candidate, operations)
                 actions.append(self.evaluate(candidate, context, scope, worktrees=worktrees,
                                              heads=remote_heads, pr_cache=pr_cache,
-                                             released=released))
+                                             released=released, sessions=sessions))
                 if candidate["kind"] == "worktree":
                     released.add(candidate["path"])
             except FAILURES as error:
@@ -769,8 +877,11 @@ class Repository:
         for item in skipped:
             reason = re.sub(r"#\d+", "#N", item["reason"].split(";")[0])
             kept[reason] = kept.get(reason, 0) + 1
-        return {"version": 2, "scope": scope, "context": context,
-                "summary": {"removable": len(actions), "kept": dict(sorted(kept.items()))},
+        summary = {"removable": len(actions), "kept": dict(sorted(kept.items()))}
+        if not context["github"]:
+            summary["github"] = (f"unavailable ({self.github_error}); only git-only proofs "
+                                 f"({', '.join(GIT_ONLY)}) apply, every other candidate is kept")
+        return {"version": 2, "scope": scope, "context": context, "summary": summary,
                 "actions": actions, "skipped": skipped, "intent_reviews": {}}
 
     def same_repository(self, planned: dict, current: dict) -> bool:
@@ -821,6 +932,7 @@ class Repository:
             records = [wt for wt in worktrees if wt["worktree"] == action["path"]]
             if len(records) != 1:
                 raise Refused("worktree registration changed immediately before deletion")
+            self.assert_not_in_use(action["path"], self.active_sessions())
             state = self.worktree_state(records[0])
             if any(state[key] != action[key] for key in ("path", "oid", "ref")):
                 raise Refused("worktree HEAD changed immediately before deletion")
@@ -876,8 +988,8 @@ class Repository:
                     # CAS prevents deleting newer commits; never branch -D.
                     self.git("update-ref", "--no-deref", "-d", action["ref"], action["oid"])
                 elif action["kind"] == "remote":
-                    self.git("push", f"--force-with-lease={action['ref']}:{action['oid']}",
-                             "origin", f":{action['ref']}")
+                    self.network("push", f"--force-with-lease={action['ref']}:{action['oid']}",
+                                 "origin", f":{action['ref']}")
                 elif action["kind"] == "worktree":
                     # Untracked dependency links block a non-forced removal;
                     # unlinking removes only the link, never its target.
@@ -906,9 +1018,9 @@ def main() -> int:
                         help="Assert exclusive access to candidate worktrees before removal")
     args = parser.parse_args()
     try:
-        for executable in ("git", "gh"):
-            if not shutil.which(executable):
-                raise Refused(f"missing prerequisite: {executable}")
+        # gh is optional: without it only git-only proofs apply.
+        if not shutil.which("git"):
+            raise Refused("missing prerequisite: git")
         repo = Repository(args.root)
         if args.mode == "prune":
             if not args.confirmed or not args.plan:
@@ -917,6 +1029,9 @@ def main() -> int:
                                 exclusive_worktrees=args.exclusive_worktrees)
         else:
             result = repo.plan(args.scope, args.trunk)
+        if not result["context"].get("github"):
+            print(f"warning: GitHub unavailable ({repo.github_error}); only git-only proofs "
+                  f"({', '.join(GIT_ONLY)}) apply, so PR-backed candidates are kept", file=sys.stderr)
         print(json.dumps(result, indent=2))
         return int(args.mode == "prune" and any(action["result"] == "skipped" for action in result["actions"]))
     except FAILURES as error:

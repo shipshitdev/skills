@@ -1,7 +1,7 @@
 ---
 name: git-cleanup
 description: Audits candidate code and intent against current trunk, then plans or removes only proven-safe or merged branches and worktrees. Defaults to a read-only cleanup plan.
-compatibility: Requires Python 3.9+, git with patch-id --verbatim, authenticated GitHub CLI gh.
+compatibility: Requires Python 3.9+, git with patch-id --verbatim; authenticated GitHub CLI gh for PR-backed proofs.
 metadata:
   version: "2.2.4"
   tags: "git, cleanup, branches, worktrees, prune, ci-cd, squash-merge, trunk-based"
@@ -152,6 +152,14 @@ A detached worktree qualifies the same way through its HEAD reflog. A branch
 whose reflog shows a commit, reset, rebase or pull, or that has no reflog,
 takes the normal audit.
 
+A worktree whose HEAD log, back to its creation entry, holds only commits in
+captured trunk history gets an `ancestor-of-trunk` proof with no paths and needs
+no intent review. Removing it deletes no ref and loses no commit, so a later
+trunk revert cannot lose work. A typical case is a detached checkout of a
+squash-merge commit after its PR landed. A log that shows a commit outside
+trunk, even one later reset away, or that lacks its creation entry, takes the
+normal audit.
+
 A merged PR head is delivered work. When the gate fails because trunk later
 edited, replaced or reverted that code, or because criss-cross merges leave no
 single audit base, the helper records a `merged-pr-head` proof: a
@@ -195,11 +203,20 @@ entire branch plan. Plan format 2 rejects old history-only cleanup plans.
 ## Plan
 
 Resolve the packaged helper relative to this skill's installation directory.
-Validate `git` and `gh` before discovery. The helper also verifies that the
-repository inferred by GitHub matches `origin`, rejects alternate or multiple
-push destinations, fetches origin trunk, fast-forwards the local trunk ref when
+Validate `git` before discovery, and `gh` for PR-backed proofs. The helper also
+verifies that the repository inferred by GitHub matches `origin`, rejects
+alternate or multiple push destinations, fetches origin trunk, fast-forwards the local trunk ref when
 it is a strict ancestor of origin (never a reset, never `--prune`), reads the
 live trunk object ID, and requires that object to exist locally.
+
+Network git commands run without credential prompts. When an
+`https://github.com/` origin fails, the helper retries once over SSH
+(`url.git@github.com:.insteadOf`) and keeps that transport for the rest of the
+run, including the prune push; if SSH fails too, planning stops. When `gh` is
+missing or unauthenticated, the helper warns on stderr, reads trunk from
+origin's HEAD (or `--trunk`), sets `context.github` to false and applies only the
+git-only proofs (`no-own-commits`, `ancestor-of-trunk`). Every other candidate
+is kept as `unproven without GitHub`; authenticate `gh` and replan to evaluate it.
 
 ```bash
 python3 <skill-directory>/scripts/cleanup.py dry-run --root <repository> --scope worktrees
@@ -209,7 +226,7 @@ For a reusable plan, explicitly save the same output under the repository's
 `.tmp/` after creating that directory. Review its `context`, `actions`, and
 `skipped` fields, including every `content_audit`. Complete the code/intent
 receipt, populate `intent_reviews` as documented in the reference (not needed
-for `no-own-commits`, `merged-pr-head` or `exact-pr-head-squash` actions), and remove
+for `no-own-commits`, `ancestor-of-trunk`, `merged-pr-head` or `exact-pr-head-squash` actions), and remove
 uncertain actions from the selected plan before pruning. Missing, unresolved or
 stale reviews make the helper skip deletion; `--confirmed` cannot bypass this. Saving this report is a caller-requested file write; the helper
 itself writes nothing during discovery.
@@ -223,12 +240,16 @@ still uses origin trunk.
 Protected names use exact string comparisons: `main`, `master`, `HEAD`, the
 selected trunk, and the caller's current branch. Names containing punctuation
 are never regular expressions. Preserve the main checkout and the caller's
-worktree. Preserve missing, locked, dirty, or symlink worktrees, including
+worktree. A worktree that contains the caller's working directory, or that any
+live process uses as its working directory (from `lsof`), is kept as
+`active session`; prune rechecks this immediately before each removal.
+Worktrees are never force-removed. Preserve missing, locked, dirty, or symlink worktrees, including
 untracked files and dirty submodules. The one untracked exception is a symlink
 named like a regenerable directory (a linked `node_modules` that a
 `node_modules/` ignore rule misses); the plan lists it as `untracked_links` and
 prune unlinks it, never its target, before removal. An ignored file blocks removal unless it
-is a byte-identical copy of the same path in the main checkout, not reached through
+is a byte-identical copy of the same path in the main checkout, or of that path
+with leading directories dropped (a copy nested under another directory), not reached through
 a link into the worktree (such as a synced
 env file) or sits under a regenerable directory: `node_modules`, `.next`,
 `.turbo`, `.cache`, `.parcel-cache`, `dist`, `build`, `coverage`, `generated`,
@@ -274,12 +295,12 @@ The helper rejects changes to repository identity, remote URL, current HEAD, or
 scope, and any trunk change other than a fast-forward. When trunk only advanced,
 prune re-proves each action against the new trunk instead of aborting (a trunk
 checkout may fast-forward with it). Proofs that carry their own evidence
-(`no-own-commits`, `merged-pr-head`, `exact-pr-head-squash`) continue when the
+(`no-own-commits`, `ancestor-of-trunk`, `merged-pr-head`, `exact-pr-head-squash`) continue when the
 proof kind and PR still match; an intent review is bound to the planned trunk,
 so other proofs need a fresh plan and review. Trunk must not move again between
 that proof and the deletion. Immediately before each action it refreshes PR protection,
 requires a recorded verified intent review bound to candidate/base/trunk IDs
-(except for a `no-own-commits`, `merged-pr-head` or `exact-pr-head-squash` proof), recomputes that candidate's proof, and checks
+(except for a `no-own-commits`, `ancestor-of-trunk`, `merged-pr-head` or `exact-pr-head-squash` proof), recomputes that candidate's proof, and checks
 that the exact candidate, ref, object ID, and clean worktree state still match.
 Prune creates no recovery refs. Changed or unproven candidates are skipped with
 reasons.
