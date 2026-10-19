@@ -9,57 +9,42 @@ when_to_use: "isolated world, page scraping"
 
 # Content Script Developer
 
-## When to Use
-
-- Building or updating a content script
-- Injecting UI into third-party pages
-- Scraping or reading page state in a browser extension
-- Handling SPA navigation changes or dynamic DOM updates
-
-## Core Constraints
+## Core constraints
 
 - Content scripts run in an isolated world; page JS scope is not shared.
 - Avoid polluting the host page (global styles, conflicting IDs/classes).
-- Be idempotent: injection should not duplicate on re-run.
+- Be idempotent: injection must not duplicate on re-run.
 - Prefer robust selectors over brittle class chains.
 - Never block the main thread; throttle observers and event handlers.
 
 ## Workflow
 
-### 1) Understand the Target Page
+1. **Understand the target page.**
+   - Identify stable anchors (data attributes, IDs, landmark roles).
+   - Note SPA navigation patterns (URL changes, DOM root swaps).
+   - Decide what you need: read-only scrape or UI injection.
 
-- Identify stable anchors (data attributes, IDs, landmark roles).
-- Note SPA navigation patterns (URL changes, DOM root swaps).
-- Decide what you need: read-only scrape vs UI injection.
+2. **Plan injection safely.**
+   - Create a single root container for your UI.
+   - Use a shadow root if CSS conflicts are likely.
+   - Scope styles to your root or give them a unique prefix.
+   - Add cleanup hooks for when the page swaps roots.
 
-### 2) Plan Injection Safely
+3. **Handle dynamic pages.**
+   - Use a MutationObserver for DOM changes.
+   - Throttle work with `requestAnimationFrame` or debouncing.
+   - Re-check anchors on navigation events.
 
-- Create a single root container for your UI.
-- Use a shadow root if CSS conflicts are likely.
-- Add styles with a unique prefix or scoped to your root.
-- Ensure cleanup hooks if the page swaps roots.
+4. **Message and store data.**
+   - Use `chrome.runtime.sendMessage` for background/service-worker calls.
+   - Use `chrome.storage` for persistent state.
+   - Keep tokens and sensitive data in extension storage, not in the DOM.
 
-### 3) Handle Dynamic Pages
+5. **Accessibility and UX.** Keyboard-focusable elements, visible focus styles, ARIA labels for controls.
 
-- Use a MutationObserver for DOM changes.
-- Throttle work with `requestAnimationFrame` or debouncing.
-- Re-check anchors on navigation events.
+## Patterns and snippets
 
-### 4) Message and Store Data
-
-- Use `chrome.runtime.sendMessage` for background/service worker calls.
-- Use `chrome.storage` for persistent state.
-- Keep tokens or sensitive data in extension storage, not DOM.
-
-### 5) Accessibility and UX
-
-- Keyboard-focusable UI elements.
-- Visible focus styles.
-- ARIA labels for controls.
-
-## Patterns and Snippets
-
-### Idempotent UI Injection
+### Idempotent UI injection
 
 ```ts
 const ROOT_ID = 'ext-root';
@@ -76,7 +61,7 @@ export function ensureRoot() {
 }
 ```
 
-### Safe Styling (Scoped)
+### Safe styling (scoped)
 
 ```ts
 const styleId = 'ext-style';
@@ -90,7 +75,7 @@ function injectStyles(css: string) {
 }
 ```
 
-### MutationObserver with Throttle
+### MutationObserver with throttle
 
 ```ts
 let scheduled = false;
@@ -106,7 +91,7 @@ const observer = new MutationObserver(() => {
 observer.observe(document.body, { childList: true, subtree: true });
 ```
 
-### Messaging to Background
+### Messaging to background
 
 ```ts
 async function fetchData(payload: Record<string, unknown>) {
@@ -114,22 +99,22 @@ async function fetchData(payload: Record<string, unknown>) {
 }
 ```
 
-## Reliability Checklist
+## Reliability checklist
 
 - UI injection is idempotent
 - Styles are scoped or shadow-rooted
 - Observers are throttled and cleaned up
 - Messaging uses explicit message types
-- Host page performance remains stable
+- Host page performance stays stable
 
-## Common Pitfalls
+## Common pitfalls
 
 - Injecting the same UI multiple times on SPA navigation
-- Using brittle selectors that break on minor DOM changes
+- Brittle selectors that break on minor DOM changes
 - Global CSS that overrides host styles
 - Heavy MutationObserver handlers without throttling
 
 ## Notes
 
 - Prefer small, composable helpers over large one-off scripts.
-- Keep extension logging prefixed and easy to disable in production.
+- Prefix extension logging and keep it easy to disable in production.

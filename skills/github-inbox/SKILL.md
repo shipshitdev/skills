@@ -70,9 +70,9 @@ Delegates To:
 
 ## Workflow
 
-Resolve `<skill-dir>` to this skill's installed directory through the active
-catalog before running a helper. Do not assume a repository checkout or a
-provider-specific environment variable.
+`<skill-dir>` is this skill's installed directory. Resolve it before running a
+helper; do not assume a repository checkout or a provider-specific environment
+variable.
 
 1. Verify auth:
 
@@ -90,9 +90,9 @@ provider-specific environment variable.
    Common filters:
 
    ```bash
-   node <skill-dir>/scripts/github-inbox-report.mjs --owner shipshitdev
-   node <skill-dir>/scripts/github-inbox-report.mjs --repo shipshitdev/shipcode
-   node <skill-dir>/scripts/github-inbox-report.mjs --project shipshitdev/1
+   node <skill-dir>/scripts/github-inbox-report.mjs --owner <org-or-user>
+   node <skill-dir>/scripts/github-inbox-report.mjs --repo <owner>/<repo>
+   node <skill-dir>/scripts/github-inbox-report.mjs --project <owner>/<project-number>
    node <skill-dir>/scripts/github-inbox-report.mjs --limit 50
    ```
 

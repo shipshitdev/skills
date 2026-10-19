@@ -20,12 +20,13 @@ when_to_use: "interview me, send a questionnaire, grill me, grill me with docs, 
 # Interview
 
 Run a focused discovery interview before creating a PRD, writing a plan, shaping
-UX, or starting implementation. Ground in the repo first, then run `grill-me` for
+UX, or starting implementation. Ground in the repo first, then run `grill-me` (if
+installed; otherwise ask the same kind of one-at-a-time decision questions) for
 the decisions that cannot be inferred.
 
 This skill does not write code, create issues, or produce a final PRD by default.
 It produces an interview brief. Recommend the next skill; do not invoke another
-user-invoked skill.
+user-invoked skill on the user's behalf.
 
 ## Contract
 
@@ -72,7 +73,7 @@ Recommend next (do not invoke): `prd-writer`, `feature-intake`, `shape`,
 
 ## Send mode
 
-`/interview send` serves a decision the user cannot make alone: someone else holds
+`send` mode (first argument `send`) serves a decision the user cannot make alone: someone else holds
 the missing knowledge. Skip the repo scan and the brief. Read
 [references/questionnaire.md](references/questionnaire.md): grill the user about the
 send (who receives it, what must come back), then write a questionnaire aimed at
@@ -80,7 +81,7 @@ that gap. Sending it stays with the user.
 
 ## When To Use
 
-- A user asks for `/interview`, "grill me", "grill me with docs", or equivalent.
+- A user asks for an interview, "grill me", "grill me with docs", a requirements interview, or equivalent.
 - A feature idea is too vague to turn directly into a PRD.
 - Existing repo docs probably answer part of the question, but missing decisions
   still need the user.
@@ -109,7 +110,7 @@ Read repo context before asking questions:
 - Search docs, README files, source code, and issues for the topic before
   asking the user to repeat known context.
 
-Do not look for a local plans directory under `.agents`; plans live on GitHub
+Do not look for a local plans directory under `.agents`; plans live on tracker
 issues and PR comments.
 
 When the user provides external docs or says "with docs", read only the relevant

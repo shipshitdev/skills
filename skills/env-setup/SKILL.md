@@ -10,9 +10,7 @@ when_to_use: "missing env var, secrets in git, env template"
 
 # Env Setup
 
-Make a project's environment configuration explicit: find every variable the
-code reads, keep `.env.example` truthful, verify the developer's real `.env`
-satisfies it, and make sure no secret file can reach git.
+Make a project's environment configuration explicit: find every variable the code reads, keep `.env.example` truthful, verify the developer's real `.env` satisfies it, and make sure no secret file can reach git.
 
 ## Contract
 
@@ -42,14 +40,7 @@ Confirmation Required:
 - Before overwriting an existing `.env.example` that has hand-written comments
   or values the scan did not produce.
 
-## When to Use
-
-- Setting up environment variables for a new project or app
-- Regenerating `.env.example` after configuration drift
-- Validating that a `.env` satisfies what the code requires
-- Auditing that `.gitignore` keeps secret env files out of git
-
-## Phase 1: Discover Required Variables
+## Phase 1: Discover required variables
 
 Scan the codebase for environment reads:
 
@@ -62,28 +53,13 @@ grep -rEoh "(process\.env|import\.meta\.env)(\.[A-Z0-9_]+|\[['\"][A-Z0-9_]+['\"]
   | grep -oE "[A-Z0-9_]{2,}" | sort -u
 ```
 
-**Treat that grep as a starting inventory, never as the answer.** It knows one
-language family (JS/TS) and two syntaxes (`process.env.X` and
-`process.env["X"]`, plus the `import.meta.env` equivalents). It cannot see a
-variable read through a helper (`getEnv("STRIPE_KEY")`), a destructure
-(`const { DATABASE_URL } = process.env`), a dynamic key, or a non-JS service in
-the same repo — Python `os.environ`, Go `os.Getenv`, Dockerfiles, CI workflows.
-Exclusions are directory-scoped (`--exclude-dir`) because filtering `grep -oh`
-output by path is impossible: `-o` prints only the matched text and `-h`
-suppresses the filename, so a downstream `grep -v node_modules` matches nothing
-and silently filters nothing.
+**Treat that grep as a starting inventory, never the answer.** It knows only JS/TS and two syntaxes (`process.env.X`, `process.env["X"]`, plus `import.meta.env` equivalents). It cannot see variables read through a helper (`getEnv("STRIPE_KEY")`), a destructure (`const { DATABASE_URL } = process.env`), a dynamic key, or non-JS services in the same repo (Python `os.environ`, Go `os.Getenv`, Dockerfiles, CI workflows). Exclusions use `--exclude-dir` because filtering `grep -oh` output by path is impossible: `-o` prints only the match and `-h` drops filenames, so a downstream `grep -v node_modules` silently filters nothing.
 
-Widen the sweep by hand from there: framework config (`next.config.*`,
-`nest-cli.json`, deploy config), schema-based env validation modules
-(zod/valibot env files), container and CI definitions, and existing `.env*`
-files. In a monorepo, inventory per app/package — apps often need different
-variables. Report the inventory as "found by scan + found by hand", so a reader
-can see what the automated pass could not cover.
+Widen the sweep by hand: framework config (`next.config.*`, `nest-cli.json`, deploy config), schema-based env validation modules (zod/valibot), container and CI definitions, and existing `.env*` files. In a monorepo, inventory per app/package. Report the inventory as "found by scan + found by hand" so the reader sees what the automated pass could not cover.
 
 ## Phase 2: Generate .env.example
 
-Create or update `.env.example` from the inventory. Group by service with a
-comment header per group, placeholder values only — never a real credential:
+Create or update `.env.example` from the inventory, grouped by service with a comment header per group. Placeholder values only, never a real credential:
 
 ```env
 # Application
@@ -100,40 +76,26 @@ AUTH_SECRET=...
 SENTRY_DSN=https://...
 ```
 
-For monorepos, write per-app templates when apps diverge. Preserve existing
-hand-written comments; confirm before overwriting anything the scan did not
-produce. Document any variable whose purpose is not obvious from its name.
+For monorepos, write per-app templates when apps diverge. Preserve hand-written comments, confirm before overwriting anything the scan did not produce, and document any variable whose purpose is not obvious from its name.
 
 ## Phase 3: Validate
 
-- Every variable the code reads appears in `.env.example`; every template
-  variable is actually read somewhere (flag dead entries).
-- The local `.env` (if present) sets every required variable; report gaps
-  without printing secret values.
-- For TypeScript projects, recommend schema-based env validation (e.g. zod) at
-  app startup so missing variables fail fast — point at where to add it rather
-  than wiring it unasked.
+- Every variable the code reads appears in `.env.example`; every template variable is read somewhere (flag dead entries).
+- The local `.env` (if present) sets every required variable. Report gaps without printing secret values.
+- For TypeScript projects, recommend schema-based env validation (for example zod) at startup so missing variables fail fast. Point at where to add it rather than wiring it unasked.
 
-## Phase 4: Keep Secrets Out of Git
+## Phase 4: Keep secrets out of git
 
-- `.gitignore` must cover `.env`, `.env.local`, and every `.env.*` variant
-  **except** `.env.example` (which must be committed).
-- Check nothing secret is already tracked: `git ls-files '.env*'` should return
-  only templates. A tracked secret file is a finding to surface — removing it
-  from history belongs to `git-safety`, not this skill.
-- For production, point at platform-native secret stores (AWS Secrets Manager,
-  Vercel/hosting env vars) — real values never live in the repo.
+- `.gitignore` must cover `.env`, `.env.local` and every `.env.*` variant **except** `.env.example` (which must be committed).
+- Check nothing secret is tracked: `git ls-files '.env*'` should return only templates. A tracked secret file is a finding to surface; removing it from history belongs to a git-safety skill, not this one.
+- For production, point at platform-native secret stores (AWS Secrets Manager, hosting-provider env vars). Real values never live in the repo.
 
-## Final Report
+## Final report
 
-State the mode that ran, variables discovered (per app where relevant),
-template files created or updated, validation gaps, and any `.gitignore` or
-tracked-secret findings.
+State the mode that ran, variables discovered (per app where relevant), template files created or updated, validation gaps, and any `.gitignore` or tracked-secret findings.
 
-## Anti-Patterns
+## Anti-patterns
 
-- **Writing real values.** This skill produces templates and reports; actual
-  secrets are entered by the developer or a secret manager.
-- **Printing secret values in output.** Name the variable, never its value.
-- **Guessing variables the code never reads.** The template mirrors the code,
-  not a generic stack checklist.
+- Writing real values. This skill produces templates and reports; secrets are entered by the developer or a secret manager.
+- Printing secret values in output. Name the variable, never its value.
+- Guessing variables the code never reads. The template mirrors the code, not a generic stack checklist.

@@ -7,36 +7,29 @@ metadata:
 when_to_use: "error boundaries, retry logic"
 ---
 
-# Error Handling Expert Skill
+# Error Handling Expert
 
-## When to Use
+## When to use
 
-- Implementing error handling
-- Creating exception filters
-- Designing error responses
-- Setting up error logging
-- Implementing error recovery
-- Handling async errors
-- Creating error boundaries
-- Implementing retry logic
+- Implementing or reviewing error handling and recovery
+- Creating NestJS exception filters or React error boundaries
+- Designing error responses and error logging
+- Handling async errors, implementing retry logic
 
-## Project Context Discovery
+## Discover project context first
 
-Before providing guidance:
+1. Read the repo's memory/instructions files (CLAUDE.md, AGENTS.md, `.agents/memory/` if present) for architecture and error patterns.
+2. Review existing exception filters and boundaries.
+3. Check for error monitoring (Sentry, Rollbar).
+4. Check the logging library (Winston, Pino).
 
-1. Check `.agents/memory/` for project architecture and error patterns
-2. Review existing exception filters
-3. Check for error monitoring (Sentry, Rollbar)
-4. Review logging libraries (Winston, Pino)
+Follow what the repo already does before adding a new pattern. In the Next.js App Router, route-level boundaries use `error.tsx` / `global-error.tsx`.
 
-## Core Principles
+## Core principles
 
-### Error Types
+**Application errors:** 400, 401, 403, 404, 409, 422. **System errors:** 500, 502, 503, 504.
 
-**Application Errors:** 400, 401, 403, 404, 409, 422
-**System Errors:** 500, 502, 503, 504
-
-### Error Response Format
+Error response format:
 
 ```typescript
 {
@@ -51,9 +44,9 @@ Before providing guidance:
 }
 ```
 
-## Quick Patterns
+## Quick patterns
 
-### NestJS Exception Filter
+NestJS exception filter:
 
 ```typescript
 @Catch()
@@ -64,7 +57,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 }
 ```
 
-### React Error Boundary
+React error boundary:
 
 ```typescript
 class ErrorBoundary extends React.Component {
@@ -74,27 +67,26 @@ class ErrorBoundary extends React.Component {
 }
 ```
 
-### Retry with Backoff
+Retry with backoff:
 
 ```typescript
 async function retryWithBackoff<T>(fn, maxRetries = 3): Promise<T>
 ```
 
-## Best Practices
+These are skeletons; full implementations are in `references/full-guide.md`.
 
-- User-friendly messages, no sensitive info
-- Log all errors with context
-- Integrate error monitoring (Sentry)
-- Implement retry logic and circuit breakers
-- Provide fallback values
-- Test error cases
+## Best practices
 
-## Recovery Strategies
+- User-friendly messages; no sensitive information in responses.
+- Log every error with context.
+- Integrate error monitoring (Sentry).
+- Add retries and circuit breakers where appropriate; provide fallback values.
+- Test error cases.
 
-1. **Retry Logic** - Exponential backoff
-2. **Circuit Breaker** - Prevent cascade failures
-3. **Fallback Values** - Graceful degradation
+## Recovery strategies
 
----
+1. **Retry logic:** exponential backoff.
+2. **Circuit breaker:** prevent cascade failures.
+3. **Fallback values:** graceful degradation.
 
-**For complete exception filter implementations, custom exceptions, validation pipe setup, error boundaries, circuit breaker pattern, logging integration, and database/API error patterns, see:** `references/full-guide.md`
+For complete exception filters, custom exceptions, validation pipe setup, error boundaries, circuit breaker, logging integration and database/API error patterns, read `references/full-guide.md`.

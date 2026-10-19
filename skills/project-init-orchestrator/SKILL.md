@@ -9,15 +9,15 @@ when_to_use: "initialize project, set up new project, bootstrap project, new pro
 
 # Project Init Orchestrator
 
-Choose the smallest safe setup route. For new Shipshit.dev product repos, prefer `npx @shipshitdev/v0`
+Choose the smallest safe setup route. For new Shipshit.dev product repos, prefer `bunx @shipshitdev/v0`
 as the primary scaffolder, then customize and verify the generated workspace. Use the
 lower-level init skills for existing repos, repairs, or project types not covered by v0.
 
-## Authorized Scope
+## Authorized scope
 
 Act only within the user's request and existing approval; loading this skill
 grants no new authority. Keep report-only requests report-only, honor the
-caller's target, host, provider, and cost limits, ask before expanding scope,
+caller's target and cost limits, ask before expanding scope,
 and forward these limits to delegates.
 
 ## Contract
@@ -65,7 +65,7 @@ Delegates To:
   repo repair or post-v0 customization
 - `scaffold` for small module/component additions inside an existing codebase
 
-## When to Use
+## When to use
 
 This skill activates automatically when users:
 
@@ -75,21 +75,21 @@ This skill activates automatically when users:
 - Say "initialize project", "set up new project", "bootstrap project"
 - Want consistent setup across multiple projects
 
-## Skills Orchestrated
+## Skills orchestrated
 
 | Order | Skill | Purpose | Required |
 |-------|-------|---------|----------|
-| 1 | `npx @shipshitdev/v0` | New Shipshit.dev product repo | Conditional |
+| 1 | `bunx @shipshitdev/v0` | New Shipshit.dev product repo | Conditional |
 | 2 | `agent-folder-init` | AI documentation & standards for existing repos | Conditional |
-| 3 | `linter-formatter-init` | ESLint/Biome + formatter + pre-commit repair | Conditional |
+| 3 | linter/formatter init skill | ESLint/Biome + formatter + pre-commit repair | Conditional |
 | 4 | `testing-cicd-init` / `husky-test-coverage` | Test and CI gates | Optional |
 | 5 | `scaffold` | Incremental module/component additions | Optional |
 
-## Route Selection
+## Route selection
 
 Use this order:
 
-1. New Shipshit.dev product repo: run `npx @shipshitdev/v0`.
+1. New Shipshit.dev product repo: run `bunx @shipshitdev/v0`.
 2. New non-product repo: scaffold only the requested repo structure, then add agent docs and gates.
 3. Existing repo missing AI context: run `agent-folder-init`.
 4. Existing repo with weak quality gates: run linter/test/CI skills only.
@@ -98,13 +98,13 @@ Use this order:
 For v0-backed setup, use interactive mode unless the user provides all inputs:
 
 ```bash
-npx @shipshitdev/v0 <project-directory>
+bunx @shipshitdev/v0 <project-directory>
 ```
 
 For non-interactive Shipshit.dev product setup:
 
 ```bash
-npx @shipshitdev/v0 <project-directory> \
+bunx @shipshitdev/v0 <project-directory> \
   --scope "<product scope>" \
   --agent codex \
   --apps web,app,desktop,mobile,extension,cli \
@@ -115,7 +115,7 @@ npx @shipshitdev/v0 <project-directory> \
 Use `--skip-agent`, `--no-install`, and `--no-start` for CI/smoke tests or when the
 user only wants the scaffold written.
 
-## Legacy Manual Route
+## Legacy manual route
 
 Use only when v0 is not appropriate or when enhancing an existing workspace. Do
 not use for new Shipshit.dev product repos unless v0 is unavailable or the user
@@ -124,7 +124,7 @@ explicitly bypasses it.
 Stack: Next.js 16 (`proxy.ts`) + React 19 + TypeScript 6 + Tailwind v4 CSS-first
 (frontend), NestJS 12 + Prisma 7/Postgres + Better Auth + Swagger (backend), Vitest 80%
 coverage + Biome + GitHub Actions CI, Bun package manager. Every dependency pin lives in
-the `V` table at the top of `scripts/init-workspace.py`; refresh it with `npm view <pkg> version`
+the `V` table at the top of `scripts/init-workspace.py`; refresh it by looking up each package's current version in the registry
 (Expo packages follow the SDK's `bundledNativeModules.json`, not the newest release).
 
 Load `references/legacy-manual-route.md` for the full step-by-step workflow,
@@ -161,21 +161,21 @@ When user says "initialize my project" or "set up new project":
 Use lower-level skills only after deciding v0 is not the right route:
 
 1. `agent-folder-init` for AI docs and agent config.
-2. `linter-formatter-init` for lint/format drift.
+2. A linter/formatter init skill for lint/format drift.
 3. `testing-cicd-init` or `husky-test-coverage` for test and CI gates.
 4. `scaffold` for a requested module, endpoint, component, or package.
 
-## Route Matrix
+## Route matrix
 
 | Request | Primary Route | Notes |
 |---------|---------------|-------|
-| New Shipshit.dev product repo | `npx @shipshitdev/v0` | Default route. Includes app surfaces and agent setup. |
+| New Shipshit.dev product repo | `bunx @shipshitdev/v0` | Default route. Includes app surfaces and agent setup. |
 | New non-product repo | Minimal scaffold + `agent-folder-init` | Keep setup proportional to the requested repo. |
 | Existing repo AI context | `agent-folder-init` | No application source generation. |
 | Existing repo quality gates | Linter/test/CI skills | Repair only the missing gates. |
 | Existing repo feature/module | `scaffold` | Find 3+ local examples first. |
 
-## Best Practices
+## Best practices
 
 ### Sequencing
 
@@ -199,16 +199,16 @@ After orchestration, verify:
 - [ ] Existing repo changes are limited to the delegated repair/addition
 - [ ] `bun lint`, `bun test`, or the repo's documented equivalents work when present
 
-## Example Interaction
+## Example interaction
 
-**User:** "Set up my new product at ~/projects/my-saas"
+**User:** "Set up my new product at ./my-saas"
 
 **Orchestrator Response:**
 
 ```
 Route: new Shipshit.dev product repo → v0.
 
-npx @shipshitdev/v0 ~/projects/my-saas --agent codex --no-github
+bunx @shipshitdev/v0 ./my-saas --agent codex --no-github
 ```
 
 ## References

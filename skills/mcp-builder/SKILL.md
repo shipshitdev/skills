@@ -110,12 +110,12 @@ This document contains the complete MCP specification. Note: the URL may change 
 **For Python implementations, also load:**
 
 - **Python SDK Documentation**: Fetch `https://py.sdk.modelcontextprotocol.io/`
-- [🐍 Python Implementation Guide](./references/python_mcp_server.md) - Python-specific best practices and examples
+- [Python Implementation Guide](./references/python_mcp_server.md) - Python-specific best practices and examples
 
 **For Node/TypeScript implementations, also load:**
 
 - **TypeScript SDK Documentation**: Fetch `https://ts.sdk.modelcontextprotocol.io/`
-- [⚡ TypeScript Implementation Guide](./references/node_mcp_server.md) - Node/TypeScript-specific best practices and examples
+- [TypeScript Implementation Guide](./references/node_mcp_server.md) - Node/TypeScript-specific best practices and examples
 
 #### 1.4 Study API Documentation
 
@@ -176,13 +176,13 @@ tools.
 
 **For Python:**
 
-- Create a single `.py` file or organize into modules if complex (see [🐍 Python Guide](./references/python_mcp_server.md))
+- Create a single `.py` file or organize into modules if complex (see [Python Guide](./references/python_mcp_server.md))
 - Use the MCP Python SDK for tool registration
 - Define Pydantic models for input validation
 
 **For Node/TypeScript:**
 
-- Create the project structure from [⚡ TypeScript Guide](./references/node_mcp_server.md)
+- Create the project structure from [TypeScript Guide](./references/node_mcp_server.md)
 - Set up `package.json` and `tsconfig.json`
 - Use MCP TypeScript SDK
 - Define Zod schemas for input validation
@@ -235,7 +235,7 @@ For each tool in the plan:
 
 #### 2.4 Follow Language-Specific Best Practices
 
-Load the matching guide before finishing implementation — [🐍 Python Implementation Guide](./references/python_mcp_server.md) or [⚡ TypeScript Implementation Guide](./references/node_mcp_server.md) — and follow its patterns: proper SDK tool registration (`@mcp.tool` / `server.registerTool`), strict input validation (Pydantic v2 `model_config` / Zod `.strict()`), full type coverage with no `any`, async/await for all I/O, module-level constants for shared values (e.g. `CHARACTER_LIMIT`, `API_BASE_URL`), and — for TypeScript — a working `bun run build`.
+Load the matching guide before finishing implementation — [Python Implementation Guide](./references/python_mcp_server.md) or [TypeScript Implementation Guide](./references/node_mcp_server.md) — and follow its patterns: proper SDK tool registration (`@mcp.tool` / `server.registerTool`), strict input validation (Pydantic v2 `model_config` / Zod `.strict()`), full type coverage with no `any`, async/await for all I/O, module-level constants for shared values (e.g. `CHARACTER_LIMIT`, `API_BASE_URL`), and — for TypeScript — a working `bun run build`.
 
 ---
 
@@ -268,8 +268,8 @@ Safe ways to test: run the server in tmux to keep it out of the main process, us
 
 To verify implementation quality, load the appropriate checklist from the language-specific guide:
 
-- Python: see "Quality Checklist" in [🐍 Python Guide](./references/python_mcp_server.md)
-- Node/TypeScript: see "Quality Checklist" in [⚡ TypeScript Guide](./references/node_mcp_server.md)
+- Python: see "Quality Checklist" in [Python Guide](./references/python_mcp_server.md)
+- Node/TypeScript: see "Quality Checklist" in [TypeScript Guide](./references/node_mcp_server.md)
 
 ---
 
@@ -278,7 +278,7 @@ To verify implementation quality, load the appropriate checklist from the langua
 After implementing the MCP server, create evaluations that test whether agents
 can answer realistic questions with the tools.
 
-**Load [✅ Evaluation Guide](./references/evaluation.md) for complete evaluation guidelines.**
+**Load [Evaluation Guide](./references/evaluation.md) for complete evaluation guidelines.**
 
 #### 4.1 Understand Evaluation Purpose
 

@@ -69,7 +69,7 @@ Delegates To:
    For a standalone requirements-only request, return/publish the draft within
    authorization and clearly say that execution readiness has not been checked.
 
-## Updates and Planning
+## Updates and planning
 
 When asked to plan existing requirements, read the live issue body and relevant
 comments, then run the `writing-plans` skill. A draft state does not prevent a

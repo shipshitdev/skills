@@ -16,7 +16,7 @@ when_to_use: "every section looks the same, nothing guides the eye"
 
 # Layout
 
-Apply structure changes only within the authorized target and scope.
+Apply structure changes only within the authorized target and scope. The target is the argument, if given (a page, component or flow).
 
 Layout turns product priority into reading order, grouping, rhythm, and usable space. Diagnose the structural problem before moving boxes.
 
@@ -44,7 +44,7 @@ record the first assessment before starting the second.
    - **Density:** Does the amount of information per region fit use frequency, decision complexity, and visitor mode?
    - **Adaptation:** At narrow, intermediate, wide, zoomed, and localized states, what reorders, collapses, wraps, scrolls, or remains fixed? Does DOM and focus order still agree with the visual order?
    - **Extremes:** Do long content, empty states, overlays, sticky elements, safe areas, and small touch targets expose structural failures?
-2. **Mechanical scan:** use the project's configured layout checks in read-only
+2. **Mechanical scan:** use the project's configured layout checks (linters, visual or accessibility checks) in read-only
    mode, or inspect the source when no checker exists. Report unavailable evidence.
 
 Also inspect arbitrary spacing, overflow, stacking, and container behavior the detector cannot resolve. Keep mechanical evidence out of the first assessment, then synthesize both passes before editing. A clean scan cannot prove hierarchy or rhythm.
@@ -90,4 +90,4 @@ Variation is not a goal by itself. Repetition should support recognition; break 
 
 Answer each item with rendered or source evidence, then rerun the scan. Do not substitute a bare “yes” for verification.
 
-When the structure holds, recommend the available `polish` skill.
+When the structure holds, recommend the `polish` skill (if installed) for the last-mile finish.

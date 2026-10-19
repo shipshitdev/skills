@@ -8,7 +8,6 @@ metadata:
 allowed-tools: Bash(bun *) Bash(bunx *) Bash(git *)
 when_to_use: "smoke tests, build compiles"
 ---
-
 # Test Runner
 
 Run the requested test scope and report the result. Default to changed tests,
@@ -16,15 +15,8 @@ detect the runner, and read the actual failure output and traces. A test executi
 request, including a bare scope, authorizes execution and diagnosis. Repair files
 only after explicit authorization to fix the failures.
 
-It subsumes the "run the smoke suite and stabilize it" and "compile and fix the
-type errors in a loop" workflows behind one scoped entry point.
-
-## Authorized Scope
-
-Act only within the user's request and existing approval; loading this skill
-grants no new authority. Keep report-only requests report-only, honor the
-caller's target, host, provider, and cost limits, ask before expanding scope,
-and forward these limits to delegates.
+It covers "run the smoke suite and stabilize it" and "compile and fix the
+type errors in a loop" behind one scoped entry point.
 
 ## Contract
 

@@ -37,6 +37,8 @@ tuning, use `performance-expert` instead.
 
 ## Checklist
 
+If the project uses the React Compiler, skip manual `memo`/`useMemo`/`useCallback` unless the Profiler still shows a problem (verify the project's setup).
+
 - Measure: use React DevTools Profiler or log renders; capture baseline.
 - Find churn: identify state updated on a timer, scroll, input, or animation.
 - Split: move ticking state into a child; keep heavy lists static.
@@ -141,4 +143,4 @@ function Summary({ orders }: { orders: Order[] }) {
 
 ## Example Reference
 
-Load `references/examples.md` when the user wants a concrete refactor example.
+Load [references/examples.md](references/examples.md) when the user wants a concrete refactor example.

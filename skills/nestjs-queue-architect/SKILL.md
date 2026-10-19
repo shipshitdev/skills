@@ -16,6 +16,9 @@ Design resilient, scalable BullMQ + NestJS job processing systems for media-heav
 
 ## Technology Stack
 
+Versions below were last recorded in 2025-10 and may be stale; check the repo's
+`package.json` and the registry before relying on them (verify).
+
 - **BullMQ**: 5.61.0 (Redis-backed job queue)
 - **@nestjs/bullmq**: 12.0.0 (NestJS 12)
 - **@bull-board/nestjs**: 6.13.1 (Queue monitoring UI)
@@ -24,9 +27,9 @@ Design resilient, scalable BullMQ + NestJS job processing systems for media-heav
 
 Before implementing:
 
-1. Check `.agents/memory/` for any architecture files describing queue patterns
+1. Check the repo's memory/instructions files (for example CLAUDE.md or AGENTS.md) for queue conventions
 2. Review existing queue services and constants
-3. Look for `[project]-queue-architect` skill
+3. Look for a project-specific queue skill and prefer its conventions
 
 ## Core Patterns
 
@@ -34,8 +37,8 @@ Before implementing:
 
 ```typescript
 export const QUEUE_NAMES = {
-  VIDEO_PROCESSING: 'video-processing',
-  IMAGE_PROCESSING: 'image-processing',
+  VIDEO: 'video-processing',
+  IMAGE: 'image-processing',
 } as const;
 
 export const JOB_PRIORITY = {
@@ -111,9 +114,9 @@ BullModule.registerQueue({
 ## Common Pitfalls
 
 - **Memory leaks**: Always set `removeOnComplete/Fail`
-- **Timeouts**: Set appropriate `timeout` for heavy jobs
+- **Timeouts**: Bound heavy handlers explicitly (verify whether your BullMQ version supports a per-job timeout; otherwise enforce it inside the handler)
 - **Race conditions**: Make handlers idempotent
 
----
+## Further reading
 
 **For complete processor examples, testing patterns, Bull Board setup, and Redis pub/sub integration, see:** `references/full-guide.md`

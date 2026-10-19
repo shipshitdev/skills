@@ -88,3 +88,7 @@ the top of the prototype.
    branch, out of main, and leave a context pointer to that branch on the
    implementation issue. Capture the answer too. The main branch keeps only the
    validated decision.
+
+---
+
+Adapted from the `prototype` skill in mattpocock/skills (MIT): https://github.com/mattpocock/skills

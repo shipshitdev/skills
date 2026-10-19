@@ -74,8 +74,9 @@ Delegates To:
 ## Quick Start
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/setup-husky-coverage.py --root /path/to/project
-python3 ${CLAUDE_SKILL_DIR}/scripts/setup-husky-coverage.py --root /path/to/project --dry-run
+# <skill-dir> is the directory containing this SKILL.md. Run --dry-run first.
+python3 <skill-dir>/scripts/setup-husky-coverage.py --root /path/to/project --dry-run
+python3 <skill-dir>/scripts/setup-husky-coverage.py --root /path/to/project
 ```
 
 See `references/full-guide.md` (§ Quick Start Examples) for threshold, warn-only, and skip-if-no-tests invocations.
@@ -85,7 +86,7 @@ See `references/full-guide.md` (§ Quick Start Examples) for threshold, warn-onl
 ### Husky Setup
 
 - Installs Husky if not already present
-- Initializes Husky (`bunx husky install`)
+- Initializes Husky (the bundled script writes `husky install` as the `prepare` script; Husky v9+ changed its init flow, so verify against the Husky docs for the installed major version)
 - Creates `.husky/pre-commit` hook that runs tests with coverage
 - Adds `prepare` script to package.json (if missing)
 
@@ -177,9 +178,9 @@ See `references/full-guide.md` (§ Example .nycrc.json) for a full config exampl
 
 ## Package Manager Support
 
-The skill automatically detects and uses:
+The script detects the project's existing package manager and uses it to run tests (prefer bun when the project uses it):
 
-- **bun**: `bun run test` (preferred)
+- **bun**: `bun run test`
 - **yarn**: `yarn test`
 - **pnpm**: `pnpm run test`
 
@@ -196,14 +197,14 @@ The skill automatically detects and uses:
 
 | Skill | How It Works Together |
 |-------|----------------------|
-| **project-init-orchestrator** | Auto-invoked after scaffolding; sets Vitest + 80% threshold + CI/CD. Run this skill separately only when adding to an existing project. |
-| **linter-formatter-init** | Both configure Husky; this skill covers test coverage, linter-formatter-init covers linting/formatting |
-| **testing-expert** | Uses testing patterns and coverage targets from testing-expert skill |
+| **project-init-orchestrator** (if installed) | Auto-invoked after scaffolding; sets Vitest + 80% threshold + CI/CD. Run this skill separately only when adding to an existing project. |
+| **linter-formatter-init** (if installed) | Both configure Husky; this skill covers test coverage, linter-formatter-init covers linting/formatting |
+| **testing-expert** (if installed) | Uses testing patterns and coverage targets from testing-expert skill |
 
 ### Manual Integration (existing projects)
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/setup-husky-coverage.py \
+python3 <skill-dir>/scripts/setup-husky-coverage.py \
   --root /path/to/project \
   --threshold 80
 ```
@@ -213,7 +214,7 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/setup-husky-coverage.py \
 ### Pre-commit hook not running
 
 ```bash
-# Reinstall Husky
+# Reinstall Husky (verify the command for the installed Husky major version)
 bunx husky install
 chmod +x .husky/pre-commit
 ```

@@ -299,8 +299,9 @@ Never use `process.env` directly outside config files.
 | `$queryRawUnsafe` with user input | Typed client or tagged `$queryRaw` |
 | Dependent writes without a transaction | `prisma.$transaction` |
 
-## Related skills
+## Related skills (use if installed)
 
 - `nestjs-queue-architect` — BullMQ async job patterns
+- `nestjs-testing-expert` — Vitest and Supertest specs
 - `postgres-ops` — migrations, indexes, query plans
 - `error-handling-expert` — global error strategy

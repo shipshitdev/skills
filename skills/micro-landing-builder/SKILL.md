@@ -60,7 +60,7 @@ Each landing page is a standalone NextJS app where:
 
 ## Prerequisites
 
-Nothing to publish or install first: the scaffold writes the shadcn/ui setup itself and depends only on live npm packages (Next.js 16, React 19, Tailwind v4, `shadcn`, `radix-ui`, `class-variance-authority`, `cn`, `lucide-react`, `tw-animate-css`). Versions are pinned in `scripts/scaffold.py`; re-check them with `npm view <pkg> version` before changing pins. Needs Bun and network access for `bun install`.
+Nothing to publish or install first: the scaffold writes the shadcn/ui setup itself and depends only on live npm packages (Next.js 16, React 19, Tailwind v4, `shadcn`, `radix-ui`, `class-variance-authority`, `cn`, `lucide-react`, `tw-animate-css`). Versions are pinned in `scripts/scaffold.py`; re-check current versions on the package registry before changing pins (verify). Needs Bun and network access for `bun install`.
 
 ## Usage
 
@@ -90,7 +90,7 @@ python3 scripts/scaffold.py \
 
 # Allow outside current directory
 python3 scripts/scaffold.py \
-  --root ~/www/landings \
+  --root ../landings \
   --slug mystartup \
   --allow-outside
 ```
@@ -173,20 +173,20 @@ Create multiple landing pages from a template or CSV/JSON file:
 ```bash
 # From CSV file
 python3 scripts/batch_create.py \
-  --root ~/www/landings \
+  --root ../landings \
   --csv projects.csv \
   --allow-outside
 
 # From JSON file
 python3 scripts/batch_create.py \
-  --root ~/www/landings \
+  --root ../landings \
   --json projects.json \
   --allow-outside
 
 # Clone from existing template
 python3 scripts/batch_create.py \
-  --root ~/www/landings \
-  --template ~/www/landings/template-landing \
+  --root ../landings \
+  --template ../landings/template-landing \
   --json projects.json \
   --allow-outside
 ```
@@ -224,7 +224,7 @@ Optional theme columns (headers are trimmed and case-insensitive; unknown or dup
 
 ### Single Project
 
-Before running `vercel`, confirm `.vercel/project.json` exists in the landing directory. If it does not exist, stop and ask the user to run `vercel link` manually — do not run it unattended.
+Before running `vercel` (here or via `deploy_vercel.py`), confirm `.vercel/project.json` exists in the landing directory. If it does not exist, stop and ask the user to run `vercel link` manually — do not run it unattended. Deploying needs the Vercel CLI and credentials, so skip it in environments that lack them and say so.
 
 ```bash
 cd mystartup
@@ -238,15 +238,15 @@ Deploy multiple projects to Vercel with custom domains:
 ```bash
 # Deploy with domain mapping
 python3 scripts/deploy_vercel.py \
-  ~/www/landings/project1 \
-  ~/www/landings/project2 \
+  ../landings/project1 \
+  ../landings/project2 \
   --domains-json domains.json \
   --prod \
   --yes
 
 # Single domain
 python3 scripts/deploy_vercel.py \
-  ~/www/landings/project1 \
+  ../landings/project1 \
   --domain project1.com \
   --prod \
   --yes

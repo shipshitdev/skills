@@ -7,7 +7,6 @@ metadata:
   author: Ship Shit Dev
 when_to_use: "testing pyramid, sandbox vs production drift"
 ---
-
 # Testing Expert
 
 The generalist front door for testing. It owns the decisions that hold no matter

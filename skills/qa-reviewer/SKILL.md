@@ -28,9 +28,8 @@ Structured framework for reviewing AI agent work before finalizing changes. Catc
 
 - Review original task and requirements
 - List all deliverables (files created/modified/deleted)
-- Check critical rules in the applicable `AGENTS.override.md` / `AGENTS.md`
-  chain and explicitly configured fallback files; include `CLAUDE.md` for
-  Claude-specific rules
+- Check critical rules in the repository's instruction files (`AGENTS.md`,
+  `AGENTS.override.md`, `CLAUDE.md`, or configured fallbacks)
 
 ### 2. Requirement Verification
 
@@ -78,13 +77,15 @@ grep -r ": any" <files>
 
 ## Project Rules Check
 
+Example checklist. Replace it with the rules in the repository's own instruction files.
+
 - [ ] No console.log (use logger)
 - [ ] No `any` types
 - [ ] No inline interfaces
-- [ ] Applicable AGENTS files intact and scoped overrides intentional
+- [ ] Repository instruction files intact and scoped overrides intentional
 - [ ] Configured fallback instruction files exist and are nonempty
-- [ ] .agents/ folders untouched
-- [ ] Multi-tenancy preserved
+- [ ] Agent configuration folders untouched unless the task required changes
+- [ ] Project invariants preserved (for example multi-tenancy, if the project has it)
 
 ## Final Assessment Categories
 

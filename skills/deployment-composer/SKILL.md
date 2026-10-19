@@ -11,14 +11,11 @@ when_to_use: "release workflow, failed-check diagnosis"
 
 # Deployment Composer
 
-Compose the smallest safe deployment workflow from the repository's actual branching model, CI setup, deploy provider, and release risk. Routes work to focused skills instead of treating every deploy as the same checklist.
+Compose the smallest safe deployment workflow from the repository's actual branching model, CI setup, deploy provider and release risk. Route to focused skills instead of treating every deploy as the same checklist.
 
-## Authorized Scope
+## Scope
 
-Act only within the user's request and existing approval; loading this skill
-grants no new authority. Keep report-only requests report-only, honor the
-caller's target, host, provider, and cost limits, ask before expanding scope,
-and forward these limits to delegates.
+Act only within the user's request and existing approval; loading this skill grants no new authority. Keep report-only requests report-only, honor the caller's target, provider and cost limits, ask before expanding scope, and forward these limits to delegates.
 
 ## Contract
 
@@ -60,18 +57,18 @@ Delegates To:
 - `ec2-backend-deployer`
 - `testing-cicd-init`
 
-## Composed Skills
+## Composed skills (use if available)
 
 | Stage | Use |
 |-------|-----|
 | `release` | Gate the exact trunk SHA, then cut via release-please, a guarded release workflow, or a tag |
-| `deploy-app` | General staging/production deploy checklist, local quality gates, post-deploy monitoring |
+| `deploy-app` | Staging/production checklist, local quality gates, post-deploy monitoring |
 | `github-fix-ci` | Failed GitHub Actions checks on release or deploy PRs |
 | `ec2-backend-deployer` | Docker + GitHub Actions + EC2 backend deployment setup |
 | `testing-cicd-init` | Missing or weak GitHub Actions/test infrastructure |
 | Provider-specific skills | Vercel, Docker, Turborepo, monitoring, or app-specific deployment when present |
 
-## Discovery Phase
+## 1. Discovery
 
 Always inspect before choosing a path:
 
@@ -83,89 +80,41 @@ find . -maxdepth 3 -type f \( -name 'package.json' -o -name 'vercel.json' -o -na
 find .github/workflows -maxdepth 1 -type f 2>/dev/null
 ```
 
-For GitHub repos:
+For GitHub repos also run `gh repo view --json nameWithOwner,defaultBranchRef` and `gh workflow list`.
 
-```bash
-gh repo view --json nameWithOwner,defaultBranchRef
-gh workflow list
-```
+Capture: current branch and dirty-worktree state; default (trunk) branch and remote branches; CI provider and required checks; deploy provider (Vercel, EC2/Docker, GitHub Actions, custom scripts, unknown); package manager and quality commands; environment targets (preview, staging, production).
 
-Capture:
+## 2. Routing
 
-- Current branch and dirty worktree state
-- Default (trunk) branch and remote branch list
-- CI provider and required checks
-- Deploy provider: Vercel, EC2/Docker, GitHub Actions, custom scripts, or unknown
-- Package manager and quality commands
-- Environment targets: preview, staging, production
+**Release.** Use `release`: it gates the exact trunk SHA and cuts through the repo's own mechanism. `staging` and `production` are deployment environments driven by CI/tags, not git branches. Use `github-fix-ci` if checks fail.
 
-## Routing Rules
+**Direct provider deploy.** Use `deploy-app` for local pre-deploy checks and post-deploy verification, then route by provider: Vercel (provider guidance; prefer CI/Git-integration deploys), EC2/Docker (`ec2-backend-deployer`), Turborepo (inspect `turbo.json`, use affected builds), unknown (inspect scripts and workflows before acting). Never deploy production without explicit confirmation.
 
-### Release
+**CI setup or repair.** No CI or weak gates: `testing-cicd-init` for baseline checks, then `deploy-app`. Failing existing checks: `github-fix-ci`.
 
-If the user wants to cut a release:
+**Release notes.** Use `release` in `notes` mode for user-facing notes from commit history; include migrations, env changes and rollback notes when visible.
 
-1. Use `release`: it gates the exact trunk SHA and cuts through the repo's own release mechanism.
-2. `staging` and `production` are deployment environments driven by CI/tags — not git branches.
-3. Use `github-fix-ci` if checks fail.
+## 3. Workflow
 
-### Direct Provider Deploy
-
-If the user wants to deploy the current branch/app to an environment:
-
-1. Use `deploy-app` for local pre-deploy checks and post-deploy verification.
-2. Route provider setup or execution:
-   - Vercel project: use Vercel-specific guidance or CLI.
-   - EC2/Docker backend: use `ec2-backend-deployer`.
-   - Turborepo: inspect `turbo.json` and use affected builds where appropriate.
-   - Unknown provider: inspect scripts and workflow files before acting.
-3. Do not deploy production without explicit confirmation.
-
-### CI Setup or Repair
-
-If the repo has no CI or weak gates:
-
-1. Use `testing-cicd-init` to add baseline checks.
-2. Use `deploy-app` after CI exists.
-3. For failing existing checks, use `github-fix-ci`.
-
-### Release Notes
-
-If the release needs user-facing notes or a PR body:
-
-1. Use `release` in `notes` mode for user-facing notes from commit history.
-2. Include migrations, env changes, and rollback notes when visible.
-
-## Deployment Workflow
-
-1. Discover repo topology and deployment provider.
-2. Choose the narrowest route from the routing rules.
-3. Before a direct deploy, run the repository's own format, lint, and type-check
-   scripts (tests and build when configured) on the host the repo designates.
-   Never guess or chain package managers; report absent scripts as coverage gaps.
-   Releases rely on CI for the exact SHA instead (see `release`).
-
+1. Discover repo topology and provider.
+2. Choose the narrowest route above.
+3. Before a direct deploy, run the repository's own format, lint and type-check scripts (tests and build when configured). Never guess or chain package managers; report absent scripts as coverage gaps. Releases rely on CI for the exact SHA instead (see `release`).
 4. Execute the selected release or deploy path.
 5. Wait for remote checks or deployment status.
-6. Verify the deployed environment:
-   - health endpoint
-   - critical page/API path
-   - logs or monitoring when available
+6. Verify the deployed environment: health endpoint, a critical page/API path, logs or monitoring.
 7. Report final status and blockers.
 
-## Safety Rules
+## Safety rules
 
-- Never hide a dirty worktree; identify whether local changes are part of the deploy.
+- Never hide a dirty worktree; say whether local changes are part of the deploy.
 - Never bypass branch protection or required checks.
 - Never merge or deploy production without explicit confirmation.
-- Never assume a `staging` environment is configured; verify CI/deployment settings.
+- Never assume a `staging` environment exists; verify CI/deployment settings.
 - Never call skipped or absent checks green.
-- Prefer existing repo scripts and workflows over inventing new deploy commands.
-- If a provider cannot be identified, stop after discovery and report what is missing.
+- Prefer existing repo scripts and workflows over inventing deploy commands.
+- If the provider cannot be identified, stop after discovery and report what is missing.
 
-## Output Shape
-
-Return a compact deployment state:
+## Output shape
 
 ```markdown
 Deployment route: [release PR / provider deploy / CI setup / repair]

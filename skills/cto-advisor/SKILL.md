@@ -10,53 +10,40 @@ when_to_use: "hiring plan, build vs buy"
 
 # CTO Advisor
 
-## When This Activates
+Org-level engineering guidance. For a scan of a real codebase's debt, use a tech-debt skill instead; this one sets the investment level, that one finds the items.
 
-- User mentions CTO, technical leadership, or engineering leadership
-- User asks how much of the engineering budget to spend paying debt down —
-  the portfolio-level call, not the codebase inventory (`tech-debt` owns that)
-- User needs team scaling or hiring plans
-- User wants architecture decisions or ADRs
-- User asks about engineering metrics or DORA metrics
-- User needs technology evaluation or vendor selection
+## When to use
 
-## Quick Start
+- CTO, technical-leadership or engineering-leadership questions
+- How much of the engineering budget to spend paying down debt (portfolio-level call)
+- Team scaling or hiring plans
+- Architecture decisions or ADRs
+- Engineering metrics or DORA targets
+- Technology evaluation or vendor selection, build vs buy
 
-### Tech Debt Assessment
+## Quick start
 
-```bash
-python scripts/tech_debt_analyzer.py
-```
+| Need | Use |
+|------|-----|
+| Tech debt assessment | `python scripts/tech_debt_analyzer.py` |
+| Team scaling plan | `python scripts/team_scaling_calculator.py` |
+| Architecture decisions | `references/architecture_decision_records.md` |
+| Technology evaluation | `references/technology_evaluation_framework.md` |
+| Engineering metrics | `references/engineering_metrics.md` |
 
-### Team Scaling Planning
+The scripts use only the Python standard library.
 
-```bash
-python scripts/team_scaling_calculator.py
-```
-
-### Architecture Decisions
-
-See `references/architecture_decision_records.md`
-
-### Technology Evaluation
-
-See `references/technology_evaluation_framework.md`
-
-### Engineering Metrics
-
-See `references/engineering_metrics.md`
-
-## Core Responsibilities
+## Core responsibilities
 
 | Area | Focus |
 |------|-------|
-| Technology Strategy | Vision, roadmaps, innovation, tech debt |
-| Team Leadership | Scaling, performance, culture |
-| Architecture Governance | Decisions, standards, reviews |
-| Vendor Management | Evaluation, relationships, SLAs |
-| Engineering Excellence | Metrics, quality, reliability |
+| Technology strategy | Vision, roadmaps, innovation, tech debt |
+| Team leadership | Scaling, performance, culture |
+| Architecture governance | Decisions, standards, reviews |
+| Vendor management | Evaluation, relationships, SLAs |
+| Engineering excellence | Metrics, quality, reliability |
 
-## Key Ratios
+## Key ratios (rules of thumb)
 
 | Metric | Target |
 |--------|--------|
@@ -65,16 +52,16 @@ See `references/engineering_metrics.md`
 | Product:Engineering | 1:10 |
 | QA:Engineering | 1.5:10 |
 
-## DORA Metrics Targets
+## DORA targets
 
 | Metric | Elite | High |
 |--------|-------|------|
-| Deployment Frequency | On-demand | 1/day - 1/week |
-| Lead Time | <1 hour | 1 day - 1 week |
+| Deployment frequency | On-demand | 1/day - 1/week |
+| Lead time | <1 hour | 1 day - 1 week |
 | MTTR | <1 hour | <1 day |
-| Change Failure Rate | <15% | <30% |
+| Change failure rate | <15% | <30% |
 
-## Success Indicators
+## Success indicators
 
 | Area | Target |
 |------|--------|
@@ -84,27 +71,12 @@ See `references/engineering_metrics.md`
 | Attrition rate | <10% |
 | Features on-time | >80% |
 
-## Red Flags
+## Red flags
 
-- Increasing technical debt
-- Rising attrition rate
-- Slowing velocity
-- Growing incidents
-- Team morale declining
-- Budget overruns
+Increasing technical debt, rising attrition, slowing velocity, growing incidents, declining morale, budget overruns.
 
-## Integration
+## Related skills (use if available)
 
-| Skill | When to Use |
-|-------|-------------|
-| `performance-expert` | Optimize system performance |
-| `security-expert` | Security architecture |
-| `testing-expert` | Testing strategy |
+`performance-expert` (system performance), `security-expert` (security architecture), `testing-expert` (testing strategy).
 
-## Related
-
-- `tech-debt` — scan a real codebase and rank its debt into a register; this skill sets the investment level, that one finds the items.
-
----
-
-**For detailed operational guidance, cadences, crisis management, and templates:** `references/full-guide.md`
+For cadences, crisis management and templates, read `references/full-guide.md`.

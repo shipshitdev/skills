@@ -45,7 +45,7 @@ Delegates To:
 - `release` for gating the trunk SHA and cutting the release
 - `playwright-e2e-init` for missing launch-critical browser coverage; `test-runner` for existing tests
 
-## When to Use
+## When to use
 
 - User asks "is this production ready?", "what breaks in prod?", "ready to
   ship?", "audit this release", or "what did we miss?"
@@ -56,7 +56,7 @@ Delegates To:
 
 Not a compliance, legal, financial, medical, or security certification — engineering release triage only.
 
-## Evidence Order
+## Evidence order
 
 Start with cheap local evidence:
 
@@ -79,9 +79,9 @@ Then inspect the surfaces that actually exist:
 
 Do not call a release healthy just because CI is green.
 
-## Risk Lenses
+## Risk lenses
 
-### Security and Auth
+### Security and auth
 
 - Are sensitive routes protected server-side?
 - Are authorization checks tenant-aware and applied near data access?
@@ -97,7 +97,7 @@ Do not call a release healthy just because CI is green.
 - Are retries safe for writes, jobs, and webhooks?
 - Do sandbox, staging, and production schemas match the code assumptions?
 
-### Payments and Webhooks
+### Payments and webhooks
 
 - Are webhook signatures verified before trusting payload fields?
 - Are fulfillment handlers idempotent for duplicate delivery?
@@ -113,7 +113,7 @@ Do not call a release healthy just because CI is green.
 - Are logs useful without leaking secrets or personal data?
 - Is there a clear deploy, rollback, and incident-owner path?
 
-### User Experience
+### User experience
 
 - Are launch-critical paths covered on desktop and mobile?
 - Are loading, empty, error, and permission-denied states usable?
@@ -142,7 +142,7 @@ Cap at `69` if any are true:
 Cap at `84` if CI is not green or the launch-critical path was not tested end
 to end.
 
-## Output Format
+## Output format
 
 Lead with one sentence:
 
@@ -160,7 +160,7 @@ Then list:
 
 If no blockers are found, still state the evidence boundary.
 
-## Anti-Patterns
+## Anti-patterns
 
 - Running unpinned remote scanners as the default audit path.
 - Uploading private source, secrets, customer data, or topology externally

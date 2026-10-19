@@ -9,87 +9,50 @@ when_to_use: "hardcoded hex, palette usage"
 
 # Design Consistency Auditor
 
-Before auditing, discover the project's frontend structure from documentation.
+Before auditing, discover the project's frontend structure from its documentation and code (design docs, tokens, theme files, Tailwind config, shared UI components).
 
 Ensures:
 
-- Color palettes are used consistently through semantic tokens
+- Color palettes are used through semantic tokens
 - Spacing stays on the project's scale
-- Components maintain visual harmony across screens
-- The design system is applied instead of duplicated
+- Components look consistent across screens
+- The design system is applied, not duplicated
 - No design debt accumulates
 
-## When to Use
+## When to use
 
 - Auditing design-token consistency across apps
-- Reviewing color palette usage and hunting hardcoded hex values
-- Checking UI/UX patterns for screen-to-screen divergence
+- Reviewing palette usage and hunting hardcoded hex values
+- Checking UI patterns for screen-to-screen divergence
 - Spotting one-off classes that duplicate a design-system component
-- Reviewing new features against the established design standards
+- Reviewing new features against established design standards
 
-Accessibility conformance is a separate pass — use `accessibility` for WCAG, ARIA,
-keyboard access, and contrast.
+Accessibility conformance (WCAG, ARIA, keyboard access, contrast) is a separate pass; use an accessibility skill if available. For a scored sweep across accessibility, performance, theming, responsive design and anti-patterns when no single dimension is named, use the `audit` skill.
 
-## Quick Reference
+## Quick reference
 
-### Color Rules
+**Color.** DO use semantic tokens (for shadcn: `bg-background`, `bg-card`, `bg-primary`, `text-muted-foreground`, `border-border`). DON'T hardcode hex (`#000000`) or arbitrary values (`bg-[#123456]`).
 
-**DO:** Use shadcn semantic tokens (`bg-background`, `bg-card`, `bg-primary`, `text-muted-foreground`, `border-border`)
-**DON'T:** Hardcode hex colors (`#000000`) or arbitrary values (`bg-[#123456]`)
+**Components.** Find the project's real class names and components before auditing; do not assume a naming convention. Look for: cards (shadcn `Card` or the project's own), app shells/layouts, modals/dialogs, inputs, and button variants (primary, secondary, ghost).
 
-### Component Patterns
+**Spacing.** DO use the Tailwind scale (`p-4`, `m-6`, `gap-4`). DON'T use arbitrary values (`p-[17px]`).
 
-Discover the project's component class conventions from its design system or existing codebase. Common patterns to look for:
+**Accessibility basics to spot-check.** Semantic HTML (`<button>`, `<nav>`, `<main>`), ARIA labels on interactive elements, 4.5:1 text contrast and 3:1 for UI, visible focus states (`focus:outline-none focus:ring-2 focus:ring-primary`).
 
-- Cards: the shadcn `Card` or the project's own card component
-- App shells / layouts: project-specific shell wrapper class
-- Modals / dialogs: project dialog component pattern
-- Inputs: project form input class or component
-- Buttons: project button variants (primary, secondary, ghost)
+**Responsive.** Mobile-first with `sm:`, `md:`, `lg:`, `xl:`; responsive typography such as `text-3xl sm:text-4xl`.
 
-Identify the actual class names from the codebase before auditing — do not assume a specific naming convention.
+## Audit phases
 
-### Spacing
+1. **Color palette:** scan for hardcoded colors; verify theme tokens.
+2. **Component patterns:** check cards, buttons and forms use theme classes.
+3. **Spacing and layout:** verify a consistent spacing scale.
+4. **Typography:** check heading hierarchy and text styles.
+5. **Accessibility:** run automated checks and keyboard testing.
 
-**DO:** Use Tailwind scale (`p-4`, `m-6`, `gap-4`)
-**DON'T:** Use arbitrary values (`p-[17px]`)
+## AI slop prevention
 
-### Accessibility
+Flag generic "AI-generated" aesthetics: Inter/Roboto everywhere, purple gradients on white, predictable layouts without character, safe boring color choices. Push for distinctive, branded design.
 
-- Semantic HTML (`<button>`, `<nav>`, `<main>`)
-- ARIA labels on interactive elements
-- 4.5:1 contrast for text, 3:1 for UI
-- Focus states: `focus:outline-none focus:ring-2 focus:ring-primary`
+## Supporting files
 
-### Responsive
-
-- Mobile-first with `sm:`, `md:`, `lg:`, `xl:` modifiers
-- Responsive typography: `text-3xl sm:text-4xl`
-
-## Audit Phases
-
-1. **Color Palette** - Scan for hardcoded colors, verify theme tokens
-2. **Component Patterns** - Check cards, buttons, forms use theme classes
-3. **Spacing & Layout** - Verify consistent spacing scale
-4. **Typography** - Check heading hierarchy and text styles
-5. **Accessibility** - Run automated checks, keyboard testing
-
-## AI Slop Prevention
-
-Audit for generic "AI-generated" aesthetics:
-
-- Generic fonts (Inter, Roboto everywhere)
-- Purple gradients on white
-- Predictable layouts without character
-- Safe, boring color choices
-
-Push for distinctive, branded designs with personality.
-
----
-
-**For detailed checklists, examples, reporting templates, and audit commands, see:** `references/full-guide.md`
-
-## Related
-
-- `audit` — a scored 0-4 sweep across accessibility, performance, theming, responsive design, and anti-patterns when no single dimension is named.
-- `accessibility` — WCAG 2.1 AA conformance, ARIA, keyboard access, and screen-reader verification.
+Detailed checklists, examples, report templates and audit commands: `references/full-guide.md`, `examples/quick-audit-checklist.md`, `examples/audit-report-template.md`.

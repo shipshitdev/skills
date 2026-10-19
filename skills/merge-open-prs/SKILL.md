@@ -25,14 +25,13 @@ not cut a release (use the `release` skill to tag from trunk) and does not deplo
 
 ## Delivery Readiness
 
-For every implementation PR, read the installed `executing-plans` skill's
-`references/delivery-gate.md` before declaring merge-ready, merging, or reporting
-Done; nothing here weakens it. In short: acceptance evidence for the full outcome,
-a PASS from a reviewer in a different lab than every contributor, tied to the
-current head, and green required CI. Missing evidence stays a visible blocker; a
-new commit invalidates earlier review and CI. Merge only within existing
-authorization, bound to the verified head. Done also needs merge and the issue's
-required deployment evidence.
+For every implementation PR, apply the project's delivery gate (if it defines one)
+before declaring merge-ready, merging, or reporting Done; nothing here weakens it.
+In short: acceptance evidence for the full outcome, a PASS from an independent
+reviewer (not a contributor to the change) tied to the current head, and green
+required CI. Missing evidence stays a visible blocker; a new commit invalidates
+earlier review and CI. Merge only within existing authorization, bound to the
+verified head. Done also needs merge and the issue's required deployment evidence.
 
 ## Contract
 
@@ -148,8 +147,8 @@ checks, rewrite history, or deploy.
 8. Never deploy, force-push, use an admin merge, or bypass branch protection.
 9. Preserve unrelated dirty work. Use an isolated worktree for a PR fix when the
    current checkout is dirty or belongs to another branch.
-10. Do not run heavy local suites. Use only focused checks allowed by the host's
-    repository policy and rely on PR CI for broad verification.
+10. Do not run heavy local suites. Use only focused checks allowed by the
+    repository's policy and rely on PR CI for broad verification.
 
 ### Force Discovery and Classification
 
@@ -265,19 +264,17 @@ available remote branches. If the user passed an explicit base, confirm it exist
 before continuing.
 
 Snapshot every open PR targeting the trunk in one query — this drives the rest of
-the run. Keep it in the shell, or write it under the current repo's `.tmp/` if it
-must be a file. Never `/tmp` or `/private/tmp`. Do not include PR titles or bodies
-in the machine snapshot; those are outsider-authored free text and are not needed
-for merge gating:
+the run. Keep it in the shell variable below; do not write it to a shared temp
+directory outside the repository. Do not include PR titles or bodies in the
+machine snapshot; those are outsider-authored free text and are not needed for
+merge gating:
 
 ```bash
-mkdir -p "$(git rev-parse --show-toplevel)/.tmp"
 MOP_PRS=$(gh pr list --base "$DEFAULT_BRANCH" --state open --limit 200 \
   --json number,headRefName,isDraft,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup,url)
 ```
 
-Raise `--limit` if there are more than 200 open PRs into the trunk. Paginate
-rather than writing a snapshot outside this repository.
+Raise `--limit` if there are more than 200 open PRs into the trunk, or paginate.
 
 Pick the merge method once from the repository's allowed modes (prefer squash so
 cleanup's squash-aware oracle stays consistent):
@@ -387,22 +384,17 @@ cleanup completed.
 
 With `--no-prune`, stop after Phase 4 and report; skip the cleanup inventory.
 
-## Arguments
+## Phase Map
 
-- `merge-open-prs` — Phases 1-5. Review, confirm, merge, then report cleanup
-  candidates without deleting them. (Default.)
-- `merge-open-prs force [dependency order]` — run Force Mode. Merge green PRs,
-  narrowly fix red PRs, and move on without serial CI waiting or pruning.
-- `merge-open-prs review` — Phases 1-3. Review every open PR into the trunk and
-  print the plan. Merge nothing, prune nothing.
-- `merge-open-prs --no-prune` — Phases 1-4. Review, confirm, merge; skip cleanup inventory.
-- `merge-open-prs <base>` — run against an explicit base branch instead of the
-  auto-detected trunk (after confirming that branch exists). Combines with `review`
-  and `--no-prune`.
+- default sweep: Phases 1-5 (review, confirm, merge, report cleanup candidates).
+- `review`: Phases 1-3 (plan only).
+- `--no-prune`: Phases 1-4 (skip the cleanup inventory).
+- `<base>` combines with `review` and `--no-prune`.
+- `force`: the Force Mode section only; no cleanup.
 
 If the user scopes the run ("only PRs labeled X", "skip the prune"), honor it:
-still review and gate, but restrict the candidate set or stop
-before the phase they excluded.
+still review and gate, but restrict the candidate set or stop before the phase
+they excluded.
 
 ## Final Status
 

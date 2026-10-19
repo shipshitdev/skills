@@ -14,14 +14,11 @@ when_to_use: "vulnerable packages, SCA, secrets scan"
 
 # Dependency Audit
 
-Cover the supply-chain surface the app-level review does not: what you pulled in
-(CVEs), what you are about to leak (secrets), and whether the lockfile can be trusted.
-The `audit` mode reports; the `ci` mode wires the same checks into CI so a vulnerable
-dep or a leaked key blocks the merge instead of reaching production.
+Cover the supply-chain surface that an app-level review does not: what you pulled in (CVEs), what you are about to leak (secrets), and whether the lockfile can be trusted. Mode `audit` (default) reports; mode `ci` wires the same checks into CI so a vulnerable dependency or leaked key blocks the merge.
 
-Scope boundary: `security-audit` owns app/API vulnerabilities; `git-safety` owns
-secrets already in git history. This skill owns dependencies and pre-commit secret
-leaks, and the CI gate for both.
+Scope boundary: a security-audit skill owns app/API vulnerabilities; a git-safety skill owns secrets already in git history. This skill owns dependencies, pre-commit secret leaks, and the CI gate for both.
+
+Requires Bun and git; `gh` to add the CI workflow; uses gitleaks when available.
 
 ## Contract
 
@@ -55,45 +52,35 @@ Delegates To:
 - `stack-modernization` to actually upgrade a vulnerable package to a fixed version.
 - `git-safety` when a secret is found already committed (history cleanup).
 
-## Step 1 — Dependency CVEs
+## Step 1: Dependency CVEs
 
 ```bash
 bun audit                 # known advisories in the installed tree, by severity
-bun outdated              # how far behind — a fix often just means an upgrade
+bun outdated              # how far behind; a fix often just means an upgrade
 ```
 
-Report each advisory with: package, installed version, severity, the fixed version,
-and whether it is a direct or transitive dependency (transitive fixes may need an
-override). Prioritize by severity × reachability — a critical CVE in a package you
-actually call outranks a moderate one in a dev-only tool.
+Report each advisory with package, installed version, severity, fixed version, and whether it is direct or transitive (transitive fixes may need an override). Prioritize by severity times reachability: a critical CVE in a package you call outranks a moderate one in a dev-only tool.
 
-## Step 2 — Secret leaks
+## Step 2: Secret leaks
 
-Scan the working tree (and staged changes) for credentials before they land:
+Scan the working tree and staged changes before credentials land:
 
 ```bash
 gitleaks detect --no-git --source .        # working tree
 gitleaks protect --staged                  # what's about to be committed
 ```
 
-If gitleaks is unavailable, grep for high-signal patterns (`sk-`, `ghp_`, `AKIA`,
-`-----BEGIN … PRIVATE KEY`, `Bearer` tokens). Report `file:line` and the credential
-**type** only — never reproduce the secret value — and recommend rotation. A secret
-already in history is `git-safety`'s job.
+If gitleaks is unavailable, grep for high-signal patterns (`sk-`, `ghp_`, `AKIA`, `-----BEGIN ... PRIVATE KEY`, `Bearer` tokens). Report `file:line` and the credential **type** only, never the secret value, and recommend rotation. A secret already in history belongs to git-safety.
 
-## Step 3 — Lockfile & provenance
+## Step 3: Lockfile and provenance
 
-- Confirm a single lockfile (`bun.lock`) and no stray `package-lock.json` /
-  `yarn.lock` (mixed managers defeat integrity).
+- Confirm a single lockfile (`bun.lock`) and no stray `package-lock.json` / `yarn.lock` (mixed managers defeat integrity).
 - Flag dependencies added without a lockfile update (install drift).
-- Flag suspicious provenance: a package name one typo from a popular one
-  (typosquat), a version published very recently for a long-stable package, or a
-  postinstall script on a new dependency.
+- Flag suspicious provenance: a name one typo from a popular package (typosquat), a very recent version of a long-stable package, or a postinstall script on a new dependency.
 
-## Step 4 — CI gate (`ci` mode)
+## Step 4: CI gate (`ci` mode)
 
-Draft a PR workflow running the same three checks so they gate merges. Show the file,
-then add it on approval:
+Draft a PR workflow running the same checks. Show it, then add it on approval:
 
 ```yaml
 name: supply-chain
@@ -128,21 +115,11 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2       # fail on any leaked secret
 ```
 
-The lockfile step rejects mixed package managers and install drift. The lifecycle step
-blocks newly introduced install scripts until their package provenance is reviewed and
-the package is explicitly trusted. Typosquat and package-age checks still require
-human judgment in `audit` mode; do not claim the CI gate can infer them reliably.
+The lockfile step rejects mixed package managers and install drift. The lifecycle step blocks newly introduced install scripts until provenance is reviewed and the package is explicitly trusted. Typosquat and package-age checks still need human judgment in `audit` mode; do not claim the CI gate infers them. Verify the current major versions of the actions before pinning, keep `permissions` least-privilege (`contents: read`), and set the audit threshold to the team's risk tolerance (default: fail on high/critical).
 
-Pin action versions, keep `permissions` least-privilege (`contents: read`), and set the
-audit threshold to the team's risk tolerance (default: fail on high/critical).
+## Anti-patterns
 
-## Anti-Patterns
-
-- **Reproducing a secret value** in a report or issue — cite `file:line` and type,
-  recommend rotation.
-- **Failing CI on every advisory including low/dev-only** — noise trains people to
-  bypass the gate; threshold at high/critical.
-- **Upgrading blindly to clear an advisory** — verify the fix version and its
-  breaking changes via `stack-modernization`.
-- **Adding the CI workflow without confirmation**, or with a broad `permissions`
-  block (default GITHUB_TOKEN scope) — keep it `contents: read`.
+- Reproducing a secret value in a report or issue. Cite `file:line` and type; recommend rotation.
+- Failing CI on every advisory including low/dev-only. Noise trains people to bypass the gate; threshold at high/critical.
+- Upgrading blindly to clear an advisory. Verify the fix version and its breaking changes first.
+- Adding the CI workflow without confirmation, or with a broad `permissions` block.

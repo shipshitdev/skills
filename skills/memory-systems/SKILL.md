@@ -29,15 +29,15 @@ that satisfies retrieval, durability, and reasoning requirements.
 
 Do not activate this skill for adjacent work owned by other skills:
 
-- Token budgets, retrieval scoping, or prefix caching inside one trajectory: `context-optimization`.
-- Stale or conflicting memories as context poisoning: `context-optimization` (diagnose mode, `references/degradation.md`).
+- Token budgets, retrieval scoping, or prefix caching inside one trajectory: use a context-optimization skill if installed.
+- Stale or conflicting memories as context poisoning: the same context-optimization skill (diagnose mode).
 
 ## Core Concepts
 
 Classify memory requirements from volatile context to persistent storage.
 Default to the simplest layer that meets retrieval needs, because benchmark
 evidence suggests tool complexity matters less than reliable retrieval for some
-memory workloads (claim-memory-locomo-filesystem-baseline). Add structure
+memory workloads (per published LoCoMo comparisons; re-check before citing). Add structure
 (graphs, temporal validity) only when retrieval quality degrades or the agent
 needs multi-hop reasoning, relationship traversal, or time-travel queries.
 
@@ -197,7 +197,7 @@ results = await cognee.search(
 
 1. **Stuffing everything into context**: Loading all available memories into the prompt is expensive and degrades attention quality. Use just-in-time retrieval with relevance filtering instead.
 2. **Ignoring temporal validity**: Facts go stale. Without validity tracking, outdated information poisons the context and the agent acts on wrong assumptions.
-3. **Over-engineering early**: Simple filesystem-backed memory can outperform more specialized tooling on some benchmarks (claim-memory-locomo-filesystem-baseline). Add sophistication only when simple approaches demonstrably fail.
+3. **Over-engineering early**: Simple filesystem-backed memory can outperform more specialized tooling on some benchmarks (per published LoCoMo comparisons; re-check before citing). Add sophistication only when simple approaches demonstrably fail.
 4. **No consolidation strategy**: Unbounded memory growth degrades retrieval quality over time. Set memory count thresholds or scheduled intervals to trigger consolidation.
 5. **Embedding model mismatch**: Writing memories with one embedding model and reading with another produces poor retrieval because vector spaces are not interchangeable. Pin a single embedding model for each memory store and re-embed all entries if the model changes.
 6. **Graph schema rigidity**: Over-structured graph schemas (rigid node types, fixed relationship labels) break when the domain evolves. Prefer generic relation types and flexible property bags so new entity kinds do not require schema migrations.
@@ -208,7 +208,9 @@ results = await cognee.search(
 
 This skill owns persistent semantic memory. Adjacent skills own scratch storage, compaction, and context tactics:
 
-- `context-optimization`: just-in-time memory loading and retrieval scoping inside active context budgets; its diagnose mode (`references/degradation.md`) covers stale or conflicting memories as context poisoning or clash.
+Use these if installed:
+
+- `context-optimization`: just-in-time memory loading and retrieval scoping inside active context budgets; also stale or conflicting memories as context poisoning.
 - `multi-agent-patterns`: shared memory across agents.
 - `evaluation`: memory quality, retrieval correctness, and benchmark selection.
 
@@ -217,11 +219,6 @@ This skill owns persistent semantic memory. Adjacent skills own scratch storage,
 Internal references:
 
 - [Implementation Reference](./references/implementation.md) - Read when: implementing vector stores, property graphs, temporal queries, or memory consolidation logic from scratch
-
-Related skills in this collection:
-
-- context-optimization (fundamentals reference) - Read when: designing the context layer that memory feeds into
-- multi-agent-patterns - Read when: multiple agents need to share or coordinate memory state
 
 External resources:
 

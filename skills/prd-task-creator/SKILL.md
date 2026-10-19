@@ -47,7 +47,7 @@ Delegates To:
 - `feature-intake` for a rough request without a prepared packet.
 - `prd-quality-gate` for canonical templates and readiness validation.
 
-## Publish the Packet
+## Publish the packet
 
 1. Resolve the target from the user/session and verified repository remote. Search
    existing issues and open PRs. Reuse the matching issue within authorized scope;
@@ -78,7 +78,7 @@ Delegates To:
    from planner-owned rework. Return URLs and the readiness verdict, including any
    remaining publication or delivery blockers.
 
-## Tracker Mechanics
+## Tracker mechanics
 
 Use the procedures in [Publishing guide](references/full-guide.md). They contain
 tracker details only. Resolve templates through `prd-quality-gate`, never maintain

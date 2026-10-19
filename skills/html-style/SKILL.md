@@ -13,11 +13,12 @@ Transform barebones HTML into styled output using a specific design system.
 
 ## Workflow
 
-1. Read the user's HTML
-2. Identify elements to style (tables, lists, status text, buttons, sections)
-3. Inject `<style>` block from `assets/base.css`
-4. Add appropriate classes to HTML elements
-5. Add interactive JS if needed (copy buttons, drafts, collapsible sections)
+1. Read the user's HTML.
+2. Identify elements to style (tables, lists, status text, buttons, sections).
+3. Inject the contents of `assets/base.css` into a `<style>` block in `<head>`.
+4. Add the appropriate classes to HTML elements.
+5. Add interactive JS if needed (copy buttons, drafts, collapsible sections).
+6. For detailed CSS patterns, read `references/style-guide.md`.
 
 ## Quick Class Reference
 
@@ -85,11 +86,11 @@ Convert URLs to native app links:
 ## Theme
 
 - **Default**: Light (`background: #fff`)
-- **Dark mode**: Add `class="dark"` to `<body>` when user requests dark theme or context is trading/real-time
+- **Dark mode**: Add `class="dark"` to `<body>` when the user requests a dark theme or the context is real-time/monitoring
 
 ## Compatibility with Structure Skills
 
-When styling output from `quick-view` or `table-filters`, these class mappings apply:
+When styling output from the `quick-view` or `table-filters` skills (if used), these class mappings apply:
 
 ### quick-view classes
 

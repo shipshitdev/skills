@@ -7,16 +7,11 @@ metadata:
 when_to_use: "slow endpoint, p95 latency, missing index, load testing"
 ---
 
-# Performance Expert Skill
+# Performance Expert
 
-Backend, database, and infrastructure performance. This skill owns the
-server-side and delivery-layer of a stack: request latency, data access,
-caching, background work, and what ships over the wire.
+Backend, database and infrastructure performance. This skill owns the server-side and delivery layer of a stack: request latency, data access, caching, background work, and what ships over the wire.
 
-Render-time work inside React components — re-renders, memoization,
-virtualized lists, Profiler traces — is a different diagnosis with different
-tooling. Route it to `react-component-performance` instead of duplicating it
-here.
+Render-time work inside React components (re-renders, memoization, virtualized lists, Profiler traces) is a different diagnosis with different tooling. Route it to `react-component-performance` instead of duplicating it here.
 
 ## Contract
 
@@ -47,73 +42,63 @@ Delegates To:
 - `workspace-performance-audit` when the target is a whole monorepo rather than
   one surface.
 
-## When to Use
+## When to use
 
 - Improving API response times
-- Optimizing database queries, indexes, and aggregations
+- Optimizing database queries, indexes and aggregations
 - Diagnosing N+1 query patterns
 - Implementing caching strategies and invalidation
 - Moving heavy work into background jobs or queues
 - Profiling a server process or tracing a slow request
 - Analyzing shipped bundle size and asset delivery
-- Configuring CDN, cache headers, or edge caching
+- Configuring CDN, cache headers or edge caching
 
-## Project Context Discovery
+## Project context discovery
 
-1. Check `.agents/memory/` for performance architecture context (e.g., any
-   `*performance*` or `*architecture*` files)
-2. Identify performance tools (APM, load-testing harness, profiler)
-3. Review existing optimizations and caching strategies
-4. Check for `[project]-performance-expert` skill
+1. Check the repo's memory/docs (for example `.agents/memory/`, `docs/`) for performance or architecture notes.
+2. Identify the performance tools in use (APM, load-testing harness, profiler).
+3. Review existing optimizations and caching strategies.
+4. Check for a project-specific performance skill.
 
-## Core Performance Principles
+## Core principles
 
 ### Backend
 
-**API Response Times:** Target < 200ms (p95), caching, background jobs, connection pooling
-
-**Query Optimization:** Indexes, projections (`select`), pagination, database-side aggregation
-
-**Background Processing:** Queues for heavy operations, async for non-critical tasks, no blocking work in request handlers
+- **API response times:** target < 200ms (p95); use caching, background jobs, connection pooling.
+- **Query optimization:** indexes, projections (`select`), pagination, database-side aggregation.
+- **Background processing:** queues for heavy operations, async for non-critical tasks, no blocking work in request handlers.
 
 ### Database
 
-**Indexes:** On frequently queried fields, compound indexes, monitor usage
-
-**Queries:** Filter in `where`, `select` only needed columns, sort with indexes, avoid sequential scans
+- **Indexes:** on frequently queried fields, compound indexes, monitor usage.
+- **Queries:** filter in `where`, `select` only needed columns, sort with indexes, avoid sequential scans.
 
 ### Infrastructure
 
-**CDN:** Edge caching, correct cache headers, static assets off the origin
+- **CDN:** edge caching, correct cache headers, static assets off the origin.
+- **Serverless:** cold start optimization, memory allocation, provisioned concurrency.
 
-**Serverless:** Cold start optimization, memory allocation, provisioned concurrency
+### Delivery layer
 
-### Delivery Layer
+- **Bundles:** code splitting by route, dynamic imports for heavy modules, tree shaking, drop unused dependencies.
+- **Assets:** WebP images, subset fonts, minify CSS/JS, Gzip/Brotli compression.
+- **Server rendering:** static generation for static content, incremental revalidation, framework image and font pipelines.
 
-**Bundles:** Code splitting by route, dynamic imports for heavy modules, tree shaking, drop unused dependencies
+## Targets
 
-**Assets:** WebP images, subset fonts, minify CSS/JS, Gzip/Brotli compression
+| Area | Metric | Target |
+|------|--------|--------|
+| Backend | API p50 | < 100ms |
+| Backend | API p95 | < 200ms |
+| Backend | DB query p95 | < 50ms |
+| Backend | Error rate | < 0.1% |
+| Delivery | LCP | < 2.5s |
+| Delivery | TTFB | < 800ms |
+| Delivery | Initial bundle | < 200KB |
 
-**Server rendering:** Static generation for static content, incremental revalidation, framework image and font pipelines
+## Quick checklist
 
-## Performance Metrics
-
-### Backend
-
-- **API p50:** < 100ms
-- **API p95:** < 200ms
-- **DB Query p95:** < 50ms
-- **Error Rate:** < 0.1%
-
-### Delivery
-
-- **LCP:** < 2.5s
-- **TTFB:** < 800ms
-- **Initial bundle:** < 200KB
-
-## Quick Checklist
-
-### Backend
+Backend:
 
 - [ ] Database queries optimized
 - [ ] Indexes created and used
@@ -121,15 +106,17 @@ Delegates To:
 - [ ] Background jobs for heavy operations
 - [ ] Connection pooling configured
 
-### Delivery
+Delivery:
 
-- [ ] Bundle size < 200KB initial
+- [ ] Initial bundle < 200KB
 - [ ] Code splitting implemented
 - [ ] Images optimized and lazy loaded
 - [ ] Compression and cache headers configured
 
-Before reporting a measured speedup or regression, vet the number with the `pstack` skill's benchmark checklist reference: name the limiter, confirm every side was tuned, count errors, and repeat the run.
+## Vet numbers before reporting
+
+Before reporting a measured speedup or regression: name the limiter (what actually bounds the result), confirm every side of the comparison was tuned equally, count errors, and repeat the run.
 
 ---
 
-**For database query optimization code, caching strategy implementation, N+1 query solutions, background-job patterns, infrastructure tuning, performance testing commands, and detailed checklists, see:** `references/full-guide.md`
+**Database query optimization code, caching strategy implementation, N+1 solutions, background-job patterns, infrastructure tuning, performance testing commands and detailed checklists:** `references/full-guide.md`

@@ -14,7 +14,6 @@ metadata:
   license: MIT
 when_to_use: "setup script, walk me through"
 ---
-
 # Wizard
 
 A **wizard** is a bash script that walks a human, step by step, through a manual
@@ -34,6 +33,8 @@ A wizard is ephemeral by default — built for one run, saved to a scratch or
 a repeatable setup path in the repo.
 
 Skip this skill when the agent can perform the steps itself.
+
+Inputs: a manual procedure (dashboard clicks, credentials, cutover, one-off migration) and repo files that name the values (`.env.example`, README, CI workflows). Output: an executable bash wizard whose stages capture every required value. Confirm the wizard's path with the user before writing it. This skill writes nothing else; the generated script writes env files and GitHub secrets only when the human runs it, and it confirms before irreversible actions.
 
 ## Contract
 

@@ -88,7 +88,7 @@ Delegates To:
 
 ## Optional house preset
 
-When explicitly selected, the Ship Shit Dev preset uses Backlog / In Progress /
+When explicitly selected, the house preset uses Backlog / In Progress /
 Human Review / Done / Deferred. Automated testing remains part of In Progress;
 Human Review denotes a human decision. The preset proposes project-local
 Priority options P0 / P1 / P2 / P3 only where that field source is appropriate.
@@ -101,7 +101,7 @@ preset rather than silently approximating it.
 
 ## Provider and evaluation boundaries
 
-GitHub's packaged normalizer proposes field options and can apply approved
+GitHub's packaged normalizer (`scripts/setup-github-board.mjs`, run with Node or Bun and an authenticated `gh` with project scope) proposes field options and can apply approved
 project-local changes. Failed native Priority discovery preserves available
 Status/view audit evidence, withholds the Priority plan, and blocks apply. Its
 defaults express the optional house preset; do not

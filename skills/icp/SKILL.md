@@ -13,8 +13,8 @@ when_to_use: "who is our customer, who are we selling to"
 # ICP
 
 Produce one durable artifact: `.agents/memory/icp.md`, the ranked answer to "who do
-we sell to, and why do they pay." It is the input that lets `roadmap-analyzer` weigh
-features by revenue instead of guesswork, and lets `roadmap-to-milestones` sequence
+we sell to, and why do they pay." It is the input that lets `roadmap-analyzer` (if installed) weigh
+features by revenue instead of guesswork, and lets `roadmap-to-milestones` (if installed) sequence
 work toward MRR. Ground it in what the product already says about itself before
 asking the founder anything.
 
@@ -147,7 +147,7 @@ _Last updated: <date>. Maintained by the `icp` skill; consumed by
 ### 5. Write on confirmation
 
 Only after the user approves, write `.agents/memory/icp.md` (create the directory if
-absent). Report the path and recommend the next step: `roadmap-analyzer` to turn this
+absent). Report the path and recommend the next step: `roadmap-analyzer` (if installed) to turn this
 into a revenue-ranked backlog.
 
 ## Anti-Patterns

@@ -18,9 +18,9 @@ Design every tool as a contract between a deterministic system and a non-determi
 
 The unit of work for this skill is a single tool or a tool catalog. Deciding whether to introduce sub-agents belongs to `multi-agent-patterns`. This skill owns the interface layer that connects deterministic code to the agent.
 
-## When to Activate
+## When to Use
 
-Activate this skill when the unit of work is a tool:
+Use this skill when the unit of work is a tool:
 
 - Writing a new tool description, schema, or response format.
 - Debugging cases where the agent picked the wrong tool or generated malformed calls.
@@ -29,7 +29,7 @@ Activate this skill when the unit of work is a tool:
 - Naming tools and parameters consistently across a catalog (MCP namespacing, verb-noun naming).
 - Evaluating a third-party tool against the consolidation principle before adding it.
 
-Do not activate this skill for adjacent work owned by other skills:
+Do not use this skill for adjacent work owned by other skills:
 
 - Deciding whether to split work across sub-agents or run a single agent with more tools: `multi-agent-patterns`.
 - Reducing the token weight of tool outputs at the trajectory level (observation masking, format-option choice at scale): `context-optimization`.
@@ -59,7 +59,7 @@ Namespace tools under common prefixes as the collection grows, because agents be
 Build single comprehensive tools instead of multiple narrow tools that overlap. Rather than implementing `list_users`, `list_events`, and `create_event` separately, implement `schedule_event` that finds availability and schedules in one call. The comprehensive tool handles the full workflow internally, removing the agent's burden of chaining calls in the correct order.
 
 **Why Consolidation Works**
-Apply consolidation because agents have limited context and attention. Each tool in the collection competes for attention during tool selection, each description consumes context budget tokens, and overlapping functionality creates ambiguity. Consolidation eliminates redundant descriptions, removes selection ambiguity, and shrinks the effective tool set. The Architectural Reduction Case Study is a concrete example of reducing specialized tools into a smaller primitive tool set with better measured outcomes (claim-tool-design-vercel-d0-reduction).
+Apply consolidation because agents have limited context and attention. Each tool in the collection competes for attention during tool selection, each description consumes context budget tokens, and overlapping functionality creates ambiguity. Consolidation eliminates redundant descriptions, removes selection ambiguity, and shrinks the effective tool set. The Architectural Reduction Case Study is a concrete example of reducing specialized tools into a smaller primitive tool set with better measured outcomes.
 
 **When Not to Consolidate**
 Keep tools separate when they have fundamentally different behaviors, serve different contexts, or must be callable independently. Over-consolidation creates a different problem: a single tool with too many parameters and modes becomes hard for agents to parameterize correctly.
@@ -287,14 +287,7 @@ Internal references:
 - [Best Practices Reference](./references/best_practices.md) - Read when: designing a new tool from scratch or auditing an existing tool collection for quality gaps
 - [Architectural Reduction Case Study](./references/architectural_reduction.md) - Read when: considering removing specialized tools in favor of primitives, or evaluating whether a complex tool architecture is justified
 
-Related skills in this collection:
+Related skills (use if available):
 
 - context-optimization (fundamentals reference) - Tool context interactions
 - evaluation - Tool testing patterns
-
-External resources:
-
-- MCP (Model Context Protocol) documentation - Read when: implementing tools for multi-server agent environments or debugging tool routing failures
-- Framework tool conventions - Read when: adopting a new agent framework and need to map tool design principles to framework-specific APIs
-- API design best practices for agents - Read when: translating existing human-facing APIs into agent-facing tool interfaces
-- Agent architecture case studies - Read when: evaluating whether to consolidate tools or seeking production evidence for architectural reduction

@@ -76,7 +76,7 @@ Delegates To:
 ## Code and Intent Audit
 
 Run this audit for every cleanup invocation and every selected resource scope.
-A unique commit count cannot answer whether the code is on current `master`.
+A unique commit count cannot answer whether the code is on current trunk.
 Moving work to another PR, squashing, cherry-picking, or rebasing changes commit
 identities; compare the resulting code independently of the original PR.
 
@@ -233,7 +233,7 @@ itself writes nothing during discovery.
 
 If origin trunk cannot be fetched, stop and report the failure. Do not classify
 against a stale local trunk. Fetch is required in every mode, including
-worktree-only cleanup; unique commit counts against a stale master are not a
+worktree-only cleanup; unique commit counts against a stale trunk are not a
 plan. Local trunk commits that are not on origin are left in place; classification
 still uses origin trunk.
 
@@ -333,8 +333,5 @@ Distinguish unproven work, open PRs, protected names,
 dirty worktrees, and changes since planning. Successful cleanup can retain unsafe
 candidates; it must never label them merged or delete them to empty the report.
 
-Verify the helper with real Git fixtures:
-
-```bash
-python3 -m unittest discover -s skills/git-cleanup/tests -p 'test_*.py'
-```
+The helper's unit tests are not bundled with this skill; if you change
+`scripts/cleanup.py`, test it against real Git fixtures before use.

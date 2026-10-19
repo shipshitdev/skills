@@ -16,13 +16,21 @@ metadata:
 when_to_use: "wayfinder, map this effort, too big for one session, foggy effort"
 argument-hint: "[loose idea, or a map issue number or URL]"
 ---
-
 # Wayfinder
 
 An idea arrived too big for one session and wrapped in fog: the way to the
 **destination** is not visible yet. Chart that way as a **map** on the issue
 tracker, then resolve its **decision tickets** one session at a time until the
 route is clear. The skill finds the way; it never walks it.
+
+## Inputs, outputs and guards
+
+- Input: a loose idea (chart mode), or a map issue number or URL (work mode). Read the repo's tracker config (`docs/agents/issue-tracker.md`) when present.
+- Output, chart mode: a map issue and its first decision tickets. Work mode: one resolved ticket, the map updated, and the next frontier named. When the way is clear: a recommendation to turn the settled decisions into a PRD/feature issue.
+- Writes: GitHub issues only (map labelled `wayfinder:map`, child tickets labelled `wayfinder:<type>`, assignments, blocking links, resolution comments). No code and no branches, except a throwaway `research/<name>` branch a research ticket may use.
+- Confirm before publishing the map and its tickets: show destination, tickets and fog first, and confirm when the repo is public.
+- Invoking work mode on a map authorizes the claim, resolution comment, close and map update for one ticket. Creating, updating or deleting any other ticket needs separate approval.
+- Helper skills, used when available: `grill-me` and `domain-modeling` (grilling tickets, naming the destination), `research`, `prototype`. If a helper is missing, run the same exchange directly.
 
 ## Contract
 
@@ -71,7 +79,7 @@ Each ticket resolves a decision, and the map is done when nothing is left to
 decide before someone goes and builds. The pull to just do the work marks the
 edge of the map: hand off there. An effort may override this in its **Notes**.
 Tickets are decisions, never build slices; the build is one feature issue that
-`/prd prepare` writes from the settled map.
+a PRD skill writes from the settled map.
 
 ## The map
 
@@ -104,8 +112,7 @@ never a bare number; the link rides inside the name.
 
 Open tickets stay out of the map: they are the open child issues, found by query.
 
-Child links use the repo's native sub-issue API (see `prd-task-creator`'s
-independently-complete-children guide for the REST calls). Blocking uses the
+Child links use the repo's native sub-issue API (the GitHub sub-issues REST endpoints). Blocking uses the
 native blocked-by relationship so the tracker's own view shows the frontier; fall
 back to a `Blocked by:` body line only when the tracker lacks it, and say so. A
 ticket is **unblocked** when every blocker is closed. The **frontier** is the
@@ -172,4 +179,4 @@ concurrently, so re-read before each write.
 
 Done when the ticket is closed, the map shows its gist, and the next frontier is
 named. When no tickets and no fog remain, the way is clear: recommend
-`/prd prepare` on the settled decisions.
+writing a PRD/feature issue from the settled decisions (for example with `prd-dispatch` or `/prd prepare`, if available).

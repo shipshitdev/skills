@@ -9,82 +9,45 @@ when_to_use: "stale cursorrules, sync agent configs"
 
 # Agent Config Audit
 
-## Authorized Scope
+Audit the instruction and config files that steer coding agents. Default mode is report-only; loading this skill grants no authority to edit files. Honor the caller's scope and limits, and ask before expanding them.
 
-Act only within the user's request and existing approval; loading this skill
-grants no new authority. Keep report-only requests report-only, honor the
-caller's target, host, provider, and cost limits, ask before expanding scope,
-and forward these limits to delegates.
+## When to use
 
-## Contract
+- The user says "audit CLAUDE.md", "agent config", "rules out of date", "config drift", or "sync docs".
+- After restructuring repos, adding or removing projects, or changing conventions.
+- As periodic maintenance (monthly is reasonable).
+- Agents keep making the same mistake despite rules existing (a sign of stale or contradictory config).
+- After a refactor that changed file paths, package names, or architecture.
 
-Inputs:
+## When not to use
 
-- Workspace root
-- Scope: full, dedup, stale, instructions, cursor, settings, or fix
-- Optional list of repos/config files to include
-
-Outputs:
-
-- Audit report with critical/moderate/minor findings
-- Proposed fix plan
-- Applied changes only when fix mode is explicit
-
-Creates/Modifies:
-
-- Report mode: no file changes
-- Fix mode: agent config files, `.agents/` docs, and related settings, but only
-  after an explicit fix request and confirmation of the exact plan
-
-External Side Effects:
-
-- None by default
-- Does not push, publish, or call external APIs
-
-Confirmation Required:
-
-- Before entering fix mode or using any mutating file/shell operation; an audit or
-  sync request alone authorizes report mode only
-- Before overwriting existing agent configs
-- Before deleting or consolidating duplicated rules
-
-Delegates To:
-
-- `rules-capture` for single new preferences
-- `agent-folder-init` for missing `.agents/` structure
-
-## When to Use
-
-- User mentions: "audit CLAUDE.md", "agent config", "rules out of date", "config drift", "sync docs"
-- After restructuring repos, adding/removing projects, or changing conventions
-- Periodic maintenance (monthly recommended)
-- When agents keep making the same mistake despite rules existing (symptom of stale or contradictory config)
-- After a major refactor where file paths, package names, or architecture changed
-
-## When NOT to Use
-
-- For application defects, recommend `debug`; for refactoring, recommend `/refactor`.
-- If capturing a single new rule from conversation → use **rules-capture**
-- If auditing code quality rather than agent configuration → use `audit`
-- If setting up or repairing formatter/linter config → use `linter-formatter-init`
-- If scaffolding `.agents/` from scratch → use **agent-folder-init**
+- Application defects: debug them instead.
+- Capturing a single new rule from the conversation: just add it to the right file.
+- Auditing code quality rather than agent configuration: use a code audit/review skill.
+- Setting up or repairing formatter/linter config.
+- Scaffolding an `.agents/` folder from scratch: use an agent-folder-init skill if available.
 
 ## Inputs
 
 | Input | Required | Description |
 |-------|----------|-------------|
-| Workspace root | Yes | Path to the workspace containing repos (auto-detected from cwd) |
-| Scope | No | `full` (all checks) or specific: `dedup`, `stale`, `instructions`, `cursor`, `settings` |
-| Fix mode | No | `report` (default, read-only) or `fix` (apply recommended changes) |
+| Workspace root | Yes | Directory containing the repos (default: current directory) |
+| Scope | No | `full` (all checks) or one of `dedup`, `stale`, `instructions`, `cursor`, `settings` |
+| Mode | No | `report` (default, read-only) or `fix` |
+
+## Guardrails
+
+- Report mode makes no file changes, pushes nothing, and calls no external APIs.
+- Never infer fix mode from findings or from a request to "sync" configs. Enter fix mode only when the user explicitly asks for mutation, show the exact files and operations first, and get confirmation.
+- Get confirmation before overwriting existing agent configs and before deleting or consolidating duplicated rules.
 
 ## Workflow
 
-### Step 1: Inventory — Discover All Config Files
+### Step 1: Inventory
 
-Scan the workspace for every agent config file:
+Find every agent config file in the workspace, including sub-repos:
 
 ```bash
-# Find all agent config files across workspace (including sub-repos)
 glob "**/CLAUDE.md"
 glob "**/AGENTS.override.md"
 glob "**/AGENTS.md"
@@ -99,112 +62,94 @@ glob "**/.agents/memory/*.md"
 Build an inventory table:
 
 ```
-| Layer           | Files Found | Total Lines |
-|-----------------|-------------|-------------|
-| CLAUDE.md       | N           | N           |
-| AGENTS.override.md | N        | N           |
-| AGENTS.md       | N           | N           |
-| Configured fallbacks | N      | N           |
-| .cursorrules    | N           | N           |
-| .claude/ config | N           | N           |
-| .agents/memory/ | N           | N           |
+| Layer              | Files Found | Total Lines |
+|--------------------|-------------|-------------|
+| CLAUDE.md          | N           | N           |
+| AGENTS.override.md | N           | N           |
+| AGENTS.md          | N           | N           |
+| Configured fallbacks | N         | N           |
+| .cursorrules       | N           | N           |
+| .claude/ config    | N           | N           |
+| .agents/memory/    | N           | N           |
 ```
 
-### Step 2: Dedup Check — Find Duplicated Rules
+### Step 2: Dedup check
 
-These rules commonly appear in multiple places. Search for each across ALL config files:
+Search all config files for rules that commonly appear in several places, such as:
 
-**Rules to check:**
+- `any` types / "No any" (belongs in AGENTS.md plus hooks only)
+- `console.log` / logger rules (AGENTS.md only)
+- Conventional commits (AGENTS.md only)
+- AbortController usage (AGENTS.md or one linked memory topic)
+- Session file naming (hooks plus one doc reference)
+- Import order (AGENTS.md or a coding-standards topic)
+- Soft delete flags and multi-tenancy scoping (one data/security topic each)
 
-- `any` types / `No any` — should be in AGENTS.md + hooks only
-- `console.log` / logger — should be in AGENTS.md only
-- Conventional commits — should be in AGENTS.md only
-- AbortController — should be in AGENTS.md or a linked `.agents/memory/` topic only
-- Session file naming — should be in hooks.json + one doc reference only
-- Import order — should be in AGENTS.md or `.agents/memory/coding-standards.md` only
-- Soft delete (`isDeleted`) — should be in `.agents/memory/data-guardrails.md` only
-- Multi-tenancy (`organization: orgId`) — should be in `.agents/memory/security.md` only
-
-For each rule, count occurrences:
+Adapt the list to the repo's own recurring rules. For each rule, count occurrences, for example:
 
 ```
 grep "No \`any\`\|NO \`any\`\|no any types" across all config files
 ```
 
-**Healthy target**: Each rule appears in max 2 files (one "teach" doc + one runtime enforcement like hooks).
+Healthy target: each rule appears in at most 2 files (one "teach" doc plus one runtime enforcement such as a hook). Flag any rule appearing 3+ times.
 
-**Flag**: Any rule appearing 3+ times across config files.
-
-### Step 3: Staleness Check — Find Outdated Files
-
-Check for stale dates and paths:
+### Step 3: Staleness check
 
 ```bash
-# Find files with old "Last Updated" dates (> 90 days old)
+# Files with old "Last Updated" dates (> 90 days)
 grep -r "Last Updated:" across .cursorrules, .cursor/rules
 
-# Find hardcoded workspace paths that should be relative
-grep -r "/Users/" across .agents/ config files
+# Hardcoded absolute workspace paths that should be relative
+grep -rE "/(Users|home)/" across .agents/ and config files
 
-# Find references to directories that no longer exist
-# Compare referenced paths against actual directory listing
+# References to directories that no longer exist
+# Compare referenced paths against the actual directory listing
 ```
 
-**Flag**: Any file with "Last Updated" > 90 days behind current date.
-**Flag**: Any hardcoded absolute path in config files.
-**Flag**: Any reference to a directory that doesn't exist.
+Flag: any "Last Updated" more than 90 days behind the current date; any hardcoded absolute path; any reference to a directory that does not exist.
 
-### Step 4: Codex Instruction Resolution Check
+### Step 4: Codex instruction resolution (only if the repo uses Codex)
 
-For each workspace, check the instruction chain Codex actually resolves:
+Read the effective `.codex/config.toml` and record `project_doc_fallback_filenames` plus any runtime policy before judging the chain. Then check:
 
 - [ ] Each directory resolves at most one nonempty instruction file in this order: `AGENTS.override.md`, `AGENTS.md`, then configured fallback filenames
-- [ ] The instruction chain is read from the project root down to the working directory
+- [ ] The chain is read from the project root down to the working directory
 - [ ] `AGENTS.override.md` is used only where a subtree intentionally replaces the same-directory `AGENTS.md`
 - [ ] `AGENTS.md` contains repo-specific rules and entry points
 - [ ] Any fallback filenames are explicitly declared in the effective `.codex/config.toml`
 - [ ] Runtime approval, sandbox, and network policy lives in the effective `.codex/config.toml` or hooks, not in assumed prose
-- [ ] No `.codex/instructions.md` file or `.codex/commands` directory is presented
-  as a supported Codex entry surface
+- [ ] No `.codex/instructions.md` file or `.codex/commands` directory is presented as a supported Codex entry surface
 
-Read the effective Codex configuration and record
-`project_doc_fallback_filenames` plus any runtime policy before judging the
-instruction chain.
+Flag: undocumented fallback files, accidental overrides, instruction files that contradict runtime configuration, and unsupported `.codex/instructions.md` or `.codex/commands` surfaces.
 
-**Flag**: Undocumented fallback files, accidental overrides, instruction files that
-contradict runtime configuration, or unsupported `.codex/instructions.md` and `.codex/commands`
-surfaces.
-
-### Step 5: AGENTS.md Consistency Check
+### Step 5: AGENTS.md consistency
 
 For each AGENTS.md:
 
-- [ ] Has repo-specific context (not just generic "docs in .agents/")
-- [ ] Links to correct `.agents/` paths that actually exist
-- [ ] Consistent structure across repos
+- [ ] Has repo-specific context (not just a generic "docs in .agents/" pointer)
+- [ ] Links to `.agents/` paths that actually exist
+- [ ] Structure is consistent across repos
 
-**Flag**: Any AGENTS.md that's a pure generic stub (< 20 lines with no repo-specific content).
+Flag any pure generic stub (under 20 lines with no repo-specific content).
 
-### Step 6: Cursor Config Check
+### Step 6: Cursor config
 
 For `.cursorrules` and `.cursor/rules`:
 
 - [ ] No emoji in headers (wastes tokens)
 - [ ] "Last Updated" within 90 days
 - [ ] Project paths reference actual directories
-- [ ] No duplicated session file rules (hooks.json handles this)
+- [ ] No duplicated session-file rules (hooks already handle this)
 
-### Step 7: Settings Audit
+### Step 7: Settings
 
 For `.claude/settings.json` and `.claude/settings.local.json`:
 
-- [ ] Denied skills have documented rationale (in SETTINGS-NOTES.md or equivalent)
-- [ ] Local bash overrides don't contradict documented standards without explanation
+- [ ] Denied skills have a documented rationale (SETTINGS-NOTES.md or equivalent)
+- [ ] Local bash overrides do not contradict documented standards without explanation
 - [ ] No stale tool references
 
-### Step 8: Generate Report
-
-Output format:
+### Step 8: Report
 
 ```markdown
 # Agent Config Audit Report
@@ -244,41 +189,37 @@ Output format:
 2. [Specific actionable fix]
 ```
 
-### Step 9: Apply Fixes (if fix mode)
+### Step 9: Apply fixes (fix mode only)
 
-Never infer fix mode from the audit findings or from a request to "sync" configs.
-Enter fix mode only when the user explicitly requests mutation, show the exact files
-and operations, and obtain confirmation before using write/edit or mutating shell
-behavior. Then apply changes following these principles:
+After explicit request and confirmation of the exact plan, apply these principles:
 
-- Each rule lives in ONE canonical location
-- Hooks enforce at runtime — docs teach, not repeat
-- Strip emoji from all config files
-- Update all "Last Updated" dates
-- Replace hardcoded paths with relative references
-- Consolidate project instructions into AGENTS.md and scoped AGENTS.override.md files
-- Move runtime approval, sandbox, and network policy into the effective `.codex/config.toml` or hooks
+- Each rule lives in ONE canonical location.
+- Hooks enforce at runtime; docs teach, not repeat.
+- Strip emoji from all config files.
+- Update all "Last Updated" dates.
+- Replace hardcoded paths with relative references.
+- Consolidate project instructions into AGENTS.md and scoped AGENTS.override.md files.
+- Move runtime approval, sandbox, and network policy into the effective `.codex/config.toml` or hooks.
 
-## Reference Files
+## Reference files
 
-- `references/canonical-ownership.md` — Which rule belongs in which file
-- `references/healthy-config-example.md` — Example of a well-structured config set
-- File pointer: `references/writing-for-agents.md` from the selected `skill-creator` skill directory, for judging whether a steering line earns its load (cache vs environment, sediment, sprawl)
+- `references/canonical-ownership.md`: which rule belongs in which file
+- `references/healthy-config-example.md`: example of a well-structured config set
 
-## Anti-Patterns
+## Anti-patterns
 
 | DON'T | DO | Why |
 |-------|-----|-----|
-| Repeat the same rule in AGENTS.md, CLAUDE.md, `.agents/memory/`, and hooks | Put the rule in ONE canonical file; others reference it | Duplication wastes context tokens and creates drift when one copy gets updated but others don't |
-| Leave "Last Updated: 2025-10-07" in a file touched in 2026 | Update dates when modifying any config file | Stale dates signal neglect and erode trust in the config system |
-| Create an extra instruction filename without configuring it | Put shared project guidance in AGENTS.md; use AGENTS.override.md for scoped overrides and configure any genuine fallback in the effective `.codex/config.toml` | Codex resolves native instruction names plus explicitly configured fallbacks |
-| Use emoji in config headers | Use plain text headers | Emoji waste tokens on every context load and violate "no emoji unless requested" |
-| Hardcode `/Users/username/path/` in config files | Use relative paths or describe location generically | Hardcoded paths break when workspace moves or another developer joins |
-| Recreate a parallel legacy instruction tree under `.agents/` | Put durable guardrails in topic files under `.agents/memory/`; put shared actionable rules in AGENTS.md | The current memory layout keeps durable context discoverable without parallel hierarchies |
+| Repeat the same rule in AGENTS.md, CLAUDE.md, `.agents/memory/`, and hooks | Put the rule in ONE canonical file; others reference it | Duplication wastes context tokens and drifts when one copy is updated |
+| Leave an old "Last Updated" date in a file you changed | Update dates when modifying any config file | Stale dates erode trust in the config system |
+| Create an extra instruction filename without configuring it | Put shared guidance in AGENTS.md; use AGENTS.override.md for scoped overrides; declare any genuine fallback in the effective `.codex/config.toml` | Codex resolves native instruction names plus explicitly configured fallbacks |
+| Use emoji in config headers | Use plain text headers | Emoji waste tokens on every context load |
+| Hardcode `/Users/username/path/` in config files | Use relative paths or describe the location generically | Hardcoded paths break when the workspace moves or another developer joins |
+| Recreate a parallel legacy instruction tree under `.agents/` | Put durable guardrails in topic files under `.agents/memory/` and shared actionable rules in AGENTS.md | Keeps durable context discoverable without parallel hierarchies |
 
 ## Validation
 
-After running the audit:
+After the audit, confirm:
 
 - [ ] No rule appears in more than 2 config files
 - [ ] All `.cursorrules` files have "Last Updated" within 90 days
@@ -286,12 +227,42 @@ After running the audit:
 - [ ] Runtime approval, sandbox, and network claims match the effective `.codex/config.toml` or hooks
 - [ ] No hardcoded absolute paths in any config file
 - [ ] No emoji in `.cursorrules` or `.cursor/rules` headers
-- [ ] Denied skills in settings.json have documented rationale
-- [ ] Total config file line count decreased or stayed flat (no bloat)
+- [ ] Denied skills in settings.json have a documented rationale
+- [ ] Total config line count decreased or stayed flat
 
-## Related Skills
+## Contract
 
-- `rules-capture` — capture one new preference instead of auditing a config set
-- `agent-folder-init` — scaffold a missing `.agents/` structure
-- `linter-formatter-init` — set up or repair formatter/linter configuration
-- `audit` — audit application quality instead of agent configuration
+Inputs:
+
+- Workspace root
+- Scope: full, dedup, stale, instructions, cursor, settings, or fix
+- Optional list of repos/config files to include
+
+Outputs:
+
+- Audit report with critical/moderate/minor findings
+- Proposed fix plan
+- Applied changes only when fix mode is explicit
+
+Creates/Modifies:
+
+- Report mode: no file changes
+- Fix mode: agent config files, `.agents/` docs, and related settings, but only
+  after an explicit fix request and confirmation of the exact plan
+
+External Side Effects:
+
+- None by default
+- Does not push, publish, or call external APIs
+
+Confirmation Required:
+
+- Before entering fix mode or using any mutating file/shell operation; an audit or
+  sync request alone authorizes report mode only
+- Before overwriting existing agent configs
+- Before deleting or consolidating duplicated rules
+
+Delegates To:
+
+- `rules-capture` for single new preferences
+- `agent-folder-init` for missing `.agents/` structure

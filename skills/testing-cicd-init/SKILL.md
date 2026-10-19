@@ -6,15 +6,9 @@ metadata:
   tags: "testing, ci, vitest"
 when_to_use: "set up vitest, add coverage, first CI"
 ---
-
 # Testing & CI/CD Initialization
 
-## Authorized Scope
-
-Act only within the user's request and existing approval; loading this skill
-grants no new authority. Keep report-only requests report-only, honor the
-caller's target, host, provider, and cost limits, ask before expanding scope,
-and forward these limits to delegates.
+Loading this skill grants no new authority. Apply setup only when the user asked for it or approved a plan containing it; confirm before overwriting existing test configuration or adding dependencies beyond this setup.
 
 ## Contract
 
@@ -62,15 +56,14 @@ This skill should be used when:
 - Configuring Vitest with coverage thresholds
 - Initializing testing infrastructure for a new project
 
-## What It Does
+## Steps
 
-1. **Detects project type** (Next.js, NestJS, React, Node.js)
-2. **Adds Vitest configuration** with appropriate settings
-3. **Creates test setup files** for the environment
-4. **Adds GitHub Actions workflow** for CI/CD
-5. **Configures 80% coverage thresholds**
-6. **Adds test scripts** to package.json
-7. **Installs required dependencies**
+1. Detect the project type (below).
+2. Install the dependencies for that type.
+3. Create the Vitest config and test setup file from `templates/`.
+4. Create the GitHub Actions workflow and set coverage thresholds.
+5. Add the test scripts to `package.json`.
+6. Run the tests and typecheck once to confirm the setup works.
 
 ## Project Type Detection
 
@@ -141,16 +134,13 @@ Default thresholds (configurable):
 - Branches: 75%
 - Statements: 80%
 
-Coverage is enforced:
-
-1. In pre-commit hooks (via Husky)
-2. In CI/CD pipeline (GitHub Actions)
+Coverage is enforced in the CI pipeline (GitHub Actions). A pre-commit gate is added separately via `husky-test-coverage`.
 
 ## GitHub Actions Features
 
 The generated CI workflow includes:
 
-- Bun setup with caching
+- Bun setup with caching (the templates pin `bun-version: latest` and current major versions of the GitHub actions; verify and pin as the project prefers)
 - Dependency installation
 - Lint/format checking (Biome)
 - TypeScript type checking

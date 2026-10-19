@@ -34,7 +34,7 @@ Confirmation Required:
 
 - None for read-only validation. Preserve the caller's access restrictions.
 
-## One Shared Contract
+## One shared contract
 
 Read [Execution readiness](references/execution-readiness.md) before validating or
 supplying preparation templates. This reference owns the requirements template,
@@ -52,7 +52,7 @@ handoff, AFK classification, or any request to declare work ready for an agent.
 An unspecified mode in one of those contexts means `execution-readiness`.
 Otherwise default to `draft-lint` and label that limitation in the output.
 
-## Validate Meaning and Evidence
+## Validate meaning and evidence
 
 Check actual behavior, complete decisions, repository evidence, verification
 feasibility, and freshness. Headings and EARS grammar alone cannot establish

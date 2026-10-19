@@ -18,7 +18,8 @@ endpoints.
 This skill owns NestJS mechanics: testing modules, provider wiring, and
 request-level end-to-end flows. For framework-agnostic questions — which level a
 behavior belongs at, what a coverage number means, how to design a test that
-survives refactoring, how to kill a flake — use `testing-expert`.
+survives refactoring, how to kill a flake — use a general testing skill such as
+`testing-expert` if installed.
 
 ## When to Use
 

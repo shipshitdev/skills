@@ -10,7 +10,6 @@ metadata:
   author: Ship Shit Dev
 when_to_use: "debt register, debt backlog, /refactor debt"
 ---
-
 # Tech Debt
 
 Turn a vague sense of "this codebase needs work" into a ranked register: each item
@@ -58,7 +57,7 @@ Gather each type with concrete evidence, not vibes:
 - **Code smells** — `rg -c "TODO|FIXME|HACK|XXX|@deprecated"`; `any` density; files over
   ~500 lines; functions over ~50; duplicated blocks (3+ copies). Anchor each to `file:line`.
 - **Dependency debt** — outdated majors and deprecated packages (`bun outdated`,
-  `bun audit`); unused deps (`knip` / `depcheck` if available).
+  `bun audit` or the project's package manager equivalent); unused deps (`knip` / `depcheck` if available).
 - **Test debt** — skipped/`.only` tests, modules with no test file, areas below the
   coverage bar.
 - **Architectural debt** — churn hotspots: files changed most often carry the most

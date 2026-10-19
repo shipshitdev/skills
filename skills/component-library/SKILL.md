@@ -7,19 +7,11 @@ metadata:
 when_to_use: "props, reusable components"
 ---
 
-# Component Library Standards Skill
+# Component Library Standards
 
-## When to Use
+Use when creating UI components, refactoring for reuse, reviewing component architecture, setting up shared patterns, or optimizing component performance.
 
-Use when you're:
-
-- Creating new UI components
-- Refactoring existing components for reusability
-- Reviewing component architecture
-- Setting up shared component patterns
-- Optimizing component performance
-
-## Quick Reference
+## Quick reference
 
 ### Naming
 
@@ -55,8 +47,8 @@ export default function MyComponent({ ... }: MyComponentProps) { ... }
 - Semantic HTML (`button`, `nav`, not `div`)
 - ARIA labels for icons
 - Keyboard navigation support
-- Focus states visible
+- Visible focus states
 
 ## References
 
-- [Full guide: Patterns, styling, TypeScript, testing, documentation](references/full-guide.md)
+- [Full guide: patterns, styling, TypeScript, testing, documentation](references/full-guide.md)

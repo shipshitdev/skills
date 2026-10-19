@@ -83,7 +83,7 @@ when_to_use: "custom hook, composition, server vs client component"
 
 ### Compiler Benefits
 
-- Automatic memoization
+- Automatic memoization (when the React Compiler is enabled in the project; verify)
 - Less manual useMemo/useCallback
 - Focus on pure components
 
@@ -200,10 +200,7 @@ when_to_use: "custom hook, composition, server vs client component"
 
 ## When to Use
 
-This skill is applicable to execute the workflow or actions described in the overview.
+- Writing or reviewing React components, hooks, or state placement.
+- Choosing between a custom hook, render props, and context.
 
-## Limitations
-
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+This is a general reference, not a substitute for the project's own conventions or for testing. Follow the repository's existing patterns first. Ask for clarification if requirements are missing.

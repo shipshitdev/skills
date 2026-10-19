@@ -31,7 +31,7 @@ Now process: "Can't upload files larger than 10MB, getting timeout"
 
 ### 2. Chain-of-Thought Prompting
 
-Request step-by-step reasoning before the final answer. Add "Let's think step by step" (zero-shot) or include example reasoning traces (few-shot). Use for complex problems requiring multi-step logic, mathematical reasoning, or when you need to verify the model's thought process. Improves accuracy on analytical tasks by 30-50%.
+Request step-by-step reasoning before the final answer. Add "Let's think step by step" (zero-shot) or include example reasoning traces (few-shot). Use for complex problems requiring multi-step logic, mathematical reasoning, or when you need to verify the model's thought process.
 
 **Example:**
 
@@ -188,14 +188,12 @@ When designing prompts for content generation:
 - Create a system prompt for brand-consistent LinkedIn post generation
 - Build a prompt pipeline for content repurposing (article → social → email)
 
-## When to Use
+## When to use
 
 Activate when user wants to improve prompts, learn prompting strategies, debug agent behavior, or design content generation pipelines.
 
-**When optimizing an existing prompt** (the `/prompt` command's job): follow the systematic 4-D workflow — Deconstruct, Diagnose, Develop, Deliver — in `references/prompt-optimization.md`.
+**When optimizing an existing prompt** : follow the systematic 4-D workflow — Deconstruct, Diagnose, Develop, Deliver — in `references/prompt-optimization.md`.
 
 ## Limitations
 
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+Prompt changes still need testing on representative inputs; this skill is no substitute for that evaluation. Ask for clarification when the task goal, inputs or success criteria are missing.

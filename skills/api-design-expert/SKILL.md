@@ -7,30 +7,22 @@ metadata:
 when_to_use: "filtering, sorting"
 ---
 
-# API Design Expert Skill
+# API Design Expert
 
-## When to Use
+Use when designing new endpoints or RESTful APIs, writing OpenAPI/Swagger documentation, implementing versioning, designing error responses, creating DTOs and validation, or implementing pagination, filtering, and sorting.
 
-- Designing new API endpoints
-- Creating RESTful APIs
-- Writing OpenAPI/Swagger documentation
-- Implementing API versioning
-- Designing error responses
-- Creating DTOs and validation
-- Implementing pagination, filtering, sorting
+## Discover project context first
 
-## Project Context Discovery
+1. Check the repo's memory/instructions files (for example `.agents/memory/`, `AGENTS.md`, `CLAUDE.md`) for API patterns and architecture notes.
+2. Review existing controllers and DTOs.
+3. Check for an OpenAPI/Swagger setup.
+4. Review the versioning strategy.
 
-Before providing guidance:
+Follow what the project already does unless the user asks to change it.
 
-1. Check `.agents/memory/` for API patterns and architecture notes
-2. Review existing controllers and DTOs
-3. Check for OpenAPI/Swagger setup
-4. Review versioning strategy
+## Core principles
 
-## Core Principles
-
-### RESTful Design
+### RESTful design
 
 ```typescript
 // Use nouns, plural, hierarchical
@@ -42,13 +34,13 @@ DELETE /api/users/:id
 GET    /api/users/:id/posts
 ```
 
-### HTTP Status Codes
+### HTTP status codes
 
 - `200 OK` / `201 Created` / `204 No Content`
 - `400 Bad Request` / `401 Unauthorized` / `403 Forbidden`
 - `404 Not Found` / `409 Conflict` / `500 Internal Server Error`
 
-### Response Format
+### Response format
 
 ```typescript
 // Single resource
@@ -58,7 +50,7 @@ GET    /api/users/:id/posts
 { "data": [...], "pagination": { "page", "limit", "total" } }
 ```
 
-### Error Format
+### Error format
 
 ```typescript
 {
@@ -72,7 +64,7 @@ GET    /api/users/:id/posts
 }
 ```
 
-## Best Practices
+## Best practices
 
 - Consistent naming conventions
 - Validate all inputs with DTOs
@@ -81,6 +73,6 @@ GET    /api/users/:id/posts
 - Pagination for lists
 - Version APIs from the start
 
----
+## Full guide
 
-**For complete DTO examples, pagination/filtering/sorting patterns, versioning strategies, OpenAPI setup, CRUD controller patterns, nested resources, bulk operations, and anti-patterns, see:** `references/full-guide.md`
+For complete DTO examples, pagination/filtering/sorting patterns, versioning strategies, OpenAPI setup, CRUD controller patterns, nested resources, bulk operations, and anti-patterns, see [references/full-guide.md](references/full-guide.md).

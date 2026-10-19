@@ -6,10 +6,9 @@ metadata:
   tags: "tables, filters, ux"
 when_to_use: "column filters, filter bar"
 ---
-
 # Table Filters
 
-When the user is building a table that needs filters, analyze the columns and design the filtering UX.
+Analyze the table's columns, choose a filter type for each, and design a unified filter field with inline header filters.
 
 ## Step 1: Analyze Each Column
 
@@ -137,7 +136,7 @@ When implementing, verify:
 
 ## HTML Class Reference
 
-Use these classes for styling compatibility with `html-style`:
+Use these classes so the output works with the `html-style` skill (if unavailable, use them as plain semantic hooks):
 
 | Element | Class | Purpose |
 |---------|-------|---------|
@@ -158,4 +157,4 @@ Use these classes for styling compatibility with `html-style`:
 
 ## Styling Handoff
 
-This skill outputs semantic HTML with class names. For visual styling, invoke the `html-style` skill after generating filter HTML.
+This skill outputs semantic HTML with class names. For visual styling, invoke the `html-style` skill after generating filter HTML, if it is available.

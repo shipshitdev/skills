@@ -9,20 +9,11 @@ when_to_use: "auto-scaling, CloudWatch"
 
 # AWS Infrastructure Expert
 
-## When to Use
+Use for EC2 instance setup, VPC and networking, security groups, Application Load Balancer setup, Route53 DNS, ACM certificate management, and CloudWatch monitoring. These are baseline recommendations; adapt sizes and ports to the project, and confirm before creating or changing real resources.
 
-- EC2 instance setup and configuration
-- VPC and networking setup
-- Security group configuration
-- Application Load Balancer setup
-- Route53 DNS configuration
-- SSL/TLS certificate management (ACM)
-- Auto-scaling groups
-- CloudWatch monitoring
+## EC2 setup
 
-## EC2 Setup
-
-### Instance Types
+### Instance types
 
 - **Development:** t3.medium (2 vCPU, 4GB RAM)
 - **Production (small):** t3.large (2 vCPU, 8GB RAM)
@@ -35,31 +26,31 @@ when_to_use: "auto-scaling, CloudWatch"
 - Production: 100GB+ based on needs
 - Enable EBS snapshots for backups
 
-### Key Pairs
+### Key pairs
 
 - Generate or import SSH key pairs
 - Store private keys securely
 - Use IAM roles instead of access keys when possible
 
-## VPC Configuration
+## VPC configuration
 
-### Basic Setup
+### Basic setup
 
-- Create VPC with CIDR block (e.g., 10.0.0.0/16)
+- Create the VPC with a CIDR block (for example 10.0.0.0/16)
 - Create public and private subnets
-- Set up Internet Gateway
+- Set up an Internet Gateway
 - Configure route tables
-- Set up NAT Gateway for private subnets (if needed)
+- Set up a NAT Gateway for private subnets (if needed)
 
 ### Subnets
 
-- Public subnets: For load balancers, bastion hosts
-- Private subnets: For application servers, databases
+- Public subnets: load balancers, bastion hosts
+- Private subnets: application servers, databases
 - Multi-AZ for high availability
 
-## Security Groups
+## Security groups
 
-### Application Security Group
+### Application security group
 
 ```
 Inbound:
@@ -71,7 +62,7 @@ Outbound:
 - All traffic (0.0.0.0/0)
 ```
 
-### Database Security Group
+### Database security group
 
 ```
 Inbound:
@@ -83,7 +74,7 @@ Outbound:
 - All traffic (0.0.0.0/0)
 ```
 
-### Load Balancer Security Group
+### Load balancer security group
 
 ```
 Inbound:
@@ -99,17 +90,17 @@ Outbound:
 
 ### Setup
 
-1. Create ALB in public subnets
-2. Configure target groups (EC2 instances)
-3. Set up health checks
-4. Configure listeners (HTTP → HTTPS redirect)
-5. Attach SSL certificate from ACM
+1. Create the ALB in public subnets.
+2. Configure target groups (EC2 instances).
+3. Set up health checks.
+4. Configure listeners (HTTP to HTTPS redirect).
+5. Attach an SSL certificate from ACM.
 
-### Health Checks
+### Health checks
 
 - Path: `/health` or `/api/health`
 - Protocol: HTTP
-- Port: 3001 (backend) or 3000 (frontend)
+- Port: 3001 (backend) or 3000 (frontend), or the app's actual port
 - Healthy threshold: 2
 - Unhealthy threshold: 2
 - Timeout: 5 seconds
@@ -117,26 +108,26 @@ Outbound:
 
 ## Route53 DNS
 
-### Domain Setup
+### Domain setup
 
-1. Create hosted zone for domain
-2. Create A record (alias) pointing to ALB
-3. Create CNAME for www subdomain
-4. Update nameservers at domain registrar
+1. Create a hosted zone for the domain.
+2. Create an A record (alias) pointing to the ALB.
+3. Create a CNAME for the www subdomain.
+4. Update nameservers at the domain registrar.
 
 ### SSL/TLS (ACM)
 
-1. Request certificate in ACM (us-east-1 for CloudFront/ALB)
-2. Validate via DNS (add CNAME records)
-3. Attach certificate to ALB listener
-4. Certificate auto-renews
+1. Request the certificate in ACM in the same region as the ALB. Only certificates used by CloudFront must be in us-east-1.
+2. Validate via DNS (add the CNAME records).
+3. Attach the certificate to the ALB listener.
+4. ACM renews the certificate automatically while the DNS validation record stays in place.
 
-## CloudWatch Monitoring
+## CloudWatch monitoring
 
 ### Metrics
 
-- EC2: CPU, Memory, Disk, Network
-- ALB: Request count, Target response time, HTTP errors
+- EC2: CPU, network (memory and disk metrics require the CloudWatch agent)
+- ALB: request count, target response time, HTTP errors
 - Custom metrics for application-specific data
 
 ### Alarms
@@ -146,17 +137,13 @@ Outbound:
 - Application errors (via CloudWatch Logs)
 - Unhealthy target instances
 
-## Best Practices
+## Best practices
 
 - Use IAM roles instead of access keys
 - Enable CloudTrail for audit logging
 - Use VPC endpoints for AWS service access
-- Implement least privilege security groups
+- Implement least-privilege security groups
 - Use private subnets for databases
 - Enable encryption at rest for EBS volumes
 - Set up automated backups (EBS snapshots)
 - Monitor costs with AWS Cost Explorer
-
-## Integration
-
-This skill integrates with `postgres-ops` for Postgres setup (RDS or EC2) and `/deploy` for deployment workflows.

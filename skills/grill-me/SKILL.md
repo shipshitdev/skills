@@ -17,7 +17,7 @@ when_to_use: "grill me, interview me"
 
 # Grill Me
 
-Interview the user relentlessly until every branch of the **design tree** is resolved. This is the reusable interview primitive. Orchestrators (`interview`, `shape`) invoke it; they own grounding, artifacts, and routing.
+Interview the user relentlessly until every branch of the **design tree** is resolved. This is the reusable interview primitive. Orchestrator skills (such as `interview` or `shape`, if installed) invoke it; they own grounding, artifacts, and routing.
 
 ## Contract
 

@@ -6,7 +6,6 @@ metadata:
   tags: "turborepo, monorepo, build, caching, ci"
 when_to_use: "monorepo, package boundaries"
 ---
-
 # Turborepo Skill
 
 Build system guidance for JavaScript and TypeScript monorepos using Turborepo.
@@ -199,4 +198,4 @@ Use `turbo watch` for file-change loops, not `turbo run ... --watch` patterns im
 
 ## Source Documentation
 
-Based on official Turborepo docs (library v2.9.7-canary.12): `apps/docs/content/docs/` — https://turborepo.dev/docs
+Based on the official Turborepo docs (https://turborepo.dev/docs). The bundled references were written against a canary release; verify flags and config against the repo's installed Turborepo version.

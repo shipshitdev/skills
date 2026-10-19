@@ -14,83 +14,80 @@ metadata:
 when_to_use: "UI quality report, no code changes"
 ---
 
-Run systematic **technical** quality checks and generate the report below. Do
-not fix issues in this skill.
+# Frontend Quality Audit
 
-Before scanning, read the existing design system (CSS / tokens / theme and a representative component) so "correct" is measured against the project's own conventions, not generic defaults. If the repo carries design context (`PRODUCT.md`, `DESIGN.md`, `.impeccable.md`, or a `## Design Context` block in `.github/copilot-instructions.md`), read it too.
+Run systematic **technical** quality checks and generate the report below. Do not fix issues in this skill. Optionally scope the audit to an area (feature, page, component) given by the user.
 
-This is a code-level audit, not a design critique. Check what's measurable and verifiable in the implementation.
+Before scanning, read the existing design system (CSS / tokens / theme and a representative component) so "correct" is measured against the project's own conventions, not generic defaults. If the repo carries design context (for example `PRODUCT.md`, `DESIGN.md`, or a design-context section in its instructions file), read it too.
 
-## Diagnostic Scan
+This is a code-level audit, not a design critique. Check what is measurable and verifiable in the implementation.
 
-Run checks across 5 dimensions. Score each dimension 0-4 using the criteria
-below.
+## Diagnostic scan
 
-### 1. Accessibility (A11y)
+Check 5 dimensions and score each 0-4 using the criteria below.
 
-**Check for**:
+### 1. Accessibility
 
-- **Contrast issues**: Text contrast ratios < 4.5:1 (or 7:1 for AAA)
-- **Motion sensitivity**: Reduced motion preserves useful state feedback; flag flashing, motion that blocks tasks, and blanket animation kills that hide changes
-- **Missing ARIA**: Interactive elements without proper roles, labels, or states
-- **Keyboard navigation**: Missing focus indicators, illogical tab order, keyboard traps
-- **Semantic HTML**: Improper heading hierarchy, missing landmarks, divs instead of buttons
-- **Alt text**: Missing or poor image descriptions
-- **Form issues**: Inputs without labels, poor error messaging, missing required indicators
+Check for:
 
-**Score 0-4**: 0=Inaccessible (fails WCAG A), 1=Major gaps (few ARIA labels, no keyboard nav), 2=Partial (some a11y effort, significant gaps), 3=Good (WCAG AA mostly met, minor gaps), 4=Excellent (WCAG AA fully met, approaches AAA)
+- **Contrast issues:** text contrast ratios below 4.5:1 (or 7:1 for AAA)
+- **Motion sensitivity:** reduced motion should preserve useful state feedback; flag flashing, motion that blocks tasks, and blanket animation kills that hide changes
+- **Missing ARIA:** interactive elements without proper roles, labels, or states
+- **Keyboard navigation:** missing focus indicators, illogical tab order, keyboard traps
+- **Semantic HTML:** improper heading hierarchy, missing landmarks, divs instead of buttons
+- **Alt text:** missing or poor image descriptions
+- **Form issues:** inputs without labels, poor error messaging, missing required indicators
+
+Score: 0=Inaccessible (fails WCAG A), 1=Major gaps (few ARIA labels, no keyboard nav), 2=Partial (some a11y effort, significant gaps), 3=Good (WCAG AA mostly met, minor gaps), 4=Excellent (WCAG AA fully met, approaches AAA)
 
 ### 2. Performance
 
-**Check for**:
+Check for:
 
-- **Layout thrashing**: Reading/writing layout properties in loops
-- **Expensive animations**: Animating layout properties (width, height, top, left) instead of transform/opacity
-- **Missing optimization**: Offscreen images without lazy loading and unoptimized assets; preserve eager loading for critical initial content
-- **will-change overuse**: Broad or permanent hints can waste resources; use targeted hints only for demonstrated expensive animation
-- **Bundle size**: Unnecessary imports, unused dependencies
-- **Render performance**: Unnecessary re-renders, missing memoization
+- **Layout thrashing:** reading/writing layout properties in loops
+- **Expensive animations:** animating layout properties (width, height, top, left) instead of transform/opacity
+- **Missing optimization:** offscreen images without lazy loading, unoptimized assets; keep eager loading for critical initial content
+- **will-change overuse:** broad or permanent hints waste resources; use targeted hints only for demonstrated expensive animation
+- **Bundle size:** unnecessary imports, unused dependencies
+- **Render performance:** unnecessary re-renders, missing memoization
 
-**Score 0-4**: 0=Severe issues (layout thrash, unoptimized everything), 1=Major problems (no lazy loading, expensive animations), 2=Partial (some optimization, gaps remain), 3=Good (mostly optimized, minor improvements possible), 4=Excellent (fast, lean, well-optimized)
+Score: 0=Severe issues (layout thrash, unoptimized everything), 1=Major problems (no lazy loading, expensive animations), 2=Partial (some optimization, gaps remain), 3=Good (mostly optimized, minor improvements possible), 4=Excellent (fast, lean, well-optimized)
 
 ### 3. Theming
 
-**Check for**:
+Check for:
 
-- **Hard-coded colors**: Colors not using design tokens
-- **Broken dark mode**: Missing dark mode variants, poor contrast in dark theme
-- **Inconsistent tokens**: Using wrong tokens, mixing token types
-- **Theme switching issues**: Values that don't update on theme change
+- **Hard-coded colors:** colors not using design tokens
+- **Broken dark mode:** missing dark variants, poor contrast in dark theme
+- **Inconsistent tokens:** wrong tokens, mixed token types
+- **Theme switching issues:** values that do not update on theme change
 
-**Score 0-4**: 0=No theming (hard-coded everything), 1=Minimal tokens (mostly hard-coded), 2=Partial (tokens exist but inconsistently used), 3=Good (tokens used, minor hard-coded values), 4=Excellent (full token system, dark mode works perfectly)
+Score: 0=No theming (hard-coded everything), 1=Minimal tokens (mostly hard-coded), 2=Partial (tokens exist but inconsistently used), 3=Good (tokens used, minor hard-coded values), 4=Excellent (full token system, dark mode works perfectly)
 
-### 4. Responsive Design
+### 4. Responsive design
 
-**Check for**:
+Check for:
 
-- **Fixed widths**: Hard-coded widths that break on mobile
-- **Touch targets**: Interactive elements < 44x44px
-- **Broken touch interaction**: Exercise sliders and drag surfaces under touch; check pointer cancellation, lost capture, blur and page scrolling. A mobile viewport proves layout, not gestures. State whether evidence came from viewport emulation, synthesized touch or a physical device, and what remains untested
-- **Horizontal scroll**: Content overflow on narrow viewports
-- **Text scaling**: Layouts that break when text size increases
-- **Missing breakpoints**: No mobile/tablet variants
+- **Fixed widths:** hard-coded widths that break on mobile
+- **Touch targets:** interactive elements under 44x44px
+- **Broken touch interaction:** exercise sliders and drag surfaces under touch; check pointer cancellation, lost capture, blur, and page scrolling. A mobile viewport proves layout, not gestures. State whether evidence came from viewport emulation, synthesized touch, or a physical device, and what remains untested
+- **Horizontal scroll:** content overflow on narrow viewports
+- **Text scaling:** layouts that break when text size increases
+- **Missing breakpoints:** no mobile/tablet variants
 
-**Score 0-4**: 0=Desktop-only (breaks on mobile), 1=Major issues (some breakpoints, many failures), 2=Partial (works on mobile, rough edges), 3=Good (responsive, minor touch target or overflow issues), 4=Excellent (fluid, all viewports, proper touch targets and working touch gestures)
+Score: 0=Desktop-only (breaks on mobile), 1=Major issues (some breakpoints, many failures), 2=Partial (works on mobile, rough edges), 3=Good (responsive, minor touch target or overflow issues), 4=Excellent (fluid, all viewports, proper touch targets and working touch gestures)
 
-### 5. Implementation Integrity (CRITICAL)
+### 5. Implementation integrity (critical)
 
-Verify repeated shortcuts, design-system drift, misleading content and
-interchangeable structure against the product context. Keep measurable source
-findings separate from visual judgment; a palette or layout pattern alone is
-not a defect. Explain false positives.
+Verify repeated shortcuts, design-system drift, misleading content, and interchangeable structure against the product context. Keep measurable source findings separate from visual judgment; a palette or layout pattern alone is not a defect. Explain false positives.
 
-**Score 0-4**: 0=Systemic drift, 1=Major repeated failures, 2=Several verified issues, 3=Minor isolated issues, 4=Coherent and intentional
+Score: 0=Systemic drift, 1=Major repeated failures, 2=Several verified issues, 3=Minor isolated issues, 4=Coherent and intentional
 
-## Generate Report
+## Generate the report
 
-### Audit Health Score
+### Audit health score
 
-| # | Dimension | Score | Key Finding |
+| # | Dimension | Score | Key finding |
 |---|-----------|-------|-------------|
 | 1 | Accessibility | ? | [most critical a11y issue or "--"] |
 | 2 | Performance | ? | |
@@ -99,77 +96,74 @@ not a defect. Explain false positives.
 | 5 | Implementation Integrity | ? | |
 | **Total** | | **??/20** | **[Rating band]** |
 
-**Rating bands**: 18-20 Excellent (minor polish), 14-17 Good (address weak dimensions), 10-13 Acceptable (significant work needed), 6-9 Poor (major overhaul), 0-5 Critical (fundamental issues)
+Rating bands: 18-20 Excellent (minor polish), 14-17 Good (address weak dimensions), 10-13 Acceptable (significant work needed), 6-9 Poor (major overhaul), 0-5 Critical (fundamental issues)
 
-### Implementation Integrity Verdict
+### Implementation integrity verdict
 
-**Start here.** Does the implementation express a coherent product-specific
-system? Cite verified evidence.
+Start here. Does the implementation express a coherent product-specific system? Cite verified evidence.
 
-### Executive Summary
+### Executive summary
 
-- Audit Health Score: **??/20** ([rating band])
+- Audit health score: **??/20** ([rating band])
 - Total issues found (count by severity: P0/P1/P2/P3)
 - Top 3-5 critical issues
 - Recommended next steps
 
-### Detailed Findings by Severity
+### Detailed findings by severity
 
-Tag every issue with **P0-P3 severity**:
+Tag every issue with a severity:
 
-- **P0 Blocking**: Prevents task completion — fix immediately
-- **P1 Major**: Significant difficulty or WCAG AA violation — fix before release
-- **P2 Minor**: Annoyance, workaround exists — fix in next pass
-- **P3 Polish**: Nice-to-fix, no real user impact — fix if time permits
+- **P0 Blocking:** prevents task completion; fix immediately
+- **P1 Major:** significant difficulty or WCAG AA violation; fix before release
+- **P2 Minor:** annoyance, workaround exists; fix in the next pass
+- **P3 Polish:** nice to fix, no real user impact; fix if time permits
 
-For each issue, document:
+For each issue document:
 
 - **[P?] Issue name**
-- **Location**: Component, file, line
-- **Category**: Accessibility / Performance / Theming / Responsive / Implementation Integrity
-- **Impact**: How it affects users
-- **WCAG/Standard**: Which standard it violates (if applicable)
-- **Recommendation**: How to fix it
-- **Suggested command**: Which command or skill to use to fix it
+- **Location:** component, file, line
+- **Category:** Accessibility / Performance / Theming / Responsive / Implementation Integrity
+- **Impact:** how it affects users
+- **WCAG/Standard:** which standard it violates (if applicable)
+- **Recommendation:** how to fix it
+- **Suggested command:** which command or skill to use to fix it
 
-### Patterns & Systemic Issues
+### Patterns and systemic issues
 
-Identify recurring problems that indicate systemic gaps rather than one-off mistakes:
+Identify recurring problems that indicate systemic gaps rather than one-off mistakes, for example:
 
 - "Hard-coded colors appear in 15+ components, should use design tokens"
-- "Touch targets consistently too small (<44px) throughout mobile experience"
+- "Touch targets consistently too small (<44px) throughout the mobile experience"
 
-### Positive Findings
+### Positive findings
 
-List 1-3 implementation practices worth preserving, with file/component
-evidence. Omit this section when there is no concrete positive finding.
+List 1-3 implementation practices worth preserving, with file/component evidence. Omit this section when there is no concrete positive finding.
 
-## Recommended Actions
+## Recommended actions
 
-List recommended commands in priority order (P0 first, then P1, then P2):
+List recommended fixes in priority order (P0 first, then P1, then P2):
 
-1. **[P?] `/command-name`** — Brief description (specific context from audit findings)
-2. **[P?] `/command-name`** — Brief description (specific context)
+1. **[P?] `/command-name`**: brief description (specific context from the findings)
+2. **[P?] `/command-name`**: brief description (specific context)
 
-**Rules**: Map findings to the most appropriate available skill or command. End with a polish/cleanup step as the final recommendation if any fixes were recommended.
+Map findings to the most appropriate available skill or command. If any fixes are recommended, end with a polish/cleanup step.
 
 After presenting the summary, tell the user:
 
 > You can ask me to run these one at a time, all at once, or in any order you prefer.
 >
-> Re-run `/audit` after fixes to see your score improve.
+> Re-run this audit after fixes to see your score improve.
 
 Limit P3 findings to the top five unless the user asks for a complete backlog.
 
-**NEVER**:
+## Never
 
-- Report issues without explaining impact (why does this matter?)
-- Provide recommendations without file/component evidence and a fix path
-- Skip positive findings (celebrate what works)
-- Forget to prioritize (everything can't be P0)
-- Report false positives without verification
+- Report issues without explaining impact (why it matters).
+- Give recommendations without file/component evidence and a fix path.
+- Skip positive findings.
+- Skip prioritizing (everything cannot be P0).
+- Report false positives without verification.
 
 ## Related
 
-- `accessibility` — go deeper than dimension 1 when the request is WCAG conformance, ARIA, keyboard access, or screen readers.
-- `design-consistency-auditor` — go deeper than dimension 3 when the request is token drift, hardcoded colors, or design-system divergence.
+- `accessibility`: go deeper than dimension 1 when the request is WCAG conformance, ARIA, keyboard access, or screen readers.

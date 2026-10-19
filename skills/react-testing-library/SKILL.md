@@ -16,8 +16,8 @@ when_to_use: "getByRole, findBy, waitFor, renderHook, userEvent"
 
 This skill owns React component and hook testing mechanics. For
 framework-agnostic questions — which level a behavior belongs at, what a coverage
-number means, how to choose test data, how to kill a flake — use
-`testing-expert`.
+number means, how to choose test data, how to kill a flake — use a general
+testing skill if one is available.
 
 ## When to Apply
 

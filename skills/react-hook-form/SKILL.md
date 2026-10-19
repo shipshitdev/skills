@@ -110,9 +110,9 @@ Read individual reference files for detailed explanations and code examples:
 
 ## Related Skills
 
-- For schema validation with Zod resolver, see `zod` skill
-- For UI/UX form design, see `frontend-design` skill
+- For schema validation with a Zod resolver, use the `zod` skill if available
+- For UI/UX form design, use the `frontend-design` skill if available
 
 ## Full Compiled Document
 
-For the complete guide with all rules expanded, see `${CLAUDE_SKILL_DIR}/AGENTS.md` (load when a deep rule reference is needed).
+For the complete guide with all rules expanded, see [AGENTS.md](AGENTS.md) (load when a deep rule reference is needed).

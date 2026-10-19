@@ -20,8 +20,7 @@ argument-hint: "[what the next session is for]"
 # Handoff
 
 Compact the current conversation into one file a fresh agent can pick up cold.
-Use it at a phase boundary where `/clear` would lose too much; `ask-dev-loop`
-holds the tree that decides when.
+Use it at a phase boundary where clearing the conversation would lose too much.
 
 ## Contract
 
@@ -62,8 +61,7 @@ Tailor everything to the argument when one is given. Sections, in order:
 4. **Open**: blockers and unanswered questions, with who can answer.
 5. **Pointers**: specs, plans, ADRs, issues, PRs, commits and diffs as paths or
    URLs. Reference; never restate.
-6. **Suggested skills**: the skills the next agent should run first, resolved
-   through the active skill catalog.
+6. **Suggested skills**: the skills the next agent should run first, by name.
 7. **First move**: the single next action.
 
 Redact secrets, tokens and personal data as `<REDACTED>`.

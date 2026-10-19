@@ -108,4 +108,4 @@ when_to_use: "god component, module boundaries, extract hooks"
 
 ## Related Skills
 
-- For client-side form handling, see `react-hook-form` skill
+- For client-side form handling, use a dedicated React Hook Form skill if one is available

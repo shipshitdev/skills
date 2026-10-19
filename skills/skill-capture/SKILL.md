@@ -9,289 +9,129 @@ when_to_use: "make this reusable, save this pattern"
 
 # Skill Capture
 
-## When This Skill Activates
+## When to activate
 
-Activate when the user mentions ANY of these:
+- **Explicit requests:** "save this as a skill", "make this a skill", "this workflow should be reusable", "capture this", "save this pattern".
+- **Completion signals:** a complex problem solved after several iterations; a multi-step procedure that finally ran; domain knowledge found through research; a code pattern other projects could use.
+- **Learning moments:** "this was tricky to figure out", "I wish I knew this earlier", "this should be documented".
 
-### Explicit Requests
+A capture request authorizes the matching skill edits. A completion signal alone authorizes a proposal, not persistence or tracker submissions. Stay inside the user's scope and ask before consequential changes outside it.
 
-- "let's save this as a skill"
-- "this workflow should be reusable"
-- "capture this as a skill"
-- "make this a skill"
-- "turn this into a skill"
-- "save this pattern"
+## Process (5 phases, in order)
 
-### Workflow Completion Signals
+### 1. Identification
 
-- Complex problem solved after multiple iterations
-- Multi-step procedure successfully executed
-- Valuable domain knowledge discovered through research
-- Code pattern emerged that could benefit other projects
-
-### Learning Moments
-
-- "this was tricky to figure out"
-- "glad we finally got this working"
-- "I wish I knew this earlier"
-- "this should be documented"
-
----
-
-## Capture Process
-
-A capture request authorizes the matching skill edits. A completion signal alone authorizes a proposal, not persistence or tracker submissions. Preserve the user's scope and ask before consequential changes outside it.
-
-Follow these 5 phases in order:
-
-### Phase 1: Identification
-
-Review the conversation to identify capturable content:
-
-**What to Look For:**
+Review the conversation for capturable content:
 
 | Category | Example |
 |----------|---------|
 | Workflows | Multi-step procedures that took iterations to perfect |
-| Domain Knowledge | Information requiring research or expertise |
-| Problem Solutions | Approaches that resolved complex issues |
-| Code Patterns | Reusable patterns that could help other projects |
-| Decision Rationale | Architectural choices with clear reasoning |
+| Domain knowledge | Information requiring research or expertise |
+| Problem solutions | Approaches that resolved complex issues |
+| Code patterns | Reusable patterns that could help other projects |
+| Decision rationale | Architectural choices with clear reasoning |
 
-**Questions to Ask:**
+Ask: Is it generalizable beyond this project? Would another agent session benefit? Did it take multiple iterations? Is it non-obvious procedural knowledge?
 
-- Is this generalizable beyond this specific project?
-- Would another agent session benefit from this knowledge?
-- Did this require multiple iterations to get right?
-- Is this non-obvious procedural knowledge?
+### 2. Destination planning
 
-### Phase 2: Destination Planning
+1. Check whether an existing skill should be updated: glob the repo's skills directory for `*/SKILL.md` and read related skills for overlap.
+2. Otherwise create a new skill with a descriptive kebab-case name in its own directory (`<skills-dir>/<skill-name>/`).
 
-Determine where the skill should live:
+Skill or rule?
 
-```
-1. Check if an existing skill should be updated
-   - Glob for skills/*/SKILL.md
-   - Read related skills to check for overlap
-
-2. If creating new skill:
-   - Choose descriptive kebab-case name
-   - Create in skills/<skill-name>/ directory
-```
-
-**Skill vs. Rule Decision:**
-
-| Create a Skill | Capture a Rule |
+| Create a skill | Capture a rule |
 |----------------|----------------|
 | Workflow with multiple steps | Single preference statement |
 | Procedural knowledge | "always/never do X" |
 | Domain expertise | Style/format preferences |
 | Code patterns with context | Import/naming conventions |
 
-If it's a rule/preference, delegate to `rules-capture` skill instead.
+If it is a rule or preference, use a rules-capture skill if available; otherwise add it to the project's instructions file (CLAUDE.md / AGENTS.md) instead of creating a skill.
 
-### Phase 3: Content Drafting
+### 3. Content drafting
 
-Transform conversational insights into SKILL.md format:
+Transform the conversation into SKILL.md format:
 
 ```markdown
 ---
 name: <skill-name>
-description: <One sentence describing what the skill does and when to use it>
-metadata:
-  version: "1.0.0"
-  tags: relevant, tags
+description: <What it does + "Use when ..." triggers, one line>
 ---
 
 # <Skill Title>
 
-<Brief description of the skill's purpose>
-
----
+<Brief description of the purpose>
 
 ## When to Use
 
-<Clear triggers for when this skill should activate>
-
----
+<Clear triggers>
 
 ## Process
 
-<Step-by-step workflow or procedure>
-
----
+<Step-by-step workflow>
 
 ## Examples
 
-<Concrete examples showing the skill in action>
-
----
+<Concrete examples>
 
 ## Integration
 
-<How this skill works with other skills, if applicable>
+<How it works with other skills, if applicable>
 ```
 
-### Phase 4: Distillation
+Principles: imperative form ("Do X", not "You should do X"); specific triggers; concrete examples; reference bundled resources.
 
-Extract and refine the content:
+### 4. Distillation
 
-1. **Extract the Final Approach** - Capture only what worked, not the failed attempts
-2. **Generalize** - Remove project-specific details that don't apply broadly
-3. **Add Context** - Explain why certain approaches work, not just what to do
-4. **Include Examples** - Add concrete examples that demonstrate usage
+1. Extract the final approach; capture only what worked, not the failed attempts.
+2. Generalize; remove project-specific details that do not apply broadly.
+3. Add context; explain why an approach works, not just what to do.
+4. Include examples, good and bad where helpful.
 
-**Checklist:**
+Checklist: project-specific paths and names removed; hardcoded values generalized; non-obvious steps explained; imperative language throughout.
 
-- [ ] Removed project-specific paths and names
-- [ ] Generalized any hardcoded values
-- [ ] Added explanatory context for non-obvious steps
-- [ ] Included both good and bad examples where helpful
-- [ ] Kept language in imperative form
-
-### Phase 5: Verification
-
-Ensure the skill is ready for use:
-
-**Quality Checks:**
+### 5. Verification
 
 | Check | Requirement |
 |-------|-------------|
-| Length | Under 500 lines (use references/ for large content) |
-| Frontmatter | Valid YAML with name and description |
-| Completeness | All sections have meaningful content |
-| Actionability | Instructions are specific enough to follow |
-| Formatting | Follows library patterns (see rules-capture for reference) |
+| Length | Under 500 lines (move large content to `references/`) |
+| Frontmatter | Valid YAML with `name` and `description` |
+| Completeness | Every section has meaningful content |
+| Actionability | Instructions specific enough to follow |
+| Formatting | Matches the existing skills in the repo |
 
-**Validation:**
+Validate with the repo's skill validator if one exists (for example `scripts/package_skill.py skills/<skill-name>` from the skill-creator skill); otherwise check the table by hand. Add a plugin manifest only if the repo's other skills have one.
 
-```bash
-# Run the package script to validate
-scripts/package_skill.py skills/<skill-name>
-```
+## What to capture
 
----
+**Good candidates:** multi-iteration workflows; domain knowledge that required research; problem-solving approaches that worked; reusable code patterns; architectural decision rationale; tool/service integration patterns; technology-specific debugging approaches.
 
-## What to Capture
+**Do NOT capture:** one-off project-specific solutions; trivial fixes or obvious patterns; information documented elsewhere; sensitive or proprietary information; incomplete workflows still being refined; preferences without procedural value (record as a rule).
 
-### Good Candidates
+## Related skills (if available)
 
-- Workflows that took multiple iterations to get right
-- Domain knowledge that required research
-- Problem-solving approaches that worked
-- Code patterns that could be reused across projects
-- Decision rationale for architectural choices
-- Integration patterns between tools or services
-- Debugging approaches for specific technologies
+| Skill | Role |
+|-------|------|
+| rules-capture | Captures preferences and rules; this skill handles multi-step procedures |
+| skill-creator | Creation patterns and validation |
+| retro | Reviews a finished session for friction and routes skill candidates back here |
 
-### Anti-Patterns (Do NOT Capture)
+## Example
 
-- One-off solutions specific to a single project
-- Trivial fixes or obvious patterns
-- Information already documented elsewhere
-- Sensitive or proprietary information
-- Incomplete workflows still being refined
-- Preferences without procedural value (use rules-capture instead)
+**Context:** the user spent 30 minutes debugging a NestJS queue integration; the fix needed specific configuration patterns.
 
----
+**User:** "This was a pain to figure out. Let's save this for next time."
 
-## Output Structure
-
-Create two files for each skill:
-
-### SKILL.md
-
-See Phase 3 template above. Key principles:
-
-- Use imperative form ("Do X" not "You should do X")
-- Be specific about triggers and activation conditions
-- Include concrete examples
-- Reference any bundled resources
-
-### plugin.json
-
-```json
-{
-  "name": "<skill-name>",
-  "version": "1.0.0",
-  "description": "<Same description as SKILL.md frontmatter>",
-  "author": {
-    "name": "Ship Shit Dev",
-    "email": "hello@shipshit.dev",
-    "url": "https://shipshit.dev"
-  },
-  "license": "MIT",
-  "skills": "."
-}
-```
-
----
-
-## Integration
-
-This skill works with:
-
-| Skill | Integration |
-|-------|-------------|
-| `rules-capture` | Delegates preference capture; handles skill creation |
-| `skill-creator` | Uses creation patterns and validation |
-| `docs` | For formatting help with SKILL.md |
-
----
-
-## Example Interaction
-
-**Context**: User spent 30 minutes debugging a NestJS queue integration issue. The solution involved specific configuration patterns.
-
-**User**: "This was a pain to figure out. Let's save this for next time."
-
-**Agent**:
+**Agent:**
 
 ```
-I'll capture this as a skill. Let me analyze what we learned:
-
-Capturable Knowledge:
+I'll capture this. Capturable knowledge:
 - NestJS Bull queue configuration pattern
 - Redis connection handling for queues
 - Processor registration requirements
 
-This would make a good standalone skill or could extend `nestjs-queue-architect`.
-
-Let me check the existing skill...
-[Reads skills/nestjs-queue-architect/SKILL.md]
-
-The existing skill covers queue setup but not this specific debugging pattern.
-I'll add a new "Troubleshooting" section.
-
-Created: skills/nestjs-queue-architect/SKILL.md (updated)
-- Added troubleshooting section
-- Documented Redis connection requirements
-- Added common error patterns
-
-Should I also create session documentation for this debugging session?
+The existing nestjs-queue-architect skill covers queue setup but not this
+debugging pattern. I'll read it, then add a "Troubleshooting" section
+documenting the Redis connection requirements and common error patterns.
 ```
-
----
-
-## Activation Triggers
-
-The skill activates on these patterns:
-
-```regex
-# Explicit capture requests
-(save|capture|turn|make).*(skill|reusable|pattern)
-(this should be|let's make this).*(skill|documented|reusable)
-
-# Workflow completion signals
-(finally|glad).*(working|figured|solved)
-(this was|that was).*(tricky|hard|difficult|complex)
-(multiple|several).*(iterations|attempts|tries)
-
-# Learning signals
-(wish I knew|should have known|next time|for future)
-```
-
-## Session retrospectives
-
-Recommend `/retro` to review a finished session for friction. Retro routes its
-skill candidates back here.

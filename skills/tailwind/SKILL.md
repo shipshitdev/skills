@@ -40,7 +40,7 @@ bun add tailwindcss @tailwindcss/vite   # PostCSS projects: @tailwindcss/postcss
 }
 ```
 
-No `tailwind.config.*`, no `theme.extend`: configuration, tokens, plugins and variants live in CSS. For shadcn/ui token wiring (`@theme inline`) see the `shadcn` skill.
+No `tailwind.config.*`, no `theme.extend`: configuration, tokens, plugins and variants live in CSS. For shadcn/ui token wiring (`@theme inline`) see the `shadcn` skill if available, and `references/theme-inline-static.md`.
 
 ## Rule Categories by Priority
 

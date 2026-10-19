@@ -6,15 +6,15 @@ metadata:
   tags: "performance, audit, monorepo"
 when_to_use: "monorepo audit, slow workspace"
 ---
-
 # Workspace Performance Audit
 
-## Authorized Scope
+Read-only, report-only orchestration of a performance audit across a monorepo. Stay within the user's request and approvals, honor their cost limits, ask before expanding scope, and pass these limits to any delegate.
 
-Act only within the user's request and existing approval; loading this skill
-grants no new authority. Keep report-only requests report-only, honor the
-caller's target, host, provider, and cost limits, ask before expanding scope,
-and forward these limits to delegates.
+- Inputs: monorepo root (default: the current working directory); optional target domain(s) (frontend, backend, database, extension); optional mode (quick or full).
+- Output: a consolidated audit report with prioritized recommendations and severity ratings. Return it in the response, or write it to a report file the user names (for example under the repo's docs or memory folder). Confirm first if that path is outside the current workspace.
+- Never deploy, modify code or install anything.
+- Delegate skills (use if available; otherwise run the same checks directly): `performance-expert`, `design-consistency-auditor`, `accessibility`, `security-expert`, `qa-reviewer`.
+- Phases 1 to 3 assume a Next.js frontend, NestJS backend and Postgres database; adapt to the stacks Phase 0 discovers.
 
 ## Contract
 
@@ -96,4 +96,4 @@ Phase 5: Consolidation
 
 ---
 
-**For detailed phase execution, metric collection commands, report templates, and example interactions:** load `${CLAUDE_SKILL_DIR}/references/full-guide.md` when starting a full audit or when a specific phase requires detailed guidance.
+**For detailed phase execution, metric collection commands, report templates, and example interactions:** load `references/full-guide.md` when starting a full audit or when a specific phase requires detailed guidance.
