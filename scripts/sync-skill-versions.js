@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 
-import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-
-const digest = (content) => createHash('sha256').update(content).digest('hex');
 
 try {
   const args = process.argv.slice(2);
@@ -64,29 +61,8 @@ try {
     } else
       process.stdout.write(`All ${count} skills and plugins use repository version ${version}.\n`);
   } else {
-    // Only version edits to already accepted bytes may advance fingerprints.
-    // Unreviewed body changes retain their old hashes and fail pstack:verify.
-    const mappingPath = join(root, 'upstream/pstack/mapping.json');
-    let mapping;
-    let updated = 0;
-    if (existsSync(mappingPath)) {
-      mapping = JSON.parse(readFileSync(mappingPath, 'utf8'));
-      for (const item of Object.values(mapping.files)) {
-        for (const destination of item.destinations || []) {
-          const change = changes.get(destination.path);
-          if (change && destination.sha256 === digest(change.before)) {
-            destination.sha256 = digest(change.after);
-            updated += 1;
-          }
-        }
-      }
-    }
-    // Validate every source and the mapping before writing any metadata.
     for (const [path, change] of changes) writeFileSync(join(root, path), change.after);
-    if (updated) writeFileSync(mappingPath, `${JSON.stringify(mapping, null, 2)}\n`);
-    process.stdout.write(
-      `Aligned ${count} skills to ${version}; changed ${changes.size} files and ${updated} accepted version fingerprints.\n`
-    );
+    process.stdout.write(`Aligned ${count} skills to ${version}; changed ${changes.size} files.\n`);
   }
 } catch (error) {
   process.stderr.write(`Skill version alignment failed: ${error.message}\n`);

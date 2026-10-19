@@ -57,8 +57,6 @@ Confirmation Required:
 Delegates To:
 
 - `test-runner` to verify the tree builds and tests pass after resolution
-- `debug` (scoped mode) when the post-resolution build or tests fail for a
-  non-obvious reason
 - `git-safety` if the history is tangled or a destructive recovery is being weighed
 
 ## When to Use

@@ -5,7 +5,7 @@ metadata:
   version: "2.2.4"
   tags: "prd, planning, dispatcher, requirements, spec, specification, ears, orchestration"
   author: Ship Shit Dev
-when_to_use: "/prd, prepare a feature issue, write a PRD, plan a feature, validate a PRD, discovery interview"
+when_to_use: "/prd, prepare a feature issue, write a PRD, plan a feature, validate a PRD"
 disable-model-invocation: true
 ---
 
@@ -50,7 +50,6 @@ Delegates To:
 - `prd-quality-gate` for `gate` (blocking execution readiness) or `lint` (draft warnings).
 - `feature-intake`, `prd-quality-gate`, and `executing-plans` for `spec` (prepare, gate,
   then execute within authorized scope; see Spec mode).
-- Recommend `interview` for `interview` (explicit discovery workflow).
 
 ## Route
 
@@ -119,5 +118,4 @@ rule.
 /prd gate <issue>        Check blocking execution readiness and freshness
 /prd lint <issue>        Warn about incomplete draft requirements
 /prd spec <request>      Prepare and implement within authorized scope
-/prd interview <topic>   Recommend the explicit discovery entry point
 ```

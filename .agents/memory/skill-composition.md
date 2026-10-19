@@ -6,13 +6,12 @@ Skill discovery and action authorization are separate. Explicit execution router
 may invoke reusable engines only within the selected task, carrying target,
 existing authorization, report-only mode, and host/provider/cost limits.
 `disable-model-invocation` remains for explicit entry points and advisory workflows
-that are not routed by a command. A router a command names (`review-dispatch`,
-`ask-dev-loop`) uses `user-invocable: false`; the other `*-dispatch` routers are
+that are not routed by a command. A router a command names (`review-dispatch`) uses `user-invocable: false`; the other `*-dispatch` routers are
 explicit entry points because their commands name the engines directly;
 it is not a substitute for a writing engine's in-body action gates.
 
-`ask-dev-loop`, `interview`, and `shape` retain their advisory output boundaries.
-Pstack stays a public, attributed adaptation. Resolve one implementation and a
+`shape` retains its advisory output boundary.
+Pstack and Pocock skills live upstream and are not vendored here (2026-10-19). Resolve one implementation and a
 consistent set of companions from the installed catalog; resolve resources from
 the selected skill directory, never an assumed consumer `skills/` checkout.
 

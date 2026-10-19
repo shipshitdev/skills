@@ -54,7 +54,6 @@ PLATFORM_EXEMPT_SKILLS=""
 CONTRACT_REQUIRED_SKILLS="
 agent-config-audit
 agent-folder-init
-codebase-design
 deploy-app
 deployment-composer
 feature-intake
@@ -64,16 +63,8 @@ landing-page-vercel
 micro-landing-builder
 project-init-orchestrator
 release
-rules-capture
 scaffold
 prd-task-creator
-pstack
-create-verification-skill
-maintain-verification-skill
-show-me-your-work
-no-comments
-arena
-swarm
 orchestrate
 "
 

@@ -25,7 +25,6 @@ Frontend development and design skills
 - `react-component-performance`
 - `react-hook-form`
 - `theme-factory`
-- `prototype`
 - `react-patterns`
 - `react-refactor`
 - `react-testing-library`

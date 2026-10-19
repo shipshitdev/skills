@@ -1,6 +1,6 @@
 ---
 description: "Run, author, or set up tests: run and repair, QA pass, TDD, Playwright E2E, coverage gates, or CI init."
-argument-hint: "[run [scope]|qa|tdd|e2e|coverage|init|regression]"
+argument-hint: "[run [scope]|qa|e2e|coverage|init|regression]"
 disable-model-invocation: true
 ---
 
@@ -26,7 +26,6 @@ AI-targeted regression suites.
 /test run --since <ref>  # tests related to a commit range
 /test run --no-fix       # run and report only; make no edits
 /test qa                 # structured multi-phase verification pass on completed work
-/test tdd                # red-green-refactor workflow for a feature or bug fix
 /test e2e                # scaffold Playwright E2E tests for a frontend project
 /test coverage           # set up or verify Husky pre-commit coverage enforcement
 /test init               # install Vitest + GitHub Actions CI with 80% coverage threshold
@@ -51,9 +50,6 @@ runs the suite with coverage, while `/test coverage` installs the Husky gate.
 - **`qa`** — the `qa-reviewer` skill: run a structured multi-phase verification
   pass on completed AI agent work, catching bugs, missed requirements, and
   incorrect assumptions before changes are committed.
-- **`tdd`** — the `tdd` skill: drive a red-green-refactor cycle for a feature
-  request or bug fix, producing a test-first implementation plan followed by
-  verified, passing code.
 - **`e2e`** — the `playwright-e2e-init` skill: initialize Playwright
   end-to-end testing for Next.js and React projects, including config, example
   tests, and CI integration.
@@ -78,7 +74,6 @@ preconditions and confirmation gate; this command does not relax them.
 | _(empty)_ | `status` | none: print a one-line domain overview (detected runner, coverage config) and the Usage block, mutate nothing |
 | `run`, `suite`, `smoke` | `run` | Use the `test-runner` skill; forward scope tokens (`full`, `unit`/`integration`/`e2e`, `types`, `coverage`, a path/pattern, `--since <ref>`, `--no-fix`) verbatim |
 | `qa`, `review`, `verify` | `qa` | Use the `qa-reviewer` skill |
-| `tdd`, `red-green` | `tdd` | Use the `tdd` skill |
 | `e2e`, `playwright` | `e2e` | Use the `playwright-e2e-init` skill (scaffold) |
 | `coverage`, `hooks` | `coverage` | Use the `husky-test-coverage` skill (Husky gate) |
 | `init`, `setup`, `ci` | `init` | Use the `testing-cicd-init` skill |

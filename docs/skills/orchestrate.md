@@ -44,13 +44,13 @@ not enroll chats or schedule monitoring.
 
 ## Related workflows
 
-[Pstack's Orchestrate playbook](../../skills/pstack/playbooks/orchestrate.md)
-already supplies a standing coordinator, upward reporting, an inbox, durable human
+The upstream [pstack](https://github.com/poteto/plugins) plugin's Orchestrate playbook
+supplies a standing coordinator, upward reporting, an inbox, durable human
 gates and delivery receipts for large multi-PR programs. This session workflow
 uses those organizational ideas with the harness's existing chat controls; it does
 not require Pstack's runtime, stack management or worker fan-out.
 
-Matt Pocock's [wayfinder](../../skills/wayfinder/SKILL.md) models decisions as shared
-tracker tickets, and [handoff](../../skills/handoff/SKILL.md) carries state across
-sessions. Those are useful complements; neither is the existing-session enrollment
-and centralized question protocol defined here. `swarm` retains worker fan-out.
+Matt Pocock's upstream `wayfinder` and `handoff` skills model decisions as shared
+tracker tickets and carry state across sessions. Those are useful complements;
+neither is the existing-session enrollment and centralized question protocol
+defined here.

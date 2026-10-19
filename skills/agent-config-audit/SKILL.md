@@ -50,7 +50,6 @@ Confirmation Required:
 
 Delegates To:
 
-- `rules-capture` for single new preferences
 - `agent-folder-init` for missing `.agents/` structure
 
 ## When to Use
@@ -63,8 +62,8 @@ Delegates To:
 
 ## When NOT to Use
 
-- For application defects, recommend `debug`; for refactoring, recommend `/refactor`.
-- If capturing a single new rule from conversation → use **rules-capture**
+- For application defects, investigate the defect directly; for refactoring, recommend `/refactor`.
+- If capturing a single new rule from conversation → add it to the instruction file directly
 - If auditing code quality rather than agent configuration → use `audit`
 - If setting up or repairing formatter/linter config → use `linter-formatter-init`
 - If scaffolding `.agents/` from scratch → use **agent-folder-init**
@@ -291,7 +290,6 @@ After running the audit:
 
 ## Related Skills
 
-- `rules-capture` — capture one new preference instead of auditing a config set
 - `agent-folder-init` — scaffold a missing `.agents/` structure
 - `linter-formatter-init` — set up or repair formatter/linter configuration
 - `audit` — audit application quality instead of agent configuration

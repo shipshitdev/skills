@@ -45,7 +45,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `refactor-code` / `deslop` / `stack-modernization` to actually pay down an item.
+- `refactor-code` / `stack-modernization` to actually pay down an item.
 - `roadmap-analyzer` when debt competes with features — it ranks both against revenue.
 - Recommend `roadmap-to-milestones` to schedule a debt-paydown milestone.
 - `cto-advisor` when the question is how much to invest overall, or which architecture

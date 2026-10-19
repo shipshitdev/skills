@@ -1,11 +1,11 @@
 ---
 name: test-dispatch
-description: Router behind /test. Parses run, qa, tdd, e2e, coverage, init, or regression and delegates to the matching testing engine without adding testing logic of its own.
+description: Router behind /test. Parses run, qa, e2e, coverage, init, or regression and delegates to the matching testing engine without adding testing logic of its own.
 metadata:
   version: "2.2.4"
-  tags: "testing, dispatcher, tdd, e2e, coverage, ci, orchestration"
+  tags: "testing, dispatcher, e2e, coverage, ci, orchestration"
   author: Ship Shit Dev
-when_to_use: "/test, run tests, qa review, tdd, e2e setup, coverage gate, testing setup, ai regression tests"
+when_to_use: "/test, run tests, qa review, e2e setup, coverage gate, testing setup, ai regression tests"
 disable-model-invocation: true
 ---
 
@@ -54,7 +54,6 @@ Delegates To:
 
 - `test-runner` for `run`
 - `qa-reviewer` for `qa`
-- `tdd` for `tdd`
 - `playwright-e2e-init` for `e2e`
 - `husky-test-coverage` for `coverage`
 - `testing-cicd-init` for `init`
@@ -67,7 +66,6 @@ Delegates To:
 | _(empty)_ | `status` | none — overview + this table; mutate nothing |
 | `run`, `suite`, `smoke` | `run` | `test-runner`, scope tokens forwarded |
 | `qa`, `review`, `verify` | `qa` | `qa-reviewer` |
-| `tdd`, `red-green` | `tdd` | `tdd` |
 | `e2e`, `playwright` | `e2e` | `playwright-e2e-init` (scaffold) |
 | `coverage`, `hooks` | `coverage` | `husky-test-coverage` (Husky gate) |
 | `init`, `setup`, `ci` | `init` | `testing-cicd-init` |

@@ -228,32 +228,6 @@ assert.deepEqual(result.results, [{ skill: "board-sync" }]);
         result = subprocess.run(["bun", "-e", script], cwd=ROOT, capture_output=True, text=True, check=False)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_review_workflow_leaves_model_selection_with_harness(self) -> None:
-        script = r'''
-import { readFileSync } from "node:fs";
-import assert from "node:assert/strict";
-const source = readFileSync("skills/full-code-review/scripts/full-code-review.js", "utf8")
-  .replace("export const meta", "const meta");
-const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-const execute = new AsyncFunction("agent", "parallel", "log", "DIFF", "CHANGED_FILES", "COMMIT_LOG", source);
-for (const retro of [false, true]) {
-  const labels = [];
-  const agent = async (_prompt, options) => {
-    assert.equal(Object.hasOwn(options, "model"), false);
-    assert.equal(Object.hasOwn(options, "effort"), false);
-    labels.push(options.label);
-    if (options.label === "adversarial-verifier") return { verified_findings: [] };
-    if (options.label.endsWith("synthesis")) return { mode: retro ? "retro" : "pr", verdict: retro ? "retro-backlog" : "approve", rationale: "Fixture", stats: {} };
-    return { findings: [] };
-  };
-  const result = await execute(agent, (tasks) => Promise.all(tasks.map((task) => task())), () => {}, "diff", "file.ts", retro ? "commit" : "");
-  assert.equal(labels.length, retro ? 6 : 5);
-  assert.equal(result.mode, retro ? "retro" : "pr");
-}
-'''
-        result = subprocess.run(["bun", "-e", script], cwd=ROOT, capture_output=True, text=True, check=False)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-
 
 if __name__ == "__main__":
     unittest.main()

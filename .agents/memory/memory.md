@@ -1,13 +1,13 @@
 # Skills Repo Memory
 
-last_verified: 2026-08-14
+last_verified: 2026-10-19
 
 ## What This Repo Is
 
 <!-- catalog-summary:start -->
 Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
 
-Generated catalog: **169 skills · 24 commands · 13 bundles · 182 plugins**.
+Generated catalog: **132 skills · 23 commands · 13 bundles · 145 plugins**.
 <!-- catalog-summary:end -->
 
 Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
@@ -26,10 +26,10 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 <!-- catalog-counts:start -->
 | Asset | Count | Canonical source |
 |---|---:|---|
-| Skills | 169 | `skills/*/SKILL.md` |
-| Commands | 24 | `commands/*.md` |
+| Skills | 132 | `skills/*/SKILL.md` |
+| Commands | 23 | `commands/*.md` |
 | Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 182 | skills + bundles |
+| Plugins | 145 | skills + bundles |
 <!-- catalog-counts:end -->
 
 ## Architecture Decisions
@@ -223,41 +223,18 @@ not a ratified standard — the gate regex is the single point to adjust if it s
 | Keep react-patterns + react-refactor + react-component-performance | Cleanly separated by concern |
 | Keep all expo-*/resend-*/static-analysis-* families | Non-overlapping topics |
 
-### Pstack consolidation (2026-09-05)
+### Unvendored pstack and Pocock skills (2026-10-19)
 
-Maintain one canonical Shipshit implementation. Open Pstack supplies the portable
-base; Cursor Pstack is independently tracked for original-only capabilities.
-Pinned archives and exhaustive source mappings live in upstream/pstack/. Runtime
-scripts ship in skills/pstack/scripts/; principles and platform adapters are
-installed resources, not duplicate skill catalogs. Existing deslop modes and tdd
-contributions stay canonical. Benny and Bot UI are dormant, explicit setup
-capabilities. Installing a skill does not activate their routines or services.
-
-Use scripts/pstack-sync.py to verify accepted snapshots and stage reviewed
-upstream candidates. Never advance accepted source commits or overwrite local
-adaptations automatically. Review after major model/harness releases while
-preserving user-owned provider routing. See upstream/pstack/README.md.
-
-A lock source may list `ignored_paths`: exact upstream paths or directory prefixes
-ending in `/` that are repo-only and never shipped (open-pstack's verify harness and
-its symlink). Candidates skip and report them; verify rejects any that are also
-archived or mapped. Every other symlink or non-blob upstream object is still rejected.
-
-Sync of 2026-10-05 (issue #188): Pstack advanced to open-pstack 1b03678 and
-cursor-pstack 807c031. Take Cursor changes through open-pstack's port up to its
-sync marker, and hand-port only later Cursor deltas. Model, routing and effort
-defaults, `/loop` and `/goal` autopilot cadence, Cursor-only UI and upstream repo
-infrastructure are never adopted. How critique mode is retired. The `correct`
-procedure lives in rules-capture, benchmark checklist and prompting in pstack
-references, and commit-summary no longer duplicates standup.
-The runner is open-pstack's reliability bundle, copied verbatim (portable launcher,
-stream sidecars, terminal-failure classification). Grok lanes run with
-`--permission-mode auto` (Vincent approved, 2026-10-05) because headless Grok cancels
-a turn on any permission prompt. Do not take the reverted Claude write-lane change.
-
-Duplicate installed providers may be disabled only after replacement verification.
-Preserve generated user role sheets and their actual source of truth. Source
-coverage and runtime unit tests do not prove a live harness cutover.
+Vincent's call: pstack (poteto/plugins) and mattpocock/skills are maintained
+upstream, so this repo no longer vendors them. 36 pstack-derived and
+Pocock-duplicate skills were removed (architect, arena, blast-radius, deslop,
+how, why, swarm, tdd, standup, grill-me, wayfinder, handoff, debug, interview and
+others), along with `ask-dev-loop` and `/ask`, `upstream/pstack/`,
+`scripts/pstack-sync.py` and their tests/CI steps. Keep only skills that
+complement them. Install both from upstream (`bunx skills add
+https://github.com/poteto/plugins`, `.../mattpocock/skills`); skills here name
+them as "upstream pstack/mattpocock when installed", never as relative routes.
+Earlier sections below that mention the removed skills are history.
 
 ### Upstream review (2026-10-06, #224)
 

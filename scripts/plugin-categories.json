@@ -4,7 +4,6 @@
       "description": "Testing, QA, and CI/CD automation skills",
       "skills": [
         "playwright-e2e-init",
-        "tdd",
         "testing-expert",
         "testing-cicd-init",
         "qa-reviewer",
@@ -52,7 +51,6 @@
         "react-component-performance",
         "react-hook-form",
         "theme-factory",
-        "prototype",
         "react-patterns",
         "react-refactor",
         "react-testing-library",
@@ -79,8 +77,7 @@
         "nestjs-expert",
         "nestjs-testing-expert",
         "incremental-fetch",
-        "turborepo",
-        "typescript-expert"
+        "turborepo"
       ]
     },
     "ai-agents": {
@@ -109,7 +106,6 @@
         "content-script-developer",
         "package-architect",
         "artifacts-builder",
-        "wizard",
         "open-source-checker",
         "devcontainer-setup"
       ]
@@ -120,21 +116,14 @@
         "cto-advisor",
         "feature-intake",
         "icp",
-        "interview",
-        "grill-me",
-        "domain-modeling",
-        "prototype",
         "prd-dispatch",
         "prd-quality-gate",
         "prd-task-creator",
         "prd-writer",
         "roadmap-analyzer",
         "roadmap-to-milestones",
-        "rules-capture",
         "writing-plans",
-        "executing-plans",
-        "wayfinder",
-        "research"
+        "executing-plans"
       ]
     },
     "github": {
@@ -176,15 +165,11 @@
         "agent-config-audit",
         "ai-agent-cost-optimizer",
         "code-review",
-        "codebase-design",
         "commit-summary",
-        "deslop",
-        "debug",
         "deploy-app",
         "deploy-dispatch",
         "deployment-composer",
         "docs",
-        "full-code-review",
         "grok-review",
         "llm-structured-output",
         "merge-open-prs",
@@ -192,7 +177,6 @@
         "receiving-code-review",
         "refactor-code",
         "release",
-        "retro",
         "git-cleanup",
         "review-dispatch",
         "scaffold",
@@ -202,12 +186,9 @@
         "skill-dispatch",
         "skill-scout",
         "stack-modernization",
-        "standup",
-        "structural-review",
         "tech-debt",
         "verification-before-completion",
         "weekly-review",
-        "wizard",
         "worktree"
       ]
     },
@@ -218,19 +199,12 @@
         "executing-plans",
         "orchestrate",
         "setup-agent-routing",
-        "wait-what",
-        "workspace-performance-audit",
-        "handoff"
+        "workspace-performance-audit"
       ]
     },
     "dev-loop": {
       "description": "Autonomous GitHub issue-to-PR loop with PRDs, plans, board dispatch, QA, and review",
       "skills": [
-        "interview",
-        "grill-me",
-        "domain-modeling",
-        "ask-dev-loop",
-        "wait-what",
         "feature-intake",
         "prd-writer",
         "writing-plans",
@@ -240,10 +214,7 @@
         "setup-agent-routing",
         "project-board",
         "board-sync",
-        "qa-reviewer",
-        "handoff",
-        "wayfinder",
-        "research"
+        "qa-reviewer"
       ]
     }
   }

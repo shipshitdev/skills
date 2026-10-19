@@ -44,7 +44,7 @@ Empty input shows usage; an unknown mode shows an error and usage without mutati
 | `gate` | Run the `prd-quality-gate` skill in `execution-readiness` mode. |
 | `lint` | Run the `prd-quality-gate` skill in `draft-lint` mode. A successful lint is never execution readiness. |
 | `spec` | Prepare, gate, then implement within authorized scope (see below). |
-| `interview` | Recommend the `interview` skill, the explicit discovery entry point. |
+| `interview` | Interview the user about missing product requirements (the upstream mattpocock/skills `grill-me` fits when installed), then hand the answers to `prepare`. |
 
 ### Spec mode
 

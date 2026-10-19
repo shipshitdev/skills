@@ -13,9 +13,9 @@ when_to_use: "check the diff, review my code"
 
 Correctness and security gate. High-conviction findings only — flag issues you
 are certain about. Ambiguity defaults to "request changes." Structural concerns
-(cohesion, abstraction altitude, circular deps, dead code) belong to the
-`structural-review` skill; trust it on those axes and own correctness + security
-here.
+(cohesion, abstraction altitude, circular deps, dead code) are
+out of scope here (the upstream pstack plugin's structural-review covers them when
+installed); own correctness + security here.
 
 Stack rules from the repo's agent instruction file (Bun, Tailwind v4, Next.js 16,
 shadcn/ui) are validated by the correctness review harness's rule-compliance
@@ -50,9 +50,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `structural-review` for cohesion/abstraction/dead-code axes.
 - `security-audit` for OWASP-depth security review.
-- `codebase-design` when a finding is about module depth or seam placement.
 
 ## Spec Axis
 
@@ -248,8 +246,9 @@ repo's merge-queue skill (`merge-open-prs` in this catalog); never infer that mu
 
 Structural and maintainability concerns — module cohesion, abstraction altitude,
 circular dependencies, dead-code introduction, API surface sprawl, whether the
-implementation matches the stated architecture — belong to the `structural-review`
-skill. Do not re-litigate those axes here; trust `structural-review` to own them.
+implementation matches the stated architecture — are out of scope here. Do not
+re-litigate those axes; the upstream pstack plugin's structural-review covers them
+when installed.
 
 Security-audit depth (OWASP rubric, dependency CVEs, timing attacks, privilege
 escalation paths) belongs to the `security-audit` skill. Surface obvious issues

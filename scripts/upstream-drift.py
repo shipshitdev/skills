@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """Report upstream drift for every tracked upstream as one aggregate issue.
 
-Two kinds of sources feed one report:
-
-- the pinned Pstack imports in upstream/pstack/lock.json (whole import scopes), and
-- every skills/*/SKILL.md, and every skills/*/references/*.md with frontmatter (an
-  absorbed upstream skill), whose `metadata.source` is a GitHub URL in a repository
-  the lock file does not cover. Rolling pins (`upstream_commit`) are compared with
+Sources are every skills/*/SKILL.md, and every skills/*/references/*.md with
+frontmatter (an absorbed upstream skill), whose `metadata.source` is a GitHub URL
+(plus any optional pinned imports in upstream/pstack/lock.json, absent since the
+2026-10-19 unvendoring). Rolling pins (`upstream_commit`) are compared with
   the default branch; tagged pins (`upstream_version`) with the newest release tag
   of the same tag family.
 
 Read-only against upstream: it only calls the GitHub compare/tags APIs. It never
-imports, stages or pushes anything; `pstack-sync.py verify` stays the import gate.
+imports, stages or pushes anything.
 One issue (found by MARKER in any state) tracks everything: updated in place,
 commented on only when the drift set changes, reopened when drift returns and
 closed only when every source is clean and conclusive.
@@ -539,7 +537,8 @@ def apply(ops: list[Op], existing: dict | None, repo: str, run: Runner) -> str:
 
 
 def collect(root: Path, run: Runner) -> list[dict]:
-    lock = json.loads((root / "upstream/pstack/lock.json").read_text())
+    lock_path = root / "upstream/pstack/lock.json"
+    lock = json.loads(lock_path.read_text()) if lock_path.exists() else {"sources": []}
     ctx = Context(run)
     reports = [inspect(source, run, ctx) for source in lock["sources"]]
     covered = {slug(source["repository"]).lower() for source in lock["sources"]}

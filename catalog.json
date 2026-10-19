@@ -7,10 +7,10 @@
     "layout": "git ls-files"
   },
   "counts": {
-    "skills": 169,
-    "commands": 24,
+    "skills": 132,
+    "commands": 23,
     "bundles": 13,
-    "plugins": 182
+    "plugins": 145
   },
   "bundles": [
     "ai-agents",
@@ -87,10 +87,6 @@
     {
       "path": "skills/",
       "role": "Canonical public Agent Skills sources"
-    },
-    {
-      "path": "upstream/",
-      "role": "Pinned upstream snapshots and reviewed adaptation ledgers"
     }
   ]
 }

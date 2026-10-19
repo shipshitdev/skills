@@ -68,12 +68,6 @@ class SkillContractTests(unittest.TestCase):
                     )
                     self.assertNotIn("disable-model-invocation: true", target_header)
 
-    def test_standup_has_no_session_write_exception(self) -> None:
-        body = skill("standup")
-        self.assertIn("Nothing. Keep the entire invocation read-only", body)
-        self.assertNotIn("Only writes to a session log", body)
-        self.assertNotIn("Nothing by default", body)
-
     def test_retired_skills_are_not_required_contracts(self) -> None:
         validator = (ROOT / "scripts/validate-skill-sync.sh").read_text()
         contract_list = validator.split('CONTRACT_REQUIRED_SKILLS="', 1)[1].split('"', 1)[0].split()
@@ -98,13 +92,6 @@ class SkillContractTests(unittest.TestCase):
         body = skill("qa-loop")
         self.assertIn("A 5xx status, failed job, or same-origin URL alone does not prove ownership", body)
         self.assertIn("Without that evidence, classify as `observed` or `blocked`", body)
-
-    def test_deslop_preserves_precise_technical_terms(self) -> None:
-        body = re.sub(r"\s+", " ", (ROOT / "skills/deslop/references/prose-slop.md").read_text())
-        self.assertIn("Preserve established technical meanings", body)
-        self.assertIn("API surface", body)
-        self.assertIn("embedding vector", body)
-        self.assertNotIn('"Vector" becomes "way" or "method"', body)
 
 
 if __name__ == "__main__":

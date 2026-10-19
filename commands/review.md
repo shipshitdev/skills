@@ -20,8 +20,8 @@ PR, the last N commits, or a time window — through the same review engine.
 /review <duration>       # review commits in a time window: 24h, 7d, 2w
 /review retro [window]   # retrospective over merged history (default 14d): cross-commit
                          #   bugs/optimizations/refactors as a backlog, optionally filed as issues
-/review --deep [target]  # full multi-dimension review (structural + security + devex) on any target
-/review --structural [target]  # structural/maintainability lens only (the thermo-nuclear pass)
+/review --deep [target]  # multi-lens review on any target (needs the upstream pstack plugin)
+/review --structural [target]  # structural lens only (needs the upstream pstack plugin)
 /review grok [target]    # second opinion: same target, reviewed by the Grok CLI instead
 ```
 
@@ -35,12 +35,11 @@ mutually exclusive; `--deep` wins if both are given.
 
 - **Default (quick):** the `code-review` skill — correctness + security gate.
   Fast, high-conviction, the right call for most reviews.
-- **`--deep`:** the `full-code-review` skill — three parallel lenses
-  (structural, security, devex/flags), adversarial verification, strongest-tier
-  synthesis. Use for high-risk changes or production-readiness passes.
-- **`--structural`:** the `structural-review` skill alone — the
-  structural/maintainability "thermo-nuclear" lens (file size, abstraction,
-  layering, design purity, directness-vs-magic), without the security/devex fan-out.
+- **`--deep`:** the upstream pstack plugin's full-code-review workflow (parallel
+  lenses, adversarial verification). Not vendored here; install pstack from
+  poteto/plugins. Without it, the review falls back to the quick gate and says so.
+- **`--structural`:** the upstream pstack plugin's structural-review skill alone.
+  Same fallback when pstack is not installed.
 
 ## External Engine
 
@@ -56,8 +55,9 @@ Combines with any target except `retro`; mutually exclusive with `--deep` and
 `/review retro [window]` is not a merge gate — it mines a window of **already-merged**
 history for what per-PR review structurally cannot see: the same helper copy-pasted
 across separate commits, an optimization compounding over many changes, a bug fix
-whose root cause recurs in siblings it never touched. It runs `full-code-review` with
-the commit log attached (adding its cross-commit lens) and returns a **prioritized
+whose root cause recurs in siblings it never touched. It runs the upstream pstack
+full-code-review workflow with the commit log attached (adding its cross-commit lens; quick
+gate fallback when pstack is not installed) and returns a **prioritized
 backlog** — bugs / optimizations / refactors, ranked by (impact × recurrence) ÷ effort
 — not an approve/block verdict. Windows: `7d`, `14d` (default), `30d`, or `since <ref>`.
 On request it files the backlog as GitHub issues (confirmation-gated).
@@ -74,8 +74,8 @@ with read-only `git`/`gh`, routes to the chosen depth, and renders the verdict.
    diffing; stop and ask for a base if it can't be resolved.
 3. **Resolve the target to diffs** — branch vs trunk, `gh pr diff`, a commit
    range, or a `git log --since` window.
-4. **Route by depth** — apply `code-review` (quick), `full-code-review` (deep),
-   or `structural-review` (structural) to each resolved diff — or hand the
+4. **Route by depth** — apply `code-review` (quick), or the upstream pstack
+   deep/structural reviews when installed, to each resolved diff — or hand the
    diff to `grok-review` when the `grok` engine is selected.
 5. **Render** — a single verdict for one target, or a summary table (one verdict
    line per PR) for `prs`, with a `/review <PR#>` drill-down hint.

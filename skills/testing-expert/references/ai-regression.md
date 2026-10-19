@@ -11,7 +11,7 @@ a model review calls a change correct but no test proves it.
 Never hit production services: use sandbox, fixtures, local test databases, or
 mocked providers. Confirm before changing production data, external accounts,
 CI settings, or destructive fixtures. Write application code only when the user
-also asks to fix the behavior; use `debug` while the root cause is unknown.
+also asks to fix the behavior; investigate the root cause first while it is unknown.
 
 ## Core Principle
 

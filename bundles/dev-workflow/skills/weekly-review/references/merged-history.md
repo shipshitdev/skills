@@ -1,7 +1,6 @@
 # Shared Merged History
 
-Own the integrated-history procedure for `weekly-review` and the `all` modes of
-`standup`. Use `recap` for a diff-backed summary; use `audit` for individual and
+Own the integrated-history procedure for `weekly-review`. Use `recap` for a diff-backed summary; use `audit` for individual and
 combined review. Keep this procedure report-only even when its caller has repair
 authority. Return the frozen inventory, evidence, coverage, and findings to the
 caller; do not run board maintenance, cleanup, repair, or delivery actions here.
@@ -150,7 +149,7 @@ for correctness and spec fidelity. Supply historical diffs directly so closed
 PRs are still inspected. Keep missing specs explicit. Empty combined diffs still
 require individual review when intermediate changes/reversions exist.
 
-Run the `full-code-review` skill with the combined diff, complete changed-file
+Run a multi-lens review (the upstream pstack full-code-review workflow when installed; otherwise repeat `code-review` per lens) with the combined diff, complete changed-file
 union, and COMMIT_LOG in retrospective mode with its cross-commit lens. Check
 interacting schemas, APIs/callers, jobs, permissions, flags, dependencies, and
 deployment configuration. Inspect unchanged consumers where changed contracts

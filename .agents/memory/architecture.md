@@ -9,20 +9,19 @@ last_verified: 2026-07-13
 |---|---|---|
 | `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
 | `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 182 generated plugins |
+| `.claude-plugin/` | Generated Claude marketplace catalog | 145 generated plugins |
 | `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
 | `.github/` | Issue templates and GitHub Actions workflows | Tracked |
 | `.husky/` | Git hook configuration | Tracked |
 | `.tmp/` | Tracked repository content | Tracked |
 | `assets/` | Static repository assets | Tracked |
 | `bundles/` | Generated marketplace bundle snapshots | 13 generated bundles |
-| `commands/` | Claude Code/plugin command adapters | 24 command adapters |
+| `commands/` | Claude Code/plugin command adapters | 23 command adapters |
 | `docs/` | Human-facing orientation pages for flagship skills | Tracked |
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
 | `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 169 canonical skills |
-| `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
+| `skills/` | Canonical public Agent Skills sources | 132 canonical skills |
 <!-- catalog-layout:end -->
 
 ## Data Flow

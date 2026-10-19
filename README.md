@@ -5,9 +5,9 @@
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
 <!-- catalog-summary:start -->
-169 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
+132 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
 
-Catalog: **169 skills · 24 commands · 13 bundles · 182 plugins**.
+Catalog: **132 skills · 23 commands · 13 bundles · 145 plugins**.
 <!-- catalog-summary:end -->
 
 Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
@@ -19,20 +19,19 @@ Skills are **model-agnostic playbooks**: the harness supplies the model, so no s
 |---|---|---|
 | `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
 | `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 182 generated plugins |
+| `.claude-plugin/` | Generated Claude marketplace catalog | 145 generated plugins |
 | `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
 | `.github/` | Issue templates and GitHub Actions workflows | Tracked |
 | `.husky/` | Git hook configuration | Tracked |
 | `.tmp/` | Tracked repository content | Tracked |
 | `assets/` | Static repository assets | Tracked |
 | `bundles/` | Generated marketplace bundle snapshots | 13 generated bundles |
-| `commands/` | Claude Code/plugin command adapters | 24 command adapters |
+| `commands/` | Claude Code/plugin command adapters | 23 command adapters |
 | `docs/` | Human-facing orientation pages for flagship skills | Tracked |
 | `prompts/` | Shared prompt resources | Tracked |
 | `resources/` | Authoring references and supporting documentation | Tracked |
 | `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 169 canonical skills |
-| `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
+| `skills/` | Canonical public Agent Skills sources | 132 canonical skills |
 <!-- catalog-layout:end -->
 
 ## What's Included
@@ -54,7 +53,7 @@ The flagship workflow: a **board-driven autonomous dev loop** that turns a GitHu
 issue into a reviewed PR, with you as architect/reviewer. It is the open, `gh`-driven
 version of **ShipCode**'s pipeline — same stages, no app required.
 
-- **Plan** (human): `/ask` if you don't know which skill; `interview` → `prd-writer` / `writing-plans` write the PRD
+- **Plan** (human): `prd-writer` / `writing-plans` write the PRD
   and implementation plan onto the issue.
 - **Dispatch** (human opt-in): apply `dispatch:claude` (Claude lane),
   `dispatch:codex` (Codex lane), or `dispatch:openrouter` (OpenRouter lane) to a
@@ -203,7 +202,6 @@ or another Agent Skills-compatible harness.
 - `.agents/memory/system/routine-standards.md` - portable scheduled-task and automation authoring
 - `.agents/memory/system/ai-dev-loop.md` - Board-driven autonomous dev loop (`/loop` + agent-dispatch)
 - `docs/skills/dev-loop.md` - Human-facing Dev Loop orientation
-- `docs/skills/ask-dev-loop.md` - Human-facing router for the flagship flow
 
 ## Development Commands
 
@@ -226,19 +224,19 @@ or another Agent Skills-compatible harness.
 | prd | Create specs, PRDs, and feature plans |
 | prompt | Optimize a prompt via `prompt-engineering`'s 4-D workflow |
 | qa | Run a structured verification pass before commit — shortcut for `/test qa` |
-| refactor | Improve existing code — deslop, refactor, debt, perf, structure, stack |
+| refactor | Improve existing code — refactor, debt, perf, stack |
 | review | Review changes, a PR, all open PRs, or recent commits — natively or via the Grok CLI |
 | roadmap | Turn ICP into a revenue-ranked backlog and dated milestones |
 | scan | Run a security audit — full app/API audit or dependency supply chain |
 | skill | Author, capture, test, and scout agent skills |
 | suggest | Post inline suggested changes on a PR |
-| test | One testing front door — run, qa, tdd, e2e, coverage, init, regression |
+| test | One testing front door — run, qa, e2e, coverage, init, regression |
 
 ### Intentional shortcuts, not duplicates
 
-- `/qa` = `/test qa` and `/deslop` = `/refactor deslop` — the two most-used
-  modes keep their own top-level spelling on purpose.
-- `/bug`, `/deslop`, `/orchestrate`, `/release`, `/standup`, `/wait-what`, and `/weekly-review`
+- `/qa` = `/test qa` — the most-used mode keeps its own top-level spelling on
+  purpose.
+- `/bug`, `/orchestrate`, `/release`, and `/weekly-review`
   are skills, not command files: a skill with the same name owns the slash name,
   so a command file would be shadowed.
 - `/address`, `/suggest`, and `/fix-ci` are three distinct jobs in the same PR
@@ -261,15 +259,8 @@ follow-up through a supported thread heartbeat. See
 
 ### Weekly engineering review
 
-Run `/standup 24` for a personal recap, `/standup all 24` for everyone's merged
-changes, or `/standup all 24 audit` to double-check individual and combined
-changes with frozen commits, PR/review links, deployment evidence, and safe
-checkpoints. Bare numbers mean hours; `7d`, `since <SHA>`, and dated timezone
-windows also work. See [standup modes and routing](docs/skills/standup.md) and the
-[Anthropic engineering coverage comparison](docs/skills/engineering-comparison.md).
-
 Run `/weekly-review 7d` with a repository and board URL for an evidence-backed
-report on issue accuracy, recent changes, operational gaps, and deslop findings.
+report on issue accuracy, recent changes, operational gaps, and cleanup findings.
 Use `since <SHA>` to resume from a completed review checkpoint. Add `--fix` for
 scoped code repairs; board writes and other external actions retain their own
 authorization boundaries. The workflow does not schedule itself.
@@ -277,20 +268,18 @@ authorization boundaries. The workflow does not schedule itself.
 The coordinator reuses [weekly-review](skills/weekly-review/SKILL.md)'s declared
 engines. When preparing an installation, select the coordinator and any missing
 companions. During a review, missing companions are reported without installation.
-Plain `deslop` is the Shipshit adaptation. `pstack:deslop` is a separate upstream
-plugin skill, not an alias.
 
 <!-- catalog-skills-heading:start -->
-## Skills (169)
+## Skills (132)
 <!-- catalog-skills-heading:end -->
 
 ### Dev Loop (15)
 
-`interview`, `grill-me`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
+`feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
 
 ### Dev Workflow (35)
 
-`agent-architecture-audit`, `agent-config-audit`, `ai-agent-cost-optimizer`, `codebase-design`, `code-review`, `structural-review`, `full-code-review`, `grok-review`, `review-dispatch`, `commit-summary`, `standup`, `deslop`, `tech-debt`, `stack-modernization`, `debug`, `deploy-app`, `deployment-composer`, `docs`, `llm-structured-output`, `merge-open-prs`, `production-audit`, `refactor-code`, `release`, `git-cleanup`, `scaffold`, `shape`, `skill-capture`, `skill-comply`, `skill-scout`, `receiving-code-review`, `verification-before-completion`, `wizard`, `worktree`, `skill-dispatch`, `deploy-dispatch`
+`agent-architecture-audit`, `agent-config-audit`, `ai-agent-cost-optimizer`, `code-review`, `grok-review`, `review-dispatch`, `commit-summary`, `tech-debt`, `stack-modernization`, `deploy-app`, `deployment-composer`, `docs`, `llm-structured-output`, `merge-open-prs`, `production-audit`, `refactor-code`, `release`, `git-cleanup`, `scaffold`, `shape`, `skill-capture`, `skill-comply`, `skill-scout`, `receiving-code-review`, `verification-before-completion`, `worktree`, `skill-dispatch`, `deploy-dispatch`
 
 ### GitHub (17)
 
@@ -298,15 +287,15 @@ plugin skill, not an alias.
 
 ### Testing (9)
 
-`playwright-e2e-init`, `tdd`, `testing-expert`, `testing-cicd-init`, `qa-reviewer`, `qa-loop`, `husky-test-coverage`, `test-runner`, `test-dispatch`
+`playwright-e2e-init`, `testing-expert`, `testing-cicd-init`, `qa-reviewer`, `qa-loop`, `husky-test-coverage`, `test-runner`, `test-dispatch`
 
 ### Frontend & React (31)
 
-`frontend-design`, `component-library`, `accessibility`, `audit`, `clarify`, `critique`, `design-consistency-auditor`, `html-style`, `layout`, `polish`, `quieter`, `react-component-performance`, `react-hook-form`, `theme-factory`, `prototype`, `react-patterns`, `react-refactor`, `react-testing-library`, `react-native-components`, `expo-architect`, `landing-page-vercel`, `micro-landing-builder`, `ai-loading-ux`, `table-filters`, `quick-view`, `nextra-writer`, `shadcn`, `tailwind`, `stack-validator`, `design-dispatch`
+`frontend-design`, `component-library`, `accessibility`, `audit`, `clarify`, `critique`, `design-consistency-auditor`, `html-style`, `layout`, `polish`, `quieter`, `react-component-performance`, `react-hook-form`, `theme-factory`, `react-patterns`, `react-refactor`, `react-testing-library`, `react-native-components`, `expo-architect`, `landing-page-vercel`, `micro-landing-builder`, `ai-loading-ux`, `table-filters`, `quick-view`, `nextra-writer`, `shadcn`, `tailwind`, `stack-validator`, `design-dispatch`
 
 ### Backend & Data (8)
 
-`api-design-expert`, `error-handling-expert`, `graphql-architect`, `nestjs-expert`, `nestjs-testing-expert`, `incremental-fetch`, `turborepo`, `typescript-expert`
+`api-design-expert`, `error-handling-expert`, `graphql-architect`, `nestjs-expert`, `nestjs-testing-expert`, `incremental-fetch`, `turborepo`
 
 ### Infrastructure (12)
 
@@ -322,11 +311,11 @@ plugin skill, not an alias.
 
 ### Workspace Setup (10)
 
-`project-init-orchestrator`, `env-setup`, `linter-formatter-init`, `content-script-developer`, `package-architect`, `artifacts-builder`, `wizard`, `open-source-checker`, `devcontainer-setup`, `stack-validator`
+`project-init-orchestrator`, `env-setup`, `linter-formatter-init`, `content-script-developer`, `package-architect`, `artifacts-builder`, `open-source-checker`, `devcontainer-setup`, `stack-validator`
 
 ### Planning & PRDs (15)
 
-`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grill-me`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `executing-plans`, `prd-dispatch`
+`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `writing-plans`, `executing-plans`, `prd-dispatch`
 
 ### Payments & Product Integrations (1)
 
@@ -334,7 +323,7 @@ plugin skill, not an alias.
 
 ### Session Management (7)
 
-`agent-folder-init`, `executing-plans`, `orchestrate`, `setup-agent-routing`, `wait-what`, `workspace-performance-audit`, `handoff`
+`agent-folder-init`, `executing-plans`, `orchestrate`, `setup-agent-routing`, `workspace-performance-audit`
 
 ## How Skills Adapt to Projects
 

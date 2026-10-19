@@ -15,7 +15,7 @@ user-invocable: false
 The router behind `/review`. It owns one job: turn an argument into a concrete
 target workflow, pick the review depth when applicable, and delegate. It does
 **not** contain review rubrics or merge logic of its own — correctness/security
-live in `code-review`, the multi-dimension pass lives in `full-code-review`, and
+live in `code-review`, the multi-dimension pass lives in the upstream pstack plugin, and
 non-serial queue draining belongs exclusively to `/merge force`.
 
 ## Delivery Readiness
@@ -79,10 +79,6 @@ Confirmation Required:
 Delegates To:
 
 - `code-review` for the default quick gate.
-- `full-code-review` for `--deep` (parallel lenses) and for `retro` (same Workflow
-  with a `COMMIT_LOG` attached — adds the cross-commit lens, emits a backlog).
-- `structural-review` for `--structural` (the structural/maintainability lens
-  alone — the "thermo-nuclear" pass, no security/devex fan-out).
 - `grok-review` for the `grok` engine token — one headless Grok CLI run on the
   gathered diff, on the CLI's own default model and effort, with every finding
   verified in-session before it is reported.
@@ -117,7 +113,7 @@ the Usage block — do not guess.
 `retro` is distinct from `since`: `since` reviews a window as one changeset and
 returns a merge verdict; `retro` additionally attaches the commit log so the
 cross-commit lens runs, and returns a backlog. A depth flag is ignored in `retro`
-(it always routes to `full-code-review`).
+(it always routes to the upstream pstack review workflow).
 
 Depth flags apply normally to `prs`; warn before `--deep prs` when more than a
 few PRs are open because it is token-heavy.
@@ -205,15 +201,17 @@ already merged/closed, say so plainly and stop — do not invent findings.
   preserve report-only behavior throughout.
 - **quick →** apply the `code-review` skill to the gathered `DIFF` /
   `CHANGED_FILES`.
-- **deep →** run the `full-code-review` skill, passing `DIFF` and
-  `CHANGED_FILES` into its Workflow.
-- **structural →** apply the `structural-review` skill alone to the gathered
-  `DIFF` (the structural/maintainability "thermo-nuclear" lens — no
-  security/devex fan-out).
-- **retro →** run the `full-code-review` skill, passing `DIFF`, `CHANGED_FILES`,
-  **and `COMMIT_LOG`** into its Workflow. The commit log switches it to retro mode
-  (adds the cross-commit lens, emits `mode: retro` backlog). Depth flags do not
-  apply.
+- **deep →** use the upstream pstack plugin's full-code-review workflow when it
+  is installed, passing `DIFF` and `CHANGED_FILES`. Without it, say so and fall
+  back to the quick gate.
+- **structural →** use the upstream pstack plugin's structural-review skill alone
+  on the gathered `DIFF` when it is installed (the structural/maintainability
+  lens, no security/devex fan-out). Without it, say so and fall back to the quick
+  gate.
+- **retro →** use the upstream pstack full-code-review workflow when installed,
+  passing `DIFF`, `CHANGED_FILES`, **and `COMMIT_LOG`**. The commit log switches
+  it to retro mode (cross-commit lens, `mode: retro` backlog). Depth flags do not
+  apply. Without it, say so and fall back to the quick gate.
 - **engine grok →** pass the gathered `DIFF` / `CHANGED_FILES` to the
   `grok-review` skill instead of a native engine. It runs one headless Grok
   CLI invocation (no model or effort flags — CLI defaults own the lane),
@@ -226,13 +224,13 @@ a report-only review sweep.
 ## Step 5 — Render
 
 **Single target** — defer to the chosen engine's own verdict format
-(`code-review` buckets, or the `full-code-review` verdict block).
+(`code-review` buckets, or the pstack workflow's verdict block).
 
 **`prs`** — render one summary table with PR number, title, depth, verdict, and
 the highest-priority finding. End with a `/review <PR#>` drill-down hint. Do not
 offer to merge from this mode.
 
-**`retro`** — render the backlog `full-code-review` returns (grouped bug /
+**`retro`** — render the backlog the review workflow returns (grouped bug /
 optimization / refactor, ranked within each; no APPROVE/BLOCK). Lead with the
 one-line theme, then the buckets, each finding tagged with its commit SHAs.
 
@@ -267,7 +265,7 @@ milestones the repo does not already use.
 ## Anti-Patterns
 
 - **Re-implementing review logic here.** This skill resolves scope and
-  delegates; the rubrics live in `code-review` / `full-code-review`.
+  delegates; the rubrics live in `code-review` and the upstream pstack plugin.
 - **Treating `/review prs` as merge authorization.** It is always a report-only
   per-PR review sweep; use exact `/merge force` for queue mutation.
 - **Mutating anything directly in this dispatcher** outside the one gated `retro`

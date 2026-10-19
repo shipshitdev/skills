@@ -18,4 +18,3 @@ Backend development and API skills
 - `nestjs-testing-expert`
 - `incremental-fetch`
 - `turborepo`
-- `typescript-expert`

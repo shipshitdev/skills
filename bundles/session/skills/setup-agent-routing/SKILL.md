@@ -55,7 +55,7 @@ Delegates To:
 
 - File pointer: `executing-plans` and its installed delivery reference define execution.
 - File pointer: `prd-quality-gate` and its installed readiness reference define preparation.
-- Recommend `domain-modeling` to maintain the discovered domain layout separately.
+- Recommend the upstream mattpocock/skills `domain-modeling` skill (when installed) to maintain the discovered domain layout separately.
 
 ## 1. Inspect Existing Context
 

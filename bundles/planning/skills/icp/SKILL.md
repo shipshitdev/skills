@@ -49,8 +49,6 @@ Confirmation Required:
 Delegates To:
 
 - `roadmap-analyzer` once the ICP exists — it scores features against these segments.
-- Recommend `interview` when the question is a single feature's requirements, not the whole
-  customer.
 
 ## Workflow
 

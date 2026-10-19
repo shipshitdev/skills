@@ -21,38 +21,29 @@ contracts; they are not mandatory naming prefixes.
 | `ai-agent-cost-optimizer` | `ai-agent-cost-optimizer` | retain | agent-cost |
 | `ai-loading-ux` | `ai-loading-ux` | retain | design |
 | `api-design-expert` | `api-design-expert` | retain | api-design |
-| `architect` | `architect` | retain | architecture |
-| `arena` | `arena` | retain | agent-orchestration |
 | `artifacts-builder` | `artifacts-builder` | retain | artifact-production |
-| `ask-dev-loop` | `ask-dev-loop` | retain | workflow-navigation |
 | `audit` | `audit` | retain | design |
 | `aws-infrastructure` | `aws-infrastructure` | retain | aws-infrastructure |
-| `blast-radius` | `blast-radius` | retain | change-analysis |
 | `bug` | `bug` | retain | issue-intake |
 | `clarify` | `clarify` | retain | design |
 | `code-review` | `code-review` | retain | code-review |
-| `codebase-design` | `codebase-design` | retain | architecture |
 | `codex-image-gen` | `codex-image-gen` | retain | artifact-production |
 | `comment-mode` | `comment-mode` | retain | document-feedback |
 | `commit-summary` | `commit-summary` | retain | git |
 | `component-library` | `component-library` | retain | react-components |
 | `content-script-developer` | `content-script-developer` | retain | browser-extensions |
 | `context-optimization` | `context-optimization` | retain | agent-context |
-| `create-verification-skill` | `create-verification-skill` | retain | skill-maintenance |
 | `critique` | `critique` | retain | design |
 | `cto-advisor` | `cto-advisor` | retain | engineering-leadership |
-| `debug` | `debug` | retain | debugging |
 | `dependency-audit` | `dependency-audit` | retain | dependency-security |
 | `deploy` | `deploy-app` | rename | deployment |
 | `deploy-dispatch` | `deploy-dispatch` | retain | deployment |
 | `deployment-composer` | `deployment-composer` | retain | deployment |
 | `design-consistency-auditor` | `design-consistency-auditor` | retain | design |
 | `design-dispatch` | `design-dispatch` | retain | design |
-| `deslop` | `deslop` | retain | code-cleanup |
 | `devcontainer-setup` | `devcontainer-setup` | retain | development-environment |
 | `docker-expert` | `docker-expert` | retain | containers |
 | `docs` | `docs` | retain | documentation |
-| `domain-modeling` | `domain-modeling` | retain | architecture |
 | `ec2-backend-deployer` | `ec2-backend-deployer` | retain | aws-infrastructure |
 | `env-setup` | `env-setup` | retain | development-environment |
 | `error-handling-expert` | `error-handling-expert` | retain | error-handling |
@@ -60,11 +51,9 @@ contracts; they are not mandatory naming prefixes.
 | `executing-plans` | `executing-plans` | retain | agent-orchestration |
 | `expo-architect` | `expo-architect` | retain | expo-mobile |
 | `feature-intake` | `feature-intake` | retain | issue-intake |
-| `figure-it-out` | `figure-it-out` | retain | agent-orchestration |
 | `finishing-a-development-branch` | `finishing-a-development-branch` | retain | git |
 | `fix-merge-conflicts` | `fix-merge-conflicts` | retain | git |
 | `frontend-design` | `frontend-design` | retain | design |
-| `full-code-review` | `full-code-review` | retain | code-review |
 | `gh-address-comments` | `pr-comments` | rename, then merged (#190) | pull-request-feedback |
 | `gh-board-sync` | `board-sync` | rename | board-workflow |
 | `gh-fix-ci` | `github-fix-ci` | rename | github |
@@ -76,21 +65,15 @@ contracts; they are not mandatory naming prefixes.
 | `git-safety` | `git-safety` | retain | git |
 | `github-actions-author` | `github-actions-author` | retain | github |
 | `graphql-architect` | `graphql-architect` | retain | api-design |
-| `grill-me` | `grill-me` | retain | discovery |
 | `grok-review` | `grok-review` | retain | grok-review |
-| `handoff` | `handoff` | retain | agent-context |
-| `how` | `how` | retain | code-explanation |
 | `html-style` | `html-style` | retain | design |
 | `husky-test-coverage` | `husky-test-coverage` | retain | code-quality-tooling |
 | `icp` | `icp` | retain | product-strategy |
 | `incremental-fetch` | `incremental-fetch` | retain | data-ingestion |
-| `interrogate` | `interrogate` | retain | code-review |
-| `interview` | `interview` | retain | discovery |
 | `landing-page-vercel` | `landing-page-vercel` | retain | landing-pages |
 | `layout` | `layout` | retain | design |
 | `linter-formatter-init` | `linter-formatter-init` | retain | code-quality-tooling |
 | `llm-structured-output` | `llm-structured-output` | retain | llm-output |
-| `maintain-verification-skill` | `maintain-verification-skill` | retain | skill-maintenance |
 | `mcp-builder` | `mcp-builder` | retain | mcp |
 | `memory-systems` | `memory-systems` | retain | agent-context |
 | `merge-open-prs` | `merge-open-prs` | retain | pull-request-integration |
@@ -101,7 +84,6 @@ contracts; they are not mandatory naming prefixes.
 | `nestjs-queue-architect` | `nestjs-queue-architect` | retain | nestjs |
 | `nestjs-testing-expert` | `nestjs-testing-expert` | retain | nestjs |
 | `nextra-writer` | `nextra-writer` | retain | documentation |
-| `no-comments` | `no-comments` | retain | code-cleanup |
 | `open-source-checker` | `open-source-checker` | retain | open-source-release |
 | `package-architect` | `package-architect` | retain | package-design |
 | `performance-expert` | `performance-expert` | retain | performance |
@@ -116,8 +98,6 @@ contracts; they are not mandatory naming prefixes.
 | `production-audit` | `production-audit` | retain | production-readiness |
 | `project-init-orchestrator` | `project-init-orchestrator` | retain | product-initialization |
 | `prompt-engineering` | `prompt-engineering` | retain | prompt-design |
-| `prototype` | `prototype` | retain | prototyping |
-| `pstack` | `pstack` | retain | agent-orchestration |
 | `qa-loop` | `qa-loop` | retain | qa |
 | `qa-reviewer` | `qa-reviewer` | retain | qa |
 | `quick-view` | `quick-view` | retain | artifact-production |
@@ -128,25 +108,19 @@ contracts; they are not mandatory naming prefixes.
 | `react-patterns` | `react-patterns` | retain | react |
 | `react-refactor` | `react-refactor` | retain | react |
 | `react-testing-library` | `react-testing-library` | retain | react |
-| `recall` | `recall` | retain | agent-context |
 | `receiving-code-review` | `receiving-code-review` | retain | code-review |
 | `redis-caching` | `redis-caching` | retain | redis |
 | `refactor-code` | `refactor-code` | retain | refactoring |
 | `release` | `release` | retain | release |
-| `research` | `research` | retain | product-research |
-| `retro` | `retro` | retain | agent-memory |
 | `review-dispatch` | `review-dispatch` | retain | code-review |
 | `roadmap-analyzer` | `roadmap-analyzer` | retain | product-strategy |
 | `roadmap-to-milestones` | `roadmap-to-milestones` | retain | roadmap-scheduling |
-| `rules-capture` | `rules-capture` | retain | agent-memory |
 | `scaffold` | `scaffold` | retain | code-scaffolding |
 | `security-audit` | `security-audit` | retain | application-security |
 | `security-expert` | `security-expert` | retain | application-security |
 | `setup-agent-routing` | `setup-agent-routing` | retain | agent-configuration |
-| `setup-pstack` | `setup-pstack` | retain | agent-orchestration |
 | `shadcn` | `shadcn` | retain | shadcn |
 | `shape` | `shape` | retain | design |
-| `show-me-your-work` | `show-me-your-work` | retain | work-evidence |
 | `skill-capture` | `skill-capture` | retain | skill-maintenance |
 | `skill-comply` | `skill-comply` | retain | skill-maintenance |
 | `skill-creator` | `skill-creator` | retain | skill-maintenance |
@@ -154,16 +128,10 @@ contracts; they are not mandatory naming prefixes.
 | `skill-scout` | `skill-scout` | retain | skill-maintenance |
 | `stack-modernization` | `stack-modernization` | retain | stack-modernization |
 | `stack-validator` | `stack-validator` | retain | stack-configuration |
-| `standup` | `standup` | retain | work-summary |
 | `stripe-implementer` | `stripe-implementer` | retain | stripe |
-| `structural-review` | `structural-review` | retain | code-review |
-| `swarm` | `swarm` | retain | agent-orchestration |
 | `table-filters` | `table-filters` | retain | design |
 | `tailwind` | `tailwind` | retain | tailwind |
-| `tdd` | `tdd` | retain | testing |
-| `teach` | `teach` | retain | code-explanation |
 | `tech-debt` | `tech-debt` | retain | refactoring |
-| `technical-writing` | `technical-writing` | retain | documentation |
 | `test-dispatch` | `test-dispatch` | retain | testing |
 | `test-runner` | `test-runner` | retain | testing |
 | `testing-cicd-init` | `testing-cicd-init` | retain | testing |
@@ -171,14 +139,9 @@ contracts; they are not mandatory naming prefixes.
 | `theme-factory` | `theme-factory` | retain | artifact-production |
 | `tool-design` | `tool-design` | retain | agent-architecture |
 | `turborepo` | `turborepo` | retain | monorepo |
-| `typescript-expert` | `typescript-expert` | retain | typescript |
 | `vercel-deploy` | `vercel-deploy` | retain | vercel |
 | `verification-before-completion` | `verification-before-completion` | retain | work-evidence |
-| `wait-what` | `wait-what` | retain | code-explanation |
-| `wayfinder` | `wayfinder` | retain | product-specification |
 | `weekly-review` | `weekly-review` | retain | engineering-maintenance |
-| `why` | `why` | retain | code-explanation |
-| `wizard` | `wizard` | retain | human-setup |
 | `workspace-performance-audit` | `workspace-performance-audit` | retain | performance |
 | `worktree` | `worktree` | retain | git |
 | `writing-plans` | `writing-plans` | retain | product-specification |
@@ -222,7 +185,6 @@ names no longer install through `npx skills add --skill <name>`.
 |---|---|---|---|
 | `/address` | `/address` | retain | pull-request-feedback |
 | `/agent` | `/agent` | retain | agent-configuration |
-| `/ask` | `/ask` | retain | workflow-navigation |
 | `/board` | `/board` | retain | board-workflow |
 | `/cleanup` | `/cleanup` | retain | git |
 | `/codex-loop` | `/codex-loop` | retain | agent-orchestration |
@@ -249,4 +211,4 @@ No prefix sweep of Git, testing, design, release, AWS, or agent skills is propos
 
 The JSON companion records per-row rationale and command identifier references. `skill-contract-evidence.json` captures descriptions and Contract blocks used to assign ownership. This is a planning artifact, not a competing runtime catalog.
 
-Root confirmed that the command names were unchanged by the migration (29 then; the `/bug`, `/deslop`, `/release`, `/standup`, `/wait-what` and `/weekly-review` command files were dropped later because the same-named skills own those slash names). The unselected alternative was to rename the three provider-only standalone adapters /address, /fix-ci, and /suggest to their github-* skill names. It is recorded rather than silently expanding the agreed seven-skill migration.
+Root confirmed that the command names were unchanged by the migration (29 then; the `/bug`, `/release` and `/weekly-review` command files were dropped later because the same-named skills own those slash names). The unselected alternative was to rename the three provider-only standalone adapters /address, /fix-ci, and /suggest to their github-* skill names. It is recorded rather than silently expanding the agreed seven-skill migration.

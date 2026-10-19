@@ -41,16 +41,6 @@ jobs:
       - name: Validate skills
         run: bun run validate
 
-      - name: Verify pinned Pstack source and adaptation coverage
-        run: bun run pstack:verify
-
-      - name: Check packaged Pstack runtime
-        working-directory: skills/pstack/scripts
-        run: |
-          bun install --frozen-lockfile
-          bun run test
-          bun run typecheck
-
       - name: Require shared repository release versions
         run: bun run version:check
 

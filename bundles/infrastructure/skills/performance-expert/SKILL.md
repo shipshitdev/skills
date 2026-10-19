@@ -128,7 +128,7 @@ Delegates To:
 - [ ] Images optimized and lazy loaded
 - [ ] Compression and cache headers configured
 
-Before reporting a measured speedup or regression, vet the number with the `pstack` skill's benchmark checklist reference: name the limiter, confirm every side was tuned, count errors, and repeat the run.
+Before reporting a measured speedup or regression, vet the number (the upstream pstack plugin's benchmark checklist fits when installed): name the limiter, confirm every side was tuned, count errors, and repeat the run.
 
 ---
 

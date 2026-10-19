@@ -55,7 +55,6 @@ Delegates To:
   provider and repository mocking, controller and service specs, and HTTP-level
   end-to-end tests.
 - `test-runner` to actually execute a suite and drive failures to green.
-- `tdd` when the ask is to write the test before the implementation.
 - `playwright-e2e-init` to scaffold browser end-to-end coverage from nothing.
 - `husky-test-coverage` to enforce a coverage threshold at commit time.
 
@@ -73,7 +72,6 @@ the specialist has depth this skill deliberately does not carry.
 | Rendered component, hook, `screen`, `getByRole`, `userEvent`, `waitFor`, RTL | `react-testing-library` |
 | NestJS module, provider, controller, service spec, testing module, HTTP e2e | `nestjs-testing-expert` |
 | "run the tests", "fix the failures" | `test-runner` |
-| "write the test first", red-green-refactor | `tdd` |
 | AI-written change, sandbox/production parity, response-shape drift, regression for a bug fix | AI regression mode — read `references/ai-regression.md` |
 | No framework signal — level, coverage, design, data, flakes | Answer here |
 

@@ -34,9 +34,9 @@ Route by subcommand:
 1. **`/pr` (default)** — use the `github-pr-publish` skill to create or update the PR
    from local changes: branch hygiene, a durable title/body, validation notes, and
    safe push/PR gates.
-2. **`/pr review`** — use the `full-code-review` skill (structural + security +
-   devex dimensions, adversarially verified) against the PR diff. For a fast
-   correctness-only pass, use `code-review` instead.
+2. **`/pr review`** — use the `code-review` skill (correctness + security gate)
+   against the PR diff. For a deeper multi-lens pass, install the upstream pstack
+   plugin and use its full-code-review workflow.
 3. **`/pr comments`** — use the `pr-comments` skill to fetch and prioritize review
    feedback as a read-only action list. To then act on it, run `/pr address`.
 4. **`/pr tidy`** — use the `github-pr-publish` skill's reviewability pass to rewrite an

@@ -52,22 +52,19 @@ Confirmation Required:
 Delegates To:
 
 - `board-sync` for board reconciliation and approved supported field corrections
-- `full-code-review` for the shared merged-history retrospective and cross-commit lens
 - `code-review` for correctness and implementation-versus-acceptance checks
-- `deslop` for scoped dry-run findings or authorized cleanup
 - `dependency-audit` for dependency checks in audit mode when evidence needs refresh
 - `test-runner` for focused verification of authorized repairs
 
 Resolve each engine through the active catalog and resources relative to its
-installed directory. Use Shipshit `deslop`; an upstream `pstack:deslop` plugin is
-a separate implementation, not an alias. Report missing engines instead of
+installed directory. Report missing engines instead of
 silently substituting a similarly named skill or installing dependencies.
 
 ## Freeze the review scope
 
 Read [Shared merged history](references/merged-history.md), which owns the
 all-author integration inventory, frozen BASE/END, and code-history review also
-used by `standup all … audit`. Follow its freeze/inventory steps for the selected
+used by the audit modes. Follow its freeze/inventory steps for the selected
 window and package scope, retaining complete introduced-commit history and the
 union of changed files/hunks. Use its audit mode for code review; its report-only
 boundary applies even when this weekly invocation separately authorizes repairs.
@@ -109,14 +106,14 @@ only when relevant evidence is stale or absent and execution is available on an
 allowed host. Report each unavailable source as unavailable, not healthy.
 Reserve a full security or architecture audit for evidence that warrants it.
 
-## Repair and deslop
+## Repair and cleanup
 
-Run the `deslop` skill in dry-run mode over the explicitly frozen changed files
+Run a dry-run cleanup pass (the upstream pstack deslop skill when installed) over the explicitly frozen changed files
 and hunks. Pass that scope directly; its default branch-diff calculation may be
 empty after changes have merged. Review-only runs stop at findings.
 
 With repair authority, address confirmed defects before cleanup. Retain existing
-behavior during deslop; preserve meaningful checks, technical language, and
+behavior during cleanup; preserve meaningful checks, technical language, and
 product intent. Apply findings to current code in an isolated scoped branch,
 rechecking evidence when the branch has advanced. A weekly request does not
 authorize a whole-tree rewrite.

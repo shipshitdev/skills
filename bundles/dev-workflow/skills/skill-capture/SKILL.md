@@ -88,7 +88,7 @@ Determine where the skill should live:
 | Domain expertise | Style/format preferences |
 | Code patterns with context | Import/naming conventions |
 
-If it's a rule/preference, delegate to `rules-capture` skill instead.
+If it's a rule/preference, record it as a rule in the repo's agent instruction file instead.
 
 ### Phase 3: Content Drafting
 
@@ -233,7 +233,6 @@ This skill works with:
 
 | Skill | Integration |
 |-------|-------------|
-| `rules-capture` | Delegates preference capture; handles skill creation |
 | `skill-creator` | Uses creation patterns and validation |
 | `docs` | For formatting help with SKILL.md |
 
@@ -293,5 +292,5 @@ The skill activates on these patterns:
 
 ## Session retrospectives
 
-Recommend `/retro` to review a finished session for friction. Retro routes its
-skill candidates back here.
+Review a finished session for friction (the upstream pstack plugin's retro fits when
+installed) and route its skill candidates back here.

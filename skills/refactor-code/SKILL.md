@@ -13,8 +13,8 @@ Improve readability, cohesion, and maintainability without changing behavior.
 
 The `code` engine of the refactoring vertical (`/refactor code`). Draws on
 `typescript-expert` (its `references/rules/` library) for type-architecture work and `react-refactor` for component
-architecture. For mechanical AI-slop removal use `deslop`; for a read-only structural
-review use `structural-review`.
+architecture. For mechanical AI-slop removal or a read-only structural review, use the
+upstream pstack plugin when installed.
 
 ## Triggers
 

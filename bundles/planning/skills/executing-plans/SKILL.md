@@ -55,7 +55,6 @@ Delegates To:
 - `scripts/plan-header.mjs` and the executor brief for the pre-edit gate;
   the planner owns `prd-quality-gate`
 - `writing-plans` for a separate planner handoff when decisions are missing
-- `tdd` for behavioral implementation under the settled plan
 - `qa-reviewer` for acceptance evidence; self-QA does not satisfy independent review
 - `github-pr-publish` for authorized PR publication
 

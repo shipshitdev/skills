@@ -55,8 +55,6 @@ Confirmation Required:
 Delegates To:
 
 - `github-fix-ci` when the bug is a failing CI check the user wants fixed instead of filed
-- `debug` when the user wants to root-cause before filing (it escalates to its
-  four-phase loop on its own when a fix attempt has already failed)
 
 ## When to Use
 
@@ -174,5 +172,5 @@ Report:
 - The repository and whether the issue was typed `Bug` or labelled `bug`
 - The created issue number and URL
 - Any labels, assignee, or milestone applied
-- What to do next — e.g. root-cause with `debug`, or fix a failing check with
+- What to do next — e.g. root-cause the defect, or fix a failing check with
   `github-fix-ci`

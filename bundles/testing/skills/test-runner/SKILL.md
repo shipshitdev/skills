@@ -75,8 +75,6 @@ Delegates To:
 
 - `husky-test-coverage` to enforce or configure coverage thresholds and hooks
 - `playwright-e2e-init` when e2e is requested but no Playwright setup exists
-- `debug` when a failure needs deeper root-cause work
-- `typescript-expert` for non-trivial type-error fixes surfaced by `types` mode
 
 ## When to Use
 

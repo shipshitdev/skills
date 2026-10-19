@@ -1,1 +1,0 @@
-For nontrivial engineering tasks, use the canonical Shipshit pstack skill and its matched workflow. Resolve it through the active skill catalog. Preserve user authorization and harness-owned model, account, host and execution restrictions.
