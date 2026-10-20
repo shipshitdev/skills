@@ -177,7 +177,7 @@ Rules:
 
 Every skill in this repo is an explicit entry point: set
 `disable-model-invocation: true`. The model never loads these skills on its own;
-the user runs them by name (`/git-cleanup`, `/qa-loop`). The validator enforces
+the user runs them by name (`/git cleanup`, `/run-qa`). The validator enforces
 this.
 
 Separate discoverability from authorization. Loading a skill grants no permission
@@ -189,7 +189,7 @@ Because every skill here is user-only, the Skill tool cannot load one skill from
 another. A skill that composes others runs each delegate by reading its sibling
 `../<name>/SKILL.md` and following it; list those delegates under
 `## Delegates To` with that instruction. Use `Recommend` (for example, Recommend
-`/github-fix-ci`) for handoffs the user should start. Name upstream pstack or
+`/fix-ci`) for handoffs the user should start. Name upstream pstack or
 mattpocock skills only as "when installed", and never assume a consumer has this
 repository checked out.
 

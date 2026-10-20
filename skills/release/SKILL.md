@@ -63,11 +63,11 @@ Delegates To:
 
 - Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
   skills here are user-invoked only, so the Skill tool cannot load them.
-- Run the `github-fix-ci` skill when the user asks to fix failing required checks
+- Run the `fix-ci` skill when the user asks to fix failing required checks
 - File pointer: `references/notes.md` for customer-facing notes (app store text,
   update emails, public changelog pages, house-styled changelogs)
-- Recommend `deploy-app` when the repo has no CI-driven deploy for the release
-- Recommend `git-cleanup` (`/git-cleanup`) after the release lands
+- Recommend `deploy` when the repo has no CI-driven deploy for the release
+- Recommend `/git cleanup` after the release lands
 
 ## Modes
 

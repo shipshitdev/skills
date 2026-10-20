@@ -1,6 +1,6 @@
 # Skills Repo — Agent Instructions
 
-This is the shipshitdev/skills repo: 28 user-invoked agent skills for Claude
+This is the shipshitdev/skills repo: 25 user-invoked agent skills for Claude
 Code, Codex, and Cursor.
 
 ## Repo Structure
