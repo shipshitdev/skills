@@ -37,13 +37,17 @@ External Side Effects:
 Confirmation Required:
 
 - Ask only for a missing destination, consequential intent, or write authority
-  that cannot be resolved from the session. Existing same-scope authorization
-  carries through. An orchestrator's draft mode produces a draft without writes.
+  that cannot be resolved from the session. The interview step asks for product
+  decisions, never for facts the repository or tracker can answer. Existing
+  same-scope authorization carries through. An orchestrator's draft mode
+  produces a draft without writes or questions.
 
 Delegates To:
 
 - Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
   skills here are user-invoked only, so the Skill tool cannot load them.
+- The upstream `grilling` skill, when installed, for the interview step;
+  otherwise follow the interview rules in step 3.
 - `check-prd` for the canonical template and draft lint.
 - `write-plan` when invoked to plan settled requirements.
 - Recommend `file-feature` for complete preparation from a rough request.
@@ -56,17 +60,29 @@ Delegates To:
 2. Read relevant product decisions, code, and existing behavior. Reuse established
    facts before asking questions. Distinguish observed requirements from inferred
    intent; resolve consequential uncertainties before claiming readiness.
-3. Load the template from `check-prd` and its execution-readiness reference.
+3. Interview until the consequential decisions are settled. Map the open
+   decisions as a tree (scope, user-visible behavior, edge cases, data,
+   rollout) and resolve it one frontier at a time: ask only decisions whose
+   parents are settled, a few per round. Number each question, give a
+   recommended answer with its reason, and word it so a plain "yes" accepts
+   the recommendation. Look facts up in code, docs and the tracker yourself,
+   delegating wide searches; ask the user only for decisions. Use the harness's
+   structured question tool when it has one. Stop when nothing consequential is
+   open and the user confirms the summary. Skip the interview when the request
+   already settles every consequential decision. In an orchestrator's draft
+   mode, or when the user declines, ask nothing and record each open decision
+   with its recommendation under Open Decisions.
+4. Load the template from `check-prd` and its execution-readiness reference.
    Write a short imperative title. Fill each required section with concrete content;
    use stable acceptance IDs and EARS outcomes. Expand into a full PRD only when
    complexity warrants additional user stories or nonfunctional requirements.
-4. Cover the entire feature, including required API, UI, wiring, migration, tests,
+5. Cover the entire feature, including required API, UI, wiring, migration, tests,
    docs and operational handoff. Record N/A reasons for absent surfaces. Do not
    convert technical layers into separate feature-completion issues.
-5. State verification requirements based on repository practice. The planner will
+6. State verification requirements based on repository practice. The planner will
    bind them to exact commands, files and expected results. Keep unresolved facts
    visible under Open Decisions; draft lint warnings do not grant readiness.
-6. Run the `check-prd` skill in `draft-lint` mode. Return the requirements to
+7. Run the `check-prd` skill in `draft-lint` mode. Return the requirements to
    the calling coordinator so planning continues without another user prompt.
    For a standalone requirements-only request, return/publish the draft within
    authorization and clearly say that execution readiness has not been checked.

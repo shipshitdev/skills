@@ -18,7 +18,7 @@ If the repo has automated rule-compliance checks for its stack rules (package ma
 ## Scope
 
 - **Input:** one diff, branch, or PR. Gather scope with read-only `git` and `gh` commands.
-- **Output:** a findings list bucketed into Block Merge / Request Changes / Approve, each with file, line, and a one-sentence rationale, plus a separate **Spec** report.
+- **Output:** a findings list bucketed into Block Merge / Request Changes / Approve, each with file, line, and a one-sentence rationale, plus a separate **Spec** report and a short **Dismissed** list.
 - **Read-only:** this skill reports. It does not edit files, open PRs, mutate anything, or deploy. All output is advisory; no confirmation is needed.
 - **Boundaries:** for an individual diff or PR only. Do not re-litigate structural axes (module cohesion, abstraction altitude, circular dependencies, dead-code introduction, API surface sprawl, architecture fit); hand those to a structural review. Surface obvious security issues in the diff but do not attempt a full audit (OWASP rubric, dependency CVEs, timing attacks, privilege escalation paths); hand that to a dedicated security audit. If a finding is about module depth or seam placement, recommend a codebase-design review. Never infer a merge or queue-drain action from a review request.
 
@@ -133,6 +133,28 @@ Features meant to be gated that ship unflagged or partially flagged:
 
 Flag leaks that expose unreleased functionality to all users are merge blockers. Missing cleanup tickets are "request changes".
 
+## Triage Before Reporting
+
+Every candidate finding, whether from the checklist, the Spec axis, or a reviewer panel, passes this filter before it reaches a bucket:
+
+1. **Trace it.** Follow the call site or data path in the current code and name the concrete input or sequence that breaks. A failure no caller can reach is dismissed, not softened into a suggestion.
+2. **Weigh it.** Drop personal preference ("I would have written it differently"), nitpicks framed as risk, and new abstractions proposed for a single caller.
+3. **Check the context.** When a finding depends on code outside the diff (an upstream guard, an established convention, a settled spec decision), read it first. Dismiss the finding when that context already covers the case.
+4. **Scrutinize the serious ones harder.** Security and correctness findings get the opposite bias: confirm the failure or exploit path end to end, and when it holds, it blocks merge even if only one source raised it.
+
+List dismissed candidates under `## Dismissed`, one line each with the reason, so the author sees what was considered and why it was dropped.
+
+### Panel Review (opt-in)
+
+When the user asks for an adversarial or multi-model review and the upstream `interrogate` skill is installed, run it for the Standards axis instead of a single pass. Map its buckets onto this gate:
+
+- **Act On:** Block Merge or Request Changes, by the Approval Criteria below
+- **Consider:** Request Changes when the triage trace holds, otherwise Dismissed
+- **Noted:** a one-line note under Approve
+- **Dismissed:** Dismissed
+
+Re-apply the triage to its results: agreement between reviewers raises confidence but never replaces the trace. Include its agreement map after the buckets. Without that request, or without `interrogate` installed, review in a single pass. The Spec axis stays with this skill either way.
+
 ## Approval Criteria
 
 ### Block Merge
@@ -177,6 +199,8 @@ Outputs:
 - A **Spec** report alongside the checklist: missing requirements, scope creep,
   and wrong implementations relative to the originating issue. Keep the two axes
   separate so one cannot mask the other.
+- A **Dismissed** list of triaged-out candidates with one-line reasons, and an
+  agreement map when a panel review ran.
 
 Creates/Modifies:
 
@@ -192,5 +216,8 @@ Confirmation Required:
 
 Delegates To:
 
-- None. Recommend a structural, security, or codebase-design review (for example the
+- The upstream `interrogate` skill, when installed, only for an explicitly
+  requested adversarial or multi-model review (see Panel Review). Its reviewers
+  stay read-only.
+- Recommend a structural, security, or codebase-design review (for example the
   upstream pstack workflows, when installed) for findings outside this gate.
