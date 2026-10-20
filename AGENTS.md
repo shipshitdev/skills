@@ -1,6 +1,6 @@
 # Skills Repo — Agent Instructions
 
-This is the shipshitdev/skills repo: 25 user-invoked agent skills for Claude
+This is the shipshitdev/skills repo: 13 user-invoked agent skills for Claude
 Code, Codex, and Cursor.
 
 ## Repo Structure
@@ -14,7 +14,11 @@ Code, Codex, and Cursor.
 
 - Follow `.agents/memory/system/skill-standards.md`.
 - Every skill sets `disable-model-invocation: true` and never `user-invocable: false`.
-- A skill composes another by reading its sibling `../<name>/SKILL.md`; the Skill
+- Skill names are one word. Related workflows are actions under one router skill
+  (`/git pr`): the router's `SKILL.md` dispatches on the first word to
+  `references/<action>.md`.
+- A skill composes another by reading its playbook from the installed skills
+  directory (`<router>/references/<action>.md` or `<name>/SKILL.md`); the Skill
   tool cannot load user-only skills.
 - No `model:`, `effort:`, version metadata, or concrete model IDs in skills.
 - Name upstream pstack or mattpocock skills only as "when installed"; never vendor them.

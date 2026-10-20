@@ -56,10 +56,11 @@ Confirmation Required:
 
 Delegates To:
 
-- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+- Run a delegate by reading its playbook under the installed skills directory and following it
+  (`/<router> <action>`: `<router>/references/<action>.md`; `/<name>`: `<name>/SKILL.md`);
   skills here are user-invoked only, so the Skill tool cannot load them.
 - Existing project sessions through the harness's session controls
-- Recommend `execute-plan` for authorized prepared work without an owner
+- Recommend `/execute` for authorized prepared work without an owner
 - Recommend an installed handoff skill (mattpocock `handoff`) when transferring coordination
 
 ## Usage

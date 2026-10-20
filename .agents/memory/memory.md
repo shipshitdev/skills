@@ -29,8 +29,9 @@ from 132 skills to the 28 he runs; `commands/`, `bundles/`, `catalog.json`,
 the generation scripts were removed. Slash names now equal skill names.
 
 Because the Skill tool cannot load user-only skills, a composing skill runs a
-delegate by reading its sibling `../<name>/SKILL.md` and following it. Handoffs the
-user should start stay as `Recommend /<name>`.
+delegate by reading its installed playbook (`<router>/references/<action>.md` for
+`/<router> <action>`, `<name>/SKILL.md` for `/<name>`) and following it. Handoffs
+the user should start stay as `Recommend /<command>`.
 
 ### Upstream pstack and Pocock skills (2026-10-19, amended 2026-10-20)
 
@@ -63,17 +64,17 @@ Do not `git add -f` them. Durable decisions go in `.agents/memory/*.md`.
 
 PRD/spec skills standardize acceptance criteria on EARS:
 `WHEN/WHILE/WHERE/IF … THE SYSTEM SHALL …`, or a bare `THE SYSTEM SHALL …`.
-`check-prd` validates each Acceptance Criteria bullet against
+`/issue check` validates each Acceptance Criteria bullet against
 `^\s*(\d+\.\s*)?(WHEN|WHILE|WHERE|IF|THE SYSTEM)\b.*\bSHALL\b`; execution
-readiness is blocking. Applies to `write-prd`, `check-prd`,
-`file-feature`, and `publish-prd`.
+readiness is blocking. Applies to `/issue prd`, `/issue check`,
+`/issue feature`, and `/issue publish`.
 
 ### Prepared issue delivery (2026-09-14)
 
-One end-to-end feature per issue/PR by default. `file-feature` composes the PRD,
+One end-to-end feature per issue/PR by default. `/issue feature` composes the PRD,
 plan, readiness gate, and task-creation skills.
-`check-prd/references/execution-readiness.md` owns preparation readiness;
-`execute-plan/references/delivery-gate.md` owns delivery readiness. Executors
+`issue/references/execution-readiness.md` owns preparation readiness;
+`execute/references/delivery-gate.md` owns delivery readiness. Executors
 implement settled decisions and escalate gaps. Harnesses own model, effort, and
 capacity configuration.
 
@@ -85,7 +86,7 @@ human request.
 
 ### Weekly review composition (2026-09-05, amended 2026-10-20)
 
-`review-week` coordinates board evidence, issue-to-code checks, operational
+`/check week` coordinates board evidence, issue-to-code checks, operational
 evidence, and the repo's dependency audit. Report-only is the default; board
 writes and deployment actions keep their own boundaries.
 

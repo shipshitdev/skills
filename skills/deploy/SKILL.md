@@ -45,10 +45,11 @@ Confirmation Required:
 
 Delegates To:
 
-- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+- Run a delegate by reading its playbook under the installed skills directory and following it
+  (`/<router> <action>`: `<router>/references/<action>.md`; `/<name>`: `<name>/SKILL.md`);
   skills here are user-invoked only, so the Skill tool cannot load them.
 - `release` for gating the trunk SHA and cutting the release
-- `fix-ci` for failed GitHub Actions checks
+- `/git ci` for failed GitHub Actions checks
 
 ## Local quality gates (mandatory)
 

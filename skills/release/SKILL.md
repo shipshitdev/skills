@@ -61,9 +61,10 @@ Confirmation Required:
 
 Delegates To:
 
-- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+- Run a delegate by reading its playbook under the installed skills directory and following it
+  (`/<router> <action>`: `<router>/references/<action>.md`; `/<name>`: `<name>/SKILL.md`);
   skills here are user-invoked only, so the Skill tool cannot load them.
-- Run the `fix-ci` skill when the user asks to fix failing required checks
+- Run `/git ci` when the user asks to fix failing required checks
 - File pointer: `references/notes.md` for customer-facing notes (app store text,
   update emails, public changelog pages, house-styled changelogs)
 - Recommend `deploy` when the repo has no CI-driven deploy for the release

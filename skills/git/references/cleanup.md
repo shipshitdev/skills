@@ -60,9 +60,10 @@ Confirmation Required:
 
 Delegates To:
 
-- Run a delegate by reading the sibling skill's `../../<name>/SKILL.md` and following it;
+- Run a delegate by reading its playbook under the installed skills directory and following it
+  (`/<router> <action>`: `<router>/references/<action>.md`; `/<name>`: `<name>/SKILL.md`);
   skills here are user-invoked only, so the Skill tool cannot load them.
-- Suggest `publish-pr` when unmerged work needs to be shipped first
+- Suggest `/git pr` when unmerged work needs to be shipped first
 - Suggest `/git safety` when preserved history needs investigation
 
 ## Code and Intent Audit

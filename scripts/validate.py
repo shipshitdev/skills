@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
-NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
+NAME = re.compile(r"^[a-z0-9]+$")
 KEY = re.compile(r"^([A-Za-z_][\w-]*):(.*)$")
 LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 MODEL_ID = re.compile(
@@ -51,7 +51,8 @@ def check_skill(directory):
     if name != directory.name:
         errors.append(f"{skill_md}: name '{name}' does not match directory '{directory.name}'")
     if not NAME.match(name) or len(name) > 64:
-        errors.append(f"{skill_md}: name '{name}' must be lowercase words joined by hyphens, max 64 chars")
+        errors.append(f"{skill_md}: name '{name}' must be one lowercase word (letters and digits), max 64 chars; group related"
+                f" workflows as actions under one router instead of hyphenating")
     description = fields.get("description", "")
     if not 1 <= len(description) <= 1024:
         errors.append(f"{skill_md}: description must be 1-1024 chars (has {len(description)})")
