@@ -5,10 +5,10 @@ compatibility: Requires git; uses the repo's package manager and test runner to 
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
-  version: "2.2.4"
   tags: "git, merge, rebase, conflicts, resolution, lockfiles"
 allowed-tools: Bash(git *) Bash(bun *) Bash(bunx *)
 when_to_use: "resolve a merge, clear the conflicts"
+disable-model-invocation: true
 ---
 
 # Fix Merge Conflicts
@@ -169,5 +169,6 @@ merge/rebase was continued or is paused awaiting confirmation.
 
 Read [fix-merge-conflicts procedure](references/fix-merge-conflicts-procedure.md) when running this workflow.
 Apply the authorized scope and mode of this entry point to every step.
-Resolve other skills through this distribution’s active catalog; resolve
+Run another skill by reading its sibling `../<name>/SKILL.md` and following it;
+skills here are user-invoked only, so the Skill tool cannot load them. Resolve
 resources relative to the installed skill directory.

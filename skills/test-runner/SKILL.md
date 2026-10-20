@@ -1,14 +1,13 @@
 ---
 name: test-runner
-description: Runs tests at the right scope (changed, focused, full, type-check, e2e) in Bun repos and reports failures with evidence; repairs only if authorized. Use for /test run.
+description: Runs tests at the right scope (changed, focused, full, type-check, e2e) in Bun repos and reports failures with evidence; repairs only if authorized. Use for /test-runner.
 compatibility: Requires a Bun-managed JavaScript/TypeScript project with Vitest, Bun test, or Playwright.
 metadata:
-  version: "2.2.4"
   tags: "testing, vitest, playwright, e2e, smoke, type-check, ci, scoped-tests"
 allowed-tools: Bash(bun *) Bash(bunx *) Bash(git *)
 when_to_use: "smoke tests, build compiles"
+disable-model-invocation: true
 ---
-
 # Test Runner
 
 Run the requested test scope and report the result. Default to changed tests,
@@ -16,15 +15,8 @@ detect the runner, and read the actual failure output and traces. A test executi
 request, including a bare scope, authorizes execution and diagnosis. Repair files
 only after explicit authorization to fix the failures.
 
-It subsumes the "run the smoke suite and stabilize it" and "compile and fix the
-type errors in a loop" workflows behind one scoped entry point.
-
-## Authorized Scope
-
-Act only within the user's request and existing approval; loading this skill
-grants no new authority. Keep report-only requests report-only, honor the
-caller's target, host, provider, and cost limits, ask before expanding scope,
-and forward these limits to delegates.
+It covers "run the smoke suite and stabilize it" and "compile and fix the
+type errors in a loop" behind one scoped entry point.
 
 ## Contract
 
@@ -61,7 +53,7 @@ Confirmation Required:
 
 - Before the first source or test edit, obtain explicit repair authorization.
   Existing explicit authorization such as "fix the failures" satisfies this gate
-  within its stated scope; do not ask again. `/test run`, a bare scope, and a
+  within its stated scope; do not ask again. `/test-runner`, a bare scope, and a
   request to type-check do not grant repair authority.
 - Before expanding an authorized repair beyond its agreed scope. Without an
   explicit wider scope, repair covers the failing tests and files under test;
@@ -73,8 +65,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `husky-test-coverage` to enforce or configure coverage thresholds and hooks
-- `playwright-e2e-init` when e2e is requested but no Playwright setup exists
+- None. When e2e is requested but no Playwright setup exists, report it and stop.
 
 ## When to Use
 
@@ -83,9 +74,7 @@ Delegates To:
 - Type-check the project (`tsc --noEmit`) and clear the errors in a loop
 - Re-run a flaky suite to confirm a fix is real
 
-Do not use this to *set up* a test framework (use `playwright-e2e-init` /
-`testing-cicd-init`) or to enforce coverage gates in hooks (use
-`husky-test-coverage`).
+Do not use this to *set up* a test framework or to enforce coverage gates in hooks.
 
 ## Safety Model
 
@@ -140,8 +129,7 @@ Map the scope to a command:
 - **focused `<path|pattern>`** — pass straight to the runner
 - **unit / integration / e2e** — the matching script or path group; e2e starts the
   dev server first
-- **coverage** — full run with coverage; hand the threshold gate to
-  `husky-test-coverage`
+- **coverage** — full run with coverage; report against the repo's own threshold
 - **types** — `bunx tsc --noEmit` (or the repo's `type-check` script)
 
 If a scope cannot be honored precisely (e.g. no related detection), run the closest
@@ -180,15 +168,15 @@ Flag any test that passes inconsistently rather than declaring success.
 
 ## Modes
 
-- `/test run` — changed-only, related to your dirty worktree (default; falls back
+- `/test-runner` — changed-only, related to your dirty worktree (default; falls back
   to full on a clean tree or when related detection is unavailable, and says so)
-- `/test run full` — the whole suite
-- `/test run unit` | `integration` | `e2e` — by type
-- `/test run coverage` — full run + coverage; gate via `husky-test-coverage`
-- `/test run types` — type-check and report; repair only when authorized
-- `/test run <path|pattern>` — focused
-- `/test run --since <ref>` — tests related to a commit range
-- `/test run --no-fix` — run and report; make no edits
+- `/test-runner full` — the whole suite
+- `/test-runner unit` | `integration` | `e2e` — by type
+- `/test-runner coverage` — full run + coverage
+- `/test-runner types` — type-check and report; repair only when authorized
+- `/test-runner <path|pattern>` — focused
+- `/test-runner --since <ref>` — tests related to a commit range
+- `/test-runner --no-fix` — run and report; make no edits
 
 ## Final Status
 

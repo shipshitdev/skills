@@ -1,16 +1,12 @@
 # Skills Repo Memory
 
-last_verified: 2026-10-19
+last_verified: 2026-10-20
 
 ## What This Repo Is
 
-<!-- catalog-summary:start -->
-Public skills library at `shipshitdev/skills`. Installable via `npx skills add shipshitdev/skills --skill <name>`. Works with Claude Code, Codex, Cursor, OpenClaw, and Gemini.
-
-Generated catalog: **132 skills · 23 commands · 13 bundles · 145 plugins**.
-<!-- catalog-summary:end -->
-
-Published through committed marketplace bundles in `bundles/` and the generated `.claude-plugin/marketplace.json` catalog. The old generated `plugins/` package tree is retired.
+Public skills library at `shipshitdev/skills`: 28 user-invoked skills, installed
+with `bunx skills add shipshitdev/skills --skill <name>`. Works with Claude Code,
+Codex, and Cursor. No marketplace bundles, commands, or generated catalog.
 
 ## Repo Identity
 
@@ -18,360 +14,89 @@ Published through committed marketplace bundles in `bundles/` and the generated 
 - **Owner:** Vincent (decod3rs) — solo founder, zero-code workflow
 - **License:** MIT
 - **Runtime:** Bun (never npm/yarn/pnpm)
-- **Linting:** markdownlint (markdown), biome (JSON/JS), shellcheck (bash)
-- **CI:** GitHub Actions on push to master — regenerates bundles + marketplace
-
-## Generated Catalog Counts
-
-<!-- catalog-counts:start -->
-| Asset | Count | Canonical source |
-|---|---:|---|
-| Skills | 132 | `skills/*/SKILL.md` |
-| Commands | 23 | `commands/*.md` |
-| Bundles | 13 | `scripts/plugin-categories.json` |
-| Plugins | 145 | skills + bundles |
-<!-- catalog-counts:end -->
+- **Linting:** markdownlint (markdown), biome (JSON), shellcheck (bash)
+- **CI:** `checks` on every PR — lint, validate, test, `bun audit`
 
 ## Architecture Decisions
 
-### Project session coordination (2026-10-07)
+### User-invoked only, trimmed to 28 (2026-10-20)
 
-`orchestrate` is the user-invoked project-session coordinator. Bare/run enrolls
-existing project chats with an announcement/report protocol; status/plan is
-read-only; explicit watch uses a thread heartbeat where supported. Human questions
-live in one decision queue with source-session context, deduplication, answer
-relay and restart receipts. New sessions need a human request. The same-named
-skill owns `/orchestrate`; no shadowed command file or deprecated Codex prompt.
-Pstack's multi-PR playbook and `swarm`'s worker fan-out retain separate contracts.
+Vincent wants these skills used only when he runs them. Every skill sets
+`disable-model-invocation: true`; `user-invocable: false` is forbidden because it
+would make a skill unreachable. The validator enforces both. The library was cut
+from 132 skills to the 28 he runs; `commands/`, `bundles/`, `catalog.json`,
+`.claude-plugin/`, `docs/`, `prompts/`, plugin manifests, per-skill versions and
+the generation scripts were removed. Slash names now equal skill names.
+
+Because the Skill tool cannot load user-only skills, a composing skill runs a
+delegate by reading its sibling `../<name>/SKILL.md` and following it. Handoffs the
+user should start stay as `Recommend /<name>`.
+
+### Upstream pstack and Pocock skills (2026-10-19, amended 2026-10-20)
+
+pstack (Claude Code plugin `pstack@cursor-plugins` from `cursor/plugins`) and
+`mattpocock/skills` are maintained upstream, so this repo does not vendor or
+rewrite them. Skills here name them as "upstream pstack/mattpocock when
+installed", never as relative routes.
 
 ### Single-Source Skills (2026-02-04)
 
-One `skills/` directory at root. No per-platform copies. Platform-neutral writing: no tool names, imperative style.
+One `skills/` directory at root. No per-platform copies. Platform-neutral
+writing: no tool names, imperative style.
 
 ### Agent Skills Spec Compliance (2026-04-21)
 
-Follow agentskills.io/specification as base. Claude Code extensions (`when_to_use`, `disable-model-invocation`, `allowed-tools`, etc.) added on top. `version`/`tags` go inside `metadata:` block as strings, not top-level. See `.agents/memory/system/skill-standards.md`.
+Follow agentskills.io/specification as base, with Claude Code extensions on top.
+`tags` and provenance go inside `metadata:` as strings. See
+`.agents/memory/system/skill-standards.md`.
 
-### Shared release versions (2026-10-03)
+### Single release version (2026-10-03, amended 2026-10-20)
 
-All public and repo-maintenance skills, their plugin manifests and generated packages use the
-repository release version from `package.json` (2.2.2 at alignment). Vincent
-explicitly replaced independent per-skill versions with one shared version.
-Run `bun run version:sync` after a repository version change; packaging and
-release automation synchronize this automatically. `version:check` verifies
-alignment rather than requiring a separate version bump for instruction edits.
-Installed metadata updates preserve local behavior and owned customization.
-
-### Listing budget (2026-10-03)
-
-Model-invoked description + `when_to_use` load into every session, and the
-catalog's ~54.6k chars overflowed Claude Code's listing so many skills showed no
-description. Vincent approved a catalog-wide pass: descriptions ≤ 180 chars
-(validator warns > 200), `when_to_use` ≤ 80 (warns > 120) with only new trigger
-words — 54.6k → 31.4k chars. The repeated Authorized Scope and Delivery
-Readiness paragraphs were shortened in place; skills stay self-contained because
-they install individually and cannot share a reference file.
-
-### Overlap merges (2026-10-03)
-
-Vincent approved evidence-based merges after a read-only cluster audit (#168):
-`debug` absorbed `execution-debugging` (scoped mode) and `systematic-debugging`
-(`references/systematic-debugging.md`, Iron Law verbatim, rolling obra sync
-ended); `context-optimization` absorbed `context-fundamentals`
-(`references/fundamentals.md` + `scripts/context_manager.py`); `testing-expert`
-absorbed `ai-regression-testing` (AI regression mode, `/test regression`);
-`structural-review` is the single code-quality rubric and the pstack
-thermo-nuclear procedure is `superseded`. Review, interview, `bug`, and `why`
-skills stay separate: different side effects, upstream tracking, or pinned tests.
-
-### One release skill (2026-10-03)
-
-Vincent merged `release-pr-gates` and `release-dispatch` into `release`; `/release`
-routes straight to it. Rationale: `release-pr-gates` also tagged locally without
-the clean-trunk checks or guarded-workflow detection, which side-doored promote
-gates such as Genfeed's `release.yml`. `release` now proves checks for the exact
-trunk SHA (runs on the SHA plus the producing PR's required checks, because
-required checks usually run only on PRs), detects release-please, guarded
-`workflow_dispatch`, or tag mode, reads the workflow's declared inputs, and
-reports deploy evidence. `deploy-app` no longer triggers on "release". Supersedes the
-earlier backlog row that kept the release skills separate (#166).
-
-### Catalog simplification, pair merges (2026-10-05)
-
-Vincent approved the #190 catalog simplification after a read-only overlap audit.
-Part 1 (low risk): deleted `grill-me` (alias of `grilling`) and `refactor-dispatch`
-(orphan; `/refactor` carries its own mode table). Merged `changelog-generator` into
-`release` (`references/notes.md`, written fresh: the Composio upstream had no
-LICENSE, so no upstream text remains), `github-address-comments` into `pr-comments`
-(`address` mode; `receiving-code-review` no longer claims "addressing PR comments"),
-`typescript-refactor` into `typescript-expert` (43 rules under `references/rules/`),
-`spec-first` into `prd-dispatch` (`spec` mode), and `fullstack-workspace-init` into
-`project-init-orchestrator` (v0 route plus the legacy manual route under
-`references/` and `scripts/`). `pr-comments` and `typescript-expert` are pinned
-Pstack destinations, so their hashes were re-recorded in `upstream/pstack/mapping.json`.
-Removed names no longer install through `npx skills add --skill <name>`; see the
-Retired skills table in `docs/skills/catalog-naming.md`. Rejected: keeping thin alias
-skills, because they cost a plugin, a directory and a trigger collision each.
-
-### Catalog simplification, routers (2026-10-05)
-
-Part 2 of #190. `commands/agent|deploy|design|prd|skill|test.md` now carry the
-full mode-to-engine table (with the aliases the routers held, such as `/test` bare
-scope tokens and `/design review`) and name the engines directly, so no command
-depends on a model-loadable router (#177 still holds). The six `*-dispatch` routers
-became `disable-model-invocation: true` explicit entry points for harnesses without
-commands, which removes about 1,440 characters from the model-invoked listing.
-`review-dispatch` (13 KB of target resolution, pinned by the validator) and
-`ask-dev-loop` stay model-loadable. Rejected: deleting the routers, because that
-removes the only portable front door outside Claude Code and breaks
-`npx skills add --skill <name>`; a later pass can delete them if that front door is
-not wanted. `/prd` gained the `spec` workflow inline (it also lives in `prd-dispatch`).
-
-### Catalog simplification, stack validator (2026-10-05)
-
-Part 3 of #190. `biome-`, `bun-`, `clerk-`, `nextjs-` and `tailwind-validator` merged
-into one `stack-validator`: a single `scripts/validate.py` with per-stack check
-functions (`--stack biome|bun|clerk|nextjs|tailwind|all`, auto-detected when
-omitted), shared `Issue`/`ValidationResult` scaffolding and report, and
-`references/<stack>.md` holding each old SKILL body plus its full guide. Existing
-checks are unchanged except three deliberate fixes: the Bun check now accepts the
-default `bun.lock` (it only knew `bun.lockb`), the Biome config loader no longer
-mangles the `$schema` URL while stripping `//` comments (every `biome.json` with a
-schema failed as invalid JSON), and Clerk gained the script its old SKILL.md
-advertised but never shipped. New fixture tests live in
-`skills/stack-validator/tests/`. Rejected: keeping five thin skills with a shared
-library, because skills install individually and cannot share a script.
-
-### Catalog simplification, derived-skill overlaps (2026-10-06)
-
-Vincent approved four consolidations from the upstream audit after #225 (#235), each
-removing an overlap between a derived skill and an existing one. Items 1-3 landed
-together; item 4 (`shadcn-setup` into `shadcn`) landed with the `shadcn` Tailwind v4
-rewrite in #237:
-
-- `advanced-evaluation` became `evaluation`'s LLM-as-judge mode
-  (`references/llm-as-judge.md` plus the `judge-*` references and
-  `scripts/llm_judge_example.py`); `context-degradation` became
-  `context-optimization`'s diagnose mode (`references/degradation.md`,
-  `references/degradation-patterns.md`, `scripts/degradation_detector.py`). Both come from
-  muratcankoylan/Agent-Skills-for-Context-Engineering; the duplicated activation,
-  integration and guideline text was merged, not stacked.
-- `codebase-advisor` became the survey modes of `codebase-design` (`survey`, `report`,
-  `deepen`, `branch`, `next`, `plan`, `review-plan`, `execute`, `reconcile`,
-  `--issues`). The read-only hard rules and the operating contract now live in
-  `codebase-design/SKILL.md`; the workflow is `references/survey.md`. The skill is no
-  longer `disable-model-invocation`, so the contract says survey modes start only on
-  explicit request, and `gh issue create` is no longer pre-approved. `codebase-design`
-  replaced it in the validator's required-contract list.
-- `agent-browser` was dropped. It wrapped a third-party CLI that overlaps the harnesses'
-  own browsers; `qa-loop` now names the harness's built-in browser or page-automation
-  tools, worded platform-neutrally. Tracking of vercel-labs/agent-browser ended on purpose.
-- Provenance survives through reference-file frontmatter: an absorbed upstream skill keeps
-  its `metadata.source`/`upstream_commit`/`last_synced` in the frontmatter of the reference
-  that holds its body, and `scripts/upstream-drift.py` now also scans
-  `skills/*/references/*.md` (ids such as `evaluation/llm-as-judge`). shadcn/improve stays
-  tracked through `codebase-design/references/survey.md`.
-- Removed names no longer install through `npx skills add --skill <name>`; see the
-  Retired skills table in `docs/skills/catalog-naming.md`. Rejected: keeping thin alias
-  skills, because they cost a plugin, a directory and a trigger collision each.
-
-### External Skills Imported (2026-04-21)
-
-All referenced external repos now internal — no external dependencies:
-
-| Source | Skills Imported |
-|--------|----------------|
-| coreyhaines31/marketingskills | 14 CRO/SEO/marketing skills |
-| vercel-labs/agent-skills | vercel-react-best-practices, web-design-guidelines |
-| trailofbits/skills | 10 security audit skills |
-| expo/skills | 10 expo-* mobile skills |
-| resend/resend-skills + email-best-practices | 5 resend-* email skills |
-| sickn33/antigravity-awesome-skills | 20 cherry-picked skills (JS, NestJS, Prisma, security, marketing, etc.) |
+Skills carry no version. release-please bumps `package.json`, the only version.
 
 ### Session Logs Are Local-Only (2026-06-19)
 
-`.agents/sessions/` is **gitignored** in this repo — session logs stay local,
-not committed (public open-source repo). This overrides the global ritual that
-commits session logs per-repo. Do NOT `git add -f` session docs here. The
-durable equivalent that *does* get committed is decisions in
-`.agents/memory/*.md`. (Fixed a case bug: the rule was `.agents/SESSIONS/` and
-silently matched nothing on Linux; 10 previously-tracked session files were
-`git rm --cached`.)
+`.agents/sessions/` is gitignored — session logs stay local in this public repo.
+Do not `git add -f` them. Durable decisions go in `.agents/memory/*.md`.
 
 ### EARS Acceptance Criteria (2026-06-19)
 
-PRD/spec skills standardize acceptance criteria on **EARS** (Easy Approach to
-Requirements Syntax): `WHEN/WHILE/WHERE/IF … THE SYSTEM SHALL …`, or a bare
-`THE SYSTEM SHALL …`. `prd-quality-gate` validates each Acceptance Criteria
-bullet against this grammar (regex `^\s*(\d+\.\s*)?(WHEN|WHILE|WHERE|IF|THE
-SYSTEM)\b.*\bSHALL\b`); draft lint may warn; execution readiness is blocking (see the prepared-delivery decision below). The canonical
-verifiable-outcomes section is `Acceptance Criteria` (the former
-`Success Criteria` in `prd-writer`/`feature-intake` was renamed/merged — they
-are now one EARS section; testing bars live in `Verification Plan`). Applies to
-`prd-writer`, `prd-quality-gate`, `feature-intake`, `prd-dispatch` (`spec` mode),
-`prd-task-creator`. Rationale: skills are read by AI coding agents, where vague
-prose criteria cause drift; EARS is the de-facto agent-spec grammar (Kiro-origin,
-not a ratified standard — the gate regex is the single point to adjust if it shifts).
-
-### Consolidation Decisions (2026-04-21)
-
-| Decision | Rationale |
-|----------|-----------|
-| Move content/GTM skills out of Shipshit | Shipshit is dev-workflow focused; content and GTM strategy skills live in Genfeed |
-| Merge clean-code + code-refactoring-refactor-clean → refactor-code | refactor-code is best-developed; others are weaker duplicates |
-| Keep all 5 security skills | Distinct: expert persona, audit workflow, API-specific, backend impl, frontend impl |
-| Keep react-patterns + react-refactor + react-component-performance | Cleanly separated by concern |
-| Keep all expo-*/resend-*/static-analysis-* families | Non-overlapping topics |
-
-### Unvendored pstack and Pocock skills (2026-10-19)
-
-Vincent's call: pstack (poteto/plugins) and mattpocock/skills are maintained
-upstream, so this repo no longer vendors them. 36 pstack-derived and
-Pocock-duplicate skills were removed (architect, arena, blast-radius, deslop,
-how, why, swarm, tdd, standup, grill-me, wayfinder, handoff, debug, interview and
-others), along with `ask-dev-loop` and `/ask`, `upstream/pstack/`,
-`scripts/pstack-sync.py` and their tests/CI steps. Keep only skills that
-complement them. Install both from upstream (`bunx skills add
-https://github.com/poteto/plugins`, `.../mattpocock/skills`); skills here name
-them as "upstream pstack/mattpocock when installed", never as relative routes.
-Earlier sections below that mention the removed skills are history.
-
-### Upstream review (2026-10-06, #224)
-
-Reviewed all tracked sources; Cursor Pstack advanced to df581122, Open Pstack
-stays at 1b03678. Useful standalone design, planning, touch/motion verification,
-cache-cost and glossary changes were ported. Description quoting and prose-only
-changes were reviewed without replacing owned adaptations. Impeccable provenance
-now records the reviewed skill-v4.5.0 tag. Source pins mean reviewed-through,
-including deliberate exclusions, rather than byte parity. Preserve provider
-routing, host limits and opt-in automation. Complete dispositions live in
-`docs/upstream-review-2026-10-06.md`.
-
-### Pocock craft and primitives (2026-08-14)
-
-Adapted selected patterns from [mattpocock/skills](https://github.com/mattpocock/skills) (MIT) without copying the 25-skill catalog:
-
-- Writing craft + invocation split live in `skill-standards.md` (leading words, completion criteria, no-ops, positive prompts, user- vs model-invoked composition).
-- New adapted primitives: `grilling`, `domain-modeling`, `wait-what`, `wizard`, `prototype`, `codebase-design`.
-- New user-invoked router: `ask-dev-loop`. `interview` / `shape` invoke `grilling`; they hint at other user-invoked skills rather than firing them.
-- `tdd` provenance completed; `code-review` gained a Spec axis; flagship human docs live in `docs/skills/`.
-
-### grill-me is the interview primitive's name (2026-10-06)
-
-Vincent kept typing `/grill-me` after #195 deleted it as an alias, so the
-`grilling` primitive was renamed to `grill-me` instead of keeping two names.
-`interview`, `shape`, `wayfinder` and `domain-modeling` route to `grill-me`;
-"grilling" stays only as plain English and as wayfinder's ticket type.
-
-### One session retrospective (2026-10-05)
-
-`retro` (adapted from mattpocock/skills `retro`) is the single session
-retrospective. It classifies each friction moment into an environment fix
-(navigation pointer, guardrail, reviewer standard, steering cut, no-op, tool
-economy, information access) or routes it to `skill-capture` / `rules-capture`.
-The Pstack `reflect` procedure moved out of `skill-capture` into
-`retro --deep`; its mapping destinations moved with it. `skill-capture` is
-capture-only again. `/review retro` stays the commit-window code backlog.
-
-### Pocock gaps (2026-10-05, #189)
-
-Vincent approved rewriting the remaining mattpocock/skills gaps (audit at
-upstream `4588b32ecab9`). Landed in order: `writing-for-agents` became
-`skill-creator/references/writing-for-agents.md` (only levers skill-standards
-lacked); `handoff` is a small user-invoked skill with a phase-boundaries tree in
-`ask-dev-loop`; `improve-codebase-architecture` became the `deepen` variant of
-`codebase-advisor` (now `codebase-design deepen`, #235); `github-pr-publish` has one PR body template (Summary with a
-visual, Evidence, Merge danger, Review guide, Follow-ups) credited to Pocock and
-Dex Horthy's `show-me` (humanlayer/skills, MIT). Installed upstream duplicates in
-`~/.agents/skills` (handoff, improve-codebase-architecture, writing-for-agents)
-are removed by hand after the catalog copies ship.
-
-Second pass: `debug` gained minimise, a tight red-capable loop criterion,
-redaction, a human-in-the-loop template, ranked hypotheses shown to the user,
-seam-as-finding and the confirmed hypothesis in the commit; `ask-dev-loop`
-routes foggy efforts to `interview` + `figure-it-out` (not the ICP roadmap
-tools) and adds `retro`, `handoff` and the PR-body route; `domain-modeling` and
-`wait-what` accept `GLOSSARY.md` (`CONTEXT.md` stays the default for new repos).
-
-Third pass (new flows): `wayfinder` (user-invoked; a map issue of decision tickets
-resolved one per session, hands off to `/prd prepare`, never builds); `github-inbox`
-`triage <ref>` mode with an `.out-of-scope/` knowledge base for rejected
-enhancements (no label state machine, no durable-brief rule; accepted items go to
-`feature-intake`); `interview send` mode (questionnaire for someone else to answer);
-a small model-invoked `research` skill. `ask-dev-loop` routes the foggy-effort
-case to `wayfinder`.
-
-### Weekly review composition (2026-09-05)
-
-`weekly-review` coordinates board evidence, issue-to-code checks, a frozen
-all-author retrospective, operational evidence, and scoped deslop. Report-only
-is the default. Existing scoped repair authorization carries to engines; board
-writes and deployment actions keep their own boundaries. Code coverage controls
-the next review checkpoint, with unresolved work retained separately. Shipshit
-`deslop` and upstream `pstack:deslop` remain separate implementations.
+PRD/spec skills standardize acceptance criteria on EARS:
+`WHEN/WHILE/WHERE/IF … THE SYSTEM SHALL …`, or a bare `THE SYSTEM SHALL …`.
+`prd-quality-gate` validates each Acceptance Criteria bullet against
+`^\s*(\d+\.\s*)?(WHEN|WHILE|WHERE|IF|THE SYSTEM)\b.*\bSHALL\b`; execution
+readiness is blocking. Applies to `prd-writer`, `prd-quality-gate`,
+`feature-intake`, and `prd-task-creator`.
 
 ### Prepared issue delivery (2026-09-14)
 
 One end-to-end feature per issue/PR by default. `feature-intake` composes the PRD,
-plan, readiness gate, and task-creation engines without a separate template.
+plan, readiness gate, and task-creation skills.
 `prd-quality-gate/references/execution-readiness.md` owns preparation readiness;
-`executing-plans/references/delivery-gate.md` owns delivery readiness. Resolve these
-through installed skills. Executors implement settled decisions and escalate gaps;
-planning does not require complete implementation code. Every implementation needs
-independent review from a different contributor lab, current-head evidence, and
-green required CI before merge-ready. Done additionally verifies merge and required
-deployment. Harnesses own model/effort/capacity configuration. Static validation
-proves contract consistency, not guaranteed model behavior or cost savings.
+`executing-plans/references/delivery-gate.md` owns delivery readiness. Executors
+implement settled decisions and escalate gaps. Harnesses own model, effort, and
+capacity configuration.
 
-### House stack: Prisma/Postgres and Vitest (2026-10-06, #207)
+### Project session coordination (2026-10-07)
 
-The house stack is Postgres only (no document database or ODM) and uses Vitest for unit
-and integration tests (Playwright for E2E). Skills write toward Prisma + Postgres (service
-layer over `PrismaService`, string ids and explicit relations, `$queryRaw` tagged template
-only) and Vitest (`vi.*`, `unplugin-swc` for NestJS decorator metadata). The two
-document-database skills were retired (see the Retired skills table in
-`docs/skills/catalog-naming.md`); `postgres-ops` is the destination. The only allowed
-residual is the `@testing-library/jest-dom` package path.
+`orchestrate` is the user-invoked project-session coordinator: it enrolls existing
+project chats, keeps one decision queue, and relays answers. New sessions need a
+human request.
 
-### House stack sweep: Clerk dropped, `bun.lock` canonical (2026-10-06, #223)
+### Weekly review composition (2026-09-05, amended 2026-10-20)
 
-Clerk is no longer part of the catalog: `stack-validator` lost its `clerk` stack
-(`references/clerk.md`, detection, CLI choice and fixture tests), `expo-architect`
-scaffolds Better Auth through `@better-auth/expo`, and the Stripe and queue guides use
-Better Auth sessions. `bun.lock` is the canonical Bun lockfile everywhere (the validator
-still accepts a lone legacy `bun.lockb` as a migrate warning; both together stay an
-error). Scaffolds and guides emit Tailwind v4 CSS-first config (`@theme`, no
-`tailwind.config.*`), no Sass, and NestJS 12. The vendored `shadcn` and `tailwind`
-skills keep v3 and Sass examples only as before/after migration material. Rejected:
-keeping a Clerk reference "for existing apps", because the catalog writes toward the
-house stack and the removed stack remains in git history.
-
-### Last mile: artifacts-builder on Bun, shadcn and tailwind owned on v4 (2026-10-06, #232, #235)
-
-`artifacts-builder` scaffolds with `bun create vite` plus `bunx shadcn@latest` (Radix, Nova
-preset, all components) and bundles with `vite-plugin-singlefile` (no Parcel); the dead
-UI package and the bundled v3-era component archive are gone, and `node-version-check.sh`
-enforces Vite's Node floor (20.19+ or 22.12+). `shadcn` and `tailwind` are rewritten to
-Tailwind v4 CSS-first and current shadcn (`cn` package, `Field` + `Controller` forms,
-React 19 refs); provenance stays as attribution and `scripts/upstream-drift.py` still
-tracks pproenca/dot-skills. `shadcn-setup` was folded into `shadcn` as setup mode
-(`references/_setup-mode.md`); its HSL token generator `setup.py` was dropped because the
-CLI (`init --base radix --preset nova`) is the source of truth and the generator emitted
-v3-era tokens. Rejected: keeping a second shadcn skill, because install and usage rules
-share one trigger.
+`weekly-review` coordinates board evidence, issue-to-code checks, operational
+evidence, and the repo's dependency audit. Report-only is the default; board
+writes and deployment actions keep their own boundaries.
 
 ## Known Issues
 
-None currently tracked.
+- Codex has no equivalent of `disable-model-invocation` in these skills yet, so
+  Codex may still select them implicitly.
 
 ## Key Files
 
-- `.agents/memory/system/skill-standards.md` — authoritative spec doc
-- `.agents/memory/system/skill-management.md` — workflow guide
-- `scripts/validate-skill-sync.sh` — validation script
-- `scripts/generate-catalog-summary.js` — generated catalog facts and documentation blocks
-- `scripts/generate-marketplace-bundles.js` — bundle snapshot generation
-- `scripts/generate-marketplace-json.js` — marketplace catalog generation
-- `catalog.json` — single generated source for counts, bundles, and tracked layout
-- `.claude-plugin/marketplace.json` — full marketplace catalog (generated)
-- `.github/workflows/generate-bundles.yml` — CI pipeline
+- `.agents/memory/system/skill-standards.md` — authoritative spec
+- `.agents/memory/system/execution-boundary.md` — harness versus skill ownership
+- `scripts/validate.py` — skill validator (`bun run validate`)
+- `scripts/tests/test_validate.py` — validator tests

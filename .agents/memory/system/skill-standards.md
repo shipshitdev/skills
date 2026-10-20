@@ -14,7 +14,7 @@ This repo follows the [Agent Skills open standard](https://agentskills.io/specif
 | `description` | **Yes** | 1–1024 chars. Written in third person. Describes what the skill does AND when to use it. Front-load key use case. |
 | `license` | No | License name or reference to bundled LICENSE file. |
 | `compatibility` | No | 1–500 chars. System requirements: target agent, required packages, network needs. Omit if no special requirements. |
-| `metadata` | No | Map of `string → string`. Use for `version`, `tags`, `author`, and any extra data. |
+| `metadata` | No | Map of `string → string`. Use for `tags`, `author`, provenance, and any extra data. Skills carry no version. |
 | `allowed-tools` | No | Space-separated **auto-approve allowlist** — bypasses the per-use prompt for listed tools. NOT a sandbox: unlisted tools stay callable and fall through to normal permission prompts. Experimental — support varies by agent. |
 
 ### Claude Code extensions — Claude-only fields
@@ -22,8 +22,8 @@ This repo follows the [Agent Skills open standard](https://agentskills.io/specif
 | Field | Purpose |
 |-------|---------|
 | `when_to_use` | Extra trigger phrases appended to `description` in skill listing. Combined with `description`, capped at 1,536 chars. |
-| `disable-model-invocation` | `true` keeps an entry point user-only. Reusable engines omit it and enforce action authorization in their body. |
-| `user-invocable` | `false` = hides from `/` menu. Use for background knowledge skills. |
+| `disable-model-invocation` | `true` keeps a skill user-only. Required on every skill in this repo. |
+| `user-invocable` | `false` = hides from `/` menu. Forbidden here: combined with `disable-model-invocation` it makes a skill unreachable. |
 | `model` | Recognized by Claude Code, but forbidden in this public library; the harness owns model selection. |
 | `effort` | Recognized by Claude Code, but forbidden in this public library; the harness owns reasoning effort. |
 | `context` | `fork` = run in isolated subagent. Only for skills with an actionable task — a guidelines-only skill returns **empty output** when forked. ⚠️ May not be honored via the Skill tool (issue #17283). |
@@ -44,7 +44,6 @@ description: One-line summary of what it does and when to use it. Front-load the
 license: MIT
 compatibility: Requires gh CLI for GitHub features.
 metadata:
-  version: "1.0.0"
   tags: "tag1, tag2, tag3"
   author: Ship Shit Dev
   # For skills derived from an upstream, add source/last_synced — see Provenance.
@@ -61,8 +60,8 @@ disable-model-invocation: true
 
 | Wrong | Correct | Why |
 |-------|---------|-----|
-| `version: 1.0.0` (top-level) | `metadata:\n  version: "1.0.0"` | `version` is not a spec field — must be inside `metadata` |
-| `tags:\n  - foo\n  - bar` (top-level) | `metadata:\n  tags: "foo, bar"` | Same. `metadata` values must be strings, not lists |
+| `version: 1.0.0` (top-level or in `metadata`) | Remove entirely | Skills carry no version; see Versioning |
+| `tags:\n  - foo\n  - bar` (top-level) | `metadata:\n  tags: "foo, bar"` | `tags` is not a spec field, and `metadata` values must be strings |
 | `auto_activate: true` | Remove entirely | Not in spec, ignored by all agents |
 | `auto_trigger: false` | Remove entirely | Not in spec, ignored by all agents |
 | Empty `compatibility` | Omit the field | Only include if skill has real requirements |
@@ -75,7 +74,6 @@ disable-model-invocation: true
 ```
 skills/my-skill/
 ├── SKILL.md           # Required. Metadata + instructions. Keep under 500 lines.
-├── plugin.json        # Required for distribution via npx skills add.
 ├── references/        # Optional. Loaded on demand, not on activation.
 │   └── full-guide.md  # Detailed docs, long examples, edge cases.
 ├── scripts/           # Optional. Executable code (Python, bash, Node).
@@ -177,100 +175,25 @@ Rules:
 
 ## Invocation architecture
 
+Every skill in this repo is an explicit entry point: set
+`disable-model-invocation: true`. The model never loads these skills on its own;
+the user runs them by name (`/git-cleanup`, `/qa-loop`). The validator enforces
+this.
+
 Separate discoverability from authorization. Loading a skill grants no permission
 to edit files, send messages, publish, deploy, or spend beyond the user's request.
-
-| Kind | Frontmatter | Composition |
-|------|-------------|-------------|
-| **Explicit entry point** | `disable-model-invocation: true` | The human selects the workflow. Keep advisory maps and open-ended session starters here. |
-| **Reusable engine** | omit `disable-model-invocation` | A user or another workflow may invoke it within the authorized task. Its body owns action gates. |
-| **Command router** | `user-invocable: false`, omit `disable-model-invocation` | Behind a `commands/*.md` front door that names it (`review-dispatch`). The command is the user entry and is itself user-only; the model must be able to load the router the command names. |
-| **Portable router** | `disable-model-invocation: true` | A `*-dispatch` skill whose command already carries the mode table and names the engines directly (`agent-`, `deploy-`, `design-`, `prd-`, `skill-`, `test-dispatch`). It stays as an explicit entry point for harnesses without commands and costs no listing space. |
-
-**Execution routers** such as `/test run` select a declared engine and pass the
-requested mode, target, authorized actions, and restrictions. Existing explicit
-authorization satisfies an action gate within that scope; ask only for a missing
-or expanded authorization. A read-only/report-only request stays read-only across
-all delegates. Delegation never expands host, provider, cost, publication, or
-production permissions. A test-run request does not authorize repairs.
-
-**Advisory routers** such as `/ask` return a recommendation. `interview` and
-`shape` stop at their promised brief. Their stopping point follows their output
-contract, not a catalog-wide prohibition on composition. Recommend an explicit
-entry point instead of pretending to invoke one the harness hides from the model.
-
-Prefer inlining a small mode table into the command over a model-loadable router: every model-loadable skill pays its description and `when_to_use` in every session's listing.
-
-Pick engine discoverability whenever another skill must run the workflow.
 Keep safety gates in the body, including a clear authorized mutation scope for
-writing engines. Frontmatter controls discovery; it is not a permission boundary.
-Resolve dependencies through the active skill catalog, then resolve resources
-relative to the selected skill's installed directory. Never assume a consumer has
-this repository's `skills/` directory or repository-management meta-skills.
+writing skills. Frontmatter controls discovery; it is not a permission boundary.
 
-Use direct imperative routes (for example, Run the `engine-name` skill) for actual
-composition, and `Recommend` for a handoff. The validator checks these explicit
-execution routes and leading target lists in `Delegates To:` bullets, including
-comma-joined lists across wrapped lines. Start advisory declarations with
-`Recommend` and resource declarations with `File pointer`. Mode names in an
-explanation and fenced examples are not execution dependencies.
-
----
-
-## Writing craft
-
-Skills are documents an agent runs, not essays. These levers keep a run predictable — the same *process* every time, not the same output. Apply them to new and edited skills. Catalog-wide passes are fine when Vincent approves one (the 2026-10-03 listing-budget pass). Keep Contract blocks. Longer-form levers (two loads, co-location, sprawl, split-by-sequence, environment-as-cache, sediment) live in `skills/skill-creator/references/writing-for-agents.md`.
-
-**Leading words.** Collapse a restated idea into one pretrained token the agent already thinks with (`frontier`, `seam`, `tight`, `red`). Repeat the token; do not re-explain the sentence. A coined word recruits no priors — prefer a word the model already knows.
-
-**Completion criteria.** Every step ends on a checkable bound ("frontier empty", "the narrow test fails for the missing behavior"). Vague bounds ("understanding reached") invite premature completion. Sharpen the bound first; split across a context boundary only if the bound stays fuzzy *and* the agent rushes.
-
-**Context pointers.** A `description` (and any always-loaded line that names out-of-context material) is a pointer: what the material is, plus the branches that should load it. Front-load the leading word. One trigger per genuine branch. Cut identity the body already carries.
-
-**Information hierarchy.** Inline what every branch needs. Disclose behind a pointer (`references/`) what only some branches reach. Keep `SKILL.md` under 500 lines. References stay one level deep.
-
-**Prune no-ops.** Delete a sentence that does not change default model behavior. The test is behavioral, not reader-relative: run the skill; if the line never bites, remove the whole sentence.
-
-**Prompt the positive.** State the target behavior ("write one-line comments"). Negation drags the forbidden behavior into context and makes it more available. A prohibition earns its place only as a hard guardrail that cannot be phrased positively, and then only paired with the positive target.
-
----
-
-## When to add Claude Code extensions
-
-| Field | Add when... |
-|-------|-------------|
-| `when_to_use` | Description alone doesn't cover all trigger phrases |
-| `disable-model-invocation: true` | Explicit entry points and advisory workflows. Reusable writing engines stay callable and require scoped authorization in their body. |
-| `user-invocable: false` | Skill is background knowledge, not an action users invoke |
-| `context: fork` | Skill does independent research/exploration that shouldn't see conversation history (must have an actionable task — guidelines-only forks return empty) |
-| `allowed-tools` | You want to skip the per-use prompt for tools the skill calls repeatedly. Remember it only *auto-approves*, it does not restrict — see note below |
-| `disallowed-tools` | You need to actually **block** a tool while the skill runs (e.g. keep an autonomous loop from calling `AskUserQuestion`) |
-| `paths` | ~~Skill only applies to specific file types~~ — avoid until issue #49835 is fixed (sets the skill undiscoverable); use nested `.claude/skills/` dirs instead |
+Because every skill here is user-only, the Skill tool cannot load one skill from
+another. A skill that composes others runs each delegate by reading its sibling
+`../<name>/SKILL.md` and following it; list those delegates under
+`## Delegates To` with that instruction. Use `Recommend` (for example, Recommend
+`/github-fix-ci`) for handoffs the user should start. Name upstream pstack or
+mattpocock skills only as "when installed", and never assume a consumer has this
+repository checked out.
 
 **`allowed-tools` is an allowlist, not a sandbox.** Listing tools only bypasses their permission prompt; every unlisted tool is still callable and just prompts as normal. Narrowing `allowed-tools` does not lock a skill down — use `disallowed-tools`, deny rules, or hooks to actually block. For MCP tools, list the fully-qualified `ServerName:tool_name` so the grant resolves when multiple MCP servers are connected.
-
----
-
-## plugin.json format
-
-Required for distribution via `npx skills add`. Keep this committed file synced with the skill frontmatter.
-
-```json
-{
-  "name": "my-skill",
-  "version": "1.0.0",
-  "description": "Short description (shown in npx skills registry). Max 100 chars.",
-  "author": {
-    "name": "Ship Shit Dev",
-    "email": "hello@shipshit.dev",
-    "url": "https://shipshit.dev"
-  },
-  "license": "MIT",
-  "skills": "."
-}
-```
-
-`"skills": "."` means the plugin root is the skill directory itself.
 
 ---
 
@@ -292,19 +215,21 @@ Checks:
 This validator does **not** understand Claude Code extension fields. For this repo, also run:
 
 ```bash
-./scripts/validate-skill-sync.sh
+bun run validate
 ```
 
-That repo validator enforces the shared Claude Code + Codex rules and allows the approved Claude extension fields.
+`scripts/validate.py` checks that `name` matches the directory, the description
+length, `disable-model-invocation: true`, no `user-invocable: false`, no `model:`
+or `effort:`, relative links, and concrete model IDs. `bun run test` covers the
+validator and the skills' own script tests.
 
 ---
 
 ## Model references
 
 Skills are model-agnostic playbooks. The harness that loads a skill supplies the
-model — a skill must never assume or name one. 146 of this repo's skills already
-carry zero model references; keeping it that way means a new model generation
-touches only the per-repo routing block, never the skills.
+model — a skill must never assume or name one. Keeping skills model-free means a
+new model generation touches only the per-repo routing block, never the skills.
 
 - **No concrete model names anywhere in a skill** — not in the body, not in
   `references/`, not in `scripts/`. This covers tier+version IDs
@@ -315,7 +240,7 @@ touches only the per-repo routing block, never the skills.
   (fan-out review, multi-lens audit) may express **capability tiers** in prose —
   "cheapest/fastest tier for the fan-out finders, strongest available tier for the
   final verdict" — never a concrete model. The concrete tier→model mapping lives in
-  the repo routing block (`CLAUDE.md`/`AGENTS.md`, written by `setup-agent-routing`),
+  the repo routing block (`CLAUDE.md`/`AGENTS.md`),
   so one per-repo file absorbs each model generation and each harness (Claude,
   Codex) maps the tiers to its own models.
 - **Do not set `model:` or `effort:` in public skills.** Although Claude Code parses
@@ -324,36 +249,30 @@ touches only the per-repo routing block, never the skills.
 - **External tools are lanes, not models.** Naming Codex, `gh`, or a CLI as a
   dependency the skill shells out to is fine (it is a tool, like `git`). Naming the
   model that tool runs is not.
-- **Enforced by the validator.** `scripts/validate-skill-sync.sh` hard-errors on
-  version-pinned model IDs anywhere in a skill, and on bare tier names
-  (`sonnet`/`opus`/`haiku`) outside a `model:`/`model =` assignment. Harness-owned
-  execution parameters (`model:`/`effort:` keys) in reusable content are flagged
-  as warnings.
+- **Enforced by the validator.** `scripts/validate.py` rejects version-pinned
+  model IDs anywhere in a skill.
 
 ---
 
 ## Provenance
 
 A skill authored in-house needs no provenance fields. A skill **derived from an
-upstream** declares where it came from, so the rewrite-vs-resync decision is
-mechanical. The convention is enforced by `check_provenance()` in
-`scripts/validate-skill-sync.sh` and used by derived skills in this catalog.
+upstream** declares where it came from. Prefer installing the upstream directly
+over deriving a copy here; this repo no longer vendors pstack or mattpocock skills.
 
 Frontmatter (all under `metadata`):
 
 ```yaml
 metadata:
-  version: "1.0.0"
   source: https://github.com/<org>/<repo>/blob/main/skills/<name>/SKILL.md
   upstream_repo: <org>/<repo>
   upstream_ref: main               # branch or tag tracked
   upstream_commit: <short-sha>     # commit synced at (or upstream_version)
-  last_synced: "2026-07-04"        # ISO date; validator warns if >90 days old
+  last_synced: "2026-07-04"        # ISO date
   license: <upstream SPDX id>
 ```
 
-Plus a `## Upstream` section in the skill's `README.md` (validator requires it when
-`source` is set): a table mirroring the fields above, a **Local modifications** line,
+Plus a `## Upstream` section in the skill's `README.md` when `source` is set: a table mirroring the fields above, a **Local modifications** line,
 and a **Checking for upstream changes** line.
 
 The **Local modifications** line is what distinguishes the two derived kinds — no
@@ -378,22 +297,8 @@ Rules:
 
 ## Versioning
 
-All public and repo-maintenance skills share the repository release version
-from `package.json`.
-Set `metadata.version` and `plugin.json.version` to that exact value (currently
-`2.2.2`). Do not assign independent major, minor or patch versions to a skill.
-Repository releases use semver; release automation owns the next release number.
-
-- Run `bun run version:sync` to align canonical skill and plugin metadata.
-- `bun run version:check` checks every pair against `package.json.version`; skill
-  instruction edits do not require an individual version increment.
-- `bun run marketplace:generate` synchronizes versions before generating bundles
-  and marketplace entries. Release automation uses this same path.
-- `bun run validate` still rejects mismatched skill/plugin metadata or invalid
-  descriptions. Shared versions do not replace instruction or runtime review.
-- Version synchronization advances Pstack fingerprints only when the destination's
-  pre-edit bytes match the accepted hash. Unreviewed body changes keep their old
-  fingerprints and remain blocked at the adaptation review gate.
+Skills carry no individual version. The repository release version in
+`package.json`, bumped by release-please, is the only version.
 
 ---
 

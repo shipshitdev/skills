@@ -3,9 +3,9 @@ name: prd-task-creator
 description: Publishes prepared requirements and plans as one GitHub feature issue, with child issues only when justified. Use when filing a PRD or bug as issues or sub-issues.
 allowed-tools: Bash(gh *)
 metadata:
-  version: "2.2.4"
   tags: "tasks, prd, github, ears"
 when_to_use: "open a GitHub issue, create sub-issue, break epic into issues"
+disable-model-invocation: true
 ---
 
 # PRD Task Creator
@@ -44,10 +44,12 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `feature-intake` for a rough request without a prepared packet.
 - `prd-quality-gate` for canonical templates and readiness validation.
 
-## Publish the Packet
+## Publish the packet
 
 1. Resolve the target from the user/session and verified repository remote. Search
    existing issues and open PRs. Reuse the matching issue within authorized scope;
@@ -78,7 +80,7 @@ Delegates To:
    from planner-owned rework. Return URLs and the readiness verdict, including any
    remaining publication or delivery blockers.
 
-## Tracker Mechanics
+## Tracker mechanics
 
 Use the procedures in [Publishing guide](references/full-guide.md). They contain
 tracker details only. Resolve templates through `prd-quality-gate`, never maintain

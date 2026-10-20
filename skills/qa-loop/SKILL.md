@@ -9,7 +9,6 @@ description: >-
   the current checkout.
 compatibility: Requires Git and a locally runnable application. Portless is used when already configured by the project.
 metadata:
-  version: "2.2.4"
   tags: "qa, localhost, browser-testing, debugging, screenshots, git"
   author: Ship Shit Dev
 when_to_use: "start QA, QA localhost, live QA loop, fix these localhost issues, screenshot QA, test and fix the local app"
@@ -69,6 +68,8 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - the harness's built-in browser or page-automation tools, when available, for browser interaction, console/network evidence, and screenshots
 - `test-runner` for focused automated verification when project and host rules allow it
 - `qa-reviewer` only when the user requests a final whole-change review
@@ -76,7 +77,7 @@ Delegates To:
 ## Non-Negotiable Session Invariants
 
 1. Work in the existing checkout so its local environment files remain available.
-   Never create or move into a worktree.
+   Never create or move into a separate worktree.
 2. Create or resume exactly one date branch, `qa/YYYY-MM-DD`, using the user's
    local date. Pin its name for the entire session.
 3. Never switch, rename, delete, rebase, or merge branches after pinning the QA
@@ -115,12 +116,10 @@ Delegates To:
 2. Identify every app and supporting service needed to reproduce user-facing
    behavior. Prefer the project's documented orchestration command over starting
    packages independently.
-3. Detect Portless only from existing project evidence, such as documented commands,
-   package scripts, dependencies, or configuration:
-   - When configured, use the project's existing Portless entrypoint and report
-     its stable local URLs.
-   - When absent, use the project's documented dev commands and assigned ports.
-   - Never install or configure Portless as part of the QA session unless asked.
+3. Use the project's documented dev commands and assigned ports. If the project
+   already configures a local proxy or stable-URL tool (documented commands, package
+   scripts, dependencies, or configuration), use that entrypoint and report its URLs.
+   Never install or configure such a tool as part of the QA session unless asked.
 4. Start each required long-running command as a managed background process. Keep
    its process handle, URL, working directory, and log location available. Never
    block the conversation on a foreground development server.
@@ -157,10 +156,10 @@ Delegates To:
 8. Reuse running processes across issues. Restart only when the fix or configuration
    requires it, then re-check readiness and resume the cursor for that source
    identity. Apply the rotation rule to a new source; never reset silently.
-9. Obey repository and host restrictions on tests, type checks, builds, migrations,
+9. Obey repository and environment restrictions on tests, type checks, builds, migrations,
    and resource-intensive commands even when an app is running locally.
 
-Report session readiness with the pinned branch, each app URL, Portless status,
+Report session readiness with the pinned branch, each app URL,
 background-process status, monitored log surfaces, and any unavailable surface.
 
 ## Phase 3: Intake and Queue Issues
@@ -254,7 +253,7 @@ Commit before moving to the next issue:
 4. Inspect the staged diff for secrets, `.env*` files, QA evidence, logs, generated
    artifacts, and unrelated edits. Unstage any accidental inclusion.
 5. Run the narrowest allowed verification required by the repository. If a required
-   check is prohibited on the current host, record that fact rather than claiming it
+   check is prohibited in the current environment, record that fact rather than claiming it
    passed.
 6. Create one conventional commit describing the verified fix, for example
    `fix: keep mobile navigation within viewport`.

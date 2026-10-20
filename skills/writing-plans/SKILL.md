@@ -2,7 +2,6 @@
 name: writing-plans
 description: Resolves implementation decisions into an exact, current execution plan on the same issue. Use before handing coding to an executor that must escalate missing decisions.
 metadata:
-  version: "2.2.4"
   source: https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md
   upstream_repo: obra/superpowers
   upstream_ref: main
@@ -11,8 +10,8 @@ metadata:
   license: MIT
   tags: "planning, implementation-plan, tasks, tdd, dry, yagni, decomposition"
 when_to_use: "write a plan, break into tasks, spec to tasks"
+disable-model-invocation: true
 ---
-
 # Writing Plans
 
 Settle every implementation decision before handoff. The executor writes the code;
@@ -20,6 +19,12 @@ the planner specifies the contracts, steps, patterns, and proof that remove the
 need to choose an approach. Keep production code and complete test bodies out of
 the plan; include signatures, data examples or concise algorithms only when needed
 to settle ambiguity.
+
+Inputs: requirements, target repository, the current issue or document, and scope constraints. Output: one current implementation plan bound to requirements and an inspected revision, with resolved decisions, exact paths/symbols, ordered steps, verification mapping and a blocking readiness result.
+
+Writes: the `## Implementation Plan` comment on the requirements issue, or the plan section in the single canonical local document, within the authorized publication scope. No implementation files and no autonomous executor dispatch. Reads repository and tracker. Ask only for missing authority or consequential intent; authorization to plan this issue already covers that scope, so skip repeated approval prompts. If a coordinating process owns publication, return a draft to it.
+
+Optional companions: `prd-quality-gate` (canonical plan template and execution-readiness check) and `executing-plans` (`scripts/plan-header.mjs`). Neither ships with this skill. If unavailable, use the checklist below as the readiness check and record the base commit and a hash of the requirements text by hand.
 
 ## Contract
 
@@ -52,13 +57,15 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `prd-quality-gate` for the canonical plan template and execution-readiness check.
 
 ## Research and Decide
 
 1. Read live requirements and relevant comments, repository instructions and
    architecture, current revision, and existing implementation. Load the canonical
-   execution-readiness reference through `prd-quality-gate`.
+   execution-readiness reference from `prd-quality-gate` when available.
 2. Map existing paths/symbols and at least three nearby patterns; if fewer exist,
    document the searched scope and available evidence. Label proposed files and
    symbols explicitly. Follow the repository architecture without speculative
@@ -85,16 +92,16 @@ Delegates To:
    environment/fixtures and expected result. Proposed new tests need exact paths,
    behaviors/fixtures and invocation through a verified runner, not full test code.
 7. Record a reproducible base commit, requirements fingerprint and plan revision.
-   Compute the fingerprint with the `executing-plans` skill's
-   `scripts/plan-header.mjs digest` command on the saved issue body. Once every
+   Compute the fingerprint with `executing-plans`'s
+   `scripts/plan-header.mjs digest` command on the saved issue body when that script is available. Once every
    readiness check passes, set `Readiness: READY` in the draft and confirm
-   `plan-header.mjs check` passes against the current head before publishing.
+   `plan-header.mjs check` (when available) passes against the current head before publishing.
    Resolve all planner-owned unknowns. User-owned intent or unavailable prerequisites
    remain explicit blockers, never choices delegated to a smaller executor.
 
 ## Review, Store, and Handoff
 
-Run the `prd-quality-gate` skill in blocking `execution-readiness` mode. Repair
+Run `prd-quality-gate` in blocking `execution-readiness` mode (or apply the checks above manually). Repair
 coverage gaps, inconsistent names/contracts, ambiguous choices and unverified
 command assumptions. Return a verdict with evidence, not a heading-only check.
 
@@ -106,7 +113,6 @@ across unlabeled comments. If it exceeds tracker limits, reduce duplication or
 split genuinely independent outcomes instead of truncating decisions.
 
 Report the issue/plan link, inspected revision, readiness verdict and blockers.
-Do not select model/effort/provider, invent dispatch labels, or ask the user to
-choose an execution strategy: those belong to the harness and authorized workflow.
+Do not invent dispatch labels or ask the user to choose an execution strategy.
 Before execution, require live freshness validation. Any implementation gap goes
 back to the planner; the executor cannot revise decisions or acceptance criteria.

@@ -2,8 +2,5 @@ node_modules/
 .git/
 .claude/
 .codex/
-.cursor/
-bundles/
-dist/
-plugins/
+.tmp/
 CHANGELOG.md

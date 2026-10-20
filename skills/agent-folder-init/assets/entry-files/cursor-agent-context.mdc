@@ -1,8 +1,0 @@
----
-description: Shared repository context and instruction entry points
-globs:
-alwaysApply: true
----
-
-Read `AGENTS.md` for shared project instructions and `.agents/memory/` for durable
-project context. Do not duplicate those rules in this Cursor project rule.

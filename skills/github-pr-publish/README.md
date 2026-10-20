@@ -32,7 +32,7 @@ The visual menu inside Summary originates in the `show-me` skill by Dex Horthy
 2026-10-05); the repository license is MIT and nothing is quoted verbatim.
 
 **Local modifications:** One template replaces the old step 5 list and the
-`/pr tidy` list. Adds `## Review guide` for large diffs, folds "checks run and on
+`tidy` list. Adds `## Review guide` for large diffs, folds "checks run and on
 which host, or `Not run`" into Evidence, and keeps the PR Body Rules (no unproven
 test claims, `Closes` only when resolved, `--body-file`). Visual menu and evidence
 tiers live in `references/pr-body.md`, rewritten in house wording. Attribution

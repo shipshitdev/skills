@@ -2,10 +2,9 @@
 name: prd-quality-gate
 description: Validates draft requirements and blocks execution until the issue holds a complete, current implementation contract. Use when checking a PRD or plan for execution readiness.
 metadata:
-  version: "2.2.4"
   tags: "prd, planning, validation, quality-gate, spec, requirements, ears"
 when_to_use: "draft-lint, execution-readiness, is this issue ready"
-user-invocable: false
+disable-model-invocation: true
 ---
 
 # PRD Quality Gate
@@ -34,25 +33,25 @@ Confirmation Required:
 
 - None for read-only validation. Preserve the caller's access restrictions.
 
-## One Shared Contract
+## One shared contract
 
 Read [Execution readiness](references/execution-readiness.md) before validating or
 supplying preparation templates. This reference owns the requirements template,
 plan template, decomposition rule, decision boundary, and readiness checklist.
-Resolve this skill through the active catalog; consumers load the reference
-relative to this skill's installed directory. Do not maintain alternate copies.
+Consumers read this reference from the sibling path
+`../prd-quality-gate/references/execution-readiness.md`. Do not maintain alternate copies.
 
 Use `draft-lint` for an explicit requirements-only review. Check required headings,
 nonempty scope and EARS acceptance criteria; report missing information as warnings.
 Draft lint may help the planner continue research. It cannot mark an issue ready
 for an executor, even if every heading is present.
 
-Use blocking `execution-readiness` for `/prd prepare`, feature intake, execution
+Use blocking `execution-readiness` for `feature-intake`, execution
 handoff, AFK classification, or any request to declare work ready for an agent.
 An unspecified mode in one of those contexts means `execution-readiness`.
 Otherwise default to `draft-lint` and label that limitation in the output.
 
-## Validate Meaning and Evidence
+## Validate meaning and evidence
 
 Check actual behavior, complete decisions, repository evidence, verification
 feasibility, and freshness. Headings and EARS grammar alone cannot establish

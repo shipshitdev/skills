@@ -2,9 +2,9 @@
 name: qa-reviewer
 description: Runs a multi-phase verification pass on finished AI agent work to catch bugs, missed requirements, and bad assumptions. Use after long multi-step tasks or on check your work.
 metadata:
-  version: "2.2.4"
   tags: "quality-assurance, verification, code-review, accuracy, completeness"
 when_to_use: "check your work, verify before commit"
+disable-model-invocation: true
 ---
 
 # QA Reviewer: Systematic Work Verification
@@ -28,9 +28,8 @@ Structured framework for reviewing AI agent work before finalizing changes. Catc
 
 - Review original task and requirements
 - List all deliverables (files created/modified/deleted)
-- Check critical rules in the applicable `AGENTS.override.md` / `AGENTS.md`
-  chain and explicitly configured fallback files; include `CLAUDE.md` for
-  Claude-specific rules
+- Check critical rules in the repository's instruction files (`AGENTS.md`,
+  `AGENTS.override.md`, `CLAUDE.md`, or configured fallbacks)
 
 ### 2. Requirement Verification
 
@@ -78,13 +77,15 @@ grep -r ": any" <files>
 
 ## Project Rules Check
 
+Example checklist. Replace it with the rules in the repository's own instruction files.
+
 - [ ] No console.log (use logger)
 - [ ] No `any` types
 - [ ] No inline interfaces
-- [ ] Applicable AGENTS files intact and scoped overrides intentional
+- [ ] Repository instruction files intact and scoped overrides intentional
 - [ ] Configured fallback instruction files exist and are nonempty
-- [ ] .agents/ folders untouched
-- [ ] Multi-tenancy preserved
+- [ ] Agent configuration folders untouched unless the task required changes
+- [ ] Project invariants preserved (for example multi-tenancy, if the project has it)
 
 ## Final Assessment Categories
 

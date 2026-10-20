@@ -3,11 +3,11 @@ name: worktree
 description: Creates an isolated git worktree outside the repository, in the agent's worktree home, off the right base branch. Use for parallel or isolated workspaces and multi-agent runs.
 compatibility: Requires git 2.5+ (worktree support).
 metadata:
-  version: "2.2.4"
   tags: "git, worktree, branch, isolation, parallel, workspace"
   author: Ship Shit Dev
 allowed-tools: Bash(git *)
 when_to_use: "branch off current work, sibling checkout"
+disable-model-invocation: true
 ---
 
 # Worktree
@@ -16,7 +16,7 @@ Create a git worktree off the **right base branch**, in a directory **outside
 the repository**, with the safety checks that keep the main checkout and its
 branches correct. Worktrees never live inside a repository. This skill only
 **creates** and **lists** worktrees. Removing and pruning merged worktrees is
-`git-cleanup`'s job (`/cleanup`) — do not delete here.
+`git-cleanup`'s job (`/git-cleanup`) — do not delete here.
 
 ## Worktree Home
 
@@ -85,6 +85,8 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - Recommend `git-cleanup` to verify promotion and prune merged worktrees and branches
 - `git-safety` if a branch about to live in a worktree may contain secrets
 
@@ -212,13 +214,13 @@ case "$HOME_DIR/" in "$TOPLEVEL"/*) echo "Worktree home is inside the repository
 # Caps: soft 5 (warn and confirm), hard 25 (stop). The primary checkout is not linked.
 LINKED="$(( $(git worktree list --porcelain | grep -c '^worktree ') - 1 ))"
 echo "Linked worktrees: $LINKED"
-[ "$LINKED" -ge 25 ] && { echo "Hard cap (25) reached. Run /cleanup before creating another."; exit 1; }
-[ "$LINKED" -ge 5 ]  && echo "WARNING: soft cap (5) reached. Confirm, or remove merged worktrees with /cleanup first."
+[ "$LINKED" -ge 25 ] && { echo "Hard cap (25) reached. Run /git-cleanup before creating another."; exit 1; }
+[ "$LINKED" -ge 5 ]  && echo "WARNING: soft cap (5) reached. Confirm, or remove merged worktrees with /git-cleanup first."
 ```
 
 Rules:
 
-- One session per task. Remove a worktree once its PR merges (`/cleanup`),
+- One session per task. Remove a worktree once its PR merges (`/git-cleanup`),
   keeping any uncommitted work.
 - Legacy repo-local `.worktrees/` directories may still exist and stay
   gitignored where the repository already ignores them. Do not create new
@@ -287,4 +289,4 @@ repository and prevent clobbering an existing branch/path.
 3. Local tips by default; network only on explicit `--fetch`.
 4. Never `--force`, never reset an existing branch, never overwrite an existing
    path. On conflict, report and stop.
-5. Removal and pruning are out of scope — hand off to `git-cleanup` (`/cleanup`).
+5. Removal and pruning are out of scope — hand off to `git-cleanup` (`/git-cleanup`).

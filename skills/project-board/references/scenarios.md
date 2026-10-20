@@ -5,8 +5,8 @@ outcomes are design examples, not claims of executed integration tests.
 
 | Scenario | Expected route and result | Write boundary |
 |---|---|---|
-| GitHub URL, `/board audit`, custom Building/Acceptance/Released columns | project-board reports actual configuration and mapping; custom names are not preset drift | No writes |
-| Jira URL, `/board audit` | project-board reports filter, columns, and mapped issue statuses through verified capabilities | No issue transitions or configuration writes |
+| GitHub URL, `/project-board audit`, custom Building/Acceptance/Released columns | project-board reports actual configuration and mapping; custom names are not preset drift | No writes |
+| Jira URL, `/project-board audit` | project-board reports filter, columns, and mapped issue statuses through verified capabilities | No issue transitions or configuration writes |
 | Missing provider and several possible boards | Resolve missing target; preserve independent inspection | No speculative target or mutation |
 | Unknown connected provider | Report verified reads and unsupported operations | No GitHub/Jira helper assumed compatible |
 | Missing read permission or an empty permission-filtered result | Report scope and incomplete coverage; do not claim an empty healthy board | No auth changes or integration installation |

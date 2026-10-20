@@ -1,32 +1,30 @@
 # Skills Repo — Agent Instructions
 
-<!-- catalog-summary:start -->
-This is the shipshitdev/skills repo: 132 AI agent skills for Claude Code, Codex, and Cursor. The generated catalog also contains 23 command adapters, 13 bundles, and 145 marketplace plugins.
-<!-- catalog-summary:end -->
+This is the shipshitdev/skills repo: 28 user-invoked agent skills for Claude
+Code, Codex, and Cursor.
 
 ## Repo Structure
 
-- `skills/` — All public skills (SKILL.md + optional references/, scripts/, plugin.json)
-- `commands/` — Workflow commands (.md files)
-- `bundles/` — Generated marketplace bundles (do not edit manually)
-- `.agents/` — Repo management (memory, meta-skills, system docs)
-- `scripts/` — Validation, generation, migration scripts
+- `skills/` — every skill (`SKILL.md` plus optional `references/`, `scripts/`, `tests/`)
+- `scripts/` — `validate.py` and its tests
+- `resources/` — extracted upstream skill-authoring guidance
+- `.agents/` — repo memory and standards
 
 ## Rules
 
-- Follow the Agent Skills spec: `.agents/memory/system/skill-standards.md`
-- `version`/`tags` go inside `metadata:` block as quoted strings, never top-level
-- No `auto_activate`, `auto_trigger`, or `risk` fields
-- Skills are platform-neutral: no tool names, imperative style
-- Run `bunx markdownlint-cli --ignore bundles --ignore dist --ignore plugins "**/*.md"` before committing
-- Run `./scripts/validate-skill-sync.sh` for cross-validation
+- Follow `.agents/memory/system/skill-standards.md`.
+- Every skill sets `disable-model-invocation: true` and never `user-invocable: false`.
+- A skill composes another by reading its sibling `../<name>/SKILL.md`; the Skill
+  tool cannot load user-only skills.
+- No `model:`, `effort:`, version metadata, or concrete model IDs in skills.
+- Name upstream pstack or mattpocock skills only as "when installed"; never vendor them.
+- Run `bun run lint`, `bun run validate`, and `bun run test` before committing.
 
 ## Code Standards
 
-- TypeScript: no `any`, no `console.log`, interfaces in dedicated files
-- Conventional commits: `fix:`, `feat:`, `refactor:`, `chore:`
-- Never commit secrets (.env, API keys)
-- Use `bun` as package manager, not npm/yarn
+- Conventional commits: `fix:`, `feat:`, `refactor:`, `chore:`, `docs:`
+- Never commit secrets (`.env`, API keys)
+- Bun only, never npm/yarn/pnpm
 
 ## Before Editing Skills
 

@@ -6,7 +6,6 @@ argument-hint: "[status|plan|run|watch] [goal or session references]"
 compatibility: Requires harness-provided session discovery, reading and messaging; background monitoring requires a thread scheduler.
 license: MIT
 metadata:
-  version: "2.2.4"
   tags: "orchestration, sessions, reports, questions, delivery"
   author: Ship Shit Dev
 ---
@@ -57,9 +56,11 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - Existing project sessions through the harness's session controls
 - Recommend `executing-plans` for authorized prepared work without an owner
-- Recommend `handoff` when transferring coordination
+- Recommend an installed handoff skill (mattpocock `handoff`) when transferring coordination
 
 ## Usage
 

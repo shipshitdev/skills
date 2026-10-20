@@ -4,9 +4,9 @@ description: Diagnoses failing or stuck GitHub Actions checks on a PR, finds roo
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
-  version: "2.2.4"
   tags: "github, ci, actions"
 when_to_use: "failing workflow, failing checks"
+disable-model-invocation: true
 ---
 
 # GitHub Fix CI
@@ -57,8 +57,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `testing-cicd-init` when baseline CI is missing
-- `deployment-composer` when failures block a release
+- `release` when failures block a release
 - `code-review` for risky fixes
 
 ## Workflow
@@ -132,5 +131,6 @@ no force-push to shared branches.
 
 Read [fix-ci procedure](references/fix-ci-procedure.md) when running this workflow.
 Apply the authorized scope and mode of this entry point to every step.
-Resolve other skills through this distribution’s active catalog; resolve
+Run another skill by reading its sibling `../<name>/SKILL.md` and following it;
+skills here are user-invoked only, so the Skill tool cannot load them. Resolve
 resources relative to the installed skill directory.
