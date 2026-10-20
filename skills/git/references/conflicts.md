@@ -43,7 +43,7 @@ Confirmation Required:
 
 Delegates To:
 
-- `run-tests` to verify the tree builds and tests pass after resolution
+- `/test` to verify the tree builds and tests pass after resolution
 - `/git safety` (`safety.md` in this folder) if the history is tangled or a destructive recovery is being weighed
 
 ## When to Use
@@ -120,7 +120,7 @@ take the inputs from the correct side and re-run the generator.
 
 ## Phase 4: Verify the Tree Builds
 
-Hand off to `run-tests` (or run the repo's own commands) to confirm the
+Hand off to `/test` (or run the repo's own commands) to confirm the
 resolution is buildable before continuing:
 
 ```bash
@@ -156,6 +156,7 @@ merge/rebase was continued or is paused awaiting confirmation.
 
 Read [the conflicts procedure](conflicts-procedure.md) when running this workflow.
 Apply the authorized scope and mode of this entry point to every step.
-Run another skill by reading its sibling `../<name>/SKILL.md` and following it;
+Run another skill by reading its playbook under the installed skills directory and following it
+(`/<router> <action>`: `<router>/references/<action>.md`; `/<name>`: `<name>/SKILL.md`);
 skills here are user-invoked only, so the Skill tool cannot load them. Resolve
 resources relative to the installed skill directory.

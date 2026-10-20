@@ -21,9 +21,9 @@ See [the guide](references/guide.md).
 
 
 class ValidateTest(unittest.TestCase):
-    def run_on(self, skill_md, extra=None):
+    def run_on(self, skill_md, extra=None, directory="sample"):
         with tempfile.TemporaryDirectory() as tmp:
-            skill = Path(tmp) / "skills" / "sample"
+            skill = Path(tmp) / "skills" / directory
             (skill / "references").mkdir(parents=True)
             (skill / "references" / "guide.md").write_text("# Guide\n")
             (skill / "SKILL.md").write_text(skill_md)
@@ -45,6 +45,10 @@ class ValidateTest(unittest.TestCase):
     def test_name_mismatch_fails(self):
         errors = self.run_on(VALID.replace("name: sample", "name: other"))
         self.assertTrue(any("does not match directory" in e for e in errors))
+
+    def test_hyphenated_name_fails(self):
+        errors = self.run_on(VALID.replace("name: sample", "name: run-qa"), directory="run-qa")
+        self.assertTrue(any("one lowercase word" in e for e in errors))
 
     def test_broken_link_fails(self):
         errors = self.run_on(VALID.replace("references/guide.md", "references/missing.md"))

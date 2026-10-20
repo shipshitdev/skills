@@ -10,7 +10,7 @@ This repo follows the [Agent Skills open standard](https://agentskills.io/specif
 
 | Field | Required | Constraints |
 |-------|----------|-------------|
-| `name` | **Yes** | 1–64 chars. Lowercase letters, numbers, hyphens. No leading/trailing/consecutive hyphens. No reserved words (`anthropic`, `claude`). Must match directory name. |
+| `name` | **Yes** | 1–64 chars. One word: lowercase letters and numbers, no hyphens (stricter than the base spec, enforced by the validator). No reserved words (`anthropic`, `claude`). Must match directory name. |
 | `description` | **Yes** | 1–1024 chars. Written in third person. Describes what the skill does AND when to use it. Front-load key use case. |
 | `license` | No | License name or reference to bundled LICENSE file. |
 | `compatibility` | No | 1–500 chars. System requirements: target agent, required packages, network needs. Omit if no special requirements. |
@@ -177,7 +177,7 @@ Rules:
 
 Every skill in this repo is an explicit entry point: set
 `disable-model-invocation: true`. The model never loads these skills on its own;
-the user runs them by name (`/git cleanup`, `/run-qa`). The validator enforces
+the user runs them by name (`/git cleanup`, `/qa`). The validator enforces
 this.
 
 Separate discoverability from authorization. Loading a skill grants no permission
@@ -185,11 +185,19 @@ to edit files, send messages, publish, deploy, or spend beyond the user's reques
 Keep safety gates in the body, including a clear authorized mutation scope for
 writing skills. Frontmatter controls discovery; it is not a permission boundary.
 
+Related workflows share one router skill. The router's `SKILL.md` holds a table
+of actions and a `## Dispatch` section that reads the first word of the
+arguments and follows `references/<action>.md` as if it were the skill. A
+router either runs a default action when the first word is not an action
+(`/issue`, `/qa`, `/check`) or prints its table and stops (`/git`, `/board`).
+Never name a skill with a hyphen; add an action to a router instead.
+
 Because every skill here is user-only, the Skill tool cannot load one skill from
-another. A skill that composes others runs each delegate by reading its sibling
-`../<name>/SKILL.md` and following it; list those delegates under
-`## Delegates To` with that instruction. Use `Recommend` (for example, Recommend
-`/fix-ci`) for handoffs the user should start. Name upstream pstack or
+another. A skill that composes others runs each delegate by reading its playbook
+from the installed skills directory (`<router>/references/<action>.md` for
+`/<router> <action>`, `<name>/SKILL.md` for `/<name>`) and following it; list
+those delegates under `## Delegates To` with that instruction. Use `Recommend` (for example, Recommend
+`/git ci`) for handoffs the user should start. Name upstream pstack or
 mattpocock skills only as "when installed", and never assume a consumer has this
 repository checked out.
 

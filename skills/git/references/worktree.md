@@ -73,7 +73,8 @@ Confirmation Required:
 
 Delegates To:
 
-- Run a delegate by reading the sibling skill's `../../<name>/SKILL.md` and following it;
+- Run a delegate by reading its playbook under the installed skills directory and following it
+  (`/<router> <action>`: `<router>/references/<action>.md`; `/<name>`: `<name>/SKILL.md`);
   skills here are user-invoked only, so the Skill tool cannot load them.
 - Recommend `/git cleanup` to verify promotion and prune merged worktrees and branches
 - `/git safety` (`safety.md` in this folder) if a branch about to live in a worktree may contain secrets

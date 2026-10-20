@@ -8,7 +8,9 @@ last_verified: 2026-10-20
 - DO match `name:` to the directory name exactly
 - DO set `disable-model-invocation: true` on every skill
 - DO keep `description:` between 1-1024 chars and front-load the use case
-- DO compose skills by reading the sibling `../<name>/SKILL.md`
+- DO compose skills by reading the installed playbook
+  (`<router>/references/<action>.md` or `<name>/SKILL.md`)
+- DO name skills with one word; add related workflows as router actions
 - DO write platform-neutral, imperative instructions
 - DO keep SKILL.md under 500 lines; move detail into `references/`
 - DO run `bun run lint`, `bun run validate`, and `bun run test` before committing
