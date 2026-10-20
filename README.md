@@ -16,6 +16,119 @@ Skills are model-agnostic playbooks: the harness supplies the model and effort, 
 no skill names a concrete model. Standards live in
 [`.agents/memory/system/skill-standards.md`](.agents/memory/system/skill-standards.md).
 
+## Quick start
+
+1. Install the skills (and, optionally, the [companion libraries](#companion-libraries)):
+
+   ```bash
+   bunx skills add shipshitdev/skills -g --agent claude-code codex cursor --skill '*' -y
+   ```
+
+2. Run the core loop on a real task:
+
+   ```text
+   /file-feature add CSV export to the invoices page
+   /execute-plan #123
+   /review-code
+   /publish-pr
+   /merge-prs
+   ```
+
+Every command takes free text after its name. Bare commands with modes (`/git`,
+`/orchestrate help`) print their options instead of guessing.
+
+## How to use
+
+### Ship a feature
+
+```text
+/file-feature <rough request>      # requirements, plan, readiness check, one issue
+/execute-plan #<issue>             # implement exactly the plan, collect evidence
+/run-tests                         # changed scope; `full`, `e2e`, `types`, `<path>` widen it
+/review-code                       # Standards + Spec review of the branch or PR
+/publish-pr                        # push and open or update the PR
+/fix-ci                            # when checks go red; loops until green on request
+```
+
+Need only one piece? `/write-prd` interviews you and drafts requirements,
+`/write-plan` turns settled requirements into steps, and `/check-prd` tells you
+whether an issue is ready to execute. `/publish-prd` files a finished PRD as an
+issue with sub-issues.
+
+### Fix a bug
+
+```text
+/file-bug draft checkout total ignores the discount code   # preview only
+/file-bug checkout total ignores the discount code         # preview, then file
+/execute-plan #<bug>
+```
+
+To root-cause before filing, run an upstream debugging skill such as
+`diagnosing-bugs` or `/pstack:why`.
+
+### QA the running app
+
+```text
+/run-qa the onboarding flow on localhost      # reproduce, fix, re-verify each defect
+/review-qa                                    # check finished agent work against the ask
+/computer-user open the dashboard and screenshot the empty state
+```
+
+### Review
+
+```text
+/review-code                       # current branch against its base
+/review-code #42                   # a PR
+/review-code adversarial #42       # multi-model panel, with pstack interrogate installed
+/review-with-grok #42              # second opinion from the Grok CLI, findings verified
+```
+
+### Land and clean up
+
+```text
+/merge-prs                         # review, confirm, merge green PRs, list cleanup candidates
+/merge-prs review                  # review only, merge nothing
+/git cleanup                       # dry-run: proves what is merged, deletes nothing
+/git cleanup prune                 # remove the proven-merged branches and worktrees from that plan
+/git worktree fix-auth from develop
+/git conflicts                     # resolve the current merge or rebase
+/git safety                        # staged-secret check before a commit
+```
+
+### Release and deploy
+
+```text
+/release                           # status of trunk, gates, and the next version
+/release cut minor
+/deploy staging
+```
+
+### Weekly review and retros
+
+```text
+/review-week                       # last 7 days, report only
+/review-week since <SHA> --fix     # also repair confirmed findings in scope, via PRs
+```
+
+For a retrospective on how the work went (not what shipped), use the upstream
+`/retro` (mattpocock) or `/pstack:reflect`.
+
+### Run several sessions at once
+
+```text
+/orchestrate status                # what every project session is doing
+/orchestrate plan bugs first       # propose lanes, dispatch nothing
+/orchestrate run finish the bugs   # coordinate existing sessions, routing their questions
+/orchestrate help
+```
+
+### Boards
+
+```text
+/configure-board                   # audit fields, views, and workflows on a GitHub or Jira board
+/sync-board                        # reconcile cards with real PR and deploy state
+```
+
 ## Skills
 
 ### Plan
@@ -103,7 +216,20 @@ so you keep receiving their updates:
   `/plugin marketplace add cursor/plugins`, then `/plugin install pstack@cursor-plugins`.
 - **mattpocock/skills**: `bunx skills add mattpocock/skills -g --agent claude-code -y`.
 
-Skills here name them only as "when installed".
+Skills here name them only as "when installed" and work without them. The ones
+worth knowing:
+
+| Skill | Library | Reach for it when |
+|---|---|---|
+| `grilling` | mattpocock | You want to be interviewed about a plan; `/write-prd` uses it when installed. |
+| `interrogate` | pstack | You want a multi-model review panel; `/review-code adversarial` uses it. |
+| `triage` | mattpocock | Sorting a pile of incoming issues before filing or fixing. |
+| `diagnosing-bugs` | mattpocock | Root-causing a bug before `/file-bug` or a fix. |
+| `why` | pstack | Tracing why code or a decision is the way it is. |
+| `retro` | mattpocock | Looking back on how a stretch of work went. |
+| `reflect` | pstack | Turning a session's lessons into durable rules. |
+| `swarm` | pstack | Fanning one task out across parallel agents. |
+| `arena` | pstack | Comparing competing implementations of the same task. |
 
 ## Development
 
