@@ -4,11 +4,11 @@ description: Runs an independent second-opinion review of a diff through the Gro
 license: MIT
 compatibility: Requires the `grok` CLI (logged in) and git; gh for PR targets.
 metadata:
-  version: "2.2.4"
   tags: "code-review, second-opinion, grok, cli, cross-check"
   author: Ship Shit Dev
 allowed-tools: Bash(git *) Bash(gh *) Bash(grok *) Bash(command -v *) Bash(mktemp *)
-when_to_use: "/review grok, second opinion from another CLI"
+when_to_use: "/grok-review, second opinion from another CLI"
+disable-model-invocation: true
 ---
 
 # Grok Review
@@ -22,10 +22,8 @@ explicit confirmation, never automatically.
 
 Inputs:
 
-- `DIFF` and `CHANGED_FILES`, passed by `review-dispatch` when routed via
-  `/review grok [target]`. Invoked standalone, resolve the default target the
-  same way as review-dispatch `working` mode: current branch plus uncommitted
-  changes vs trunk.
+- Optional target: `<PR#>`, `commits <N>`, or none for the current branch plus
+  uncommitted changes vs trunk.
 
 Outputs:
 
@@ -51,9 +49,10 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `code-review` for the severity bar and conviction standard the engine is
-  instructed to hold; `review-dispatch` owns target resolution when this skill
-  is routed via `/review grok`.
+  instructed to hold.
 
 Execution Boundary:
 
@@ -65,7 +64,7 @@ Execution Boundary:
 
 ```bash
 command -v grok >/dev/null 2>&1 \
-  || { echo "grok CLI not found — install and log in, or run a native /review."; exit 1; }
+  || { echo "grok CLI not found — install and log in, or run /code-review."; exit 1; }
 ```
 
 If the CLI is missing, stop with that message. Do not fall back to a native
@@ -73,10 +72,9 @@ review silently — the user asked for an independent engine.
 
 ## Step 2 — Resolve the Diff
 
-When routed from `review-dispatch`, use the `DIFF` and `CHANGED_FILES` it
-gathered. Standalone, resolve trunk and gather the working-mode diff exactly
-as review-dispatch does (committed vs trunk plus uncommitted, concatenated and
-labeled). If the resolved diff is empty, say so plainly and stop.
+Resolve trunk and gather the diff for the target: by default, committed changes
+vs trunk plus uncommitted changes, concatenated and labeled; `<PR#>` uses
+`gh pr diff`; `commits <N>` uses `git diff HEAD~N`. If the resolved diff is empty, say so plainly and stop.
 
 ## Step 3 — Build a Self-Contained Prompt
 
@@ -150,7 +148,7 @@ findings; apply them only on explicit confirmation.
 ## Usage
 
 ```text
-/review grok             # second-opinion review of current branch + worktree
-/review grok <PR#>       # second-opinion review of one open PR
-/review grok commits <N> # second-opinion review of the last N commits
+/grok-review             # second-opinion review of current branch + worktree
+/grok-review <PR#>       # second-opinion review of one open PR
+/grok-review commits <N> # second-opinion review of the last N commits
 ```

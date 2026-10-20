@@ -41,47 +41,8 @@ jobs:
       - name: Validate skills
         run: bun run validate
 
-      - name: Verify pinned Pstack source and adaptation coverage
-        run: bun run pstack:verify
-
-      - name: Check packaged Pstack runtime
-        working-directory: skills/pstack/scripts
-        run: |
-          bun install --frozen-lockfile
-          bun run test
-          bun run typecheck
-
-      - name: Require shared repository release versions
-        run: bun run version:check
-
-      - name: Check packaged skill helper fixtures
-        run: |
-          for test_dir in skills/*/tests; do
-            [ -d "$test_dir" ] || continue
-            python3 -m unittest discover -s "$test_dir" -p 'test_*.py'
-          done
-          find skills -type f -name '*.test.mjs' -not -path '*/node_modules/*' -exec node --test {} +
-
-      - name: Check dispatch guard regressions
-        run: node --test .github/agent-dispatch.test.cjs
-
-      - name: Check validator regression fixtures
-        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - name: Test validator and skill scripts
+        run: bun run test
 
       - name: Audit dependencies
         run: bun audit
-
-      - name: Generate marketplace bundles
-        run: bun run marketplace:generate
-
-      - name: Verify generated bundles are current
-        run: |
-          git diff --exit-code -- \
-            bundles/ \
-            .claude-plugin/marketplace.json \
-            catalog.json \
-            README.md \
-            AGENTS.md \
-            .agents/memory/memory.md \
-            .agents/memory/architecture.md \
-            package.json

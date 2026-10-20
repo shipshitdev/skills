@@ -3,9 +3,9 @@ name: project-board
 description: Audits a project board's fields, columns, and scope, and applies requested setup, copy, or normalization on GitHub or Jira boards. Use when inspecting or configuring a board.
 compatibility: Requires access to the selected board provider. GitHub includes a Node.js or Bun normalizer; Jira uses an existing authenticated provider connection or browser.
 metadata:
-  version: "2.2.4"
   tags: "boards, configuration, workflow, github, jira"
 when_to_use: "board columns, board fields, normalize board, copy board"
+disable-model-invocation: true
 ---
 
 # Project Board
@@ -55,6 +55,8 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `board-sync` for work-state reconciliation, review queues, and readiness reports
 - An explicitly scoped organization/workflow administration task for changes that
   affect issues or repositories beyond this board
@@ -88,7 +90,7 @@ Delegates To:
 
 ## Optional house preset
 
-When explicitly selected, the Ship Shit Dev preset uses Backlog / In Progress /
+When explicitly selected, the house preset uses Backlog / In Progress /
 Human Review / Done / Deferred. Automated testing remains part of In Progress;
 Human Review denotes a human decision. The preset proposes project-local
 Priority options P0 / P1 / P2 / P3 only where that field source is appropriate.
@@ -101,7 +103,7 @@ preset rather than silently approximating it.
 
 ## Provider and evaluation boundaries
 
-GitHub's packaged normalizer proposes field options and can apply approved
+GitHub's packaged normalizer (`scripts/setup-github-board.mjs`, run with Node or Bun and an authenticated `gh` with project scope) proposes field options and can apply approved
 project-local changes. Failed native Priority discovery preserves available
 Status/view audit evidence, withholds the Priority plan, and blocks apply. Its
 defaults express the optional house preset; do not

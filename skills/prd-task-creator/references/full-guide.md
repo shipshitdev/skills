@@ -2,8 +2,7 @@
 
 ## Shared Content
 
-Resolve `prd-quality-gate` from the active skill catalog and read its
-`references/execution-readiness.md` relative to that installed skill. It is the
+Read the sibling `../prd-quality-gate/references/execution-readiness.md`. It is the
 single source for templates, decision authority, decomposition, freshness and
 readiness. This guide supplies tracker mechanics only.
 

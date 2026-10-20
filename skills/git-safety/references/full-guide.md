@@ -6,7 +6,7 @@ and what must never run without confirmation.
 Scope note: this guide covers the **ongoing** moment — commit time, push time,
 and leak response in a repository you already work in. The one-time audit of a
 whole repository before publication (license, attribution, full-history sweep,
-internal references) belongs to the `open-source-checker` skill.
+internal references) is a separate pre-publication audit.
 
 ---
 
@@ -539,5 +539,5 @@ git push origin --force --all
 ```
 
 For the pre-publication audit of a whole repository — license, attribution,
-full-history secret sweep, internal hostnames and employee references — use the
-`open-source-checker` skill instead.
+full-history secret sweep, internal hostnames and employee references — run a
+separate pre-publication audit instead.

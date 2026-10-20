@@ -4,385 +4,114 @@
 
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
-<!-- catalog-summary:start -->
-169 AI agent skills for development workflows. Works with Claude Code, OpenAI Codex, and Cursor.
+28 user-invoked agent skills for development workflows. Works with Claude Code,
+OpenAI Codex, and Cursor.
 
-Catalog: **169 skills · 24 commands · 13 bundles · 182 plugins**.
-<!-- catalog-summary:end -->
+Every skill sets `disable-model-invocation: true`. The model never picks one up on
+its own; you run it by name (`/git-cleanup`, `/qa-loop`, `/computer-user`). Skills
+that compose others read the sibling `SKILL.md` directly, so they still work
+without exposing those skills to the model.
 
-Skills are **model-agnostic playbooks**: the harness supplies the model, so no skill names a concrete model — orchestrators speak in capability tiers, and each repo's routing block maps tiers to models. Enforced by `scripts/validate-skill-sync.sh`; standards live in `.agents/memory/system/skill-standards.md`.
+Skills are model-agnostic playbooks: the harness supplies the model and effort, and
+no skill names a concrete model. Standards live in
+[`.agents/memory/system/skill-standards.md`](.agents/memory/system/skill-standards.md).
 
-## Directory Structure
+## Skills
 
-<!-- catalog-layout:start -->
-| Path | Role | Generated fact |
-|---|---|---|
-| `.agents/` | Repository memory, standards, and maintenance skills | Tracked |
-| `.claude/` | Claude loader adapters for shared maintenance content | Tracked |
-| `.claude-plugin/` | Generated Claude marketplace catalog | 182 generated plugins |
-| `.codex/` | Codex loader adapters for shared maintenance content | Tracked |
-| `.github/` | Issue templates and GitHub Actions workflows | Tracked |
-| `.husky/` | Git hook configuration | Tracked |
-| `.tmp/` | Tracked repository content | Tracked |
-| `assets/` | Static repository assets | Tracked |
-| `bundles/` | Generated marketplace bundle snapshots | 13 generated bundles |
-| `commands/` | Claude Code/plugin command adapters | 24 command adapters |
-| `docs/` | Human-facing orientation pages for flagship skills | Tracked |
-| `prompts/` | Shared prompt resources | Tracked |
-| `resources/` | Authoring references and supporting documentation | Tracked |
-| `scripts/` | Validation, generation, migration, and audit tooling | Tracked |
-| `skills/` | Canonical public Agent Skills sources | 169 canonical skills |
-| `upstream/` | Pinned upstream snapshots and reviewed adaptation ledgers | Tracked |
-<!-- catalog-layout:end -->
+### Plan
 
-## What's Included
+| Skill | What it does |
+|---|---|
+| `feature-intake` | Turns a rough request into one execution-ready issue. |
+| `prd-writer` | Writes repository-grounded requirements with EARS acceptance criteria. |
+| `writing-plans` | Resolves implementation decisions into an exact plan on the issue. |
+| `prd-quality-gate` | Blocks execution until the issue holds a complete contract. |
+| `prd-task-creator` | Publishes requirements and plans as a GitHub issue (and sub-issues). |
+| `bug` | Files a structured Bug issue after a preview. |
 
-- **The Dev Loop**: a board-driven autonomous workflow that ships software with
-  `gh` + Claude + Codex.
-- **Engineering Workflows**: code review, debugging, QA, release, GitHub triage,
-  branch cleanup, production audit, and CI repair.
-- **Implementation Specialists**: frontend, backend, infrastructure, security,
-  testing, payments, and workspace setup skills.
-- **Agent Engineering**: context engineering, memory systems, evaluation,
-  multi-agent patterns, MCP building, and prompt/tool design.
-- **Maintenance Tooling**: scripts that validate skills, regenerate bundles, and
-  keep the marketplace catalog aligned with source.
+### Build and verify
 
-## The Dev Loop — ship software with gh + Claude + Codex
+| Skill | What it does |
+|---|---|
+| `executing-plans` | Executes a prepared issue and tracks review, CI, merge, and deploy evidence. |
+| `orchestrate` | Coordinates existing project sessions and routes their questions. |
+| `worktree` | Creates an isolated worktree outside the repository. |
+| `test-runner` | Runs tests at the right scope and reports failures with evidence. |
+| `qa-loop` | Interactive localhost QA: reproduce, fix, and verify each defect. |
+| `qa-reviewer` | Verification pass over finished agent work. |
+| `computer-user` | Drives the project's own Brave session over the DevTools protocol. |
+| `codex-image-gen` | Generates raster images through the Codex CLI. |
+| `stack-validator` | Flags outdated Biome, Bun, Next.js, and Tailwind config. |
 
-The flagship workflow: a **board-driven autonomous dev loop** that turns a GitHub
-issue into a reviewed PR, with you as architect/reviewer. It is the open, `gh`-driven
-version of **ShipCode**'s pipeline — same stages, no app required.
+### Review
 
-- **Plan** (human): `/ask` if you don't know which skill; `interview` → `prd-writer` / `writing-plans` write the PRD
-  and implementation plan onto the issue.
-- **Dispatch** (human opt-in): apply `dispatch:claude` (Claude lane),
-  `dispatch:codex` (Codex lane), or `dispatch:openrouter` (OpenRouter lane) to a
-  **Backlog** issue.
-- **Execute** (AI): the loop claims it → **In Progress** → branch → implement →
-  `qa-reviewer` + tests → PR, advancing `loop:*` phase labels as it goes.
-- **Review** (human): the PR lands in **Human Review**, auto-assigned to you. Merge =
-  Done; reject = back to Backlog.
+| Skill | What it does |
+|---|---|
+| `code-review` | Reviews a PR or diff for correctness, security, and spec fidelity. |
+| `grok-review` | Second-opinion review through the Grok CLI, with every finding verified. |
 
-Board columns are for humans (**Backlog · In Progress · Human Review · Done ·
-Deferred**); the AI loop's sub-phases ride as `loop:*` labels. Status is the GitHub
-Projects board `Status` field — the single source of truth.
+### Git and GitHub
 
-```bash
-# 1. Install the dev-loop bundle (every skill the loop needs)
-/plugin marketplace add shipshitdev/skills
-/plugin install shipshitdev-dev-loop@shipshitdev
+| Skill | What it does |
+|---|---|
+| `github-pr-publish` | Creates and updates pull requests with safe push gates. |
+| `github-fix-ci` | Diagnoses and fixes failing GitHub Actions checks. |
+| `fix-merge-conflicts` | Resolves conflicts correctness-first and proves the tree builds. |
+| `merge-open-prs` | Reviews and lands open pull requests. |
+| `git-cleanup` | Removes only proven-merged branches and worktrees. |
+| `git-safety` | Blocks staged secrets and gates destructive git commands. |
 
-# 2. Provision your repo: labels + board + workflows + secrets (idempotent)
-bash scripts/setup-dev-loop.sh            # --dry-run to preview
+### Release and operations
 
-# 3. Write your repo's routing block (tracker + labels + domain). In Claude Code:
-/setup-agent-routing
+| Skill | What it does |
+|---|---|
+| `release` | Cuts a release from a green trunk. |
+| `deploy-app` | Runs staging or production deployment workflows. |
+| `weekly-review` | Weekly review of board accuracy, code changes, and operational health. |
 
-# 4. Drive it
-/loop                                     # Phase 1: local pull (Claude lane)
-# …or apply dispatch:claude / dispatch:codex to fire Phase 2 (GitHub Actions)
-```
+### Boards
 
-Full reference: [`.agents/memory/system/ai-dev-loop.md`](.agents/memory/system/ai-dev-loop.md).
+| Skill | What it does |
+|---|---|
+| `project-board` | Audits and configures GitHub or Jira project boards. |
+| `board-sync` | Reconciles a board with current work and delivery evidence. |
 
 ## Installation
 
-### Quick Install (Recommended)
-
 ```bash
-# Install all skills globally for Claude Code, Codex, and Cursor
-npx skills add shipshitdev/skills -g --agent claude-code codex cursor --skill '*' -y
+# All skills, globally, for the agents you use
+bunx skills add shipshitdev/skills -g --agent claude-code codex cursor --skill '*' -y
 
-# Install specific skills
-npx skills add shipshitdev/skills -g --skill stripe-implementer -y
-
-# List available skills
-npx skills add shipshitdev/skills --list
+# One skill
+bunx skills add shipshitdev/skills -g --skill git-cleanup -y
 ```
 
-> **Do NOT use `--all`** — it installs to every agent the CLI knows about (30+).
-> Always use `--agent` to target only the agents you use.
+Always pass `--agent`; `--all` installs into every agent the CLI knows (30+).
 
-### Migrating from the retired shell installer
+### Companion libraries
 
-The legacy `scripts/install-skills.sh` installer was removed. It maintained a
-second hardcoded bundle inventory, targeted Claude-only project paths, and could
-recursively replace real directories during install or restore. Do not restore or
-run an old copy.
+This repository does not vendor other skill libraries. Install them from upstream
+so you keep receiving their updates:
 
-Migrate without deleting existing directories first:
+- **pstack** (Claude Code plugin from `cursor/plugins`):
+  `/plugin marketplace add cursor/plugins`, then `/plugin install pstack@cursor-plugins`.
+- **mattpocock/skills**: `bunx skills add mattpocock/skills -g --agent claude-code -y`.
 
-1. Run the supported Quick Install command above with an explicit `--agent` list.
-   The skills CLI validates requested names against the repository catalog and owns
-   the managed installation layout.
-2. Confirm the expected skills appear in each selected agent. Keep the previous
-   directories in place until that verification is complete.
-3. Review old links/directories individually. Remove only a path you have identified
-   as an obsolete managed link; never recursively delete an agent skills directory
-   as part of migration.
+Skills here name them only as "when installed".
 
-The README installation commands and `catalog.json` are the installation/catalog
-source of truth. Marketplace bundles remain available through the Claude Code plugin
-alternative below.
-
-### Project-local Install
+## Development
 
 ```bash
-npx skills add shipshitdev/skills --agent claude-code codex cursor
+bun install
+bun run lint       # markdownlint, biome (JSON), shellcheck
+bun run validate   # scripts/validate.py
+bun run test       # validator tests and each skill's script tests
 ```
 
-### Claude Code Plugin (Alternative)
+To add a skill, create `skills/<name>/SKILL.md` with `name` matching the
+directory and `disable-model-invocation: true`, then run the three commands above.
+Releases are cut by release-please from conventional commits.
 
-```bash
-/plugin marketplace add shipshitdev/skills
-/plugin install shipshitdev-dev-loop@shipshitdev
-/plugin install shipshitdev-dev-workflow@shipshitdev
-/plugin install shipshitdev-github@shipshitdev
-/plugin install shipshitdev-testing@shipshitdev
-/plugin install shipshitdev-security@shipshitdev
-```
+## License
 
-### Platform setup boundary
-
-The portable workflow source is always `skills/<name>/SKILL.md`. Platform entry
-surfaces should route to that source instead of copying it.
-
-- **Codex project instructions:** use `AGENTS.md` and optional nested
-  `AGENTS.override.md` files. Global preferences live in `~/.codex/AGENTS.md`.
-- **Codex configuration:** user defaults live in `~/.codex/config.toml`; trusted
-  repositories may add `.codex/config.toml` overrides. Model, effort, approvals,
-  sandboxing, workspace, and other execution settings belong there or in the app.
-- **Codex workflows:** install shared skills under `.agents/skills`. Do not add `.codex/instructions.md` or `.codex/commands`;
-  neither is a supported project instruction or reusable workflow surface.
-- **Deprecated Codex prompts:** `~/.codex/prompts` is user-local, explicit-only,
-  and deprecated in favor of skills. This repository does not publish prompts
-  there.
-- **Claude commands:** files under `commands/` are thin Claude Code/plugin
-  conveniences. They are not included in generated bundle manifests and are not
-  presented as Codex commands unless a supported adapter is added later.
-
-### For Contributors
-
-```bash
-git clone https://github.com/shipshitdev/skills.git ~/shipshitdev-skills
-cd ~/shipshitdev-skills
-npx skills add . -g --agent claude-code codex cursor --skill '*' -y
-```
-
-## Adding Skills & Commands
-
-### Adding a Skill
-
-1. Create directory in `skills/skill-name/`
-2. Add `SKILL.md` with YAML frontmatter
-3. Update this README
-
-```bash
-mkdir -p skills/my-skill
-touch skills/my-skill/SKILL.md
-```
-
-### Adding a Command
-
-Commands are Claude Code/plugin entry points, not portable workflow definitions.
-Route each command to a canonical skill whenever the workflow should work in Codex
-or another Agent Skills-compatible harness.
-
-1. Create a thin `.md` file in `commands/`
-2. Follow naming: `{verb}-{noun}.md`
-3. Update this README
-
-## Documentation
-
-- `.agents/memory/system/skill-standards.md` - Agent Skills spec + Claude Code extensions
-- `.agents/memory/system/skill-management.md` - Single-source skill workflow
-- `.agents/memory/system/architecture.md` - .agents folder structure
-- `.agents/memory/system/platform-adaptations.md` - Claude vs Codex writing guide
-- `.agents/memory/system/execution-boundary.md` - app-owned execution settings vs reusable content
-- `.agents/memory/system/routine-standards.md` - portable scheduled-task and automation authoring
-- `.agents/memory/system/ai-dev-loop.md` - Board-driven autonomous dev loop (`/loop` + agent-dispatch)
-- `docs/skills/dev-loop.md` - Human-facing Dev Loop orientation
-- `docs/skills/ask-dev-loop.md` - Human-facing router for the flagship flow
-
-## Development Commands
-
-| Command | Description |
-|---------|-------------|
-| address | Resolve PR review comments — propose fixes and replies |
-| agent | Audit, configure, scaffold, and route agents and subagents |
-| ask | Name the Dev Loop skill that fits the current situation |
-| board | Set up, sync, schedule, and review a GitHub Projects v2 board |
-| cleanup | Prune merged branches, stale worktrees, and finished work |
-| codex-loop | Claim and work one dispatch:codex issue locally via codex exec |
-| deploy | Deploy the app and provision infrastructure |
-| design | Review and refine UI — audit, critique, polish, layout |
-| env | Discover, scaffold, and validate environment variables via `env-setup` |
-| feature | Capture requirements into PRD epics and GitHub issues |
-| fix-ci | Diagnose and fix failing CI checks on a PR |
-| loop | Claim and work one dispatch issue end-to-end |
-| merge | Merge all approved open PRs into the trunk in one gated sweep |
-| pr | Create, update, and publish a pull request |
-| prd | Create specs, PRDs, and feature plans |
-| prompt | Optimize a prompt via `prompt-engineering`'s 4-D workflow |
-| qa | Run a structured verification pass before commit — shortcut for `/test qa` |
-| refactor | Improve existing code — deslop, refactor, debt, perf, structure, stack |
-| review | Review changes, a PR, all open PRs, or recent commits — natively or via the Grok CLI |
-| roadmap | Turn ICP into a revenue-ranked backlog and dated milestones |
-| scan | Run a security audit — full app/API audit or dependency supply chain |
-| skill | Author, capture, test, and scout agent skills |
-| suggest | Post inline suggested changes on a PR |
-| test | One testing front door — run, qa, tdd, e2e, coverage, init, regression |
-
-### Intentional shortcuts, not duplicates
-
-- `/qa` = `/test qa` and `/deslop` = `/refactor deslop` — the two most-used
-  modes keep their own top-level spelling on purpose.
-- `/bug`, `/deslop`, `/orchestrate`, `/release`, `/standup`, `/wait-what`, and `/weekly-review`
-  are skills, not command files: a skill with the same name owns the slash name,
-  so a command file would be shadowed.
-- `/address`, `/suggest`, and `/fix-ci` are three distinct jobs in the same PR
-  flow, not overlapping reviews: `/review` finds issues *for you*, `/suggest`
-  posts suggestions *onto someone else's PR*, `/address` resolves comments
-  *others left on yours*, and `/fix-ci` repairs the failing checks. `/merge`
-  then lands what's green.
-- `/performance` and `/tests` were retired: performance analysis lives at
-  `/refactor perf`, and every `/tests <scope>` spelling is now
-  `/test run <scope>`.
-
-### Project session coordination
-
-Run `/orchestrate` in the project's coordinator to announce coordination to existing
-sessions, collect reports, relay instructions and ask shared questions once with
-session context. Use `status` for a read-only snapshot, `plan <goal>` for a battle
-plan, `run <goal>` for execution coordination and `watch <goal>` for background
-follow-up through a supported thread heartbeat. See
-[session coordination](docs/skills/orchestrate.md) for scope and harness limits.
-
-### Weekly engineering review
-
-Run `/standup 24` for a personal recap, `/standup all 24` for everyone's merged
-changes, or `/standup all 24 audit` to double-check individual and combined
-changes with frozen commits, PR/review links, deployment evidence, and safe
-checkpoints. Bare numbers mean hours; `7d`, `since <SHA>`, and dated timezone
-windows also work. See [standup modes and routing](docs/skills/standup.md) and the
-[Anthropic engineering coverage comparison](docs/skills/engineering-comparison.md).
-
-Run `/weekly-review 7d` with a repository and board URL for an evidence-backed
-report on issue accuracy, recent changes, operational gaps, and deslop findings.
-Use `since <SHA>` to resume from a completed review checkpoint. Add `--fix` for
-scoped code repairs; board writes and other external actions retain their own
-authorization boundaries. The workflow does not schedule itself.
-
-The coordinator reuses [weekly-review](skills/weekly-review/SKILL.md)'s declared
-engines. When preparing an installation, select the coordinator and any missing
-companions. During a review, missing companions are reported without installation.
-Plain `deslop` is the Shipshit adaptation. `pstack:deslop` is a separate upstream
-plugin skill, not an alias.
-
-<!-- catalog-skills-heading:start -->
-## Skills (169)
-<!-- catalog-skills-heading:end -->
-
-### Dev Loop (15)
-
-`interview`, `grill-me`, `domain-modeling`, `ask-dev-loop`, `wait-what`, `feature-intake`, `prd-writer`, `writing-plans`, `prd-quality-gate`, `prd-task-creator`, `executing-plans`, `setup-agent-routing`, `project-board`, `board-sync`, `qa-reviewer`
-
-### Dev Workflow (35)
-
-`agent-architecture-audit`, `agent-config-audit`, `ai-agent-cost-optimizer`, `codebase-design`, `code-review`, `structural-review`, `full-code-review`, `grok-review`, `review-dispatch`, `commit-summary`, `standup`, `deslop`, `tech-debt`, `stack-modernization`, `debug`, `deploy-app`, `deployment-composer`, `docs`, `llm-structured-output`, `merge-open-prs`, `production-audit`, `refactor-code`, `release`, `git-cleanup`, `scaffold`, `shape`, `skill-capture`, `skill-comply`, `skill-scout`, `receiving-code-review`, `verification-before-completion`, `wizard`, `worktree`, `skill-dispatch`, `deploy-dispatch`
-
-### GitHub (17)
-
-`bug`, `board-sync`, `github-fix-ci`, `github-inbox`, `github-pr-publish`, `project-board`, `github-review-suggestions`, `github-actions-author`, `git-safety`, `feature-intake`, `merge-open-prs`, `release`, `git-cleanup`, `worktree`, `finishing-a-development-branch`, `pr-comments`, `fix-merge-conflicts`
-
-### Testing (9)
-
-`playwright-e2e-init`, `tdd`, `testing-expert`, `testing-cicd-init`, `qa-reviewer`, `qa-loop`, `husky-test-coverage`, `test-runner`, `test-dispatch`
-
-### Frontend & React (31)
-
-`frontend-design`, `component-library`, `accessibility`, `audit`, `clarify`, `critique`, `design-consistency-auditor`, `html-style`, `layout`, `polish`, `quieter`, `react-component-performance`, `react-hook-form`, `theme-factory`, `prototype`, `react-patterns`, `react-refactor`, `react-testing-library`, `react-native-components`, `expo-architect`, `landing-page-vercel`, `micro-landing-builder`, `ai-loading-ux`, `table-filters`, `quick-view`, `nextra-writer`, `shadcn`, `tailwind`, `stack-validator`, `design-dispatch`
-
-### Backend & Data (8)
-
-`api-design-expert`, `error-handling-expert`, `graphql-architect`, `nestjs-expert`, `nestjs-testing-expert`, `incremental-fetch`, `turborepo`, `typescript-expert`
-
-### Infrastructure (12)
-
-`docker-expert`, `aws-infrastructure`, `ec2-backend-deployer`, `vercel-deploy`, `postgres-ops`, `monitoring-setup`, `nestjs-queue-architect`, `performance-expert`, `redis-caching`, `security-expert`
-
-### Security (5)
-
-`security-audit`, `security-expert`, `git-safety`, `dependency-audit`, `open-source-checker`
-
-### AI Agents (12)
-
-`prompt-engineering`, `mcp-builder`, `skill-creator`, `context-optimization`, `memory-systems`, `multi-agent-patterns`, `tool-design`, `evaluation`, `comment-mode`, `agent-dispatch`, `codex-image-gen`
-
-### Workspace Setup (10)
-
-`project-init-orchestrator`, `env-setup`, `linter-formatter-init`, `content-script-developer`, `package-architect`, `artifacts-builder`, `wizard`, `open-source-checker`, `devcontainer-setup`, `stack-validator`
-
-### Planning & PRDs (15)
-
-`icp`, `roadmap-analyzer`, `roadmap-to-milestones`, `cto-advisor`, `interview`, `grill-me`, `domain-modeling`, `prototype`, `feature-intake`, `prd-task-creator`, `prd-writer`, `prd-quality-gate`, `rules-capture`, `writing-plans`, `executing-plans`, `prd-dispatch`
-
-### Payments & Product Integrations (1)
-
-`stripe-implementer`
-
-### Session Management (7)
-
-`agent-folder-init`, `executing-plans`, `orchestrate`, `setup-agent-routing`, `wait-what`, `workspace-performance-audit`, `handoff`
-
-## How Skills Adapt to Projects
-
-Skills are **adaptive** - they scan project documentation to understand:
-
-- Project architecture and structure
-- Tooling, scripts, and CI conventions
-- Existing patterns and conventions
-- Domain terminology and implementation constraints
-
-If a project has its own skill, the generic skill will collaborate with or defer to it.
-
-## Publishing & CI/CD
-
-When you push to `master`, GitHub Actions automatically regenerates the `bundles/` directory to keep marketplace plugins in sync with skills.
-
-### Claude Marketplace
-
-Users install directly from GitHub:
-
-```bash
-# Add the marketplace
-/plugin marketplace add shipshitdev/skills
-
-# Install category bundles
-/plugin install shipshitdev-dev-loop@shipshitdev
-/plugin install shipshitdev-dev-workflow@shipshitdev
-/plugin install shipshitdev-github@shipshitdev
-/plugin install shipshitdev-testing@shipshitdev
-/plugin install shipshitdev-frontend@shipshitdev
-/plugin install shipshitdev-backend@shipshitdev
-/plugin install shipshitdev-infrastructure@shipshitdev
-/plugin install shipshitdev-security@shipshitdev
-/plugin install shipshitdev-session@shipshitdev
-/plugin install shipshitdev-planning@shipshitdev
-```
-
-## Workflow names and upgrades
-
-Use `/board` for configuration, reconciliation, review queues, and upcoming work.
-It resolves the provider and preserves the board's existing workflow. GitHub has
-packaged helpers; Jira has a documented procedure using an existing connection.
-Jira has no packaged runner or live integration validation in this release.
-
-Seven former `gh-*` skills now use `github-*` names or the shared `board-sync`
-and `project-board` workflows. All 29 command names remain. See the
-[complete naming inventory](docs/skills/catalog-naming.md) for replacements.
-Update existing installations through their installer and remove only retired
-identities owned by this library after checking their replacements. Repository
-publication does not automatically migrate global installations or unrelated
-upstream pstack plugins.
+MIT

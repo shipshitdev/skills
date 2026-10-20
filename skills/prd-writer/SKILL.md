@@ -2,9 +2,9 @@
 name: prd-writer
 description: "Writes repository-grounded requirements with full scope and observable EARS acceptance criteria. Use when drafting a PRD or scoping a feature. Plans: writing-plans."
 metadata:
-  version: "2.2.4"
   tags: "prd, planning, requirements, spec, scoping, ears"
 when_to_use: "write a PRD, scope this out, formalize this feature"
+disable-model-invocation: true
 ---
 
 # PRD Writer
@@ -42,6 +42,8 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `prd-quality-gate` for the canonical template and draft lint.
 - `writing-plans` when invoked to plan settled requirements.
 - Recommend `feature-intake` for complete preparation from a rough request.
@@ -69,7 +71,7 @@ Delegates To:
    For a standalone requirements-only request, return/publish the draft within
    authorization and clearly say that execution readiness has not been checked.
 
-## Updates and Planning
+## Updates and planning
 
 When asked to plan existing requirements, read the live issue body and relevant
 comments, then run the `writing-plans` skill. A draft state does not prevent a

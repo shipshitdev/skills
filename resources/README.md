@@ -13,7 +13,6 @@ Official skill-authoring guidance, extracted from 13 first-hand vendor sources a
 | [frontmatter-field-spec.md](skill-authoring/frontmatter-field-spec.md) | Field-by-field reference table (base spec + Claude extensions) with the constraints that bite. |
 | [checklist.md](skill-authoring/checklist.md) | One pass/fail checklist to run against any SKILL.md before shipping, plus live known-issues. |
 | [sources.md](skill-authoring/sources.md) | Annotated bibliography of the 13 primary sources. |
-| [repo-gap-analysis.md](skill-authoring/repo-gap-analysis.md) | How this repo's standards measure against the official guidance, and the gaps to close. |
 
 ## How to use
 

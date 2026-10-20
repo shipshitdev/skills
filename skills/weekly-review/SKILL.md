@@ -4,16 +4,25 @@ description: Coordinates a weekly engineering review of board accuracy, recent c
 argument-hint: "[7d|since <SHA>] [--report-only|--fix]"
 compatibility: Requires repository history and access to the selected board; operational checks depend on existing service connections.
 metadata:
-  version: "2.2.4"
   tags: "review, weekly, maintenance, boards, retrospective"
   author: Ship Shit Dev
+disable-model-invocation: true
 ---
-
 # Weekly Review
 
 Turn a review period into an evidence-backed maintenance report and, when
 requested, verified repairs. Reuse the review and cleanup engines. Keep provider
 procedures and review rubrics in their owning skills.
+
+## Inputs, outputs and guards
+
+- Inputs: repository or monorepo, board URL/provider, optional package scope; a window such as `7d` (default), explicit dates with timezone, or `since <SHA>`; optional previous checkpoint and explicitly authorized repair scope. Optional arguments: `[7d|since <SHA>] [--report-only|--fix]`.
+- Report-only by default. `--fix` authorizes code repairs for confirmed findings within the reviewed scope; `--report-only` overrides earlier repair authority.
+- Output: one report of shipped, broken, drifted, blocked, repaired and next priorities, with evidence and coverage per repository, issue, package and operational check, reviewed commit endpoints, and a proposed next checkpoint with unfinished work.
+- Report-only mode changes nothing; return the report and checkpoint in the response. Repair mode makes scoped source/test edits and verification artifacts, and publishes repair PRs per the repository's existing delivery policy.
+- Reads repository, board, CI, deployment and available monitoring evidence. Board edits, issue filing/closure, comments, merges, deployments, installations and scheduling each need their own explicit scope; `--fix` grants none of these.
+- Ask only for missing or expanded authority; keep existing approvals for the same target/actions and pass restrictions to every delegate. Review requests and findings are not permission to modify production.
+- Engines, used when available: `board-sync` (board reconciliation and approved field corrections), `code-review` (correctness and implementation-versus-acceptance), `test-runner` (focused verification of repairs). Report missing engines instead of silently substituting a similarly named skill or installing dependencies.
 
 ## Contract
 
@@ -52,29 +61,25 @@ Confirmation Required:
 Delegates To:
 
 - `board-sync` for board reconciliation and approved supported field corrections
-- `full-code-review` for the shared merged-history retrospective and cross-commit lens
 - `code-review` for correctness and implementation-versus-acceptance checks
-- `deslop` for scoped dry-run findings or authorized cleanup
-- `dependency-audit` for dependency checks in audit mode when evidence needs refresh
 - `test-runner` for focused verification of authorized repairs
 
-Resolve each engine through the active catalog and resources relative to its
-installed directory. Use Shipshit `deslop`; an upstream `pstack:deslop` plugin is
-a separate implementation, not an alias. Report missing engines instead of
+Run each engine by reading its sibling `../<name>/SKILL.md` and following it;
+skills here are user-invoked only, so the Skill tool cannot load them. Report missing engines instead of
 silently substituting a similarly named skill or installing dependencies.
 
 ## Freeze the review scope
 
 Read [Shared merged history](references/merged-history.md), which owns the
 all-author integration inventory, frozen BASE/END, and code-history review also
-used by `standup all … audit`. Follow its freeze/inventory steps for the selected
+used by the audit modes. Follow its freeze/inventory steps for the selected
 window and package scope, retaining complete introduced-commit history and the
 union of changed files/hunks. Use its audit mode for code review; its report-only
 boundary applies even when this weekly invocation separately authorizes repairs.
 
 ## Audit work and implementation
 
-Run the `board-sync` skill in report mode for the selected board and scope.
+Run `board-sync` in report mode for the selected board and scope.
 Preserve its status semantics and incomplete-coverage findings. Audit every
 current in-scope issue, including backlog and deferred work; report archived
 history coverage separately. Inventory issues missing from the board as well as
@@ -104,26 +109,26 @@ behavior. Keep a missing spec visible instead of inventing requirements.
 
 Read existing CI, security/dependency alerts, deployment, and monitoring reports
 for the same scope. Check recurring errors, failed jobs, flaky checks, rollbacks,
-and integrated changes awaiting deployment. Run `dependency-audit` in audit mode
+and integrated changes awaiting deployment. Run the repo's dependency audit (`bun audit`)
 only when relevant evidence is stale or absent and execution is available on an
 allowed host. Report each unavailable source as unavailable, not healthy.
 Reserve a full security or architecture audit for evidence that warrants it.
 
-## Repair and deslop
+## Repair and cleanup
 
-Run the `deslop` skill in dry-run mode over the explicitly frozen changed files
+Run a dry-run cleanup pass (the upstream pstack deslop skill when installed) over the explicitly frozen changed files
 and hunks. Pass that scope directly; its default branch-diff calculation may be
 empty after changes have merged. Review-only runs stop at findings.
 
 With repair authority, address confirmed defects before cleanup. Retain existing
-behavior during deslop; preserve meaningful checks, technical language, and
+behavior during cleanup; preserve meaningful checks, technical language, and
 product intent. Apply findings to current code in an isolated scoped branch,
 rechecking evidence when the branch has advanced. A weekly request does not
 authorize a whole-tree rewrite.
 
-Run the `test-runner` skill for affected verification, preserving host restrictions
+Run the `test-runner` skill for affected verification, preserving any execution-host restrictions
 and the authorized repair scope. Satisfy repository-required local checks and
-review gates before publication. If the allowed verification host is unavailable,
+review gates before publication. If no allowed environment can run the required checks,
 keep the repair unverified; do not substitute CI for required local checks.
 Follow the repository's policy for any draft PR. Use fresh CI and required review
 for a separately authorized merge. Report completed actions separately from

@@ -6,7 +6,6 @@ allowed-tools: Bash(git *) Bash(gh *)
 metadata:
   portable_source: "https://github.com/ericlitman/open-pstack"
   portable_commit: "1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43"
-  version: "2.2.4"
   tags: "github, pull-requests, publishing"
   source: https://github.com/mattpocock/skills/blob/main/skills/engineering/pr/SKILL.md
   upstream_repo: mattpocock/skills
@@ -15,6 +14,7 @@ metadata:
   last_synced: "2026-10-05"
   license: MIT
 when_to_use: "draft PR, update PR description"
+disable-model-invocation: true
 ---
 
 # GitHub PR Publish
@@ -76,7 +76,6 @@ Confirmation Required:
 
 Delegates To:
 
-- `commit-summary` to create a Conventional Commit
 - `github-fix-ci` when PR checks fail
 - `release` for trunk-based releases
 - `project-board` for a separately requested board configuration change
@@ -193,7 +192,7 @@ Delegates To:
 
 ## Reviewability Pass
 
-A focused mode (invoked as `/pr tidy`) that makes an **already-open** PR easy for a
+A focused mode (invoked as `/github-pr-publish tidy`) that makes an **already-open** PR easy for a
 reviewer to read, by rewriting its description, not its commits. Use it when a PR
 is correct but hard to review.
 
@@ -229,5 +228,6 @@ Scope and gates:
 
 Read [make-pr-easy-to-review procedure](references/make-pr-easy-to-review-procedure.md) when preparing an authorized PR publication.
 Apply the authorized scope and mode of this entry point to every step.
-Resolve other skills through this distribution’s active catalog; resolve
+Run another skill by reading its sibling `../<name>/SKILL.md` and following it;
+skills here are user-invoked only, so the Skill tool cannot load them. Resolve
 resources relative to the installed skill directory.

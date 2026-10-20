@@ -8,17 +8,7 @@
     }
   },
   "files": {
-    "includes": [
-      "*.json",
-      ".claude-plugin/**/*.json",
-      "bundles/**/plugin.json",
-      "scripts/**/*.js",
-      "skills/**/plugin.json",
-      "!**/node_modules",
-      "!bundles/**/skills",
-      "!plugins",
-      "!scripts/**/*.workflow.js"
-    ]
+    "includes": ["*.json", "skills/**/*.json", "!**/node_modules"]
   },
   "formatter": {
     "enabled": true,

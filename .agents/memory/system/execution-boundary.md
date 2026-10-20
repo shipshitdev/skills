@@ -36,7 +36,7 @@ level, schedule, sandbox, or working directory.
 
 ### Claude commands
 
-- Treat `commands/` as thin entry-point documentation that routes to portable skills.
+- Treat commands as thin entry points that route to portable skills.
 - Keep model, effort, project directory, and scheduling out of command bodies. Claude
   settings and the active session own them.
 - A repo-specific command may name a stable domain concept or route, but paths and

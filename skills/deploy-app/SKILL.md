@@ -2,11 +2,13 @@
 name: deploy-app
 description: Runs deployment workflows for web apps to staging or production. Use when the user says deploy, push to staging, ship it, or go live. Version or tag cuts are release.
 metadata:
-  version: "2.2.4"
   tags: "deployment, devops, ci-cd, production, staging"
+disable-model-invocation: true
 ---
 
 # Deploy
+
+Deploy a web app from the trunk to staging or production with gates, verification and a rollback path.
 
 ## Contract
 
@@ -43,56 +45,45 @@ Confirmation Required:
 
 Delegates To:
 
-- `deployment-composer` for route discovery across providers
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `release` for gating the trunk SHA and cutting the release
 - `github-fix-ci` for failed GitHub Actions checks
-- `ec2-backend-deployer` for EC2/Docker deployment setup
 
-## When to Use
+## Local quality gates (mandatory)
 
-- Deploying to staging or production
-- Setting up deployment pipelines
-- Managing environment-specific deployments
+Before every deployment, run the repository's own format, lint and type-check scripts (plus tests and build when configured). Resolve the real script names from `package.json`; never guess or chain package managers (use the repo's own, Bun by default). Fix failures before pushing or deploying. Prefer CI-driven deploys over running provider CLIs locally.
 
-## Local Quality Gates (MANDATORY)
+## Process
 
-Before every deployment, run the repository's own format, lint, and type-check
-scripts (and tests and build when configured), on the host the repo designates
-for them. Resolve the real script names from `package.json`; never guess or
-chain package managers. Fix failures before pushing or deploying.
+### Staging
 
-## Deployment Process
+1. Ensure trunk CI is green.
+2. Trigger the staging deploy from the trunk (no staging branch).
+3. Wait for CI and staging health checks to pass.
 
-### To Staging
+### Production
 
-1. Ensure trunk CI is green
-2. Trigger deploy to staging environment from the trunk (no staging branch)
-3. Wait for CI and staging health checks to pass
+1. Ensure staging is healthy.
+2. **Require explicit confirmation.** Production is critical.
+3. Deploy to production from the trunk.
+4. Monitor the deployment; watch health endpoints and error tracking for 15 minutes.
 
-### To Production
+### Hotfix
 
-1. Ensure staging environment is healthy
-2. **Require explicit confirmation** — production is critical
-3. Deploy to production environment from the trunk
-4. Monitor deployment
-5. Watch health endpoints and error tracking for 15 minutes
+Branch `hotfix/xxx` off the trunk (default branch), fix, PR to trunk, merge, deploy to production.
 
-### Hotfix Flow
+## Post-deploy verification
 
-1. Branch `hotfix/xxx` off the trunk (default branch)
-2. Fix -> PR to trunk -> merge -> deploy to production
-
-## Post-Deployment Verification
-
-1. Check health endpoints
-2. Monitor error tracking (Sentry, etc.)
-3. Verify critical user flows
-4. Check deployment logs
+1. Check health endpoints.
+2. Check error tracking (Sentry or similar).
+3. Verify critical user flows.
+4. Check deployment logs.
 
 ## Rollback
 
-If deployment fails, revert the merge commit and re-deploy.
+If the deployment fails, revert the merge commit and redeploy.
 
 ## References
 
-See `references/workflow.md` for platform-specific deployment details, AWS patterns, CI/CD integration, and rollback procedures.
+`references/workflow.md` has platform-specific deployment details, AWS patterns, CI/CD integration and rollback procedures. Its command examples are generic placeholders; substitute the repo's own package manager and scripts.

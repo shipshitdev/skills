@@ -2,9 +2,9 @@
 name: executing-plans
 description: Executes a prepared GitHub issue without inventing decisions, escalates plan gaps, and tracks review, CI, merge, and deploy evidence. Use for an approved plan or issue queue.
 metadata:
-  version: "2.2.4"
   tags: "execution, planning, agents, delivery"
 when_to_use: "implement the issue"
+disable-model-invocation: true
 ---
 
 # Executing Plans
@@ -52,10 +52,11 @@ Confirmation Required:
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `scripts/plan-header.mjs` and the executor brief for the pre-edit gate;
   the planner owns `prd-quality-gate`
 - `writing-plans` for a separate planner handoff when decisions are missing
-- `tdd` for behavioral implementation under the settled plan
 - `qa-reviewer` for acceptance evidence; self-QA does not satisfy independent review
 - `github-pr-publish` for authorized PR publication
 

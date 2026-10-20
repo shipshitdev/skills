@@ -1,6 +1,6 @@
 ## Distribution boundary
 
-Use the active Shipshit skill catalog and the caller's existing authorization.
+Run other skills from their sibling `SKILL.md` and use the caller's existing authorization.
 The harness owns host, account, model, effort, sandbox, worktree and schedule.
 Upstream examples describe mechanisms; they do not grant permission or select
 providers. Preserve report-only scope. External messages, publication, installs,

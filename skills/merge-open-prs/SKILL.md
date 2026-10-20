@@ -1,9 +1,8 @@
 ---
 name: merge-open-prs
-description: Review and land open pull requests through one /merge command. The default mode runs a confirmation-gated trunk sweep and reports cleanup candidates; exact /merge force drains the queue non-serially by merging green PRs and narrowly fixing red PRs. Use when asked to review and merge open PRs, batch-merge to trunk, drain PR WIP, or run /merge.
+description: Review and land open pull requests through one /merge-open-prs command. The default mode runs a confirmation-gated trunk sweep and reports cleanup candidates; exact /merge-open-prs force drains the queue non-serially by merging green PRs and narrowly fixing red PRs. Use when asked to review and merge open PRs, batch-merge to trunk, drain PR WIP, or run /merge-open-prs.
 compatibility: Requires git, GitHub CLI gh, and jq access to the target repository.
 metadata:
-  version: "2.2.4"
   tags: "git, github, pull-request, merge, review, trunk, cleanup, batch"
 allowed-tools: Bash(git *) Bash(gh *) Bash(jq *)
 disable-model-invocation: true
@@ -17,22 +16,21 @@ set serially, and reports possible cleanup candidates. Exact `force` mode drains
 merge independent green PRs immediately, narrowly fix red PRs, and move on while
 unrelated CI is pending.
 
-This skill is standalone and manually triggerable (exposed as `/merge`). It does
+This skill is standalone and manually triggerable (invoked as `/merge-open-prs`). It does
 not cut a release (use the `release` skill to tag from trunk) and does not deploy
 (use `deploy-app`). It lands the open feature/fix PRs onto the trunk. Cleanup is a separately selected workflow.
 
-`/merge force` is the sole non-serial queue-drain surface.
+`/merge-open-prs force` is the sole non-serial queue-drain surface.
 
 ## Delivery Readiness
 
-For every implementation PR, read the installed `executing-plans` skill's
-`references/delivery-gate.md` before declaring merge-ready, merging, or reporting
-Done; nothing here weakens it. In short: acceptance evidence for the full outcome,
-a PASS from a reviewer in a different lab than every contributor, tied to the
-current head, and green required CI. Missing evidence stays a visible blocker; a
-new commit invalidates earlier review and CI. Merge only within existing
-authorization, bound to the verified head. Done also needs merge and the issue's
-required deployment evidence.
+For every implementation PR, apply the project's delivery gate (if it defines one)
+before declaring merge-ready, merging, or reporting Done; nothing here weakens it.
+In short: acceptance evidence for the full outcome, a PASS from an independent
+reviewer (not a contributor to the change) tied to the current head, and green
+required CI. Missing evidence stays a visible blocker; a new commit invalidates
+earlier review and CI. Merge only within existing authorization, bound to the
+verified head. Done also needs merge and the issue's required deployment evidence.
 
 ## Contract
 
@@ -80,13 +78,15 @@ Confirmation Required:
 - Before merging a PR whose checks are failing or still pending, or that carries
   an unaddressed review finding
 - Merge confirmation authorizes merges only. Pruning requires separately selected
-  `/cleanup`, which retains its own dry-run and explicit confirmation gate
-- Exact `/merge force` authorizes normal queue actions: merge green PRs, rerun
+  `/git-cleanup`, which retains its own dry-run and explicit confirmation gate
+- Exact `/merge-open-prs force` authorizes normal queue actions: merge green PRs, rerun
   setup-stuck CI, commit narrow fixes, push, and continue. It does not authorize
   force-push, admin merge, branch-protection bypass, broad CI changes, pruning, or deploys.
 
 Delegates To:
 
+- Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
+  skills here are user-invoked only, so the Skill tool cannot load them.
 - `code-review` to review each open PR before it is merged
 - `github-fix-ci` when a PR's required checks are failing and the user wants them fixed
 - `fix-merge-conflicts` when a conflicted PR should be resolved rather than skipped
@@ -98,7 +98,7 @@ Delegates To:
 - To review and land all open PRs targeting the trunk in one pass
 - After a sprint, to clear the trunk queue: review and merge the green ones
 - When the user wants one confirm-gated sweep instead of merging PRs one by one
-- When the user explicitly runs `/merge force` to reduce WIP without waiting on
+- When the user explicitly runs `/merge-open-prs force` to reduce WIP without waiting on
   unrelated PRs
 
 Do not use this skill to cut a release or force-merge PRs that fail review or CI.
@@ -106,7 +106,7 @@ It only lands PRs that pass their gates. To cut a release, use the `release` ski
 to tag from trunk after the PRs are merged.
 
 Do not infer `force` from natural language or from a review request. Enter force
-mode only when the parsed `/merge` argument begins with the exact `force` token.
+mode only when the parsed `/merge-open-prs` argument begins with the exact `force` token.
 
 ## Mode Routing
 
@@ -126,7 +126,7 @@ input and show Usage. Do not guess. `force` cannot combine with `review`,
 
 ## Force Mode — Non-Serial Queue Drain
 
-Exact `/merge force` authorizes the workflow in this section. The word `force`
+Exact `/merge-open-prs force` authorizes the workflow in this section. The word `force`
 means **force queue progress**: merge safe independent work first and avoid
 serial waiting. It never means force-push, force-merge, `--admin`, bypass required
 checks, rewrite history, or deploy.
@@ -148,8 +148,8 @@ checks, rewrite history, or deploy.
 8. Never deploy, force-push, use an admin merge, or bypass branch protection.
 9. Preserve unrelated dirty work. Use an isolated worktree for a PR fix when the
    current checkout is dirty or belongs to another branch.
-10. Do not run heavy local suites. Use only focused checks allowed by the host's
-    repository policy and rely on PR CI for broad verification.
+10. Do not run heavy local suites. Use only focused checks allowed by the
+    repository's policy and rely on PR CI for broad verification.
 
 ### Force Discovery and Classification
 
@@ -247,7 +247,7 @@ Hard rules:
 6. The default plan contains only PRs that are non-draft, mergeable, green, and
    review-clean. Everything else is listed with its reason and skipped.
 7. All merge modes request no branch or worktree deletion. A merge request
-   alone never selects cleanup; recommend `/cleanup` when pruning is wanted.
+   alone never selects cleanup; recommend `/git-cleanup` when pruning is wanted.
 
 ## Phase 1: Discover Open PRs Into the Trunk
 
@@ -265,19 +265,17 @@ available remote branches. If the user passed an explicit base, confirm it exist
 before continuing.
 
 Snapshot every open PR targeting the trunk in one query — this drives the rest of
-the run. Keep it in the shell, or write it under the current repo's `.tmp/` if it
-must be a file. Never `/tmp` or `/private/tmp`. Do not include PR titles or bodies
-in the machine snapshot; those are outsider-authored free text and are not needed
-for merge gating:
+the run. Keep it in the shell variable below; do not write it to a shared temp
+directory outside the repository. Do not include PR titles or bodies in the
+machine snapshot; those are outsider-authored free text and are not needed for
+merge gating:
 
 ```bash
-mkdir -p "$(git rev-parse --show-toplevel)/.tmp"
 MOP_PRS=$(gh pr list --base "$DEFAULT_BRANCH" --state open --limit 200 \
   --json number,headRefName,isDraft,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup,url)
 ```
 
-Raise `--limit` if there are more than 200 open PRs into the trunk. Paginate
-rather than writing a snapshot outside this repository.
+Raise `--limit` if there are more than 200 open PRs into the trunk, or paginate.
 
 Pick the merge method once from the repository's allowed modes (prefer squash so
 cleanup's squash-aware oracle stays consistent):
@@ -376,9 +374,9 @@ By default, report merged head branches and associated local worktrees as possib
 cleanup candidates. Use the merge results and read-only worktree inventory; do not
 classify candidates as safe to delete without the cleanup workflow's proof.
 Preserve local branches and worktrees. Do not run branch/worktree deletion commands
-or invoke `/cleanup` from a merge request alone.
+or invoke `/git-cleanup` from a merge request alone.
 
-Recommend `/cleanup` as a separate workflow when pruning is wanted. If the user
+Recommend `/git-cleanup` as a separate workflow when pruning is wanted. If the user
 already selected both merge and prune, carry that explicit scope, merged PR
 results, and excluded PRs into the cleanup handoff. The selected cleanup workflow
 must still establish its own proof, display its dry-run plan, and obtain its
@@ -387,22 +385,17 @@ cleanup completed.
 
 With `--no-prune`, stop after Phase 4 and report; skip the cleanup inventory.
 
-## Arguments
+## Phase Map
 
-- `merge-open-prs` — Phases 1-5. Review, confirm, merge, then report cleanup
-  candidates without deleting them. (Default.)
-- `merge-open-prs force [dependency order]` — run Force Mode. Merge green PRs,
-  narrowly fix red PRs, and move on without serial CI waiting or pruning.
-- `merge-open-prs review` — Phases 1-3. Review every open PR into the trunk and
-  print the plan. Merge nothing, prune nothing.
-- `merge-open-prs --no-prune` — Phases 1-4. Review, confirm, merge; skip cleanup inventory.
-- `merge-open-prs <base>` — run against an explicit base branch instead of the
-  auto-detected trunk (after confirming that branch exists). Combines with `review`
-  and `--no-prune`.
+- default sweep: Phases 1-5 (review, confirm, merge, report cleanup candidates).
+- `review`: Phases 1-3 (plan only).
+- `--no-prune`: Phases 1-4 (skip the cleanup inventory).
+- `<base>` combines with `review` and `--no-prune`.
+- `force`: the Force Mode section only; no cleanup.
 
 If the user scopes the run ("only PRs labeled X", "skip the prune"), honor it:
-still review and gate, but restrict the candidate set or stop
-before the phase they excluded.
+still review and gate, but restrict the candidate set or stop before the phase
+they excluded.
 
 ## Final Status
 

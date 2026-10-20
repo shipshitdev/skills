@@ -2,9 +2,9 @@
 name: git-safety
 description: "Guards daily git work: blocks staged secrets, gates destructive git commands, installs pre-commit hooks, drives leak response. Use before commits, pushes, or history rewrites."
 metadata:
-  version: "2.2.4"
   tags: "git, security, secrets, pre-commit"
 when_to_use: "staged secret, force push, reset --hard, filter-repo, BFG"
+disable-model-invocation: true
 ---
 
 # Git Safety
@@ -59,8 +59,8 @@ Confirmation Required:
 
 Delegates To:
 
-- `open-source-checker` before publishing a private repository
-- `security-audit` for broader application-security review
+- None. Recommend a full-history publication audit before a private repository
+  goes public, and an application-security review for vulnerabilities beyond git state.
 
 Default a delegated safety check to `scan` or `guard`. Hook installation,
 credential rotation, and history rewriting require their own authorized action;
@@ -182,11 +182,11 @@ A credential is in a pushed commit:
 
 ## Related
 
-- `open-source-checker` — the one-time audit before a private repository is
+- A pre-publication audit — the one-time check before a private repository is
   published: license and attribution, secrets across the entire history,
   internal hostnames and employee references. Run it once, at the publish
   decision; run `git-safety` at every commit thereafter.
-- `security-audit` — application-level vulnerability review, not git state.
+- An application-security review covers vulnerabilities, not git state.
 
 ---
 
