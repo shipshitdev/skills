@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.2.5](https://github.com/shipshitdev/skills/compare/v2.2.4...v2.2.5) (2026-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* commands were renamed.
+    - /file-feature, /write-prd, /write-plan, /check-prd, /publish-prd,
+      /file-bug -> /issue, /issue prd, /issue plan, /issue check,
+      /issue publish, /issue bug
+    - /run-qa, /review-qa -> /qa, /qa review
+    - /review-code, /review-with-grok, /review-week -> /check, /check grok,
+      /check week
+    - /publish-pr, /fix-ci, /merge-prs -> /git pr, /git ci, /git merge
+    - /configure-board, /sync-board -> /board configure, /board sync
+    - /execute-plan, /run-tests, /computer-user, /generate-image,
+      /validate-stack -> /execute, /test, /browse, /image, /stack
+* the old /names no longer exist. Reinstall with `bunx skills add shipshitdev/skills` and remove the old installs.
+
+### Features
+
+* restore /standup and start /qa branches from fresh trunk ([#283](https://github.com/shipshitdev/skills/issues/283)) ([6ac7f31](https://github.com/shipshitdev/skills/commit/6ac7f31b2d16a4aec77d25a4d1577983012b806e))
+* **write-prd,review-code:** interview before drafting and triage findings before reporting ([#280](https://github.com/shipshitdev/skills/issues/280)) ([77c212c](https://github.com/shipshitdev/skills/commit/77c212c5fd85a0e51885b632c500cf8dcad5fc7c))
+
+
+### Bug Fixes
+
+* **board-sync:** keep exhaustive activity scans complete despite ordering anomalies ([#270](https://github.com/shipshitdev/skills/issues/270)) ([93991e7](https://github.com/shipshitdev/skills/commit/93991e76dc34b274dd428346f9b4c67a3bc19650))
+* **git-cleanup:** keep active sessions, prove squash checkouts, work over SSH and without gh ([#274](https://github.com/shipshitdev/skills/issues/274)) ([366150f](https://github.com/shipshitdev/skills/commit/366150f6ff4abf908164df8b94a6a49d65f46295))
+
+
+### Refactors
+
+* group skills into one-word topic routers ([#282](https://github.com/shipshitdev/skills/issues/282)) ([46ed362](https://github.com/shipshitdev/skills/commit/46ed3628237913bc0e92d90b4ad3cec53e48d550))
+* trim to 28 user-invoked skills and stop vendoring pstack/mattpocock ([#277](https://github.com/shipshitdev/skills/issues/277)) ([258b1f9](https://github.com/shipshitdev/skills/commit/258b1f91aa94cea8575484ffc04909fa3e8c2532))
+* verb-first skill names and a /git action router ([#278](https://github.com/shipshitdev/skills/issues/278)) ([a5c6404](https://github.com/shipshitdev/skills/commit/a5c6404f9227c5bf62d272a2e663c59ba69415ea))
+
+
+### Chores
+
+* **worktree:** create worktrees outside the repository ([#273](https://github.com/shipshitdev/skills/issues/273)) ([cccb912](https://github.com/shipshitdev/skills/commit/cccb912bdd2f0ac33475ec39cebe1a3817c34e9d)), closes [#272](https://github.com/shipshitdev/skills/issues/272)
+
+
+### Docs
+
+* add a usage guide to the README ([#281](https://github.com/shipshitdev/skills/issues/281)) ([03ddb84](https://github.com/shipshitdev/skills/commit/03ddb84e486d23a938c28d70c297fca77ad248c9))
+* drop personal owner and machine details from repo memory and changelog ([#279](https://github.com/shipshitdev/skills/issues/279)) ([ce3eb85](https://github.com/shipshitdev/skills/commit/ce3eb85aed9a29ea009fae81e7d98fd8d06bf925))
+
 ## [2.2.4](https://github.com/shipshitdev/skills/compare/v2.2.3...v2.2.4) (2026-10-07)
 
 
