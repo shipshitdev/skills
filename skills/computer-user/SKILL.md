@@ -54,7 +54,7 @@ Delegates To:
 
 - Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
   skills here are user-invoked only, so the Skill tool cannot load them.
-- `qa-loop` when the task becomes find-and-fix QA across many issues.
+- `run-qa` when the task becomes find-and-fix QA across many issues.
 
 ## Session
 

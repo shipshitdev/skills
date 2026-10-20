@@ -63,17 +63,17 @@ Do not `git add -f` them. Durable decisions go in `.agents/memory/*.md`.
 
 PRD/spec skills standardize acceptance criteria on EARS:
 `WHEN/WHILE/WHERE/IF … THE SYSTEM SHALL …`, or a bare `THE SYSTEM SHALL …`.
-`prd-quality-gate` validates each Acceptance Criteria bullet against
+`check-prd` validates each Acceptance Criteria bullet against
 `^\s*(\d+\.\s*)?(WHEN|WHILE|WHERE|IF|THE SYSTEM)\b.*\bSHALL\b`; execution
-readiness is blocking. Applies to `prd-writer`, `prd-quality-gate`,
-`feature-intake`, and `prd-task-creator`.
+readiness is blocking. Applies to `write-prd`, `check-prd`,
+`file-feature`, and `publish-prd`.
 
 ### Prepared issue delivery (2026-09-14)
 
-One end-to-end feature per issue/PR by default. `feature-intake` composes the PRD,
+One end-to-end feature per issue/PR by default. `file-feature` composes the PRD,
 plan, readiness gate, and task-creation skills.
-`prd-quality-gate/references/execution-readiness.md` owns preparation readiness;
-`executing-plans/references/delivery-gate.md` owns delivery readiness. Executors
+`check-prd/references/execution-readiness.md` owns preparation readiness;
+`execute-plan/references/delivery-gate.md` owns delivery readiness. Executors
 implement settled decisions and escalate gaps. Harnesses own model, effort, and
 capacity configuration.
 
@@ -85,7 +85,7 @@ human request.
 
 ### Weekly review composition (2026-09-05, amended 2026-10-20)
 
-`weekly-review` coordinates board evidence, issue-to-code checks, operational
+`review-week` coordinates board evidence, issue-to-code checks, operational
 evidence, and the repo's dependency audit. Report-only is the default; board
 writes and deployment actions keep their own boundaries.
 

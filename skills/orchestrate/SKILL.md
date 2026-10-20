@@ -59,7 +59,7 @@ Delegates To:
 - Run a delegate by reading its sibling `../<name>/SKILL.md` and following it;
   skills here are user-invoked only, so the Skill tool cannot load them.
 - Existing project sessions through the harness's session controls
-- Recommend `executing-plans` for authorized prepared work without an owner
+- Recommend `execute-plan` for authorized prepared work without an owner
 - Recommend an installed handoff skill (mattpocock `handoff`) when transferring coordination
 
 ## Usage
