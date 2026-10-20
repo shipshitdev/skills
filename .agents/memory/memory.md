@@ -4,14 +4,14 @@ last_verified: 2026-10-20
 
 ## What This Repo Is
 
-Public skills library at `shipshitdev/skills`: 28 user-invoked skills, installed
+Public skills library at `shipshitdev/skills`: 25 user-invoked skills, installed
 with `bunx skills add shipshitdev/skills --skill <name>`. Works with Claude Code,
 Codex, and Cursor. No marketplace bundles, commands, or generated catalog.
 
 ## Repo Identity
 
 - **Name:** ship-shit-dev-library
-- **Owner:** Vincent (decod3rs) — solo founder, zero-code workflow
+- **Owner:** shipshitdev — solo maintainer, zero-code workflow
 - **License:** MIT
 - **Runtime:** Bun (never npm/yarn/pnpm)
 - **Linting:** markdownlint (markdown), biome (JSON), shellcheck (bash)
