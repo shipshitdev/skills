@@ -1,6 +1,6 @@
 # Shared Merged History
 
-Own the integrated-history procedure for `/check week`. Use `recap` for a diff-backed summary; use `audit` for individual and
+Own the integrated-history procedure for `/check week` and `/standup all`. Use `recap` for a diff-backed summary; use `audit` for individual and
 combined review. Keep this procedure report-only even when its caller has repair
 authority. Return the frozen inventory, evidence, coverage, and findings to the
 caller; do not run board maintenance, cleanup, repair, or delivery actions here.

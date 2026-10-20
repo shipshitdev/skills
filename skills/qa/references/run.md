@@ -9,7 +9,7 @@ the next issue.
 
 Inputs:
 
-- A Git repository with a locally runnable application
+- A Git repository with a locally runnable application and an `origin` remote
 - Issues supplied incrementally as text, screenshots, recordings, routes, console
   output, network evidence, or expected-versus-actual behavior
 - Existing local environment files and credentials required by the application
@@ -24,7 +24,8 @@ Outputs:
 
 Creates/Modifies:
 
-- Creates and pins one `qa/YYYY-MM-DD` branch in the current checkout
+- Creates one `qa/YYYY-MM-DD` branch from freshly fetched `origin/<default>` in
+  the current checkout, or resumes today's, and pins it
 - Modifies only files required for the active issue
 - Creates one conventional local commit after each verified fix
 - May create ignored local logs, traces, or screenshots for diagnosis
@@ -35,6 +36,7 @@ Creates/Modifies:
 
 External Side Effects:
 
+- Fetches the default branch from `origin` before creating a new QA branch
 - Starts local applications and log monitors as managed background processes
 - May drive a local browser and exercise local application state
 - Does not create a worktree, push commits, open a pull request, deploy, or touch
@@ -63,7 +65,8 @@ Delegates To:
 1. Work in the existing checkout so its local environment files remain available.
    Never create or move into a separate worktree.
 2. Create or resume exactly one date branch, `qa/YYYY-MM-DD`, using the user's
-   local date. Pin its name for the entire session.
+   local date. Pin its name for the entire session. A new QA branch always
+   starts from freshly fetched `origin/<default>`, never from the current HEAD.
 3. Never switch, rename, delete, rebase, or merge branches after pinning the QA
    branch. Before every edit and commit, verify that the active branch still
    equals the pinned branch. Stop on any mismatch.
@@ -85,10 +88,21 @@ Delegates To:
 2. Confirm the repository root, current branch, HEAD, and complete worktree state.
 3. Record pre-existing tracked and untracked changes as the session baseline.
 4. Resolve today's branch name as `qa/YYYY-MM-DD`:
-   - Continue without changing branches when already on that exact branch.
-   - Create and switch to it from the current HEAD when it does not exist.
+   - Continue without changing branches when already on that exact branch. Do
+     not fetch into, reset, or rebase a resumed QA branch.
    - Stop and ask whether to resume or choose another date-derived name when it
      already exists but is not active. Do not switch implicitly.
+   - When it does not exist, create it from fresh trunk:
+     1. Resolve the default branch: the trunk the repository instructions name,
+        else `git symbolic-ref --short refs/remotes/origin/HEAD` without its
+        `origin/` prefix, else
+        `gh repo view --json defaultBranchRef --jq .defaultBranchRef.name`.
+     2. If the step 3 baseline is not empty, stop and list it. The user commits,
+        stashes, or moves those changes, then reruns `/qa`. Never carry them onto
+        the new QA branch and never stash them yourself.
+     3. Run `git fetch origin <default>`. If the fetch fails, stop and report;
+        never fall back to a stale ref or the current HEAD.
+     4. Run `git switch --no-track -c qa/YYYY-MM-DD origin/<default>`.
 5. Record the active branch as `PINNED_QA_BRANCH`. Treat it as immutable session
    state and verify it before every mutation.
 6. Do not clean, stash, reset, or otherwise hide the session baseline.
@@ -143,7 +157,8 @@ Delegates To:
 9. Obey repository and environment restrictions on tests, type checks, builds, migrations,
    and resource-intensive commands even when an app is running locally.
 
-Report session readiness with the pinned branch, each app URL,
+Report session readiness with the pinned branch (and, when newly created, its
+`origin/<default>` base and short SHA), each app URL,
 background-process status, monitored log surfaces, and any unavailable surface.
 
 ## Phase 3: Intake and Queue Issues

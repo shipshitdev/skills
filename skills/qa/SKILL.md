@@ -17,7 +17,7 @@ action; everything after it goes to that action unchanged.
 
 | Action | Playbook | What it does |
 |---|---|---|
-| `run` | [references/run.md](references/run.md) | Default. Pins a `qa/YYYY-MM-DD` branch in the current checkout, then reproduces, fixes, and re-verifies each issue you report, one local commit per fix. Never pushes, opens a PR, or deploys. |
+| `run` | [references/run.md](references/run.md) | Default. Creates today's `qa/YYYY-MM-DD` from freshly fetched `origin/<default>` in the current checkout (or resumes it), then reproduces, fixes, and re-verifies each issue you report, one local commit per fix. Never pushes, opens a PR, or deploys. |
 | `review` | [references/review.md](references/review.md) | Multi-phase verification pass on finished agent work: bugs, missed requirements, and bad assumptions. |
 
 ## Dispatch

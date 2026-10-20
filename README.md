@@ -4,7 +4,7 @@
 
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
-13 user-invoked commands for development workflows. Works with Claude Code,
+14 user-invoked commands for development workflows. Works with Claude Code,
 OpenAI Codex, and Cursor.
 
 Every command is one word. Related workflows share a command and take an action
@@ -74,14 +74,16 @@ To root-cause before filing, run an upstream debugging skill such as
 ### QA the running app
 
 ```text
-/qa                                # pin today's qa/YYYY-MM-DD branch, then fix what you report
+/qa                                # branch qa/YYYY-MM-DD off fresh origin trunk, then fix what you report
 /qa the onboarding flow            # same loop, focused on one area
 /qa review                         # check finished agent work against the ask
 /browse open the dashboard and screenshot the empty state
 ```
 
-`/qa` stays in the current checkout, makes one local commit per fix, and never
-pushes, opens a PR, or deploys. Publish the branch afterwards with `/git pr`.
+`/qa` stays in the current checkout and starts a new QA branch from freshly
+fetched `origin/<default>`; with uncommitted changes it stops and lists them
+instead. It makes one local commit per fix and never pushes, opens a PR, or
+deploys. Publish the branch afterwards with `/git pr`.
 
 ### Review
 
@@ -112,6 +114,18 @@ pushes, opens a PR, or deploys. Publish the branch afterwards with `/git pr`.
 /release cut minor
 /deploy staging
 ```
+
+### Daily standup
+
+```text
+/standup                           # your commits, last 24 hours
+/standup 7d                        # your commits, last 7 days
+/standup all 24                    # everyone's changes merged into trunk, last 24 hours
+/standup all 24 audit              # same, plus individual and combined review
+```
+
+`/standup` is report-only. It traces every bullet to a diff and keeps merged
+separate from deployed.
 
 ### Weekly review and retros
 
@@ -148,6 +162,7 @@ For a retrospective on how the work went (not what shipped), use the upstream
 | `/test` | | Runs tests at the right scope and reports failures with evidence. |
 | `/qa` | `run` (default), `review` | Interactive localhost QA loop, or a verification pass over finished agent work. |
 | `/check` | `code` (default), `grok`, `week` | Code review, a verified Grok second opinion, or the weekly engineering review. |
+| `/standup` | `all`, `audit` | Personal git recap, or everyone's merged changes with an optional audit. |
 | `/git` | `worktree`, `safety`, `conflicts`, `pr`, `ci`, `merge`, `cleanup` | Local git and GitHub: worktrees, secret guards, conflicts, PRs, CI fixes, merging, cleanup. |
 | `/release` | | Cuts a release from a green trunk. |
 | `/deploy` | | Runs staging or production deployment workflows. |
@@ -167,6 +182,7 @@ For a retrospective on how the work went (not what shipped), use the upstream
 | `/publish-pr`, `/fix-ci`, `/merge-prs` | `/git pr`, `/git ci`, `/git merge` |
 | `/configure-board`, `/sync-board` | `/board configure`, `/board sync` |
 | `/execute-plan`, `/run-tests`, `/computer-user`, `/generate-image`, `/validate-stack` | `/execute`, `/test`, `/browse`, `/image`, `/stack` |
+| `/git-cleanup`, `/release-cleanup`, `/worktree`, `/code-review`, `/weekly-review`, `/board-sync`, `/qa-loop` | `/git cleanup`, `/git cleanup`, `/git worktree`, `/check`, `/check week`, `/board sync`, `/qa` |
 
 ## Installation
 
