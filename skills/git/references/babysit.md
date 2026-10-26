@@ -162,6 +162,10 @@ touch this PR's files: update the branch, push, and wait for green again. Use
 the repository's merge method; where squash auto-merge is already enabled,
 leave it on and let required checks gate the merge.
 
+A queued PR or a requested auto-merge is not a merge. Report the PR merged only
+once `gh pr view --json state,mergedAt` shows `MERGED`. Auto-merge lands
+whatever head is ready, so push nothing to the branch that should not land.
+
 ## Notes
 
 - `pr-wait` needs Python 3.9+ and an authenticated `gh`.

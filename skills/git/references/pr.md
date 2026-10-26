@@ -101,6 +101,8 @@ Delegates To:
    git commit -m "<message>"
    ```
 
+   A commit body, when one is needed, says why; it does not restate the subject.
+
 5. Build the PR body from evidence, using the one template below. Read
    [references/pr-body.md](pr-body.md) for the visual menu, the
    evidence tiers and the door and blast-radius calls.

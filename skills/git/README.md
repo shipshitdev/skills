@@ -9,7 +9,7 @@ The `conflicts`, `pr`, and `ci` actions are adapted from upstream Open Pstack; t
 
 | Source | Pinned commit | Reviewed |
 |---|---|---|
-| [Open Pstack](https://github.com/ericlitman/open-pstack) | `1b03678171f6f400ae2cc9dc4e7a4a6a13e4bb43` | 2026-10-05 |
+| [Open Pstack](https://github.com/ericlitman/open-pstack) | `b4c5e3d63318308b7e11f26b2bc156e7793d834a` | 2026-10-26 |
 
 Detailed procedures and resources are adapted to canonical skill names and the
 harness-owned execution boundary. Existing Shipshit mode and authorization
