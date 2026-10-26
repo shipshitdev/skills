@@ -46,5 +46,5 @@
     "test:py": "python3 -m unittest discover -s scripts/tests -p \"test_*.py\" && for d in skills/*/tests; do python3 -m unittest discover -s \"$d\" -p \"test_*.py\" || exit 1; done",
     "validate": "python3 scripts/validate.py"
   },
-  "version": "2.2.4"
+  "version": "2.2.5"
 }
