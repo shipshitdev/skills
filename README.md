@@ -236,7 +236,7 @@ To add a command, create `skills/<name>/SKILL.md` with a one-word `name` matchin
 the directory and `disable-model-invocation: true`, or add an action to an
 existing router as `references/<action>.md` plus a row in its table. Then run the
 three commands above.
-Releases are cut by release-please from conventional commits.
+Releases are cut by hand with `/release cut`: a `vX.Y.Z` tag and a GitHub release.
 
 ## License
 
