@@ -92,11 +92,14 @@ deploys. Publish the branch afterwards with `/git pr`.
 /check #42                         # a PR
 /check adversarial #42             # multi-model panel, with pstack interrogate installed
 /check grok #42                    # second opinion from the Grok CLI, findings verified
+/check council #42                 # panel of every installed provider CLI, scored rounds in the PR body
 ```
 
 ### Land and clean up
 
 ```text
+/git babysit #42                   # watch a PR through CI and review, fix real findings
+/git modernize #42                 # judge a stale PR, then update it by merging its base
 /git merge                         # review, confirm, merge green PRs, list cleanup candidates
 /git merge review                  # review only, merge nothing
 /git merge force                   # drain the queue: merge green PRs, fix red ones, move on
@@ -161,9 +164,9 @@ For a retrospective on how the work went (not what shipped), use the upstream
 | `/execute` | | Executes a prepared issue and tracks review, CI, merge, and deploy evidence. |
 | `/test` | | Runs tests at the right scope and reports failures with evidence. |
 | `/qa` | `run` (default), `review` | Interactive localhost QA loop, or a verification pass over finished agent work. |
-| `/check` | `code` (default), `grok`, `week` | Code review, a verified Grok second opinion, or the weekly engineering review. |
+| `/check` | `code` (default), `grok`, `council`, `week` | Code review, a verified Grok second opinion, a scored multi-provider panel, or the weekly engineering review. |
 | `/standup` | `all`, `audit` | Personal git recap, or everyone's merged changes with an optional audit. |
-| `/git` | `worktree`, `safety`, `conflicts`, `pr`, `ci`, `merge`, `cleanup` | Local git and GitHub: worktrees, secret guards, conflicts, PRs, CI fixes, merging, cleanup. |
+| `/git` | `worktree`, `safety`, `conflicts`, `pr`, `ci`, `babysit`, `modernize`, `merge`, `cleanup` | Local git and GitHub: worktrees, secret guards, conflicts, PRs, CI fixes, PR babysitting, stale-PR updates, merging, cleanup. |
 | `/release` | | Cuts a release from a green trunk. |
 | `/deploy` | | Runs staging or production deployment workflows. |
 | `/board` | `configure`, `sync` | Audits and configures GitHub or Jira boards, or reconciles them with delivery evidence. |
