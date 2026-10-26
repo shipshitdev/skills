@@ -352,6 +352,10 @@ Rules during execution:
   report it rather than forcing the merge.
 - Never pass a force or admin override flag to bypass a protected-branch rule.
   Report the block and let the user decide.
+- A merge command can report success when a merge queue only queued the PR, and
+  a requested auto-merge is not a merge. Report a PR as merged only once
+  `gh pr view <n> --json state,mergedAt` shows `MERGED`; list queued or
+  auto-merge-pending PRs separately.
 
 After the batch, refresh local state for the read-only cleanup inventory:
 
