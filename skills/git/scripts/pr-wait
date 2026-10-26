@@ -68,6 +68,7 @@ STATE_DIR = Path.home() / ".local" / "state" / "pr-wait"
 # instead of replaying hours of comments as new events.
 STALE_STATE_SECONDS = 6 * 3600
 MAX_FAILED_POLLS = 10
+GH_TIMEOUT = 60
 TRANSIENT = re.compile(
     r"HTTP (5\d\d|429)|rate limit|timed? ?out|connection (reset|refused)|EOF|"
     r"temporar|could not resolve host|TLS handshake|Something went wrong",
@@ -91,6 +92,7 @@ query($owner: String!, $name: String!, $number: Int!) {
         nodes { id url state body commit { oid } author { login __typename } }
       }
       reviewThreads(last: 100) {
+        totalCount
         nodes {
           isResolved path line
           comments(first: 100) { nodes { id url body author { login __typename } } }
@@ -124,7 +126,15 @@ def gh(args: list[str], allow: tuple[int, ...] = (0,)) -> subprocess.CompletedPr
     """Run gh. Retries transient failures (HTTP 5xx or 429, network) with backoff."""
     delay = 2
     for attempt in range(5):
-        proc = subprocess.run(["gh", *args], capture_output=True, text=True)
+        try:
+            proc = subprocess.run(["gh", *args], capture_output=True, text=True, timeout=GH_TIMEOUT)
+        except subprocess.TimeoutExpired:
+            if attempt == 4:
+                raise GhError(f"gh timed out after {GH_TIMEOUT}s", True)
+            log(f"gh {' '.join(args[:2])}: timed out; retry in {delay}s")
+            time.sleep(delay)
+            delay *= 2
+            continue
         transient = proc.returncode != 0 and bool(TRANSIENT.search(proc.stderr))
         if not transient and proc.returncode in allow:
             return proc
@@ -360,6 +370,8 @@ class Watcher:
         comments = pr["comments"]["nodes"]
         reviews = pr["reviews"]["nodes"]
         threads = pr["reviewThreads"]["nodes"]
+        # Only the latest 100 threads are fetched; older ones may be unresolved.
+        unseen_threads = pr["reviewThreads"]["totalCount"] - len(threads)
         self.events = 0
 
         # Required checks. With no required checks configured, every CI check
@@ -507,6 +519,8 @@ class Watcher:
             if green and reviewed:
                 if unresolved:
                     self.finish(1, [f"blocked by {len(unresolved)} unresolved threads on {short}: {' '.join(unresolved)}"])
+                if unseen_threads > 0:
+                    self.finish(1, [f"cannot confirm ready on {short}: {unseen_threads} older review threads were not fetched"])
                 if merge_state == "BEHIND":
                     self.finish(1, [behind_line])
                 self.reported.add(checks_key)

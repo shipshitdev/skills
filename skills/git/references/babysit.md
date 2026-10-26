@@ -91,8 +91,8 @@ input or when another `pr-wait` already watches the PR.
   Greptile nor Macroscope, or `ready` waits forever.
 - `any-change`: exit on the first event.
 
-Run it under the harness's monitor tool with a long timeout so each line wakes
-the session (in Claude Code, the Monitor tool with `timeout_ms: 3600000`).
+Run it under the harness's monitor with a long timeout (about one hour) so
+each line wakes the session.
 Without a monitor, run it as one long background command; it ends on its own.
 
 Start it again after each push, after handling an exit 1, and after a resume.

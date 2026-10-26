@@ -62,8 +62,10 @@ ships as `licenses/LICENSE-tstack`.
 | Last synced | 2026-10-26 |
 | License | MIT |
 
-**Local modifications:** `pr-wait` is copied unchanged except that its DIRTY
-event asks for a base merge instead of a rebase. Both playbooks update a PR
+**Local modifications:** `pr-wait` is copied with three changes: its DIRTY
+event asks for a base merge instead of a rebase, a hung `gh` call times out and
+retries like other transient failures, and it never reports ready while review
+threads beyond the latest 100 are unchecked. Both playbooks update a PR
 branch by merging its base and pushing normally, never by rebase and force
 push, and ask before any history rewrite. `babysit` defers to a host app's PR
 monitor instead of a vendor-specific watcher, posts only replies that dismiss

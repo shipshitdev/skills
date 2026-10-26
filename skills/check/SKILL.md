@@ -6,7 +6,7 @@ compatibility: Requires git; gh for PR targets; grok needs the grok CLI logged i
 metadata:
   tags: "review, code-review, correctness, security, second-opinion, grok, council, panel, weekly"
   author: Ship Shit Dev
-allowed-tools: Bash(git *) Bash(gh *) Bash(grok *) Bash(claude *) Bash(codex *) Bash(command -v *) Bash(mktemp *)
+allowed-tools: Bash(git *) Bash(gh *) Bash(grok *) Bash(command -v *) Bash(mktemp *)
 when_to_use: "/check, /check code, /check grok, /check council, /check week, council, review my code, is this safe to merge"
 disable-model-invocation: true
 ---

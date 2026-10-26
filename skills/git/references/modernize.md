@@ -40,7 +40,8 @@ External Side Effects:
 
 Confirmation Required:
 
-- Before any history rewrite or force push; a merge update needs none
+- Before any history rewrite or force push. A clean base merge needs none; a
+  conflicted one follows the confirmation gate in `/git conflicts`
 - Before closing the PR or changing its base
 - Before starting a REWORK, unless the user asked for the rework too
 - Before posting any PR comment
@@ -107,7 +108,9 @@ not a reason to keep a PR alive.
 
 For a MODERNIZE disposition:
 
-1. Check out the recorded PR head in the disposable worktree.
+1. In the worktree chosen in Prepare, create a local branch at the recorded
+   PR head SHA. Record the head repository and branch from Step 2 as the push
+   destination.
 2. Merge the freshly fetched base into it. Do not rebase.
 3. Resolve each conflict by the PR's intent and the base's newer invariants,
    following `/git conflicts`. If a conflict exposes a product or architecture
@@ -118,8 +121,10 @@ For a MODERNIZE disposition:
    already removed came back.
 5. Run the repository's focused checks for the touched area. Tell real
    failures apart from pre-existing or infrastructure failures.
-6. Push normally. If the push is rejected because the remote head moved, fetch
-   and reassess rather than overwriting new work.
+6. Push to the recorded destination explicitly, without force
+   (`git push <head-remote> HEAD:<head-branch>`). If the push is rejected
+   because the remote head moved, fetch and reassess rather than overwriting
+   new work.
 
 When the repository requires linear history or the user asks for a rebase,
 stop and ask: a rebase rewrites the PR branch and needs a force push, which

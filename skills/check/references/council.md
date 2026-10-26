@@ -26,7 +26,7 @@ Outputs:
 Creates/Modifies:
 
 - Temporary prompt and output files under the repository's `.tmp/`, removed
-  after each round.
+  at the end of each round (Step 7).
 - Source edits only for confirmed, in-scope findings once fixes are
   authorized (see Step 6).
 - The PR description's `## Council review` section, when a PR is open.
@@ -91,6 +91,10 @@ committed changes vs trunk plus uncommitted changes, concatenated and labeled;
 `<PR#>` uses `gh pr diff`; `commits <N>` uses `git diff HEAD~N`. If the
 resolved diff is empty, say so plainly and stop.
 
+A free-form question skips diff resolution: the prompt carries the question
+and the files it names, and the panel runs one round with no score and no
+rounds table.
+
 Record the PR for the rounds table: the `<PR#>` target, or the open PR for the
 current branch (`gh pr view --json number,url` succeeds), or none.
 
@@ -113,16 +117,19 @@ Every delegate is blind to this session, so the prompt carries everything:
   host declined with a one-line reason each. Delegates re-raise a declined
   finding only with new evidence.
 - **The diff itself**, appended verbatim. For diffs over roughly 4,000 lines,
-  pass the changed-file list instead and let delegates read the files from the
-  repository.
+  write the full diff to `$RUN_DIR/target.diff` and tell delegates to read that
+  file instead of inlining it.
 
 ```bash
 REPO_TMP="$(git rev-parse --show-toplevel)/.tmp"
 mkdir -p "$REPO_TMP"
 RUN_DIR=$(mktemp -d "$REPO_TMP/check-council.XXXXXX")
-trap 'rm -rf "$RUN_DIR"' EXIT
+echo "$RUN_DIR"
 { printf '%s\n\n' "$REVIEW_INSTRUCTIONS"; printf '%s\n' "$DIFF"; } > "$RUN_DIR/prompt.md"
 ```
+
+Shell state may not carry over between commands, so reuse the printed path in
+later steps.
 
 ## Step 4 — Run the Round in Parallel
 
@@ -131,21 +138,28 @@ contents and read-only tools, then launch the external delegates in the same
 step so all seats run at once. Run only the lines for seated providers:
 
 ```bash
-claude -p --permission-mode plan < "$RUN_DIR/prompt.md" > "$RUN_DIR/claude.out" 2>&1 &
-codex exec --sandbox read-only - < "$RUN_DIR/prompt.md" > "$RUN_DIR/codex.out" 2>&1 &
-grok -p "$(cat "$RUN_DIR/prompt.md")" --output-format json > "$RUN_DIR/grok.out" 2>&1 &
-wait
+pids=()
+claude -p --permission-mode plan < "$RUN_DIR/prompt.md" > "$RUN_DIR/claude.out" 2>&1 & pids+=($!)
+codex exec --sandbox read-only - < "$RUN_DIR/prompt.md" > "$RUN_DIR/codex.out" 2>&1 & pids+=($!)
+grok --prompt-file "$RUN_DIR/prompt.md" --permission-mode plan --disable-web-search \
+  --output-format json > "$RUN_DIR/grok.out" 2>&1 & pids+=($!)
+( sleep 900; kill "${pids[@]}" 2>/dev/null ) & watchdog=$!
+wait "${pids[@]}"
+kill "$watchdog" 2>/dev/null
 for f in "$RUN_DIR"/*.out; do printf '===== %s =====\n' "$(basename "$f")"; cat "$f"; done
 ```
 
-Read every output before the command ends, since the trap removes the run
-directory. A delegate that errors, times out, or returns no parseable JSON
-keeps its seat for the round with `no score`; report the failure and do not
-retry it in a loop or re-prompt it to negotiate.
+The watchdog stops any delegate still running after 15 minutes. Run the step
+as one background command, or with a timeout longer than the watchdog's. A
+delegate that errors, is stopped, or returns no parseable JSON keeps its seat
+for the round with `no score`; report the failure and do not retry it in a
+loop or re-prompt it to negotiate.
 
 ## Step 5 — Verify and Merge Findings
 
-For each finding, read the cited file and line in the host session:
+For each finding, read the cited file and line in the host session. For a
+`<PR#>` target that is not checked out, read it at the PR head instead:
+`git fetch origin pull/<PR#>/head`, then `git show FETCH_HEAD:<path>`.
 
 - **CONFIRMED**: the issue is real at that location.
 - **REJECTED**: the claim does not hold (wrong line, misread control flow,
@@ -204,6 +218,8 @@ With an open PR, edit the description after each round: read the body with
 write the result to a file in `$RUN_DIR`, and apply it with
 `gh pr edit <PR#> --body-file`. Without a PR, the table goes in the final reply
 only.
+
+Then remove the round's run directory with `rm -rf "$RUN_DIR"`.
 
 ## Step 8 — Render
 
