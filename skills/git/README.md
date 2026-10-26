@@ -46,3 +46,32 @@ marker above, diff
 [`skills/engineering/pr/SKILL.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/pr/SKILL.md)
 on `main` since commit `4588b32ecab9`, port anything worth bringing home into
 [references/pr.md](references/pr.md), then bump this table.
+
+### tstack
+
+The `babysit` and `modernize` actions and `scripts/pr-wait` are adapted from
+the `babysit-pr` and `modernize` skills in
+**[t3dotgg/tstack](https://github.com/t3dotgg/tstack)** (MIT). The license
+ships as `licenses/LICENSE-tstack`.
+
+| Field | Value |
+|-------|-------|
+| Source | [`skills/babysit-pr`](https://github.com/t3dotgg/tstack/tree/main/skills/babysit-pr), [`skills/modernize`](https://github.com/t3dotgg/tstack/tree/main/skills/modernize) |
+| Upstream ref | `main` |
+| Synced at commit | `7de017b3fc9d` |
+| Last synced | 2026-10-26 |
+| License | MIT |
+
+**Local modifications:** `pr-wait` is copied unchanged except that its DIRTY
+event asks for a base merge instead of a rebase. Both playbooks update a PR
+branch by merging its base and pushing normally, never by rebase and force
+push, and ask before any history rewrite. `babysit` defers to a host app's PR
+monitor instead of a vendor-specific watcher, posts only replies that dismiss
+findings, and hands CI failures and conflicts to `/git ci` and
+`/git conflicts`. Owned here; not a sync target.
+
+**Checking for upstream changes:** diff `skills/babysit-pr` and
+`skills/modernize` on `main` since commit `7de017b3fc9d`, port anything
+worth bringing home into [references/babysit.md](references/babysit.md),
+[references/modernize.md](references/modernize.md), or
+[scripts/pr-wait](scripts/pr-wait), then bump this table.
