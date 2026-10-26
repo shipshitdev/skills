@@ -51,9 +51,10 @@ Follow agentskills.io/specification as base, with Claude Code extensions on top.
 `tags` and provenance go inside `metadata:` as strings. See
 `.agents/memory/system/skill-standards.md`.
 
-### Single release version (2026-10-03, amended 2026-10-20)
+### Single release version (2026-10-03, amended 2026-10-26)
 
-Skills carry no version. release-please bumps `package.json`, the only version.
+Skills carry no version. Releases are git tags with GitHub releases, cut by hand
+with `/release cut`; release-please was removed on 2026-10-26.
 
 ### Session Logs Are Local-Only (2026-06-19)
 

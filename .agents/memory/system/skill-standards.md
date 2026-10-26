@@ -305,8 +305,8 @@ Rules:
 
 ## Versioning
 
-Skills carry no individual version. The repository release version in
-`package.json`, bumped by release-please, is the only version.
+Skills carry no individual version. The repository release tag (`vX.Y.Z`),
+cut by hand with `/release cut`, is the only version.
 
 ---
 
