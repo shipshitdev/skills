@@ -11,8 +11,10 @@ Every command is one word. Related workflows share a command and take an action
 as their first word (`/git pr`, `/issue prd`, `/check grok`); the action's
 playbook lives in that skill's `references/`.
 
-Every skill sets `disable-model-invocation: true`. The model never picks one up on
-its own; you run it by name (`/git cleanup`, `/qa`, `/browse`). Skills that
+Every skill sets `disable-model-invocation: true` for Claude Code and
+`policy.allow_implicit_invocation: false` in `agents/openai.yaml` for Codex.
+You run skills explicitly (`/git cleanup` in Claude Code, `$git cleanup` in Codex).
+Other agents may interpret invocation settings differently. Skills that
 compose others read the other playbook directly, so they still work without
 exposing those skills to the model.
 
@@ -230,7 +232,10 @@ bun run test       # validator tests and each skill's script tests
 ```
 
 To add a command, create `skills/<name>/SKILL.md` with a one-word `name` matching
-the directory and `disable-model-invocation: true`, or add an action to an
+the directory and `disable-model-invocation: true`. Add `agents/openai.yaml` with
+`policy.allow_implicit_invocation: false` to keep it explicit-only in Codex too.
+See [Codex's invocation policy](https://learn.chatgpt.com/docs/build-skills#optional-metadata).
+Alternatively, add an action to an
 existing router as `references/<action>.md` plus a row in its table. Then run the
 three commands above.
 Releases are cut by release-please from conventional commits.

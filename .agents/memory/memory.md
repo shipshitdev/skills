@@ -1,6 +1,6 @@
 # Skills Repo Memory
 
-last_verified: 2026-10-20
+last_verified: 2026-10-30
 
 ## What This Repo Is
 
@@ -90,10 +90,13 @@ human request.
 evidence, and the repo's dependency audit. Report-only is the default; board
 writes and deployment actions keep their own boundaries.
 
-## Known Issues
+## Codex invocation policy (2026-10-30)
 
-- Codex has no equivalent of `disable-model-invocation` in these skills yet, so
-  Codex may still select them implicitly.
+Every skill also ships `agents/openai.yaml` with
+`policy.allow_implicit_invocation: false`. Codex honors this setting while
+preserving explicit invocation. `bun run validate` parses each policy with Bun
+and rejects missing, malformed, enabled, or incorrectly typed settings.
+Reference: https://learn.chatgpt.com/docs/build-skills#optional-metadata
 
 ## Key Files
 

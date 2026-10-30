@@ -176,9 +176,11 @@ Rules:
 ## Invocation architecture
 
 Every skill in this repo is an explicit entry point: set
-`disable-model-invocation: true`. The model never loads these skills on its own;
-the user runs them by name (`/git cleanup`, `/qa`). The validator enforces
-this.
+`disable-model-invocation: true` for Claude Code and ship `agents/openai.yaml`
+with `policy.allow_implicit_invocation: false` for Codex. Users invoke skills
+explicitly (`/git cleanup` in Claude Code, `$git cleanup` in Codex).
+`bun run validate` enforces both settings. Other agents may interpret them
+differently. See [Codex invocation policy](https://learn.chatgpt.com/docs/build-skills#optional-metadata).
 
 Separate discoverability from authorization. Loading a skill grants no permission
 to edit files, send messages, publish, deploy, or spend beyond the user's request.
@@ -225,6 +227,10 @@ This validator does **not** understand Claude Code extension fields. For this re
 ```bash
 bun run validate
 ```
+
+`scripts/validate-codex.mjs` parses every `agents/openai.yaml` with Bun and
+requires `policy.allow_implicit_invocation` to be the boolean `false`. Missing
+files, malformed YAML, and other values fail validation.
 
 `scripts/validate.py` checks that `name` matches the directory, the description
 length, `disable-model-invocation: true`, no `user-invocable: false`, no `model:`

@@ -43,7 +43,7 @@
     "test": "bun run test:py && bun run test:js",
     "test:js": "find skills -name \"*.test.mjs\" -not -path \"*/node_modules/*\" -exec node --test {} +",
     "test:py": "python3 -m unittest discover -s scripts/tests -p \"test_*.py\" && for d in skills/*/tests; do python3 -m unittest discover -s \"$d\" -p \"test_*.py\" || exit 1; done",
-    "validate": "python3 scripts/validate.py"
+    "validate": "python3 scripts/validate.py && bun scripts/validate-codex.mjs"
   },
   "version": "2.2.4"
 }
