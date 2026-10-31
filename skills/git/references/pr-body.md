@@ -38,7 +38,14 @@ A call-tree diff reads like this:
 Show the change working, as a before and after.
 
 1. **Screenshots**, best tier, when the change is visual and the environment can
-   render it.
+   render it. Upload them onto the PR itself with `--attach` (gh 2.99.0+):
+   pass `--attach './after.png#After'` to `gh pr create` or `gh pr edit`
+   (a markdown image in the body that names the same local file is rewritten
+   to the upload), or post them with `gh pr comment <number> --attach`.
+   Never push image-hosting branches, commit evidence images, open
+   screenshot-only PRs or link `raw.githubusercontent.com` images. Attachments keep the repository's
+   access controls, so evidence from a private repository never goes to a
+   gist, public repository or third-party image host.
 2. **Execution output**: the exact test or command that failed before and passes
    now. Show the assertion in pseudocode when the test file is long.
 3. **Checks**: the commands that ran, the host they ran on, and the result. Write
