@@ -147,6 +147,10 @@ Delegates To:
    gh pr edit <number> --title "<title>" --body-file <body-file>
    ```
 
+   Add `--attach './after.png#After'` (repeatable) to `gh pr create` or
+   `gh pr edit` to upload screenshots referenced in the body, or use
+   `gh pr comment <number> --attach` for evidence that arrives later.
+
    Default to draft unless the user asked for ready review or the repo convention
    clearly requires ready PRs.
 
@@ -167,6 +171,8 @@ Delegates To:
 
 - Use real newlines via `--body-file`; do not pass escaped markdown inline.
 - Do not use `--fill` as the final body if the diff needs context.
+- Upload screenshots with `--attach`; never host them on separate branches or
+  in screenshot-only PRs.
 - Do not claim tests passed unless they were run in this session or clearly
   visible from CI.
 - If the PR closes issues, include `Closes #123` only when the issue is truly
