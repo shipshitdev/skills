@@ -5,7 +5,7 @@ fields, and selects only what is needed.
 
 ## Authorized Scope
 
-Follow `protocol.md`. Loading this playbook grants no new authority.
+Loading this playbook grants no new authority.
 
 ## Contract
 
@@ -28,7 +28,7 @@ External Side Effects:
 
 Confirmation Required:
 
-- None beyond `protocol.md`
+- None beyond the shared protocol
 
 Delegates To:
 
@@ -88,5 +88,5 @@ Type checks count where the language has them; say so.
 
 ## PR
 
-Follow `protocol.md`. Table of queries with columns before and after, bytes, and
+Table of queries with columns before and after, bytes, and
 latency; list of kept whole-row loads.

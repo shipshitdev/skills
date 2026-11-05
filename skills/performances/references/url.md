@@ -5,7 +5,7 @@ validates or normalizes untrusted input.
 
 ## Authorized Scope
 
-Follow `protocol.md`. Loading this playbook grants no new authority.
+Loading this playbook grants no new authority.
 
 ## Contract
 
@@ -47,8 +47,9 @@ cost worth measuring, say so.
 ## Candidates
 
 - Parsing only to read a part the framework already parsed
-- Parsing a constant or configuration string on every call (hoist it, or use the
-  string directly)
+- Parsing a process-constant string on every call (hoist it, or use the string
+  directly). Keep the parse at the read site when the configuration can reload or
+  vary by tenant or request
 - Parsing the same string several times in one request (parse once, pass the result)
 - Parsing and immediately re-serializing with no change
 - Joining a trusted base and a trusted path where concatenation is exact
@@ -82,4 +83,4 @@ code handled.
 
 ## PR
 
-Follow `protocol.md`. Include the removed and kept lists.
+Include the removed and kept lists.

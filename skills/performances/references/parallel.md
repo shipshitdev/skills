@@ -5,8 +5,8 @@ runs them concurrently, without changing what the code observably does.
 
 ## Authorized Scope
 
-Follow `protocol.md`. Edit only application code and tests within the requested
-scope. Loading this playbook grants no new authority.
+Edit only application code and tests within the requested scope. Loading this
+playbook grants no new authority.
 
 ## Contract
 
@@ -104,5 +104,5 @@ before. Where order mattered, assert it.
 
 ## PR
 
-Follow `protocol.md`. List each changed site with its latency delta, then each
+List each changed site with its latency delta, then each
 site left sequential with the reason.

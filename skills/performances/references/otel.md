@@ -6,8 +6,8 @@ every span and trace context propagated in and out.
 
 ## Authorized Scope
 
-Follow `protocol.md`. Loading this playbook grants no new authority, and adding
-a new vendor is never implied.
+Loading this playbook grants no new authority, and adding a new vendor is never
+implied.
 
 ## Contract
 
@@ -74,8 +74,10 @@ before choosing one. Do not add a second vendor.
 ## Request context on every span
 
 Set request context once at the edge (middleware) in the stack's context store
-(`AsyncLocalStorage`, `contextvars`, Go `context`). Copy it onto every span from
-a span processor at start, so wrappers need no arguments. Attach at least:
+(`AsyncLocalStorage`, `contextvars`, Go `context`). Copy the static parts onto every span from
+a span processor at start, so wrappers need no arguments, and set the outcome and
+status in the tracing helper just before the span ends, because the outcome is
+only known then. Attach at least:
 organization or business id, user id, outcome (success, error, denied, and so
 on), route, and request id. Follow the semantic conventions where they exist and
 namespace the rest (`app.org.id`). Use ids, never names, emails, tokens, request
@@ -115,6 +117,6 @@ errors and slow traces, when volume is high.
 
 ## PR
 
-Follow `protocol.md`. Include the coverage list, the vendor-fit decision, the
+Include the coverage list, the vendor-fit decision, the
 lint rule, the overhead table, and a trace screenshot or exported span sample
 with ids redacted.

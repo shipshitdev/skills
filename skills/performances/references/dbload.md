@@ -5,7 +5,7 @@ fail at scale, fixes them, and proves the fix with statistics and a chart.
 
 ## Authorized Scope
 
-Follow `protocol.md`, especially the database safety rules. Everything runs on a
+Follow the shared protocol, especially the database safety rules. Everything runs on a
 throwaway local database. Loading this playbook grants no new authority.
 
 ## Contract
@@ -85,8 +85,10 @@ Deterministic seed, bulk loading, same indexes and constraints as migrations.
 
 For each query and tier: warm up, then take at least 30 samples, separating cold
 from warm cache runs. Record latency, rows returned, errors and timeouts, and the
-plan with actual timings and buffer or I/O counts (for example Postgres
-`EXPLAIN (ANALYZE, BUFFERS)`, SQLite `EXPLAIN QUERY PLAN`). Flag as failing: over
+plan with actual timings and buffer or I/O counts where the engine provides them
+(for example Postgres `EXPLAIN (ANALYZE, BUFFERS)`). Where it does not (SQLite
+`EXPLAIN QUERY PLAN` shows plan structure only), time the query separately and
+mark unavailable metrics as unavailable. Flag as failing: over
 the budget, timed out, errored, or growing worse than linearly across tiers
 (fit the slope of log latency against log scale; above about 1 is superlinear).
 Flag sequential scans on large tables, sorts spilling to disk, and nested loops
@@ -110,6 +112,6 @@ the HTML to the PR; do not commit it.
 
 ## PR
 
-Follow `protocol.md`. Include the suite's run instructions, the tier table with
+Include the suite's run instructions, the tier table with
 failures before and after, the chart, and the fixes. Put any migration under
 **Approvals needed**.

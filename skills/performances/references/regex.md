@@ -5,7 +5,7 @@ without changing what they match.
 
 ## Authorized Scope
 
-Follow `protocol.md`. Loading this playbook grants no new authority.
+Loading this playbook grants no new authority.
 
 ## Contract
 
@@ -28,7 +28,7 @@ External Side Effects:
 
 Confirmation Required:
 
-- None beyond `protocol.md`
+- None beyond the shared protocol
 
 Delegates To:
 
@@ -57,8 +57,10 @@ when it is negligible.
   used by `test` and `exec`. A shared one skips matches on the next call, and
   async code can interleave between uses. In a loop, a literal made fresh each
   iteration starts at zero and a hoisted one does not. Fixes: drop the flag when
-  only one match is needed, use `matchAll` or `replace` (they reset state), or set
-  `lastIndex = 0` before each use. Pick the one that keeps behavior identical.
+  only one match is needed, use `replace` (it resets state), use `matchAll` only on a fresh
+  or freshly reset regex (it requires `g`, throws on a `y`-only pattern, and its
+  clone starts at the source's current `lastIndex`), or set `lastIndex = 0` before
+  each use. Pick the one that keeps behavior identical.
 - **Dynamic patterns.** Never hoist a pattern built from user input into an
   unbounded cache. Hoist only when the variable parts come from a fixed set, or
   memoize with a bounded cache keyed by the escaped input, and only when the same
@@ -87,5 +89,5 @@ show up.
 
 ## PR
 
-Follow `protocol.md`. Include the hoisted list with any flag handling and the
+Include the hoisted list with any flag handling and the
 patterns left in place.

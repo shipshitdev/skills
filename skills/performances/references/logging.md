@@ -5,7 +5,7 @@ job, tail-sampled, sharing trace ids with tracing.
 
 ## Authorized Scope
 
-Follow `protocol.md`. Loading this playbook grants no new authority.
+Loading this playbook grants no new authority.
 
 ## Contract
 
@@ -88,11 +88,15 @@ Decide at emit time, with the whole event in hand:
 3. Always keep important traffic: configured tenants or plans, internal and test
    accounts, flagged sessions, new releases or canaries, and routes such as
    payments and auth.
-4. Randomly keep a small share of the rest (start at 1 to 5 percent).
+4. Keep a small share of the rest, chosen deterministically: hash the trace id
+   (the request id when there is no trace) and keep ids below a configured
+   threshold (start at 1 to 5 percent).
 
 Record `sample_rate` on kept events so counts can be reweighted. Make
 thresholds and rules configuration, not constants. If tracing is also sampled,
-use the same predicate so a kept trace has its event and the reverse.
+both decisions must use the same rules keyed by the same trace id, including when
+a collector makes the trace decision (see `otel.md`), so a kept trace has its
+event and the reverse. Test this across service hops.
 
 ## Trace ids
 
@@ -111,6 +115,6 @@ throw, redaction, and size caps.
 
 ## PR
 
-Follow `protocol.md`. Include a before/after sample of one request's output, the
+Include a before/after sample of one request's output, the
 volume table, the sampling rules and their configuration, and what was left as
 ordinary logs.

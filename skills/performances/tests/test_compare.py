@@ -111,7 +111,19 @@ class CompareScenarioTests(unittest.TestCase):
 
     def test_zero_baseline_does_not_divide_by_zero(self):
         result = self.run_compare([0.0] * 10, [1.0] * 10)
-        self.assertTrue(math.isinf(result["change_pct"]) or result["change_pct"] > 0)
+        self.assertTrue(math.isinf(result["change_pct"]))
+        self.assertFalse(any(math.isnan(bound) for bound in result["change_ci_pct"]))
+        self.assertEqual(result["verdict"], "regressed")
+
+    def test_throughput_increase_is_an_improvement_when_higher_is_better(self):
+        before, after = noisy(100, 5, 30, 1), noisy(200, 5, 30, 2)
+        lower = self.run_compare(before, after)
+        higher = self.run_compare(before, after, higher_is_better=True)
+        self.assertEqual(lower["verdict"], "regressed")
+        self.assertEqual(higher["verdict"], "improved")
+
+    def test_format_change_renders_nan_as_not_available(self):
+        self.assertEqual(compare.format_change(float("nan")), "n/a")
 
 
 class ReportTests(unittest.TestCase):
@@ -153,6 +165,17 @@ class ReportTests(unittest.TestCase):
         self.assertIn("&lt;script&gt;", page)
         self.assertIn("Before &amp; after", page)
         self.assertNotIn("http://", page.replace("http://www.w3.org/2000/svg", ""))
+
+    def test_html_escapes_the_unit_in_axis_labels(self):
+        data = self.sample_input()
+        data["unit"] = "</text><script>x</script>"
+        results = compare.analyze(data, alpha=0.05, resamples=100, seed=1)
+        page = compare.render_html(results, unit=data["unit"], title="t")
+        self.assertNotIn("<script>x</script>", page)
+
+    def test_html_states_the_metric_direction(self):
+        self.assertIn("Higher is better", compare.render_html([], unit="req/s", title="t", higher_is_better=True))
+        self.assertIn("Lower is better", compare.render_html([], unit="ms", title="t"))
 
     def test_html_handles_no_results(self):
         self.assertIn("No scenarios", compare.render_html([], unit="ms", title="Empty"))
@@ -204,6 +227,23 @@ class CommandLineTests(unittest.TestCase):
         with redirect_stdout(buffer):
             code = compare.main([str(self.input), "--resamples", "500"])
         self.assertEqual(code, 2)
+
+    def test_out_creates_missing_directories_and_writes_utf8(self):
+        data = json.loads(self.input.read_text())
+        data["before"] = {"requête·é": data["before"]["q"]}
+        data["after"] = {"requête·é": data["after"]["q"]}
+        self.input.write_text(json.dumps(data), encoding="utf-8")
+        out = self.directory / "nested" / "dir" / "report.html"
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(compare.main([str(self.input), "--out", str(out), "--resamples", "200"]), 0)
+        self.assertIn("requête·é", out.read_text(encoding="utf-8"))
+
+    def test_higher_is_better_flag_flips_the_exit_code(self):
+        data = json.loads(self.input.read_text())
+        data["before"], data["after"] = data["after"], data["before"]
+        self.input.write_text(json.dumps(data))
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(compare.main([str(self.input), "--resamples", "200", "--higher-is-better"]), 0)
 
     def test_bad_input_exits_with_usage_error(self):
         self.input.write_text("{not json")

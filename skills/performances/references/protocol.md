@@ -1,7 +1,8 @@
 # Performances Protocol
 
 Shared rules for every `/performances` action. Read this with the action's
-playbook. Where they differ, the playbook wins.
+playbook. A playbook may add restrictions or define its workflow, and it cannot
+override Authorized Scope. Where other rules differ, the playbook wins.
 
 ## Authorized Scope
 
@@ -35,7 +36,8 @@ Creates/Modifies:
 
 External Side Effects:
 
-- Pushes a branch and opens a PR per action
+- Pushes a branch and opens a PR per action, only for an approved, non-report
+  action that changed code
 - Reads the web where the playbook names a source
 
 Confirmation Required:
@@ -106,7 +108,8 @@ them, and by reading the code when it does not. Say which you used.
 
 ## 4. One PR per action
 
-- Branch `perf/<action>` from freshly fetched `origin/<default>`. Use a separate
+- Branch `perf/<action>` from the freshly fetched default branch of the
+  repository's default remote. Use a separate
   worktree per action when running several.
 - Conventional commits: `perf:` for speed changes, `feat:` for new capability
   (`otel`, `logging`, `dbload`), `test:` for tests-only commits.

@@ -6,7 +6,7 @@ production.
 
 ## Authorized Scope
 
-Follow `protocol.md`, especially the database safety rules. This playbook writes
+Follow the shared protocol, especially the database safety rules. This playbook writes
 migration and backfill code; it never runs them anywhere but a throwaway local
 database. Loading it grants no new authority.
 
@@ -56,8 +56,11 @@ JSON column type do not apply: say so and stop.
 2. Scan code for hot-path single-key reads: path operators (`col->>'key'`,
    `#>>`), ORM JSON path filters, selects of the whole column to read one key in
    application code, and filters, sorts, or joins on a key.
-3. Rank by frequency times column size. Large values are stored out of line and
-   decompressed in full on every read, and updates rewrite the whole value.
+3. Rank by frequency times column size, and confirm with observed size, plan, or
+   I/O evidence before ranking. How a large value is stored and read is
+   engine-specific (for example Postgres stores it out of line and decompresses
+   the whole value on each read, and updates rewrite it; check the detected
+   engine's behavior instead of assuming it).
 
 ## Decide per key
 
@@ -76,12 +79,16 @@ between missing and null if callers observe it.
 
 1. Add the nullable column with no default (no table rewrite).
 2. Dual-write: every writer sets both (ORM paths, raw SQL, scripts, triggers,
-   other services found in the repo).
+   other services in the repo). Also list writers outside the repository that
+   touch the table (other services, jobs, manual scripts). Do not switch reads
+   until each external writer can dual-write, or the inventory records that
+   none exist.
 3. Backfill in keyset batches: small transactions, throttled, idempotent,
    resumable, with progress logging. No long locks. Build indexes concurrently
    where the engine supports it, outside a transaction.
-4. Verify: a query counting rows where the jsonb key and the new column differ is
-   zero. Then add constraints in a non-blocking order (for example a check
+4. Verify: a query counting rows where the caller-visible state differs is zero,
+   comparing key presence, JSON type, and normalized value, so a missing key never
+   equals JSON null. Then add constraints in a non-blocking order (for example a check
    constraint added unvalidated, then validated).
 5. Switch reads to the column behind the project's flag mechanism if it has one.
 6. Stop writing the key into the jsonb and remove it in a later PR, not this one.
@@ -103,7 +110,7 @@ on the throwaway database.
 
 ## PR
 
-Follow `protocol.md`. Put an **Approvals needed** section first: the exact
+Put an **Approvals needed** section first: the exact
 production steps in order, estimated duration and lock impact from the measured
 data, monitoring to watch, and rollback. State plainly that nothing was applied
 outside a throwaway database.

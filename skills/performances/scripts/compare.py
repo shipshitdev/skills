@@ -7,7 +7,8 @@ Standard library only. Reads one JSON file:
       "unit": "ms",
       "before": {"scenario": [12.1, 11.8, ...]},
       "after":  {"scenario": [6.2, 6.0, ...]},
-      "failures": {"before": {"scenario": 3}, "after": {}}      # optional
+      "failures": {"before": {"scenario": 3}, "after": {}},     # optional
+      "higher_is_better": false                                # optional, true for throughput
     }
 
 Per scenario it reports sample count, median, mean, p95, a bootstrap confidence
@@ -40,7 +41,7 @@ def percentile(samples, q):
     position = q * (len(ordered) - 1)
     low = math.floor(position)
     high = math.ceil(position)
-    if low == high:
+    if low == high or ordered[low] == ordered[high]:
         return ordered[low]
     return ordered[low] + (ordered[high] - ordered[low]) * (position - low)
 
@@ -112,15 +113,19 @@ def percent_change(before, after):
     return (after - before) / before * 100
 
 
-def decide(p_value, ci, alpha):
-    if p_value < alpha and ci[1] < 0:
-        return "improved"
-    if p_value < alpha and ci[0] > 0:
-        return "regressed"
+def decide(p_value, ci, alpha, higher_is_better=False):
+    if p_value >= alpha:
+        return "no significant change"
+    if ci[1] < 0:
+        return "regressed" if higher_is_better else "improved"
+    if ci[0] > 0:
+        return "improved" if higher_is_better else "regressed"
     return "no significant change"
 
 
-def compare_scenario(before, after, alpha, resamples, seed, before_failures=0, after_failures=0, confidence=0.95):
+def compare_scenario(
+    before, after, alpha, resamples, seed, before_failures=0, after_failures=0, confidence=0.95, higher_is_better=False
+):
     before_summary = summarize(before)
     after_summary = summarize(after)
     before_summary["failures"] = before_failures
@@ -142,7 +147,7 @@ def compare_scenario(before, after, alpha, resamples, seed, before_failures=0, a
     if len(before) < MIN_SAMPLES or len(after) < MIN_SAMPLES:
         verdict = "insufficient samples"
     else:
-        verdict = decide(p_value, change_ci, alpha)
+        verdict = decide(p_value, change_ci, alpha, higher_is_better)
     return {
         "before": before_summary,
         "after": after_summary,
@@ -164,7 +169,7 @@ def _clean_samples(label, side, values):
     return cleaned
 
 
-def analyze(data, alpha, resamples, seed):
+def analyze(data, alpha, resamples, seed, higher_is_better=None):
     if not isinstance(data, dict) or "before" not in data or "after" not in data:
         raise ValueError("input needs 'before' and 'after' objects")
     before, after = data["before"], data["after"]
@@ -172,6 +177,8 @@ def analyze(data, alpha, resamples, seed):
         missing = sorted(set(before) ^ set(after))
         raise ValueError(f"scenarios differ between before and after: {', '.join(missing)}")
     failures = data.get("failures", {})
+    if higher_is_better is None:
+        higher_is_better = bool(data.get("higher_is_better", False))
     results = []
     for index, label in enumerate(before):
         result = compare_scenario(
@@ -182,13 +189,14 @@ def analyze(data, alpha, resamples, seed):
             seed + index,
             before_failures=int(failures.get("before", {}).get(label, 0)),
             after_failures=int(failures.get("after", {}).get(label, 0)),
+            higher_is_better=higher_is_better,
         )
         result["scenario"] = label
         results.append(result)
     for result, adjusted in zip(results, holm_adjust([r["p_value"] for r in results])):
         result["p_adjusted"] = adjusted
         if result["verdict"] != "insufficient samples":
-            result["verdict"] = decide(adjusted, result["change_ci_pct"], alpha)
+            result["verdict"] = decide(adjusted, result["change_ci_pct"], alpha, higher_is_better)
     return results
 
 
@@ -199,7 +207,7 @@ def format_value(value, unit):
 
 
 def format_change(value):
-    return "n/a" if math.isinf(value) else f"{value:+.1f}%"
+    return "n/a" if not math.isfinite(value) else f"{value:+.1f}%"
 
 
 CSS = """
@@ -215,11 +223,11 @@ th,td{padding:6px 8px;border-bottom:1px solid var(--grid);text-align:right}th:fi
 """
 
 
-def render_html(results, unit, title):
+def render_html(results, unit, title, higher_is_better=False):
     safe_title = html.escape(title)
     if not results:
         body = "<p>No scenarios to report.</p>"
-        return _page(safe_title, body)
+        return _page(safe_title, body, higher_is_better)
 
     left, right, row_height, gap = 230, 110, 44, 14
     width = 920
@@ -240,7 +248,7 @@ def render_html(results, unit, title):
     while tick <= high_log:
         position = left + (tick - low_log) / (high_log - low_log) * plot
         parts.append(f'<line x1="{position:.1f}" x2="{position:.1f}" y1="20" y2="{height - 10}" stroke="var(--grid)"/>')
-        parts.append(f'<text class="muted" x="{position:.1f}" y="14" text-anchor="middle">{format_value(10**tick, unit)}</text>')
+        parts.append(f'<text class="muted" x="{position:.1f}" y="14" text-anchor="middle">{html.escape(format_value(10**tick, unit))}</text>')
         tick += 1
     for row, result in enumerate(results):
         top = 28 + row * (row_height + gap)
@@ -279,15 +287,16 @@ def render_html(results, unit, title):
         f"<tbody>{''.join(rows)}</tbody></table>"
     )
     legend = '<p class="legend"><span style="background:var(--before)"></span>before<span style="background:var(--after)"></span>after · bars are medians on a log scale, whiskers are 95% bootstrap intervals</p>'
-    return _page(safe_title, "".join(parts) + legend + table)
+    return _page(safe_title, "".join(parts) + legend + table, higher_is_better)
 
 
-def _page(safe_title, body):
+def _page(safe_title, body, higher_is_better=False):
+    direction = "Higher" if higher_is_better else "Lower"
     return (
         "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         f"<title>{safe_title}</title><style>{CSS}</style></head><body><main>"
-        f"<h1>{safe_title}</h1><p class=\"note\">Lower is better. Verdicts use Holm-adjusted Mann-Whitney p-values and bootstrap intervals.</p>"
+        f"<h1>{safe_title}</h1><p class=\"note\">{direction} is better. Verdicts use Holm-adjusted Mann-Whitney p-values and bootstrap intervals.</p>"
         f"{body}</main></body></html>"
     )
 
@@ -322,17 +331,25 @@ def main(argv=None):
     parser.add_argument("--alpha", type=float, default=0.05)
     parser.add_argument("--resamples", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument(
+        "--higher-is-better",
+        action="store_true",
+        help="the metric is throughput-like: significant increases are improvements (also settable as higher_is_better in the input)",
+    )
     parser.add_argument("--format", choices=("text", "json"), default="text")
     args = parser.parse_args(argv)
     try:
-        data = json.loads(Path(args.input).read_text())
-        results = analyze(data, args.alpha, args.resamples, args.seed)
+        data = json.loads(Path(args.input).read_text(encoding="utf-8"))
+        results = analyze(data, args.alpha, args.resamples, args.seed, True if args.higher_is_better else None)
     except (OSError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)
         raise SystemExit(1) from error
     unit = data.get("unit", "ms")
+    higher_is_better = args.higher_is_better or bool(data.get("higher_is_better", False))
     if args.out:
-        Path(args.out).write_text(render_html(results, unit, args.title))
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(render_html(results, unit, args.title, higher_is_better), encoding="utf-8")
     if args.format == "json":
         print(json.dumps(_json_safe(results), indent=2))
     else:

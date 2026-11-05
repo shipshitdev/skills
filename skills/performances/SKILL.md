@@ -43,6 +43,7 @@ shared stack-detection, evidence, behavior-preservation, safety, and PR rules.
 3. Otherwise read `references/protocol.md` and the action's playbook in full and
    follow them as if they were the skill, passing the remaining arguments as the
    scope. Each playbook keeps its own scope, confirmation gates, and final report.
+   For `all`, also read the eight action playbooks, since `all` runs each one.
 
 Examples:
 
@@ -73,5 +74,6 @@ self-contained HTML chart. Run it from the installed skill directory:
 python3 <skill-dir>/scripts/compare.py samples.json --out .tmp/report.html
 ```
 
-Input and exit codes are documented at the top of the script. Use it for every
-before/after claim in every action.
+Input and exit codes are documented at the top of the script. Pass
+`--higher-is-better` for throughput-like metrics, so an increase counts as an
+improvement. Use it for every before/after claim in every action.

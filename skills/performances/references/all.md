@@ -5,7 +5,7 @@ its own branch and PR.
 
 ## Authorized Scope
 
-Follow `protocol.md`. Running `all` is the user's request for all eight actions
+Running `all` is the user's request for all eight actions
 and nothing more. Each action keeps its own confirmation gates.
 
 ## Contract
@@ -34,8 +34,8 @@ Confirmation Required:
 
 Delegates To:
 
-- Each action's playbook: `parallel.md`, `dbload.md`, `otel.md`, `logging.md`,
-  `select.md`, `url.md`, `regex.md`, `jsonb.md`. Read each installed playbook and follow it.
+- The eight action playbooks, which the router loads for `all`; follow each one
+  for its workstream.
 
 ## Order
 
@@ -50,12 +50,12 @@ Delegates To:
 
 ## Procedure
 
-1. Detect the stack once, using `protocol.md`. For each action, mark it
+1. Detect the stack once, using the shared protocol. For each action, mark it
    applicable, partly applicable, or not applicable, with the reason. Show this
    plan and wait for the user's go-ahead.
 2. Run the actions in order, each as a separate workstream:
    - Its own branch `perf/<action>` and worktree off freshly fetched
-     `origin/<default>`. Never stack one action's branch on another's.
+     the default remote's default branch. Never stack one action's branch on another's.
    - Its own baseline, fix, and after measurement. Never share before/after
      numbers between actions.
    - Its own PR, opened by its playbook.
@@ -64,8 +64,10 @@ Delegates To:
    two in the same checkout.
 4. Dependencies are soft. `logging` uses the active trace span's ids when
    `otel` has merged or is present, and generates compatible ids otherwise.
-   `select` and `jsonb` reuse the `dbload` harness when it exists and fall back
-   to a minimal seed when not. State which was used.
+   `select` and `jsonb` use the `dbload` harness only if it is already on the
+   default branch when their branch is cut; otherwise each builds its own minimal
+   seed. Never wait on, copy from, or stack on another workstream's branch, and
+   state which seed was used.
 5. A workstream with nothing to change, nothing applicable, or a blocker is
    reported, not forced. Continue to the next one.
 6. If two PRs touch the same files, say so and recommend a merge order. Do not
