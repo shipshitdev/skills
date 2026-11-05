@@ -4,7 +4,7 @@
 
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
-14 user-invoked commands for development workflows. Works with Claude Code,
+15 user-invoked commands for development workflows. Works with Claude Code,
 OpenAI Codex, and Cursor.
 
 Every command is one word. Related workflows share a command and take an action
@@ -151,6 +151,21 @@ For a retrospective on how the work went (not what shipped), use the upstream
 /orchestrate help
 ```
 
+### Performance work
+
+```text
+/performances parallel             # independent awaits on hot paths -> concurrent, authz and ordered writes stay sequential
+/performances dbload               # load-test the schema at 1x/10x/100x/1000x on a throwaway DB, chart before/after
+/performances otel                 # OpenTelemetry to the vendor already in use, lint-enforced
+/performances logging              # one wide, tail-sampled event per request or job
+/performances all                  # all eight, each as its own branch and PR
+```
+
+Each action detects the stack, measures before and after with confidence
+intervals (`scripts/compare.py`), keeps behavior unchanged, and opens one PR.
+Actions that would touch production, like `jsonb`, only prepare the migration
+for human approval.
+
 ### Boards
 
 ```text
@@ -169,6 +184,7 @@ For a retrospective on how the work went (not what shipped), use the upstream
 | `/check` | `code` (default), `grok`, `council`, `week` | Code review, a verified Grok second opinion, a scored multi-provider panel, or the weekly engineering review. |
 | `/standup` | `all`, `audit` | Personal git recap, or everyone's merged changes with an optional audit. |
 | `/git` | `worktree`, `safety`, `conflicts`, `pr`, `ci`, `babysit`, `modernize`, `merge`, `cleanup` | Local git and GitHub: worktrees, secret guards, conflicts, PRs, CI fixes, PR babysitting, stale-PR updates, merging, cleanup. |
+| `/performances` | `parallel`, `dbload`, `otel`, `logging`, `select`, `url`, `regex`, `jsonb`, `all` | Measured, behavior-preserving performance refactors, one PR per action. |
 | `/release` | | Cuts a release from a green trunk. |
 | `/deploy` | | Runs staging or production deployment workflows. |
 | `/board` | `configure`, `sync` | Audits and configures GitHub or Jira boards, or reconciles them with delivery evidence. |
