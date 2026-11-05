@@ -64,6 +64,12 @@ before choosing one. Do not add a second vendor.
   intentionally untraced.
 - Prefer library auto-instrumentation for drivers and HTTP clients, and the
   wrapper for application code.
+- Span names are low-cardinality, `{verb} {object}` (`GET /orders/:id`, never
+  the raw path or ids). Set status to error only when the operation finally
+  failed, and record exceptions with trace ids.
+- Cap the span count: a trace-shape test fails when one service emits more than
+  a small, stated number of internal spans per trace, so wrapping every I/O
+  function does not flood the vendor.
 
 ## Request context on every span
 
@@ -102,8 +108,10 @@ p50 and p95 latency and throughput with `compare.py`, state the overhead budget
 you used, and record spans per request. Verify against the real exporter or a
 local collector: spans arrive, attributes are present, parent and child
 relationships are right, and `traceparent` round-trips across two services.
-Recommend sampling (head ratio, plus tail sampling for errors in a collector)
-when volume is high.
+Sample in the pipeline: keep the SDK sampler always-on (a default parent-based
+sampler lets an external `traceparent` with the sampled flag off silence
+tracing) and do head or tail sampling in a collector, with tail rules that keep
+errors and slow traces, when volume is high.
 
 ## PR
 
