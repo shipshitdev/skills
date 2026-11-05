@@ -54,8 +54,9 @@ Delegates To:
    applicable, partly applicable, or not applicable, with the reason. Show this
    plan and wait for the user's go-ahead.
 2. Run the actions in order, each as a separate workstream:
-   - Its own branch `perf/<action>` and worktree off freshly fetched
-     the default remote's default branch. Never stack one action's branch on another's.
+   - Its own branch `perf/<action>` and worktree off the freshly
+     fetched default branch of the default remote. Never stack one action's branch
+     on another's.
    - Its own baseline, fix, and after measurement. Never share before/after
      numbers between actions.
    - Its own PR, opened by its playbook.
