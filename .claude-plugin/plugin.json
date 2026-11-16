@@ -1,0 +1,10 @@
+{
+  "name": "shipshitdev",
+  "description": "User-invoked agent skills for development workflows",
+  "author": {
+    "name": "Ship Shit Dev"
+  },
+  "homepage": "https://github.com/shipshitdev/skills",
+  "repository": "https://github.com/shipshitdev/skills",
+  "license": "MIT"
+}

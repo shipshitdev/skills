@@ -1,6 +1,6 @@
 # Skills Repo Memory
 
-last_verified: 2026-10-30
+last_verified: 2026-11-16
 
 ## What This Repo Is
 
@@ -25,13 +25,22 @@ Vincent wants these skills used only when he runs them. Every skill sets
 `disable-model-invocation: true`; `user-invocable: false` is forbidden because it
 would make a skill unreachable. The validator enforces both. The library was cut
 from 132 skills to the 28 he runs; `commands/`, `bundles/`, `catalog.json`,
-`.claude-plugin/`, `docs/`, `prompts/`, plugin manifests, per-skill versions and
+`docs/`, `prompts/`, plugin manifests, per-skill versions and
 the generation scripts were removed. Slash names now equal skill names.
 
 Because the Skill tool cannot load user-only skills, a composing skill runs a
 delegate by reading its installed playbook (`<router>/references/<action>.md` for
 `/<router> <action>`, `<name>/SKILL.md` for `/<name>`) and following it. Handoffs
 the user should start stay as `Recommend /<command>`.
+
+### Claude plugin marketplace (2026-11-16)
+
+`.claude-plugin/marketplace.json` lists one plugin, `shipshitdev`, whose source is
+the repository root; `.claude-plugin/plugin.json` carries no version, so updates
+follow the commit. Claude discovers every skill in `skills/`, so there is nothing
+to generate and no bundles. This partly reverses the 2026-10-20 removal of
+`.claude-plugin/` so Vincent can add the skills to his Claude account and sync
+them everywhere. Plugin skills are namespaced (`/shipshitdev:<name>`).
 
 ### Upstream pstack and Pocock skills (2026-10-19, amended 2026-10-20)
 
