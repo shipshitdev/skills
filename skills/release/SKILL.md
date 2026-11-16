@@ -74,12 +74,25 @@ Delegates To:
 
 | Mode | Phases | Mutates |
 |---|---|---|
+| any, outside a checkout | 0 (hand off to a project thread) | no |
 | `status` | 1, 2 (no waiting) | no |
 | `gates` | 1, 2 (wait for pending checks) | no |
 | `notes` | 1-4 | no |
 | `cut` | 1-7 | yes, after confirmation |
 
 An unrecognized argument prints this table; never guess a mode.
+
+## Phase 0: Project thread
+
+A release runs inside the target repository. If `git rev-parse --show-toplevel` succeeds and `gh repo view` resolves, continue to Phase 1 here.
+
+Otherwise, resolve the project from the arguments, or ask the user with the host's question tool (offer recently used project folders). Then branch on the host:
+
+- **Claude desktop app** (`CLAUDE_CODE_ENTRYPOINT` is `claude-desktop` and a session-start tool such as `start_session` is available): start a new session in the project's checkout, on the machine that holds it (an SSH connection when the checkout is remote). Its brief is `/release` with the same arguments; with no mode, it prepares the release: phases 1-5, ending at the plan and waiting for the user's yes. Here, link the new session and stop.
+- **Another app with a thread tool** (for example the Codex app): do the same with its tool for a new thread in that folder.
+- **CLI, or no session tool**: open nothing. Tell the user to run `/release` from the checkout (print the `cd` command), or, when they agree, run the phases from here with `git -C <path>` and `gh -R <owner>/<repo>`.
+
+Never run a phase against a folder that is not the target repository.
 
 ## Phase 1: Trunk and release mode
 
