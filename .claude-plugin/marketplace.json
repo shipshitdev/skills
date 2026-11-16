@@ -1,0 +1,14 @@
+{
+  "name": "shipshitdev",
+  "owner": {
+    "name": "Ship Shit Dev"
+  },
+  "description": "User-invoked agent skills for development workflows",
+  "plugins": [
+    {
+      "name": "shipshitdev",
+      "source": "./",
+      "description": "Every skill in skills/ as one plugin"
+    }
+  ]
+}

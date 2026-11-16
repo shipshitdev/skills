@@ -217,6 +217,21 @@ bunx skills add shipshitdev/skills -g --skill git -y
 
 Always pass `--agent`; `--all` installs into every agent the CLI knows (30+).
 
+### Claude plugin
+
+The repository is also a Claude plugin marketplace with one plugin, `shipshitdev`,
+that carries every skill in `skills/`. Add it to your Claude account (Settings →
+Customize → Skills → Add) to sync the skills to every Claude surface, or in Claude
+Code:
+
+```text
+/plugin marketplace add shipshitdev/skills
+/plugin install shipshitdev@shipshitdev
+```
+
+Plugin skills are namespaced, for example `/shipshitdev:standup`. Codex and
+Cursor still install with `bunx skills add`.
+
 ### Companion libraries
 
 This repository does not vendor other skill libraries. Install them from upstream
