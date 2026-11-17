@@ -32,7 +32,8 @@ Creates/Modifies:
 External Side Effects:
 
 - Runs the repository's checks and, for app-driven checks, a local or preview app
-- Pushes and opens a pull request only with `--pr`
+- Pushes the loop branch only with `--pr` (once, at the end) or with `--surface preview` (after each
+  fix commit, so the preview can build it); opens a pull request only with `--pr`
 - Never changes production, merges, deploys, or sends external messages
 
 Confirmation Required:
