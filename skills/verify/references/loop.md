@@ -161,7 +161,8 @@ checks (build, type, boot), then the rest in ledger order. For each:
 3. **Re-verify.** Run the finding's own check, then the full set. Update the ledger with the
    result and commit hash.
 4. **Judge.**
-   - Fixed and the set has no new failures: mark `fixed`, continue.
+   - Fixed and the set has no new failures: mark `fixed` (on the `prod` surface, mark
+     `fixed-local, awaiting prod re-verify`), continue.
    - A new failure appeared: record it as a regression finding, take it next.
    - Still failing: count an attempt. Re-run `debug` with what was learned. Do not repeat a
      refuted hypothesis. After `--max-attempts`, mark `stalled`, revert that finding's
