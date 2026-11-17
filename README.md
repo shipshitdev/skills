@@ -4,7 +4,7 @@
 
 ![Project Type](https://img.shields.io/badge/Project-Skills-blue)
 
-15 user-invoked commands for development workflows. Works with Claude Code,
+16 user-invoked commands for development workflows. Works with Claude Code,
 OpenAI Codex, and Cursor.
 
 Every command is one word. Related workflows share a command and take an action
@@ -79,6 +79,7 @@ To root-cause before filing, run an upstream debugging skill such as
 /qa                                # branch qa/YYYY-MM-DD off fresh origin trunk, then fix what you report
 /qa the onboarding flow            # same loop, focused on one area
 /qa review                         # check finished agent work against the ask
+/qa prod v1.4.0                    # QA a shipped release on production with the QA account, report only
 /browse open the dashboard and screenshot the empty state
 ```
 
@@ -86,6 +87,24 @@ To root-cause before filing, run an upstream debugging skill such as
 fetched `origin/<default>`; with uncommitted changes it stops and lists them
 instead. It makes one local commit per fix and never pushes, opens a PR, or
 deploys. Publish the branch afterwards with `/git pr`.
+
+### QA a release, then fix what fails
+
+Claude Code implements; Codex (or any agent) verifies the real app and fixes what breaks.
+
+```text
+/qa prod v1.4.0                    # every feature in the release plus the Human Review cards, on production
+/verify .tmp/qa-prod/v1.4.0/report.md   # debug, fix, and re-verify each failure until green (Codex: $verify ...)
+/qa prod v1.4.0 --only F2,F5       # re-verify the fixed items on production after they deploy
+/verify check #231                 # report-only verification of one issue's acceptance criteria
+```
+
+`/qa prod` signs in as a dedicated QA account, never a real user, with credentials from
+environment variables and not from the repository. It reports pass or fail per feature and
+per card with repro steps and evidence, and changes nothing on production beyond records
+it creates and removes. `/verify` fixes on a branch, one commit per fix, and never edits
+production. One-time setup is in
+[`skills/qa/references/prod-setup.md`](skills/qa/references/prod-setup.md).
 
 ### Review
 
@@ -180,7 +199,8 @@ for human approval.
 | `/issue` | `feature` (default), `prd`, `plan`, `check`, `publish`, `bug` | Prepares work as GitHub issues: requirements, plan, readiness gate, publishing, bug reports. |
 | `/execute` | | Executes a prepared issue and tracks review, CI, merge, and deploy evidence. |
 | `/test` | | Runs tests at the right scope and reports failures with evidence. |
-| `/qa` | `run` (default), `review` | Interactive localhost QA loop, or a verification pass over finished agent work. |
+| `/qa` | `run` (default), `review`, `prod` | Interactive localhost QA loop, a verification pass over finished agent work, or post-release QA on production. |
+| `/verify` | `loop` (default), `check`, `debug`, `fix` | Verify, debug, fix, and re-verify until green. Runs unattended in Codex or Claude Code. |
 | `/check` | `code` (default), `grok`, `council`, `week` | Code review, a verified Grok second opinion, a scored multi-provider panel, or the weekly engineering review. |
 | `/standup` | `all`, `audit` | Personal git recap, or everyone's merged changes with an optional audit. |
 | `/git` | `worktree`, `safety`, `conflicts`, `pr`, `ci`, `babysit`, `modernize`, `merge`, `cleanup` | Local git and GitHub: worktrees, secret guards, conflicts, PRs, CI fixes, PR babysitting, stale-PR updates, merging, cleanup. |
