@@ -7,8 +7,12 @@ import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const EARS = /^\s*(?:[-*]\s*)?(?:\d+\.\s*)?(?:\[[ xX]\]\s*)?((?:WHEN|WHILE|WHERE|IF|THE SYSTEM)\b.*\bSHALL\b.*)$/;
-const CLOSING = /\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+(?:[\w.-]+\/[\w.-]+)?#(\d+)/gi;
-const REFERENCE = /(?:^|[^\w&/])#(\d+)\b|\/(?:pull|issues)\/(\d+)\b/g;
+const SLUG = '[\\w.-]+\\/[\\w.-]+';
+const CLOSING = new RegExp(
+  `\\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\\s*:?\\s+(?:(${SLUG})#(\\d+)|#(\\d+)|https://github\\.com/(${SLUG})/issues/(\\d+))`, 'gi');
+const URL_REFERENCE = new RegExp(`github\\.com/(${SLUG})/(?:pull|issues)/(\\d+)\\b`, 'g');
+const QUALIFIED_REFERENCE = new RegExp(`(?:^|[^\\w/.-])(${SLUG})#(\\d+)\\b`, 'g');
+const BARE_REFERENCE = /(?:^|[^\w&/])#(\d+)\b/g;
 
 export function ghJson(args) {
   const out = execFileSync('gh', args, {
@@ -35,18 +39,33 @@ export function parseArgs(argv) {
   return options;
 }
 
-/** Issue or PR numbers a release body, or a list of commit subjects, mentions. */
-export function extractReferences(texts) {
-  const numbers = new Set();
+const refKey = (ref) => `${ref.repo}#${ref.number}`;
+
+/**
+ * Issue or PR references a release body or a list of commit subjects mention, as
+ * { repo, number } pairs. Only unqualified `#n` resolves against `defaultRepo`;
+ * `owner/repo#n` and github.com URLs keep the repository they name.
+ */
+export function extractReferences(texts, defaultRepo) {
+  const found = new Map();
+  const add = (repo, number) => found.set(refKey({ repo, number: Number(number) }), { repo, number: Number(number) });
   for (const text of texts) {
-    for (const match of String(text ?? '').matchAll(REFERENCE)) numbers.add(Number(match[1] ?? match[2]));
+    const value = String(text ?? '');
+    for (const m of value.matchAll(URL_REFERENCE)) add(m[1], m[2]);
+    for (const m of value.matchAll(QUALIFIED_REFERENCE)) add(m[1], m[2]);
+    for (const m of value.matchAll(BARE_REFERENCE)) add(defaultRepo, m[1]);
   }
-  return [...numbers].sort((a, b) => a - b);
+  return [...found.values()].sort((a, b) => a.repo.localeCompare(b.repo) || a.number - b.number);
 }
 
-/** Numbers a PR body promises to close. */
-export function closingReferences(body) {
-  return [...new Set([...String(body ?? '').matchAll(CLOSING)].map((m) => Number(m[1])))];
+/** References a PR body promises to close, with the repository each one names. */
+export function closingReferences(body, defaultRepo) {
+  const found = new Map();
+  for (const m of String(body ?? '').matchAll(CLOSING)) {
+    const ref = { repo: m[1] ?? m[4] ?? defaultRepo, number: Number(m[2] ?? m[3] ?? m[5]) };
+    found.set(refKey(ref), ref);
+  }
+  return [...found.values()];
 }
 
 /** EARS acceptance-criteria lines, which become the test cases. */
@@ -54,15 +73,16 @@ export function acceptanceCriteria(body) {
   return String(body ?? '').split(/\r?\n/).map((line) => EARS.exec(line)?.[1].trim()).filter(Boolean);
 }
 
-export function buildFeature(entry, linked = []) {
+export function buildFeature(entry, linked = [], repo = null) {
   const criteria = [entry.body, ...linked.map((item) => item.body)].flatMap(acceptanceCriteria);
   return {
+    repo,
     number: entry.number,
     kind: entry.pull_request ? 'pull_request' : 'issue',
     title: entry.title,
     url: entry.html_url,
     labels: (entry.labels ?? []).map((label) => (typeof label === 'string' ? label : label.name)),
-    closes: linked.map((item) => item.number),
+    closes: linked.map((item) => `${item.repo ?? repo}#${item.number}`),
     acceptance: [...new Set(criteria)],
     untestable: criteria.length === 0
       ? 'No EARS acceptance criteria found; derive checks from the title and body and say so.' : undefined,
@@ -107,18 +127,18 @@ export function collect(options, run = ghJson) {
     if (compare?.commits?.length >= 250) warnings.push('Compare result is capped at 250 commits; the feature list may be incomplete.');
   } else warnings.push('No previous published release found; the feature list comes from the release notes alone.');
 
-  const fetchEntry = (number) => {
-    try { return run(['api', '--method', 'GET', `repos/${repo}/issues/${number}`]); } catch (error) {
-      warnings.push(`#${number} unreadable: ${String(error.message).split('\n')[0]}`);
+  const fetchEntry = (ref) => {
+    try { return { ...run(['api', '--method', 'GET', `repos/${ref.repo}/issues/${ref.number}`]), repo: ref.repo }; } catch (error) {
+      warnings.push(`${refKey(ref)} unreadable: ${String(error.message).split('\n')[0]}`);
       return null;
     }
   };
   const features = [];
-  for (const number of extractReferences([release.body, ...subjects])) {
-    const entry = fetchEntry(number);
+  for (const ref of extractReferences([release.body, ...subjects], repo)) {
+    const entry = fetchEntry(ref);
     if (!entry) continue;
-    const linked = entry.pull_request ? closingReferences(entry.body).map(fetchEntry).filter(Boolean) : [];
-    features.push(buildFeature(entry, linked));
+    const linked = entry.pull_request ? closingReferences(entry.body, ref.repo).map(fetchEntry).filter(Boolean) : [];
+    features.push(buildFeature(entry, linked, ref.repo));
   }
 
   let cards = null;
@@ -139,7 +159,7 @@ export function collect(options, run = ghJson) {
 export function render(report) {
   const lines = [`Release ${report.release.tag} (${report.release.url})`, `Features: ${report.features.length}`];
   for (const f of report.features) {
-    lines.push(`- #${f.number} ${f.title} [${f.kind}] criteria=${f.acceptance.length}`);
+    lines.push(`- ${f.repo}#${f.number} ${f.title} [${f.kind}] criteria=${f.acceptance.length}`);
   }
   if (report.humanReview) {
     lines.push(`Human Review cards: ${report.humanReview.length}`);

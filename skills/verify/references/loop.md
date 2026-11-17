@@ -11,7 +11,8 @@ Inputs:
 - A target, one of: a QA report path (its `fail` and `blocked` items become the
   findings), an issue or PR (its acceptance criteria become the checks), a command
   (for example the repository's test or type-check command), or a URL with cases
-- Optional `--surface local|preview|prod` (default `local`; see Surfaces)
+- Optional `--surface local|preview|prod` (default `local`; `prod` when the target is a report
+  written by `/qa prod`, recognized by its `# Post-release QA:` heading; see Surfaces)
 - Optional budgets: `--max-fixes <n>` (default 10), `--max-attempts <n>` per finding (default 3)
 - Optional `--pr`: push the branch and open one pull request at the end
 
@@ -24,7 +25,7 @@ Outputs:
 
 Creates/Modifies:
 
-- Creates one branch `verify/<slug>` from freshly fetched `origin/<default>`, or resumes it
+- Creates one branch `verify/<slug>` from the base the target calls for (see Phase 1), or resumes it
 - Modifies source and tests only as `fix` allows; scratch lives under the repository's `.tmp/`
 - Never edits CI configuration, lint or test configuration, lockfiles, or environment files
 
@@ -78,13 +79,20 @@ Delegates To:
 A fix is verified on the closest surface the loop may change:
 
 - `local`: the app or tests running from the loop branch. Default.
-- `preview`: a deployment of the loop branch the repository already produces.
-- `prod`: the findings came from production (for example a `/qa prod` report). The loop
+- `preview`: a deployment of the loop branch the repository already produces. Choosing it is
+  the user's approval to push the loop branch (never to open a pull request) after each fix
+  commit. A preview result counts only when the build the deployment reports (version
+  endpoint, footer, or deploy evidence for the branch) carries the fix commit's SHA. Until
+  it does, wait for the deployment within a bounded time; if it never does, record
+  `blocked: preview not serving the fix` and do not spend an attempt.
+- `prod`: the findings came from production (a `/qa prod` report selects this surface even
+  when the flag is absent, and `/qa prod --fix` passes it). The loop
   reproduces them locally with the QA fixtures or an equivalent seed, fixes them on the
   branch, and verifies locally. It never edits production. The ledger marks each fixed
   finding `fixed-local, awaiting prod re-verify`. Production is green only after the fix
   is merged and deployed and the originating check passes there, for example
-  `/qa prod <tag> --only <items>`. Never report production green from a local result.
+  `/qa prod <tag> --only <items> --build <fix tag>`, where `<fix tag>` is the release that
+  ships the fix. Never report production green from a local result.
 
 If a prod-only symptom cannot be reproduced locally after a bounded effort, mark it
 `blocked: not reproducible off prod` with what was tried, and do not guess a fix.
@@ -120,7 +128,14 @@ On start, if a ledger for the same target and branch exists, resume it: re-verif
    lint, and the app. Use those commands; invent none.
 2. Resolve the default branch (the repository's trunk, else `origin/HEAD`). Fetch it.
    Stop if the fetch fails. If the worktree has uncommitted changes, stop and list them.
-3. Create or resume `verify/<slug>` from fresh `origin/<default>`. Pin the name.
+3. Choose the base so that what is verified includes the code under suspicion:
+   - Bare `/verify`, a command, or a URL with cases: the starting `HEAD`, so a committed
+     regression on the current branch is part of the baseline.
+   - An issue or PR: the PR head (fetched), or the starting `HEAD` when it already is that branch.
+   - A `/qa prod` report, or any target that names production: fresh `origin/<default>`, the
+     shipped trunk the findings were observed on.
+
+   Create or resume `verify/<slug>` from that base. Pin the name.
 4. Resolve the target into a verification set (see `check`), create the ledger.
 
 ### Phase 2: Baseline
@@ -136,8 +151,11 @@ checks (build, type, boot), then the rest in ledger order. For each:
 
 1. **Debug.** Run the `debug` playbook. Output: the red-capable repro command, the root
    cause with the evidence that proves it, and a confidence (`proven` or `likely`). A
-   `likely` cause still needs a discriminating observation before any edit.
-2. **Fix.** Run the `fix` playbook. It writes the failing check first, makes the smallest
+   `likely` cause still needs a discriminating observation before any edit. When debug
+   returns `stalled`, `blocked`, or `not reproducible`, do not run `fix`: count an attempt,
+   record the result in the ledger, and retry debug with the refuted list until
+   `--max-attempts`. Then mark the finding `stalled` or `blocked: <reason>` and move on.
+2. **Fix**, only for a diagnosis that meets that confidence gate. Run the `fix` playbook. It writes the failing check first, makes the smallest
    change, proves green on the finding, and commits.
 3. **Re-verify.** Run the finding's own check, then the full set. Update the ledger with the
    result and commit hash.
@@ -171,7 +189,7 @@ Result: GREEN | PARTIAL | STOPPED (<reason>)
 Branch: verify/<slug> @ <sha>, <n> commits
 Fixed: <id> <one line> <short sha>   (failing -> passing output verbatim, trimmed to the failure)
 Open: <id> <state> <what a human needs to decide or provide>
-Awaiting prod re-verify: <ids> via /qa prod <tag> --only <ids>
+Awaiting prod re-verify: <ids> via /qa prod <tag> --only <ids> --build <fix tag>
 Ledger: <path>
 ```
 

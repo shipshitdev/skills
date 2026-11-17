@@ -11,12 +11,16 @@ This playbook reports. It does not fix anything unless the user passes `--fix`.
 
 Inputs:
 
-- A release tag (`vX.Y.Z`), or the latest published release when omitted
+- A release tag (`vX.Y.Z`), or the latest published release when omitted. It names the release
+  whose features and cards are tested.
 - The repository (`owner/name`); default: the current checkout's `origin`
 - Optional board: `--owner <owner> --project <number>`; optional `--status <name>`
   for a human-review column not named `Human Review`
 - Production base URL and QA-account credentials from the environment (see Credentials)
 - Optional `--only <items>`: re-verify only those features or cards (for a re-check after a fix deploys)
+- Optional `--build <tag>`: the release production must be serving, when it differs from the tag under
+  test. Use it to re-check original failures after a fix ships in a later release
+  (`/qa prod v1.4.0 --only F2 --build v1.4.1`). Default: the tag under test.
 - Optional `--comment`: post each item's one-line verdict on its PR, issue, or card
 - Optional `--fix`: hand the failures to the verify loop after the report
 
@@ -56,8 +60,8 @@ Delegates To:
   skills here are user-invoked only, so the Skill tool cannot load them.
 - `scripts/release-inputs.mjs` in this skill directory for the feature list and review queue
 - the harness's browser or page-automation tools for UI features; HTTP clients for APIs
-- `/verify loop` (`verify/SKILL.md`) with the report path, only when `--fix` was passed
-- Recommend `/verify loop <report>` when failures exist and `--fix` was not passed
+- `/verify loop <report path> --surface prod` (`verify/SKILL.md`), only when `--fix` was passed
+- Recommend `/verify loop <report> --surface prod` when failures exist and `--fix` was not passed
 
 ## Safety rules (production)
 
@@ -108,7 +112,7 @@ Delegates To:
    A feature with none (`untestable` set) gets cases derived from its title and body,
    and the report says so.
 4. Confirm the release is live: the production build or version must correspond to the
-   tag. Use the app's version endpoint, footer, or health route when it has one, else the
+   tag under test, or to `--build <tag>` when given. Use the app's version endpoint, footer, or health route when it has one, else the
    deploy evidence for the tagged commit (`gh run list --commit <sha>`, deployments API).
    When production still serves an older build, stop with `blocked: release not deployed`
    and do not report results against the wrong build.
@@ -210,12 +214,12 @@ data appears anywhere; unknowns are stated, not guessed.
 ## Phase 6: Hand off
 
 - No `fail` or `blocked`: report the verdict and stop.
-- Failures and no `--fix`: print the report path and Recommend `/verify loop <report path>`.
-- `--fix`: run the verify loop on the report's failures as defined in `verify/SKILL.md`.
+- Failures and no `--fix`: print the report path and Recommend `/verify loop <report path> --surface prod`.
+- `--fix`: run the verify loop on the report's failures with `--surface prod`, as defined in `verify/SKILL.md`.
   Fixes land as branches and pull requests through that playbook; production is
-  never edited. After the user merges and the fix deploys, re-run `/qa prod <tag> --only
-  <failed items>` to re-verify on production. Never claim production is green on the
-  strength of a local or preview verification.
+  never edited. After the user merges and the fix deploys as release `<fix tag>`, re-run
+  `/qa prod <tag> --only <failed items> --build <fix tag>` to re-verify the original cases on
+  production. Never claim production is green on the basis of a local or preview verification.
 
 ## Stop conditions
 

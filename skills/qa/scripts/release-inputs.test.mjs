@@ -4,17 +4,30 @@ import {
   acceptanceCriteria, buildFeature, closingReferences, collect, extractReferences, humanReviewCards, parseArgs,
 } from './release-inputs.mjs';
 
-test('extractReferences finds PR and issue numbers in notes, URLs, and subjects', () => {
+test('extractReferences keeps the repository a reference names', () => {
   const refs = extractReferences([
-    '* add export (#12)\n* fix login https://github.com/o/r/pull/7',
+    '* add export (#12)\n* fix login https://github.com/o/r/pull/7\n* api change app/api#9',
     'feat: thing (#12)',
     'color #fff and a&#39;b are not references',
+  ], 'o/r');
+  assert.deepEqual(refs, [
+    { repo: 'app/api', number: 9 },
+    { repo: 'o/r', number: 7 },
+    { repo: 'o/r', number: 12 },
   ]);
-  assert.deepEqual(refs, [7, 12]);
 });
 
-test('closingReferences reads closing keywords only', () => {
-  assert.deepEqual(closingReferences('Closes #4, fixes o/r#9. See #5.'), [4, 9]);
+test('the same number in two repositories stays two references', () => {
+  const refs = extractReferences(['#9 and app/api#9 and https://github.com/app/web/issues/9'], 'o/r');
+  assert.deepEqual(refs.map((r) => `${r.repo}#${r.number}`), ['app/api#9', 'app/web#9', 'o/r#9']);
+});
+
+test('closingReferences reads closing keywords and resolves only bare numbers against the repo', () => {
+  assert.deepEqual(closingReferences('Closes #4, fixes o/x#9. See #5.', 'o/r'), [
+    { repo: 'o/r', number: 4 },
+    { repo: 'o/x', number: 9 },
+  ]);
+  assert.deepEqual(closingReferences('Resolves https://github.com/app/api/issues/9', 'app/web'), [{ repo: 'app/api', number: 9 }]);
 });
 
 test('acceptanceCriteria keeps EARS lines and drops the rest', () => {
@@ -32,9 +45,10 @@ test('acceptanceCriteria keeps EARS lines and drops the rest', () => {
 test('buildFeature merges linked issue criteria and flags missing ones', () => {
   const pr = { number: 3, title: 'Export', body: 'Closes #2', html_url: 'u', pull_request: {}, labels: [{ name: 'feat' }] };
   const issue = { number: 2, body: '- THE SYSTEM SHALL export CSV' };
-  const feature = buildFeature(pr, [issue]);
+  const feature = buildFeature(pr, [{ ...issue, repo: 'o/r' }], 'o/r');
   assert.deepEqual(feature.acceptance, ['THE SYSTEM SHALL export CSV']);
   assert.deepEqual(feature.labels, ['feat']);
+  assert.deepEqual(feature.closes, ['o/r#2']);
   assert.equal(feature.untestable, undefined);
   assert.match(buildFeature(pr, []).untestable, /No EARS/);
 });
@@ -67,16 +81,18 @@ test('collect assembles features and review cards through an injected runner', (
       { tag_name: 'v1', published_at: '2026-01-01', draft: false, prerelease: false },
     ];
     if (joined.includes('/compare/v1...v2')) return { commits: [{ commit: { message: 'fix: y (#4)\n\nbody' } }] };
-    if (joined.endsWith('/issues/3')) return { number: 3, title: 'Export', body: 'Closes #2', pull_request: {}, html_url: 'u3' };
-    if (joined.endsWith('/issues/4')) return { number: 4, title: 'Y', body: '', html_url: 'u4' };
-    if (joined.endsWith('/issues/2')) return { number: 2, title: 'Spec', body: '- THE SYSTEM SHALL export' };
+    if (joined.endsWith('repos/o/r/issues/3')) return { number: 3, title: 'Export', body: 'Closes #2 and closes app/api#9', pull_request: {}, html_url: 'u3' };
+    if (joined.endsWith('repos/o/r/issues/4')) return { number: 4, title: 'Y', body: '', html_url: 'u4' };
+    if (joined.endsWith('repos/o/r/issues/2')) return { number: 2, title: 'Spec', body: '- THE SYSTEM SHALL export' };
+    if (joined.endsWith('repos/app/api/issues/9')) return { number: 9, title: 'Other repo', body: '- THE SYSTEM SHALL serve the api' };
     if (args[0] === 'project') return { totalCount: 1, items: [{ title: 'Z', status: 'Human Review', content: { type: 'Issue', number: 9, repository: 'o/r' } }] };
     throw new Error(`unexpected ${joined}`);
   };
   const report = collect({ repo: 'o/r', owner: 'o', project: '5', status: 'Human Review' }, run);
   assert.equal(report.release.previousTag, 'v1');
   assert.deepEqual(report.features.map((f) => f.number), [3, 4]);
-  assert.deepEqual(report.features[0].acceptance, ['THE SYSTEM SHALL export']);
+  assert.deepEqual(report.features[0].acceptance, ['THE SYSTEM SHALL export', 'THE SYSTEM SHALL serve the api']);
+  assert.deepEqual(report.features[0].closes, ['o/r#2', 'app/api#9']);
   assert.equal(report.humanReview.length, 1);
   assert.deepEqual(report.warnings, []);
 });

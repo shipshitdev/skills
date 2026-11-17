@@ -38,7 +38,7 @@ Examples:
 
 ```text
 /verify                                     # loop on the current branch's own checks
-/verify .tmp/qa-prod/v1.4.0/report.md       # loop on the failures from a post-release QA report
+/verify .tmp/qa-prod/v1.4.0/report.md       # loop on a post-release QA report's failures (surface prod is inferred)
 /verify check #231                          # verify an issue's acceptance criteria, report only
 /verify debug "export button does nothing"  # root-cause one failure, change no source
 ```

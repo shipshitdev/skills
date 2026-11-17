@@ -81,4 +81,4 @@ The skill takes a tag as input and does not decide when it runs. Pick one trigge
 `/qa prod --fix` and `/verify loop` change code on a branch and open a pull request. They
 never edit production. Decide whether you want them to open the PR for you; the default
 is to stop at a local commit and ask. A fix reaches production only through your normal
-merge and release path, then `/qa prod <tag> --only <items>` confirms it there.
+merge and release path, then `/qa prod <tag> --only <items> --build <fix tag>` confirms it there.
