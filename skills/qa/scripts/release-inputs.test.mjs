@@ -22,6 +22,11 @@ test('the same number in two repositories stays two references', () => {
   assert.deepEqual(refs.map((r) => `${r.repo}#${r.number}`), ['app/api#9', 'app/web#9', 'o/r#9']);
 });
 
+test('a repository name ending in a hyphen does not leak a bare reference', () => {
+  const refs = extractReferences(['ships app/api-#9 and also app/web.#4'], 'app/web');
+  assert.deepEqual(refs.map((r) => `${r.repo}#${r.number}`), ['app/api-#9', 'app/web.#4']);
+});
+
 test('closingReferences reads closing keywords and resolves only bare numbers against the repo', () => {
   assert.deepEqual(closingReferences('Closes #4, fixes o/x#9. See #5.', 'o/r'), [
     { repo: 'o/r', number: 4 },

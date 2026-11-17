@@ -50,9 +50,12 @@ export function extractReferences(texts, defaultRepo) {
   const found = new Map();
   const add = (repo, number) => found.set(refKey({ repo, number: Number(number) }), { repo, number: Number(number) });
   for (const text of texts) {
-    const value = String(text ?? '');
+    let value = String(text ?? '');
     for (const m of value.matchAll(URL_REFERENCE)) add(m[1], m[2]);
+    value = value.replace(URL_REFERENCE, ' ');
     for (const m of value.matchAll(QUALIFIED_REFERENCE)) add(m[1], m[2]);
+    // Qualified spans are consumed first so a repo name ending in `-` or `.` cannot leak a bare `#n`.
+    value = value.replace(QUALIFIED_REFERENCE, (match) => ' '.repeat(match.length));
     for (const m of value.matchAll(BARE_REFERENCE)) add(defaultRepo, m[1]);
   }
   return [...found.values()].sort((a, b) => a.repo.localeCompare(b.repo) || a.number - b.number);
