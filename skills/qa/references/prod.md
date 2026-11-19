@@ -27,7 +27,8 @@ Inputs:
 
 Outputs:
 
-- A report file `.tmp/qa-prod/<tag>/report.md` (format below) plus an `evidence/`
+- A report file `.tmp/qa-prod/<tag>/report.md` (format below; for a `--only` recheck,
+  `.tmp/qa-prod/<tag>/recheck-<build>/report.md`) plus an `evidence/`
   directory next to it, both gitignored scratch
 - A verdict per feature and per card: `pass`, `fail`, `blocked`, or `not-tested`
   (with the reason)
@@ -131,7 +132,7 @@ the saved plan is missing (scratch is gitignored, so a fresh checkout has none),
 
 ## Phase 2: Plan the cases
 
-Write `.tmp/qa-prod/<tag>/plan.md` before touching production: one row per feature or
+Write `.tmp/qa-prod/<tag>/plan.md` (for a recheck, the `recheck-<build>/` copy) before touching production: one row per feature or
 card with its cases (route or endpoint, setup, steps, expected observable result) and
 the safety classification of each case (`safe`, `needs-yes`, `unsafe`). Cases that are
 `unsafe` or `needs-yes` are listed with the reason and left `not-tested` unless the user
@@ -182,7 +183,9 @@ delete anything that is not in the ledger.
 
 ## Phase 5: Report
 
-Write `.tmp/qa-prod/<tag>/report.md` with this shape and print the summary.
+Write `.tmp/qa-prod/<tag>/report.md` with this shape and print the summary. A `--only` recheck
+writes `report.md` and `evidence/` under `.tmp/qa-prod/<tag>/recheck-<build>/` and never touches
+the original report, plan, or evidence.
 
 ```markdown
 # Post-release QA: <repo> <tag>
