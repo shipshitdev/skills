@@ -113,10 +113,10 @@ Baseline: <n> findings (<n> automated, <n> app-driven, <n> spec)
 |----|--------|---------|-----------|-------|----------|--------|
 ```
 
-`id` is the verify finding id (`V<n>`). `source` is the id of the item the finding came from:
+`id` is the verify finding id (`V<n>`). `source` lists the id of every item the finding came from:
 for a `/qa prod` report, the feature or card id in the report row (`F2`, `C1`); otherwise the
 issue, PR, or check id. Never substitute `id` for `source` when handing a finding back to
-`/qa prod`.
+`/qa prod`, and hand back all of a finding's source ids, not only the first.
 
 States: `open`, `diagnosing`, `fixing`, `fixed`, `fixed-local, awaiting prod re-verify`,
 `blocked: <reason>`, `stalled`, `wontfix: <reason>`. The signature is the normalized

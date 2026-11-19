@@ -78,11 +78,12 @@ diff to find the adjacent flows it touches, and add a check per flow.
 
 ## Finding format
 
-One entry per distinct failure. Deduplicate by signature.
+One entry per distinct failure. Deduplicate by signature, and keep every source id the merged
+failures came from: two items that fail the same way stay two sources on one finding.
 
 ```markdown
 ### V<n>: <one-line symptom>
-- Source: <originating item id: QA report feature or card id such as F2 or C1, issue or PR number, or check id>
+- Source: <every originating item id, comma-separated: QA report feature or card ids such as F2, C1, issue or PR numbers, or check ids>
 - Check: <id, kind>
 - Surface: <local|preview|prod>, build <sha or version>
 - Repro: <one command, or numbered steps; deterministic, from a clean state>
