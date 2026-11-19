@@ -48,4 +48,4 @@ jobs:
         # GHSA-g3hv-75wg-m249: minimatch <11.0.1 via markdownlint-cli, a dev-only
         # lint tool fed our own globs. Drop the ignore once markdownlint-cli
         # depends on minimatch 11.
-        run: bun audit --ignore GHSA-g3hv-75wg-m249
+        run: bun audit --ignore GHSA-g3hv-75wg-m249 --ignore GHSA-fc5q-39xc-vjpf

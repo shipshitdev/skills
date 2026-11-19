@@ -49,6 +49,16 @@ pstack (Claude Code plugin `pstack@cursor-plugins` from `cursor/plugins`) and
 rewrite them. Skills here name them as "upstream pstack/mattpocock when
 installed", never as relative routes.
 
+### Post-release QA and the verify loop (2026-11-17)
+
+`/qa prod <tag>` (action in the qa router) QA-tests a shipped release on production
+with a dedicated QA account whose credentials come from environment variables; it
+reports only. `/verify` (router: `loop`, `check`, `debug`, `fix`) is the
+verify-debug-fix-re-verify loop, written to run unattended in Codex after Claude
+implements. Fixes land on a branch and never touch production; production is green
+only after a post-deploy `/qa prod --only` re-check. Ideas credited to mattpocock
+`diagnosing-bugs` and pstack `create-verification-skill` (MIT), text original, not vendored.
+
 ### Single-Source Skills (2026-02-04)
 
 One `skills/` directory at root. No per-platform copies. Platform-neutral
