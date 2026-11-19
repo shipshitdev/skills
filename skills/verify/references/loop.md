@@ -109,9 +109,14 @@ Target: <...>   Surface: <...>   Branch: verify/<slug> @ <base sha>
 Budgets: fixes <used>/<max>, attempts per finding <max>
 Baseline: <n> findings (<n> automated, <n> app-driven, <n> spec)
 
-| id | finding | signature | state | attempts | commit |
-|----|---------|-----------|-------|----------|--------|
+| id | source | finding | signature | state | attempts | commit |
+|----|--------|---------|-----------|-------|----------|--------|
 ```
+
+`id` is the verify finding id (`V<n>`). `source` is the id of the item the finding came from:
+for a `/qa prod` report, the feature or card id in the report row (`F2`, `C1`); otherwise the
+issue, PR, or check id. Never substitute `id` for `source` when handing a finding back to
+`/qa prod`.
 
 States: `open`, `diagnosing`, `fixing`, `fixed`, `fixed-local, awaiting prod re-verify`,
 `blocked: <reason>`, `stalled`, `wontfix: <reason>`. The signature is the normalized
@@ -132,9 +137,16 @@ On start, if a ledger for the same target and branch exists, resume it: re-verif
 3. Choose the base so that what is verified includes the code under suspicion:
    - Bare `/verify`, a command, or a URL with cases: the starting `HEAD`, so a committed
      regression on the current branch is part of the baseline.
-   - An issue or PR: the PR head (fetched), or the starting `HEAD` when it already is that branch.
-   - A `/qa prod` report, or any target that names production: fresh `origin/<default>`, the
-     shipped trunk the findings were observed on.
+   - A PR, or an issue that has a linked PR: the PR head (fetched), or the starting `HEAD` when
+     it already is that branch. An issue with no PR: the starting `HEAD`.
+   - A `/qa prod` report, or any target that names production: the commit of the build the
+     findings were observed on, taken from the report's `Build checked:` line (a release tag
+     or SHA; resolve it with `git rev-parse <build>^{commit}` after fetching tags). Never
+     assume `origin/<default>` is what production serves: it may hold unreleased commits.
+     If the build cannot be resolved, stop and record `blocked: build under test unknown`.
+     Record in the ledger how many commits `origin/<default>` is ahead of that build, and tell
+     the user in the report that the branch starts from the shipped build and may need a
+     rebase onto `origin/<default>` before it is merged.
 
    Create or resume `verify/<slug>` from that base. Pin the name.
 4. Resolve the target into a verification set (see `check`), create the ledger.
@@ -142,7 +154,11 @@ On start, if a ledger for the same target and branch exists, resume it: re-verif
 ### Phase 2: Baseline
 
 Run `check` on the whole set. Record every finding in the ledger as `open`. If nothing
-fails, report green with the evidence and stop. If the check cannot run at all (the app will
+fails on the `local` or `preview` surface, report green with the evidence and stop. On the
+`prod` surface a local pass is never green: the findings came from production, which has not
+passed. Apply the not-reproducible rule under Surfaces to each such finding (a bounded effort
+to reproduce with the QA fixtures or an equivalent seed, then `blocked: not reproducible off
+prod`), and report production as unverified. If the check cannot run at all (the app will
 not start, credentials are missing), record `blocked` for the run and stop.
 
 ### Phase 3: One finding at a time
@@ -189,9 +205,9 @@ Print the final report and leave the branch as it is:
 ```text
 Result: GREEN | PARTIAL | STOPPED (<reason>)
 Branch: verify/<slug> @ <sha>, <n> commits
-Fixed: <id> <one line> <short sha>   (failing -> passing output verbatim, trimmed to the failure)
-Open: <id> <state> <what a human needs to decide or provide>
-Awaiting prod re-verify: <ids> via /qa prod <tag> --only <ids> --build <fix tag>
+Fixed: <id> (<source>) <one line> <short sha>   (failing -> passing output verbatim, trimmed to the failure)
+Open: <id> (<source>) <state> <what a human needs to decide or provide>
+Awaiting prod re-verify: <source ids> via /qa prod <tag> --only <source ids> --build <fix tag>
 Ledger: <path>
 ```
 

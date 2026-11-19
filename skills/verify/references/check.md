@@ -54,7 +54,7 @@ and the expected result. Kinds:
   checks. A criterion that cannot be observed is reported as `unverifiable`, never as pass.
 
 From a QA report, each `fail` and `blocked` item is one check, using the report's repro
-steps verbatim. From an issue or PR, read the body, the linked issue's criteria, and the
+steps verbatim, and its feature or card id from the report is kept as the finding's `Source`. From an issue or PR, read the body, the linked issue's criteria, and the
 diff to find the adjacent flows it touches, and add a check per flow.
 
 ## Run
@@ -81,7 +81,8 @@ diff to find the adjacent flows it touches, and add a check per flow.
 One entry per distinct failure. Deduplicate by signature.
 
 ```markdown
-### F<n>: <one-line symptom>
+### V<n>: <one-line symptom>
+- Source: <originating item id: QA report feature or card id such as F2 or C1, issue or PR number, or check id>
 - Check: <id, kind>
 - Surface: <local|preview|prod>, build <sha or version>
 - Repro: <one command, or numbered steps; deterministic, from a clean state>
@@ -100,7 +101,7 @@ A finding with no repro command or steps is not a finding; it is a note under "U
 Verdict: GREEN | RED (<n> findings)
 Surface: <...>  Build: <...>
 Checked: <n> automated, <n> app-driven, <n> spec   (<n> unverifiable, <n> blocked)
-Findings: F1 <symptom>; F2 <symptom>
+Findings: V1 <symptom>; V2 <symptom>
 Unconfirmed: <notes that lack a repro>
 Findings file: <path>
 ```

@@ -17,7 +17,8 @@ Inputs:
 - Optional board: `--owner <owner> --project <number>`; optional `--status <name>`
   for a human-review column not named `Human Review`
 - Production base URL and QA-account credentials from the environment (see Credentials)
-- Optional `--only <items>`: re-verify only those features or cards (for a re-check after a fix deploys)
+- Optional `--only <items>`: re-verify only those feature or card ids from the original report (`F2`, `C1`),
+  for a re-check after a fix deploys. Cases come from the original run's saved plan (see Phase 1)
 - Optional `--build <tag>`: the release production must be serving, when it differs from the tag under
   test. Use it to re-check original failures after a fix ships in a later release
   (`/qa prod v1.4.0 --only F2 --build v1.4.1`). Default: the tag under test.
@@ -95,6 +96,14 @@ Delegates To:
    visible effect, stop the run, record it, and report it first.
 
 ## Phase 1: Collect the release and the review queue
+
+With `--only`, do not rerun the helper or derive cases from current PR or issue bodies: acceptance
+criteria may have changed since the original run, and the recheck would then test a different
+expectation. Load each selected item's cases (identifier, steps, expected result) from the
+original `.tmp/qa-prod/<tag>/plan.md`, write the recheck to `.tmp/qa-prod/<tag>/recheck-<build>/`
+so the original plan and report stay intact, and skip to Phase 3 after the build check below. If
+the saved plan is missing (scratch is gitignored, so a fresh checkout has none), stop and report
+`blocked: original plan unavailable`; never rebuild the cases silently.
 
 1. Confirm the repository and that `gh auth status` works. A board needs the
    `project` scope; without it, report the review queue as `blocked`.
@@ -183,12 +192,12 @@ Verdict: PASS | FAIL | BLOCKED   (<n> pass, <n> fail, <n> blocked, <n> not-teste
 Inputs: <release URL>, board <owner>/<number> column "<name>", warnings: <list or none>
 
 ## Features
-| # | Feature | Verdict | Cases | Evidence |
+| ID | Feature | Verdict | Cases | Evidence |
 |---|---|---|---|---|
 
 ## Human Review cards
-| Card | Verdict | Cases | Evidence |
-|---|---|---|---|
+| ID | Card | Verdict | Cases | Evidence |
+|---|---|---|---|---|
 
 ## Failures
 ### <item>: <one-line symptom>
@@ -207,7 +216,8 @@ Inputs: <release URL>, board <owner>/<number> column "<name>", warnings: <list o
 <records created, removed, and any left behind with their ids>
 ```
 
-Rules for the report: every `fail` has repro steps and evidence; every `pass` names the
+Rules for the report: features are numbered `F1`, `F2`, ... and cards `C1`, `C2`, ... in the order the
+plan lists them, and those ids stay stable for `--only` and for `/verify`. Every `fail` has repro steps and evidence; every `pass` names the
 observable result checked, not "looked fine"; no credential, token, cookie, or personal
 data appears anywhere; unknowns are stated, not guessed.
 
