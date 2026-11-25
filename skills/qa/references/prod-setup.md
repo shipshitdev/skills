@@ -36,7 +36,7 @@ output.
 ## 3. Name the board column
 
 `/qa prod` reads cards from a GitHub Projects v2 board's `Status` column. The default name
-is `Human Review`, which is the column ShipCode writes. Pass `--owner`, `--project`, and,
+is `Review` (a legacy `Human Review` column also matches). Pass `--owner`, `--project`, and,
 for another name, `--status "<name>"`. The `gh` token needs the `project` scope
 (`gh auth refresh -s project`). Only cards whose change has merged and deployed can be
 proven on production; the rest are reported as not-tested.

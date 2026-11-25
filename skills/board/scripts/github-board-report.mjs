@@ -26,7 +26,7 @@ const CONTENT = `__typename
   }`;
 
 const DEFAULT_STATUS_MAP = { backlog: ['Backlog'], inProgress: ['In Progress'],
-  review: ['Human Review'], done: ['Done'], deferred: ['Deferred'] };
+  review: ['Review', 'Human Review'], done: ['Done'], deferred: ['Deferred'] };
 
 export function parseStatusMap(value) {
   const input = JSON.parse(value);

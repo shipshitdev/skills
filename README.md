@@ -93,7 +93,7 @@ deploys. Publish the branch afterwards with `/git pr`.
 Claude Code implements; Codex (or any agent) verifies the real app and fixes what breaks.
 
 ```text
-/qa prod v1.4.0                    # every feature in the release plus the Human Review cards, on production
+/qa prod v1.4.0                    # every feature in the release plus the Review cards, on production
 /verify .tmp/qa-prod/v1.4.0/report.md --surface prod   # debug, fix, and re-verify each failure until green (Codex: $verify ...)
 /qa prod v1.4.0 --only F2,F5 --build v1.4.1   # after the fix ships as v1.4.1, re-check the original failures on production
 /verify check #231                 # report-only verification of one issue's acceptance criteria

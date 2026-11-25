@@ -59,13 +59,16 @@ test('buildFeature merges linked issue criteria and flags missing ones', () => {
 });
 
 test('humanReviewCards filters by status case-insensitively', () => {
-  const cards = humanReviewCards({ items: [
-    { title: 'A', status: 'Human Review', content: { type: 'Issue', number: 1, repository: 'o/r', body: '- THE SYSTEM SHALL a' } },
+  const items = { items: [
+    { title: 'A', status: 'Review', content: { type: 'Issue', number: 1, repository: 'o/r', body: '- THE SYSTEM SHALL a' } },
     { title: 'B', status: 'Done', content: { type: 'Issue', number: 2 } },
     { title: 'C', status: 'human review', content: { type: 'PullRequest', number: 3 } },
-  ] });
+    { title: 'D', status: 'QA', content: { type: 'Issue', number: 4 } },
+  ] };
+  const cards = humanReviewCards(items);
   assert.deepEqual(cards.map((c) => c.number), [1, 3]);
   assert.equal(cards[0].acceptance.length, 1);
+  assert.deepEqual(humanReviewCards(items, 'qa').map((c) => c.number), [4]);
 });
 
 test('parseArgs validates input', () => {
@@ -90,10 +93,10 @@ test('collect assembles features and review cards through an injected runner', (
     if (joined.endsWith('repos/o/r/issues/4')) return { number: 4, title: 'Y', body: '', html_url: 'u4' };
     if (joined.endsWith('repos/o/r/issues/2')) return { number: 2, title: 'Spec', body: '- THE SYSTEM SHALL export' };
     if (joined.endsWith('repos/app/api/issues/9')) return { number: 9, title: 'Other repo', body: '- THE SYSTEM SHALL serve the api' };
-    if (args[0] === 'project') return { totalCount: 1, items: [{ title: 'Z', status: 'Human Review', content: { type: 'Issue', number: 9, repository: 'o/r' } }] };
+    if (args[0] === 'project') return { totalCount: 1, items: [{ title: 'Z', status: 'Review', content: { type: 'Issue', number: 9, repository: 'o/r' } }] };
     throw new Error(`unexpected ${joined}`);
   };
-  const report = collect({ repo: 'o/r', owner: 'o', project: '5', status: 'Human Review' }, run);
+  const report = collect({ repo: 'o/r', owner: 'o', project: '5' }, run);
   assert.equal(report.release.previousTag, 'v1');
   assert.deepEqual(report.features.map((f) => f.number), [3, 4]);
   assert.deepEqual(report.features[0].acceptance, ['THE SYSTEM SHALL export', 'THE SYSTEM SHALL serve the api']);

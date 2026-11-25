@@ -22,7 +22,7 @@ export function ghJson(args) {
 }
 
 export function parseArgs(argv) {
-  const options = { status: 'Human Review', json: false };
+  const options = { status: null, json: false };
   const names = { '--repo': 'repo', '--tag': 'tag', '--owner': 'owner', '--project': 'project', '--status': 'status' };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -92,11 +92,11 @@ export function buildFeature(entry, linked = [], repo = null) {
   };
 }
 
-/** Board cards whose Status equals the human-review column name. */
-export function humanReviewCards(projectItems, status = 'Human Review') {
-  const wanted = status.trim().toLowerCase();
+/** Board cards in the human-review column: `status` when given, else Review or legacy Human Review. */
+export function humanReviewCards(projectItems, status) {
+  const wanted = (status ? [status] : ['Review', 'Human Review']).map((name) => name.trim().toLowerCase());
   return (projectItems?.items ?? [])
-    .filter((item) => String(item.status ?? '').trim().toLowerCase() === wanted)
+    .filter((item) => wanted.includes(String(item.status ?? '').trim().toLowerCase()))
     .map((item) => ({
       title: item.title ?? item.content?.title ?? '',
       type: item.content?.type ?? 'Unknown',
@@ -150,7 +150,7 @@ export function collect(options, run = ghJson) {
       '--limit', '500', '--format', 'json']);
     if ((items?.totalCount ?? 0) > (items?.items?.length ?? 0)) warnings.push('Board has more than 500 items; the review queue may be incomplete.');
     cards = humanReviewCards(items, options.status);
-  } else warnings.push('No --project given; Human Review cards were not collected.');
+  } else warnings.push('No --project given; Review cards were not collected.');
 
   return {
     repo,
@@ -165,7 +165,7 @@ export function render(report) {
     lines.push(`- ${f.repo}#${f.number} ${f.title} [${f.kind}] criteria=${f.acceptance.length}`);
   }
   if (report.humanReview) {
-    lines.push(`Human Review cards: ${report.humanReview.length}`);
+    lines.push(`Review cards: ${report.humanReview.length}`);
     for (const c of report.humanReview) lines.push(`- ${c.repository ?? ''}#${c.number ?? '?'} ${c.title} criteria=${c.acceptance.length}`);
   }
   for (const w of report.warnings) lines.push(`warning: ${w}`);
