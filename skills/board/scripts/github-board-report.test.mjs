@@ -26,7 +26,7 @@ function fixture() {
   const nested = Array.from({ length: 101 }, (_, index) => ({ ...issue(1000 + index), state: index === 100 ? 'OPEN' : 'CLOSED' }));
   const closing = Array.from({ length: 101 }, (_, index) => ({ id: `P${index}`, number: index, merged: index === 0,
     state: index === 100 ? 'OPEN' : 'CLOSED', url: `https://github.com/org/repo/pull/${index}` }));
-  const lanes = ['Backlog', 'In Progress', 'Human Review', 'Done', 'Deferred'];
+  const lanes = ['Backlog', 'In Progress', 'Review', 'Done', 'Deferred'];
   const board = Array.from({ length: 101 }, (_, index) => ({ id: `B${index}`, isArchived: index === 100,
     fieldValues: page([{ name: lanes[index % 5], field: { id: 'STATUS', name: 'Status', options: [] } },
       { name: 'stale-local', field: { id: 'LOCAL', name: 'Priority' } },
@@ -87,7 +87,7 @@ test('whole audit paginates every relevant connection and emits equal console/JS
     openIssuesScanned: 205, openIssuesInWindow: 204, milestones: 101 });
   assert.equal(report.findings.milestoneReadiness[0].focus.length, 101);
   assert.equal(report.findings.priorityHygiene.length, 100);
-  assert.deepEqual(new Set(report.findings.priorityHygiene.map((item) => item.status)), new Set(['Backlog', 'In Progress', 'Human Review', 'Done', 'Deferred']));
+  assert.deepEqual(new Set(report.findings.priorityHygiene.map((item) => item.status)), new Set(['Backlog', 'In Progress', 'Review', 'Done', 'Deferred']));
   assert.ok(!report.findings.epicDrift.some((item) => item.number === 0), 'open child on page two prevents false parent completion');
   assert.ok(!report.findings.staleInProgress.some((item) => item.number === 1), 'open PR on page two prevents stale finding');
   assert.ok(!report.findings.untrackedWork.some((item) => item.kind === 'merged-pr' && item.number === 1), 'archived PR membership proves tracking');
@@ -190,7 +190,7 @@ test('custom lane semantics preserve the board workflow and missing metadata in 
 
 
 test('closed work in active lanes affects the verdict without implying shipment or Done', () => {
-  for (const status of ['In Progress', 'Human Review']) {
+  for (const status of ['In Progress', 'Review']) {
     for (const type of ['Issue', 'PullRequest']) {
       const card = issue(1, { type, state: 'CLOSED', stateReason: 'NOT_PLANNED', status });
       const result = buildFindings([card], [], [], options, NOW);

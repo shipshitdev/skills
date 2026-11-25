@@ -19,7 +19,8 @@ Without `--repo`, activity scope is repositories found in accessible retained
 items, not every repository owned by the organization. The script never writes
 and does not accept `--apply`; apply is the agent workflow's separate operation.
 
-Defaults map Backlog / In Progress / Human Review / Done / Deferred. For another
+Defaults map Backlog / In Progress / Review / Done / Deferred; the legacy
+Human Review column still maps to review. For another
 workflow, provide existing labels:
 
 ```bash

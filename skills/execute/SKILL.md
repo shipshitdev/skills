@@ -75,8 +75,8 @@ not prove another owner is dead: confirm the run ended before takeover. If the
 board, claim owner, or dependency state cannot be read, stop intake safely.
 
 Use the repository's board vocabulary. The optional house columns are Backlog,
-In Progress, Human Review, Done, and Deferred. Delivery state is a separate receipt;
-being in Human Review or having a closed issue does not prove delivery.
+In Progress, Review, Done, and Deferred. Delivery state is a separate receipt;
+being in Review or having a closed issue does not prove delivery.
 
 ## 2. Validate the Prepared Contract
 

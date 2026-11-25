@@ -15,7 +15,7 @@ Inputs:
   whose features and cards are tested.
 - The repository (`owner/name`); default: the current checkout's `origin`
 - Optional board: `--owner <owner> --project <number>`; optional `--status <name>`
-  for a human-review column not named `Human Review`
+  for a human-review column not named `Review` or `Human Review`
 - Production base URL and QA-account credentials from the environment (see Credentials)
 - Optional `--only <items>`: re-verify only those feature or card ids from the original report (`F2`, `C1`),
   for a re-check after a fix deploys. Cases come from the original run's saved plan (see Phase 1)
@@ -198,7 +198,7 @@ Inputs: <release URL>, board <owner>/<number> column "<name>", warnings: <list o
 | ID | Feature | Verdict | Cases | Evidence |
 |---|---|---|---|---|
 
-## Human Review cards
+## Review cards
 | ID | Card | Verdict | Cases | Evidence |
 |---|---|---|---|---|
 

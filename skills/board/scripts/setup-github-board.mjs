@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 
 // The dev-loop board-as-truth model: five human-facing columns. The AI-loop
 // sub-phases (planning/executing/testing/shipping) live inside In Progress as
-// `loop:*` labels — they are not board columns. Human Review is the human gate.
+// `loop:*` labels — they are not board columns. Review is the human gate.
 const DEFAULT_STATUS_OPTIONS = [
   {
     name: 'Backlog',
@@ -17,7 +17,7 @@ const DEFAULT_STATUS_OPTIONS = [
     description: 'An agent is implementing (claim → branch → qa → PR)',
   },
   {
-    name: 'Human Review',
+    name: 'Review',
     color: 'BLUE',
     description: 'PR open; awaiting human review/merge',
   },
@@ -125,7 +125,7 @@ function printHelp() {
   node setup-github-board.mjs --owner <owner> --all-open [--apply]
 
 Options:
-  --status "Backlog,In Progress,Human Review,Done,Deferred"
+  --status "Backlog,In Progress,Review,Done,Deferred"
   --priority "P0 🔥,P1,P2,P3"
   --exact             Remove non-canonical options after approval.
   --include-closed    Include closed projects when processing all projects.

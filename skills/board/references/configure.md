@@ -82,8 +82,8 @@ Delegates To:
 ## Optional house preset
 
 When explicitly selected, the house preset uses Backlog / In Progress /
-Human Review / Done / Deferred. Automated testing remains part of In Progress;
-Human Review denotes a human decision. The preset proposes project-local
+Review / Done / Deferred. Automated testing remains part of In Progress;
+Review denotes a human decision. The preset proposes project-local
 Priority options P0 / P1 / P2 / P3 only where that field source is appropriate.
 
 Existing organization-native Priority retains its schema and values. Existing
